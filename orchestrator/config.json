@@ -1,0 +1,32 @@
+{
+  "linear": {
+    "project": "Project X",
+    "sprint": "Sprint 1",
+    "updateComments": true,
+    "apiKey": "__PUT_YOUR_LINEAR_API_KEY_HERE__"
+  },
+  "concurrency": 10,
+  "approvals": {
+    "prs": "require_manual"
+  },
+  "workspace": {
+    "baseDir": ".runs",
+    "branchPattern": "{type}/{issueKey}-{slug}"
+  },
+  "guardrails": {
+    "dryRun": false,
+    "secretScan": true,
+    "testsRequired": true,
+    "maxJobMinutes": 120
+  },
+  "routing": {
+    "rules": [
+      { "labels": ["frontend"], "droid": "codegen" },
+      { "labels": ["backend"], "droid": "codegen" },
+      { "labels": ["infra", "ci"], "droid": "infra" },
+      { "labels": ["refactor"], "droid": "refactor" },
+      { "labels": ["test", "qa"], "droid": "test" }
+    ],
+    "fallback": "generalist"
+  }
+}
