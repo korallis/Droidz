@@ -55,7 +55,7 @@ async function main() {
   const concurrencyStr = d(await question(`Max parallel tasks${existing?.concurrency?` [${existing.concurrency}]`:" [10]"}: `), String(existing?.concurrency ?? 10));
   const concurrency = Math.max(1, parseInt(concurrencyStr, 10) || 10);
 
-  const approvals = d(await question(`PR approvals mode: auto | require_manual | disallow_push${existing?.approvals?.prs?` [${existing.approvals.prs}]`:" [require_manual]"}: `), existing?.approvals?.prs || "require_manual");
+  const approvals = d(await question(`PR approvals mode: auto | require_manual | disallow_push${existing?.approvals?.prs?` [${existing.approvals.prs}]`:" [auto]"}: `), existing?.approvals?.prs || "auto");
 
   const baseDir = d(await question(`Workspace base dir${existing?.workspace?.baseDir?` [${existing.workspace.baseDir}]`:" [.runs]"}: `), existing?.workspace?.baseDir || ".runs");
   const branchPattern = d(await question(`Branch pattern${existing?.workspace?.branchPattern?` [${existing.workspace.branchPattern}]`:" [{type}/{issueKey}-{slug}]"}: `), existing?.workspace?.branchPattern || "{type}/{issueKey}-{slug}");
@@ -101,6 +101,14 @@ async function main() {
   };
 
   await saveConfig(repoRoot, cfg);
+
+  // Generate baseline custom droids
+  try {
+    const pGen = Bun.spawn(["bun", path.join("orchestrator", "generate-droids.ts")]);
+    await pGen.exited;
+  } catch (e) {
+    console.warn("Could not generate custom droids:", String(e));
+  }
 
   const planNow = (await question("Run a dry-run plan now? (y/n) [y]: ", false)) || "y";
   if (planNow.toLowerCase().startsWith("y")) {

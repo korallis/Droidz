@@ -106,6 +106,27 @@ export async function createIssue(apiKey: string, params: { teamId: string; proj
   return data.issueCreate.issue.id ? data.issueCreate.issue : { id: "", identifier: "" };
 }
 
+export async function getTeamStartedStateId(apiKey: string, teamId: string): Promise<string | null> {
+  const q = `#graphql
+    query($id: String!) { team(id: $id) { states(first: 50) { nodes { id name type } } } }
+  `;
+  type R = { team: { states: { nodes: Array<{ id: string; name: string; type: string }> } } | null };
+  const data = await gql<R>(apiKey, q, { id: teamId });
+  const states = data.team?.states?.nodes || [];
+  const started = states.find(s => s.type?.toLowerCase() === "started") || states.find(s => /in\s*progress/i.test(s.name));
+  return started?.id || null;
+}
+
+export async function setIssueState(apiKey: string, identifier: string, stateId: string): Promise<boolean> {
+  const issueId = await getIssueId(apiKey, identifier);
+  const m = `#graphql
+    mutation($id: String!, $stateId: String!) { issueUpdate(id: $id, input: { stateId: $stateId }) { success } }
+  `;
+  type R = { issueUpdate: { success: boolean } };
+  const data = await gql<R>(apiKey, m, { id: issueId, stateId });
+  return data.issueUpdate.success;
+}
+
 export async function commentOnIssue(apiKey: string, identifier: string, body: string) {
   // Linear mutation commonly uses issueId not identifier; resolve ID first
   const issueId = await getIssueId(apiKey, identifier);

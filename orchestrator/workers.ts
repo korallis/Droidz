@@ -2,7 +2,7 @@ import { spawn } from "bun";
 import path from "path";
 import { buildPrompt } from "./workerPrompt";
 import { OrchestratorConfig, TaskSpec } from "./types";
-import { commentOnIssue } from "./linear";
+import { commentOnIssue, getTeamStartedStateId, setIssueState, getProjectTeam } from "./linear";
 
 async function run(cmd: string, args: string[], cwd: string): Promise<{ code: number; stdout: string; stderr: string }> {
   const p = spawn([cmd, ...args], { cwd, stdout: "pipe", stderr: "pipe" });
@@ -44,8 +44,24 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
   const { workspace, approvals, guardrails } = cfg;
   const workDir = await prepareWorkspace(repoRoot, workspace.baseDir, task.branch, task.key, workspace.useWorktrees);
 
-  if (!guardrails.dryRun && cfg.linear && cfg.linear.updateComments) {
-    await commentOnIssue(cfg.linear.apiKey || "", task.key, `Starting work with ${task.specialist} in branch ${task.branch}.`);
+  if (!guardrails.dryRun) {
+    // Set issue state to In Progress (started)
+    try {
+      let teamId = cfg.linear.teamId;
+      if (!teamId && cfg.linear.projectId) {
+        const team = await getProjectTeam(cfg.linear.apiKey || "", cfg.linear.projectId);
+        teamId = team?.id;
+      }
+      if (teamId) {
+        const startedId = await getTeamStartedStateId(cfg.linear.apiKey || "", teamId);
+        if (startedId) await setIssueState(cfg.linear.apiKey || "", task.key, startedId);
+      }
+    } catch (e) {
+      console.warn("Could not set issue to In Progress:", String(e));
+    }
+    if (cfg.linear && cfg.linear.updateComments) {
+      await commentOnIssue(cfg.linear.apiKey || "", task.key, `Starting work with ${task.specialist} in branch ${task.branch}.`);
+    }
   }
 
   const args = [

@@ -13,7 +13,7 @@ Droidz helps you turn ideas or existing Linear projects into working code by run
 - Bun installed (https://bun.sh)
 - Factory Droid CLI installed and on your PATH (`droid --help` should work)
 - Custom Droids enabled in your Factory setup (the wizard generates presets in `.factory/droids`)
-- Optional: GitHub CLI (`gh auth status`) if you want auto PRs
+- Optional: GitHub CLI (`gh auth status`) if you want auto PRs (default behavior is to open a PR for review)
 
 Tip: You don’t need to be technical. The wizard asks simple questions and does the rest.
 
@@ -50,8 +50,10 @@ The wizard will:
 - You’ll see a plan first, then you can start execution.
 
 What happens during execution:
+- Each ticket is marked In Progress in Linear, and a branch is created automatically
 - Each task gets its own workspace (either git worktree or a lightweight local clone)
-- Specialist droids implement, test, and (optionally) open PRs
+- Specialist droids implement and test the change
+- A Pull Request is opened for review by default
 - Linear tickets get short status comments and a final summary
 
 Run it later again:

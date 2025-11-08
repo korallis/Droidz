@@ -39,6 +39,10 @@ async function main() {
   console.log("Validating environment...");
   const checks = await validateEnvironment(cfg.linear.apiKey);
   for (const c of checks) console.log(`- ${c.name}: ${c.ok ? "OK" : "MISSING"}${c.info?` (${c.info})`:""}`);
+  // Ensure baseline custom droids exist
+  try {
+    await Bun.spawn(["bun", path.join("orchestrator", "generate-droids.ts")]).exited;
+  } catch {}
 
   const useNew = (await ask("Create a NEW Linear project from an idea? (y/N): ")).toLowerCase().startsWith("y");
   if (useNew) {
