@@ -1,109 +1,134 @@
-# Droidz Orchestrator (Agentic Framework for Linear)
+# Droidz — Parallel Agentic Framework for Linear (Bun‑only)
 
-Bun‑only orchestration to plan, create, and implement Linear projects with parallel specialized droids via `droid exec`.
+Droidz helps you turn ideas or existing Linear projects into working code by running multiple specialized AI droids in parallel. It guides you with a simple wizard, plans the work, creates (or connects to) a Linear project, and then gets to work.
 
-## Features
-- Single command launcher to initialize config, validate environment, and guide you through either:
-  - Existing Linear projects: verify, ask clarifying questions, plan, and execute.
-  - New projects from an idea: auto‑plan epics/tasks, create a Linear Project with best‑practice labels and tickets, then execute.
-- Parallel execution with per‑ticket isolated workspaces: git worktrees (default) or lightweight local clones.
-- Token‑efficient ticket content (short descriptions + crisp acceptance criteria).
-- Linear comments for status and summaries (configurable).
-- Bun‑only: no npm/npx.
+- No npm/npx. Uses Bun + Factory Droid CLI.
+- Works for new projects (from an idea) and existing projects.
+- Runs safe, token‑efficient plans and always asks before executing.
 
-## Prerequisites
-- macOS/Linux with:
-  - Bun (>= 1.0)
-  - git and GitHub CLI (`gh auth status` should be logged in) if you want auto PRs
-  - Factory Droid CLI (`droid` in PATH)
-- Linear API key
+---
 
-## Installation (public repo)
-Recommended one‑liner (no npm/npx):
+## What you need (simple checklist)
+- A Linear account and API key (you can create one in Linear → Settings → API keys).
+- Bun installed (https://bun.sh)
+- Factory Droid CLI installed and on your PATH (`droid --help` should work)
+- Optional: GitHub CLI (`gh auth status`) if you want auto PRs
+
+Tip: You don’t need to be technical. The wizard asks simple questions and does the rest.
+
+---
+
+## 1‑minute install (into your project)
+Run this from the root of the project you want to work on:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/leebarry/Droidz/main/scripts/install.sh | bash
 ```
 
-- This downloads the orchestrator folder into your current repo and makes the entry points executable.
-- To install from a different branch or fork:
+This copies the `orchestrator/` folder into your project and makes the tools ready to run.
 
+---
+
+## Start the wizard
 ```sh
-DROIDZ_REPO="your-org/your-repo" DROIDZ_BRANCH="dev" \
-  curl -fsSL https://raw.githubusercontent.com/your-org/your-repo/dev/scripts/install.sh | bash
+bun orchestrator/launch.ts
+```
+The wizard will:
+1) Check your environment (Bun, Droid CLI, git, Linear access)
+2) Ask if you want a NEW project (from an idea) or use an EXISTING Linear project
+3) Offer a dry‑run plan so you can review everything
+4) Ask “Start execution now?” and then run tasks in parallel
+
+---
+
+## Path A: NEW project from an idea (no setup needed)
+- You’ll be asked: “What’s your project or feature idea?”
+- Droidz will plan epics and tasks (short, clear, token‑efficient), create a Linear Project for you, and add issues with best‑practice labels.
+- You’ll see a plan first, then you can start execution.
+
+What happens during execution:
+- Each task gets its own workspace (either git worktree or a lightweight local clone)
+- Specialist droids implement, test, and (optionally) open PRs
+- Linear tickets get short status comments and a final summary
+
+Run it later again:
+```sh
+bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurrency 10
 ```
 
-## Quick start
-After installation, in your repo root run:
+---
 
+## Path B: EXISTING Linear project
+- Select “Existing project” in the wizard
+- Enter your Linear project name (and a sprint/cycle name if you want)
+- Droidz verifies the project and prepares standard labels if needed
+- You’ll see a dry‑run plan; confirm to start execution
+
+Run it later again:
+```sh
+bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurrency 10
+```
+
+---
+
+## Simple settings you may be asked about
+- Linear API key: stored locally so Droidz can create/read issues and comment
+- Concurrency: how many tasks to run in parallel (default: 10)
+- PR approvals: auto (open PRs automatically), require_manual (default), or disallow_push (local only)
+- Workspaces: use git worktrees (default) or simple local clones; both are safe, worktrees are faster and lighter
+- Comments: whether to post progress comments back to Linear
+
+Everything is saved in `orchestrator/config.json` so you don’t have to re‑enter it.
+
+Note: Do not share your Linear API key. If your project uses git, avoid committing `orchestrator/config.json` (it contains your key).
+
+---
+
+## Common commands
+- Launch the wizard (recommended):
 ```sh
 bun orchestrator/launch.ts
 ```
 
-The launcher will:
-   - Run an interactive setup to write `orchestrator/config.json` (includes your Linear API key).
-   - Validate environment (bun, droid, git repo, gh auth, Linear connectivity).
-   - Ask whether to create a NEW Linear project from your idea or use an existing one.
-   - For new projects: it will plan a compact JSON (epics → tasks) and create the project/issues.
-   - For existing projects: it verifies project (and optional sprint) and updates config.
-   - Offer a dry‑run plan, then ask “Start execution now?”.
+- Only run the setup questions:
+```sh
+bun orchestrator/setup.ts
+```
 
-## Commands
-- Setup only (interactive):
-  ```sh
-  bun orchestrator/setup.ts
-  ```
+- Create a new Linear project from an idea (skips the full wizard):
+```sh
+bun orchestrator/new-project.ts
+```
 
-- Create a new Linear project from an idea (and update config):
-  ```sh
-  bun orchestrator/new-project.ts
-  ```
+- Show plan only (no changes):
+```sh
+bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10 --plan
+```
 
-- Run orchestrator (plan only):
-  ```sh
-  bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10 --plan
-  ```
+- Execute tasks now:
+```sh
+bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10
+```
 
-- Run orchestrator (execute):
-  ```sh
-  bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10
-  ```
+---
 
-- One‑command flow (recommended):
-  ```sh
-  bun orchestrator/launch.ts
-  ```
+## What you’ll see while it runs
+- A live summary in your terminal (queued/running/completed)
+- Short status updates added to the Linear ticket being worked on
+- Optional: branches and PRs created automatically if you turn on auto approvals
 
-## Configuration
-`orchestrator/config.json` (created/updated by setup/launch):
-- `linear.apiKey`: your Linear API key
-- `linear.project` / `linear.projectId`: selected or created project
-- `linear.sprint`: optional cycle name filter (falls back to project‑only)
-- `concurrency`: number of parallel tasks (default 10)
-- `approvals.prs`: `auto` | `require_manual` | `disallow_push`
-- `workspace.baseDir`: workspace base directory (default `.runs`)
-- `workspace.branchPattern`: e.g., `{type}/{issueKey}-{slug}`
-- `workspace.useWorktrees`: true to use git worktrees; false to use lightweight clones (still supports parallel runs)
-- `guardrails`: `dryRun`, `secretScan`, `testsRequired`, `maxJobMinutes`
-- `routing.rules`: map labels to specialists; `fallback` for others
+You can stop at any time; re‑running will pick up again with the same settings.
 
-## Implementation notes
-- Each ticket runs in its own git worktree and branch to avoid conflicts.
-- If no issues are found for the selected sprint, the orchestrator falls back to project‑only issue queries.
-- Linear comments are posted at start and completion (unless dry‑run).
-- Auto PR creation happens only when `approvals.prs` is set to `auto`.
+---
 
-## Safety
-- Dry‑run/plan mode available in `launch.ts` and `run.ts`.
-- Optional secret scan hook spot in workers (you can integrate your scanner).
-- Tests are expected to pass before completion (configurable).
+## Troubleshooting (plain English)
+- “It can’t find my project”: Re‑run the wizard and check the exact Linear project name
+- “I don’t have a sprint”: Leave sprint blank; Droidz will work off the entire project
+- “PRs aren’t created”: Turn PR approvals to `auto` in the wizard (or config) and ensure `gh auth status` is logged in
+- “Tests or build fail”: The droids will report failures; you can fix manually or re‑run
+- “My API key is wrong”: Re‑run the wizard and paste the correct key
 
-## Troubleshooting
-- Not a git repo: initialize with `git init` and add a remote `origin` if you plan to open PRs.
-- Linear API key: set via `setup.ts`/`launch.ts` which write `orchestrator/config.json`.
-- Cycles/Sprints: If your team manages cycles automatically, you can omit `--sprint`; the orchestrator will fetch by project only.
+---
 
-## Extending
-- Add new specialist droids by adjusting `routing.rules` and prompts in `workerPrompt.ts`.
-- Integrate Slack or other reporters in `workers.ts` and `run.ts`.
-- Implement secret scanning and policy checks in `workers.ts` before commits.
+## How it works (one‑paragraph, optional)
+Droidz fetches your Linear issues, routes each to a specialist (feature, test, infra, refactor, integration), prepares an isolated workspace, and drives the Factory `droid exec` tool to make focused changes, run tests, and (optionally) open PRs — in parallel.
