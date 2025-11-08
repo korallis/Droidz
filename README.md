@@ -12,6 +12,7 @@ Droidz helps you turn ideas or existing Linear projects into working code by run
 - A Linear account and API key (you can create one in Linear → Settings → API keys).
 - Bun installed (https://bun.sh)
 - Factory Droid CLI installed and on your PATH (`droid --help` should work)
+- Custom Droids enabled in your Factory setup (the wizard generates presets in `.factory/droids`)
 - Optional: GitHub CLI (`gh auth status`) if you want auto PRs
 
 Tip: You don’t need to be technical. The wizard asks simple questions and does the rest.
@@ -22,14 +23,16 @@ Tip: You don’t need to be technical. The wizard asks simple questions and does
 Run this from the root of the project you want to work on:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/leebarry/Droidz/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
 ```
 
 This copies the `orchestrator/` folder into your project and makes the tools ready to run.
 
+Note: If your Factory CLI supports Custom Droids, the wizard will also generate specialist droids in `.factory/droids/` (codegen, test, infra, refactor, integration, generalist). If not enabled, Droidz will still work using built‑in prompts.
+
 ---
 
-## Start the wizard
+## Start the wizard (it also sets up Custom Droids)
 ```sh
 bun orchestrator/launch.ts
 ```
@@ -77,6 +80,7 @@ bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurren
 - PR approvals: auto (open PRs automatically), require_manual (default), or disallow_push (local only)
 - Workspaces: use git worktrees (default) or simple local clones; both are safe, worktrees are faster and lighter
 - Comments: whether to post progress comments back to Linear
+- Custom Droids: wizard creates specialist droids under `.factory/droids/` based on your repo or idea; make sure your Factory CLI has custom droids enabled so they’re picked up
 
 Everything is saved in `orchestrator/config.json` so you don’t have to re‑enter it.
 

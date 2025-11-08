@@ -8,7 +8,7 @@ set -euo pipefail
 #   DROIDZ_BRANCH="main"
 #   DROIDZ_TARGET="."            # install into this directory (repo root)
 
-REPO_DEFAULT="leebarry/Droidz"
+REPO_DEFAULT="korallis/Droidz"
 REPO="${DROIDZ_REPO:-$REPO_DEFAULT}"
 BRANCH="${DROIDZ_BRANCH:-main}"
 TARGET="${DROIDZ_TARGET:-.}"
