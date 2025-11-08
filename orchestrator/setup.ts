@@ -59,7 +59,7 @@ async function main() {
 
   const baseDir = d(await question(`Workspace base dir${existing?.workspace?.baseDir?` [${existing.workspace.baseDir}]`:" [.runs]"}: `), existing?.workspace?.baseDir || ".runs");
   const branchPattern = d(await question(`Branch pattern${existing?.workspace?.branchPattern?` [${existing.workspace.branchPattern}]`:" [{type}/{issueKey}-{slug}]"}: `), existing?.workspace?.branchPattern || "{type}/{issueKey}-{slug}");
-  const useWorktreesStr = d(await question(`Use git worktrees for parallel tasks? (y/n)${existing?.workspace?.useWorktrees!==undefined?` [${existing.workspace.useWorktrees?"y":"n"}]`:" [y]"}: `), existing?.workspace?.useWorktrees===undefined?"y":(existing.workspace.useWorktrees?"y":"n"));
+  const useWorktreesStr = d(await question(`Workspace mode: use git worktrees (faster/lighter) or standard default (per-ticket local clone)? Use worktrees? (y/n)${existing?.workspace?.useWorktrees!==undefined?` [${existing.workspace.useWorktrees?"y":"n"}]`:" [y]"}: `), existing?.workspace?.useWorktrees===undefined?"y":(existing.workspace.useWorktrees?"y":"n"));
   const useWorktrees = String(useWorktreesStr).toLowerCase().startsWith("y");
 
   const dryRunStr = d(await question(`Default dry-run mode? (y/n)${existing?.guardrails?.dryRun!==undefined?` [${existing.guardrails.dryRun?"y":"n"}]`:" [n]"}: `), existing?.guardrails?.dryRun?"y":"n");

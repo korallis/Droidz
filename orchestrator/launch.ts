@@ -82,7 +82,7 @@ async function main() {
   if (appr) cfg!.approvals.prs = appr as any;
   const upd = await ask(`Update Linear comments? (y/n) [${cfg!.linear.updateComments?"y":"n"}]: `);
   if (upd) cfg!.linear.updateComments = upd.toLowerCase().startsWith("y");
-  const wt = await ask(`Use git worktrees for parallel tasks? (y/n) [${cfg!.workspace.useWorktrees!==false?"y":"n"}]: `);
+  const wt = await ask(`Workspace mode: use git worktrees (faster/lighter) or standard default (per-ticket local clone)? Use worktrees? (y/n) [${cfg!.workspace.useWorktrees!==false?"y":"n"}]: `);
   if (wt) cfg!.workspace.useWorktrees = wt.toLowerCase().startsWith("y");
   await saveConfig(root, cfg!);
 
