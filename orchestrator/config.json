@@ -11,7 +11,8 @@
   },
   "workspace": {
     "baseDir": ".runs",
-    "branchPattern": "{type}/{issueKey}-{slug}"
+    "branchPattern": "{type}/{issueKey}-{slug}",
+    "useWorktrees": true
   },
   "guardrails": {
     "dryRun": false,

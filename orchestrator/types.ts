@@ -4,7 +4,7 @@ export interface OrchestratorConfig {
   linear: { project: string; sprint: string; updateComments: boolean; apiKey?: string; teamId?: string; projectId?: string };
   concurrency: number;
   approvals: { prs: ApprovalsMode };
-  workspace: { baseDir: string; branchPattern: string };
+  workspace: { baseDir: string; branchPattern: string; useWorktrees?: boolean };
   guardrails: { dryRun: boolean; secretScan: boolean; testsRequired: boolean; maxJobMinutes: number };
   routing: { rules: Array<{ labels: string[]; droid: SpecialistKind }>; fallback: SpecialistKind };
   specialists?: Array<{ name: SpecialistKind; enabled: boolean }>;

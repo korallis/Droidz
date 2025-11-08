@@ -12,7 +12,7 @@ async function run(cmd: string, args: string[], cwd: string): Promise<{ code: nu
   return { code, stdout: out, stderr: err };
 }
 
-export async function prepareWorktree(repoRoot: string, baseDir: string, branch: string, key: string): Promise<string> {
+async function prepareWorkspace(repoRoot: string, baseDir: string, branch: string, key: string, useWorktrees: boolean | undefined): Promise<string> {
   const workDir = path.resolve(repoRoot, baseDir, key);
   await run("mkdir", ["-p", workDir], repoRoot);
 
@@ -20,18 +20,29 @@ export async function prepareWorktree(repoRoot: string, baseDir: string, branch:
   const isGit = await run("git", ["rev-parse", "--is-inside-work-tree"], repoRoot);
   if (isGit.code !== 0) throw new Error("Not a git repository. Initialize git and add a remote 'origin' to use parallel branches/PRs.");
 
-  // create or reset branch and worktree
   await run("git", ["fetch", "--all"], repoRoot);
-  await run("git", ["worktree", "remove", "-f", workDir], repoRoot).catch(() => {});
-  const res = await run("git", ["worktree", "add", "-B", branch, workDir, "HEAD"], repoRoot);
-  if (res.code !== 0) throw new Error(`worktree failed: ${res.stderr}`);
+
+  if (useWorktrees !== false) {
+    // Worktree mode
+    await run("git", ["worktree", "remove", "-f", workDir], repoRoot).catch(() => {});
+    const res = await run("git", ["worktree", "add", "-B", branch, workDir, "HEAD"], repoRoot);
+    if (res.code !== 0) throw new Error(`worktree failed: ${res.stderr}`);
+  } else {
+    // Lightweight clone mode
+    await run("rm", ["-rf", workDir], repoRoot).catch(() => {});
+    const clone = await run("git", ["clone", "--no-hardlinks", "--local", ".", workDir], repoRoot);
+    if (clone.code !== 0) throw new Error(`clone failed: ${clone.stderr}`);
+    const checkout = await run("git", ["checkout", "-B", branch], workDir);
+    if (checkout.code !== 0) throw new Error(`checkout failed: ${checkout.stderr}`);
+  }
+
   return workDir;
 }
 
 export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, repoRoot: string) {
   const prompt = buildPrompt(task.specialist, task);
   const { workspace, approvals, guardrails } = cfg;
-  const workDir = await prepareWorktree(repoRoot, workspace.baseDir, task.branch, task.key);
+  const workDir = await prepareWorkspace(repoRoot, workspace.baseDir, task.branch, task.key, workspace.useWorktrees);
 
   if (!guardrails.dryRun && cfg.linear && cfg.linear.updateComments) {
     await commentOnIssue(cfg.linear.apiKey || "", task.key, `Starting work with ${task.specialist} in branch ${task.branch}.`);

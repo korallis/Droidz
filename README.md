@@ -6,7 +6,7 @@ Bun‑only orchestration to plan, create, and implement Linear projects with par
 - Single command launcher to initialize config, validate environment, and guide you through either:
   - Existing Linear projects: verify, ask clarifying questions, plan, and execute.
   - New projects from an idea: auto‑plan epics/tasks, create a Linear Project with best‑practice labels and tickets, then execute.
-- Parallel execution with per‑ticket git worktrees and branches.
+- Parallel execution with per‑ticket isolated workspaces: git worktrees (default) or lightweight local clones.
 - Token‑efficient ticket content (short descriptions + crisp acceptance criteria).
 - Linear comments for status and summaries (configurable).
 - Bun‑only: no npm/npx.
@@ -81,8 +81,9 @@ The launcher will:
 - `linear.sprint`: optional cycle name filter (falls back to project‑only)
 - `concurrency`: number of parallel tasks (default 10)
 - `approvals.prs`: `auto` | `require_manual` | `disallow_push`
-- `workspace.baseDir`: worktrees base directory (default `.runs`)
+- `workspace.baseDir`: workspace base directory (default `.runs`)
 - `workspace.branchPattern`: e.g., `{type}/{issueKey}-{slug}`
+- `workspace.useWorktrees`: true to use git worktrees; false to use lightweight clones (still supports parallel runs)
 - `guardrails`: `dryRun`, `secretScan`, `testsRequired`, `maxJobMinutes`
 - `routing.rules`: map labels to specialists; `fallback` for others
 
