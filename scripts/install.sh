@@ -30,6 +30,7 @@ fi
 # Ensure target structure
 mkdir -p "$TARGET/orchestrator"
 mkdir -p "$TARGET/.factory/droids"
+mkdir -p "$TARGET/.claude/agents"
 
 # Copy orchestrator files
 cp -R "$ROOT_DIR/orchestrator/"* "$TARGET/orchestrator/" 2>/dev/null || true
@@ -37,6 +38,11 @@ cp -R "$ROOT_DIR/orchestrator/"* "$TARGET/orchestrator/" 2>/dev/null || true
 # Copy custom droids preset (do not overwrite existing)
 if [ -f "$ROOT_DIR/.factory/droids/orchestrator.droid.json" ] && [ ! -f "$TARGET/.factory/droids/orchestrator.droid.json" ]; then
   cp "$ROOT_DIR/.factory/droids/orchestrator.droid.json" "$TARGET/.factory/droids/orchestrator.droid.json"
+fi
+
+# Copy Claude agents (for /droids → Import from Claude)
+if [ -d "$ROOT_DIR/.claude/agents" ]; then
+  cp -R "$ROOT_DIR/.claude/agents/." "$TARGET/.claude/agents/" 2>/dev/null || true
 fi
 
 # Copy README if missing (do not overwrite user's README)
