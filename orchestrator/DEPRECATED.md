@@ -4,7 +4,7 @@ This `orchestrator/` directory is deprecated and will be removed in a future ver
 
 ## What Happened?
 
-Droidz has been completely rebuilt using **agent-os principles** with a much simpler architecture:
+Droidz has been completely rebuilt with a much simpler, more powerful architecture:
 
 ### Old Approach (DEPRECATED)
 - Complex TypeScript orchestrator
@@ -17,7 +17,7 @@ Droidz has been completely rebuilt using **agent-os principles** with a much sim
 - Framework agnostic
 - Droid CLI native with Task tool for parallelism
 - Research-driven with Exa + Ref integration
-- Based on proven agent-os patterns
+- Spec-driven development methodology
 
 ## Migration
 

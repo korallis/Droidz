@@ -2,7 +2,7 @@
 
 **Spec-driven development with parallel execution for Droid CLI**
 
-Droidz transforms your development workflow by implementing agent-os principles inside Droid CLI. Plan with research (Exa + Ref), write detailed specs, then execute tasks in parallel with specialized droids.
+Droidz transforms your development workflow with structured, research-driven AI development inside Droid CLI. Plan with research (Exa + Ref), write detailed specs, then execute tasks in parallel with specialized droids.
 
 ```
 Planning → Specification → Parallel Implementation → Verification
@@ -470,7 +470,7 @@ use_ref_docs: true       # Documentation with Ref
 
 ## Philosophy
 
-Droidz implements **agent-os principles** for Droid CLI:
+Droidz implements structured development principles for Droid CLI:
 
 1. **Spec-Driven** - Always plan before implementing
 2. **Research-Backed** - Use Exa and Ref for evidence-based decisions
@@ -478,7 +478,7 @@ Droidz implements **agent-os principles** for Droid CLI:
 4. **Standards-Enforced** - Follow project conventions automatically
 5. **Verifiable** - Every feature gets tested and validated
 
-Based on [agent-os by buildermethods](https://github.com/buildermethods/agent-os) - adapted for Droid CLI with parallel execution and integrated research tools.
+The framework emphasizes planning, research, and parallel execution to deliver predictable, high-quality features.
 
 ---
 
@@ -498,12 +498,38 @@ MIT
 
 ---
 
+## Support the Project
+
+Droidz is free and open-source. If you find it valuable, consider supporting its development:
+
+**💝 Donate via PayPal:**
+[paypal.me/leebarry84](https://paypal.me/leebarry84) or leebarry84@icloud.com
+
+Your support helps maintain and improve Droidz!
+
+---
+
 ## Resources
 
 - **Droid CLI**: https://factory.ai/product/cli
-- **Agent OS**: https://github.com/buildermethods/agent-os
 - **Exa**: Web search and code context
 - **Ref**: Documentation search
+
+---
+
+## Contributing
+
+PRs welcome! Key areas:
+- New workflows
+- Better parallelization strategies
+- More standards templates
+- Framework-specific patterns
+
+---
+
+## License
+
+MIT
 
 ---
 
