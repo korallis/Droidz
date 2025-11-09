@@ -1,0 +1,27 @@
+version: 1.0.0
+
+# Droidz Configuration
+# Spec-driven development with parallel execution for Droid CLI
+
+# Profile to use (default includes planning, spec, implementation workflows)
+profile: default
+
+# Enable Droid CLI custom droids installation
+install_droids: true
+
+# Use Exa for research during planning and specification
+use_exa_research: true
+
+# Use Ref for documentation lookup
+use_ref_docs: true
+
+# Parallel execution settings
+parallel:
+  enabled: true
+  max_concurrent_tasks: 5
+  workspace_mode: worktree  # worktree | clone | branch
+
+# Standards enforcement
+standards:
+  enforce_before_implementation: true
+  auto_inject_into_prompts: true

@@ -1,68 +1,85 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
-# Usage:
-#   curl -fsSL https://raw.githubusercontent.com/<ORG>/<REPO>/main/scripts/install.sh | bash
-# Optional env vars:
-#   DROIDZ_REPO="<ORG>/<REPO>"   # defaults to buildermethods/droidz-orchestrator (set for your public repo)
-#   DROIDZ_BRANCH="main"
-#   DROIDZ_TARGET="."            # install into this directory (repo root)
+echo "🤖 Installing Droidz - Spec-Driven Development for Droid CLI..."
 
-REPO_DEFAULT="korallis/Droidz"
-REPO="${DROIDZ_REPO:-$REPO_DEFAULT}"
-BRANCH="${DROIDZ_BRANCH:-main}"
-TARGET="${DROIDZ_TARGET:-.}"
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
-TAR_URL="https://codeload.github.com/${REPO}/tar.gz/refs/heads/${BRANCH}"
-TMP_DIR="$(mktemp -d)"
+# Target directory (where we're installing)
+TARGET_DIR="${1:-.}"
 
-echo "Downloading ${REPO}@${BRANCH} ..."
-curl -fsSL "$TAR_URL" -o "$TMP_DIR/repo.tar.gz"
+echo "📦 Source: $PROJECT_ROOT"
+echo "📂 Target: $TARGET_DIR"
 
-echo "Extracting..."
-tar -xzf "$TMP_DIR/repo.tar.gz" -C "$TMP_DIR"
-ROOT_DIR="$(find "$TMP_DIR" -maxdepth 1 -type d -name '*-*' | head -n 1)"
-if [ -z "$ROOT_DIR" ]; then
-  echo "Could not locate extracted root folder" >&2
+# Create target directories
+mkdir -p "$TARGET_DIR/.claude/agents"
+mkdir -p "$TARGET_DIR/workflows"
+mkdir -p "$TARGET_DIR/standards"
+mkdir -p "$TARGET_DIR/droidz"
+
+# Copy workflows
+echo "📋 Copying workflows..."
+if [ -d "$PROJECT_ROOT/workflows" ]; then
+  cp -r "$PROJECT_ROOT/workflows/"* "$TARGET_DIR/workflows/"
+  echo "✅ Workflows copied (planning, specification, implementation)"
+else
+  echo "❌ workflows/ not found"
   exit 1
 fi
 
-# Ensure target structure
-mkdir -p "$TARGET/orchestrator"
-mkdir -p "$TARGET/.factory/droids"
-mkdir -p "$TARGET/.claude/agents"
-
-# Copy orchestrator files
-cp -R "$ROOT_DIR/orchestrator/"* "$TARGET/orchestrator/" 2>/dev/null || true
-
-# Copy custom droids preset (do not overwrite existing)
-if [ -f "$ROOT_DIR/.factory/droids/orchestrator.droid.json" ] && [ ! -f "$TARGET/.factory/droids/orchestrator.droid.json" ]; then
-  cp "$ROOT_DIR/.factory/droids/orchestrator.droid.json" "$TARGET/.factory/droids/orchestrator.droid.json"
+# Copy standards
+echo "📐 Copying standards templates..."
+if [ -d "$PROJECT_ROOT/standards" ]; then
+  cp -r "$PROJECT_ROOT/standards/"* "$TARGET_DIR/standards/"
+  echo "✅ Standards templates copied (customize these for your project)"
+else
+  echo "❌ standards/ not found"
+  exit 1
 fi
 
-# Copy Claude agents (for /droids → Import from Claude)
-if [ -d "$ROOT_DIR/.claude/agents" ]; then
-  cp -R "$ROOT_DIR/.claude/agents/." "$TARGET/.claude/agents/" 2>/dev/null || true
+# Copy custom droids
+echo "🤖 Copying custom droids..."
+if [ -d "$PROJECT_ROOT/.claude/agents" ]; then
+  cp -r "$PROJECT_ROOT/.claude/agents/"* "$TARGET_DIR/.claude/agents/"
+  echo "✅ Custom droids copied:"
+  echo "   - droidz-planner (product planning with Exa)"
+  echo "   - droidz-spec-writer (specifications with Ref)"
+  echo "   - droidz-implementer (parallel worker)"
+  echo "   - droidz-verifier (verification)"
+  echo "   - droidz-orchestrator (workflow coordinator)"
+else
+  echo "❌ .claude/agents/ not found"
+  exit 1
 fi
 
-# Copy README if missing (do not overwrite user's README)
-if [ ! -f "$TARGET/README.md" ] && [ -f "$ROOT_DIR/README.md" ]; then
-  cp "$ROOT_DIR/README.md" "$TARGET/README.md"
+# Copy config
+echo "⚙️  Copying configuration..."
+if [ -f "$PROJECT_ROOT/config.yml" ]; then
+  cp "$PROJECT_ROOT/config.yml" "$TARGET_DIR/config.yml"
+  echo "✅ Configuration copied"
+else
+  echo "⚠️  config.yml not found (optional)"
 fi
 
-# Make TS launch scripts runnable if user wants Bun wizard later
-chmod +x "$TARGET/orchestrator/launch.ts" || true
-chmod +x "$TARGET/orchestrator/setup.ts" || true
-chmod +x "$TARGET/orchestrator/new-project.ts" || true
-chmod +x "$TARGET/orchestrator/run.ts" || true
-
-cat <<'EON'
-Install complete.
-Next steps:
-  1) Start Droid CLI:  droid
-  2) Pick the custom droid: droidz-orchestrator
-  3) Follow the prompts:
-     - Choose NEW (describe your idea) or EXISTING project
-     - Review/edit the JSON plan
-     - Confirm to let Droid run everything (branches, PRs, Linear updates)
-EON
+echo ""
+echo "✅ Droidz installation complete!"
+echo ""
+echo "📚 What You Got:"
+echo "   • workflows/ - Planning, specification, and parallel implementation workflows"
+echo "   • standards/ - Coding, architecture, and security standards (customize these!)"
+echo "   • .claude/agents/ - 5 specialized droids for the workflow"
+echo "   • config.yml - Parallel execution and research settings"
+echo ""
+echo "🚀 Quick Start:"
+echo "1. Open Droid CLI: droid"
+echo "2. Start with: @droidz-orchestrator"
+echo "3. Choose NEW product or EXISTING roadmap"
+echo "4. Let Droidz plan, spec, and implement with parallel execution"
+echo ""
+echo "📖 Documentation:"
+echo "   • README.md - Complete guide"
+echo "   • workflows/ - See how each phase works"
+echo "   • standards/ - Customize for your project"
+echo ""

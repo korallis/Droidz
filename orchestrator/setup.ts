@@ -46,7 +46,15 @@ async function main() {
   const profile = await detectRepoProfile(repoRoot);
   console.log("Detected repo profile:", profile);
 
-  const apiKey = d(await question(`Linear API key${existing?.linear?.apiKey?" (leave blank to keep)":""}: `, true), existing?.linear?.apiKey || "");
+  // Ask for Linear API key (required for new/existing project flows)
+  const placeholder = "__PUT_YOUR_LINEAR_API_KEY_HERE__";
+  let apiKeyInput = await question(`Linear API key${existing?.linear?.apiKey?" (leave blank to keep)":""}: `, true);
+  // Keep existing only if it's valid and user leaves blank
+  let apiKey = apiKeyInput || (existing?.linear?.apiKey || "");
+  while (!apiKey || apiKey === placeholder) {
+    console.log("A Linear API key is required. Find it in Linear → Settings → API Keys.");
+    apiKey = await question("Paste Linear API key: ", true);
+  }
   const project = d(await question(`Linear Project name${existing?.linear?.project?` [${existing.linear.project}]`:""}: `), existing?.linear?.project || "Project X");
   const sprint = d(await question(`Sprint/Cycle name${existing?.linear?.sprint?` [${existing.linear.sprint}]`:""}: `), existing?.linear?.sprint || "Sprint 1");
   const updateCommentsStr = d(await question(`Update Linear with comments? (y/n)${existing?.linear?.updateComments!==undefined?` [${existing.linear.updateComments?"y":"n"}]`:" [y]"}: `), existing?.linear?.updateComments===undefined?"y":(existing.linear.updateComments?"y":"n"));
