@@ -350,13 +350,57 @@ Total: 3 days 🎉
 
 ---
 
-## Customization (Make It Yours)
+## Standards (The Rules Droidz Follows)
 
-You can change the rules Droidz follows:
+**Important: You don't need to create these yourself!**
 
-### Edit Standards Files
+### For NEW Projects (Droidz creates them for you)
 
-Open these files and change them:
+When you start a new project, Droidz automatically creates standards during planning:
+
+```
+You: @droidz-orchestrator Build a recipe app with Next.js
+
+Droidz Planner:
+  📚 Researching recipe apps...
+  ✅ Created mission
+  ✅ Created roadmap
+  ✅ Creating standards for Next.js projects...
+     → Coding conventions (Next.js best practices)
+     → Architecture (app router patterns)
+     → Security (env variables, API keys)
+  ✅ Standards created and ready!
+```
+
+**Droidz automatically creates:**
+- `standards/coding-conventions.md` (based on your tech stack)
+- `standards/architecture.md` (based on framework patterns)
+- `standards/security.md` (based on your needs)
+
+### For EXISTING Projects (Ask Droidz to analyze)
+
+If you already have code, ask the orchestrator to create standards from your existing code:
+
+```
+You: @droidz-orchestrator Analyze my project and create standards
+
+Droidz:
+  🔍 Reading your code...
+  ✅ Found: React with TypeScript
+  ✅ Detected patterns: Hooks, Context API
+  ✅ Creating standards based on your code...
+  ✅ Standards created!
+```
+
+**Droidz will:**
+- Look at your existing code
+- Find what patterns you use
+- Create standards that match YOUR style
+- Save them to `standards/` folder
+
+### Customizing Standards (Optional)
+
+You can edit the standards files if you want:
 
 1. **standards/coding-conventions.md**
    - How you want code to look
@@ -371,7 +415,7 @@ Open these files and change them:
    - Security rules
    - What's not allowed
 
-**Droidz will automatically follow your rules!**
+**All AI helpers automatically follow these rules!**
 
 ---
 
