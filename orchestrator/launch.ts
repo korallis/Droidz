@@ -149,8 +149,10 @@ async function main() {
   if (appr) cfg!.approvals.prs = appr as any;
   const upd = await ask(`Update Linear comments? (y/n) [${cfg!.linear.updateComments?"y":"n"}]: `);
   if (upd) cfg!.linear.updateComments = upd.toLowerCase().startsWith("y");
-  const wt = await ask(`Workspace mode: use git worktrees (faster/lighter) or standard default (per-ticket local clone)? Use worktrees? (y/n) [${cfg!.workspace.useWorktrees!==false?"y":"n"}]: `);
-  if (wt) cfg!.workspace.useWorktrees = wt.toLowerCase().startsWith("y");
+  if (!cfg!.workspace.mode) {
+    const mode = await ask(`Workspace mode (worktree|clone|branch) [worktree]: `);
+    if (mode) cfg!.workspace.mode = mode as any;
+  }
   const am = await ask(`Enable auto-merge after PR when checks pass? (y/n) [${cfg!.merge?.autoMerge?"y":"n"}]: `);
   if (am) cfg!.merge = { ...(cfg!.merge||{}), autoMerge: am.toLowerCase().startsWith("y") } as any;
   await saveConfig(root, cfg!);
