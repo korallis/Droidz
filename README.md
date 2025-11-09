@@ -113,6 +113,27 @@ Type this (but replace the example with YOUR idea):
 @droidz-orchestrator I want to build a recipe app where people can save and share recipes
 ```
 
+### Step 2.5: Standards (Don't Worry - Automatic!)
+
+**Important: You don't need to create these yourself!**
+
+#### For NEW Projects:
+When you start, Droidz automatically creates project standards during planning:
+- Coding conventions (based on your tech stack)
+- Architecture patterns (based on your framework)
+- Security rules (based on best practices)
+
+**You'll see:** "✅ Creating standards for Next.js projects..."
+
+#### For EXISTING Projects:
+If you already have code, just ask:
+
+```
+@droidz-orchestrator Analyze my project and create standards
+```
+
+Droidz will read your code and create standards that match YOUR style!
+
 ### Step 3: Watch the Magic Happen
 
 **What happens next:**
@@ -349,73 +370,6 @@ Total: 3 days 🎉
 **Time saved: 5 days (62% faster!)**
 
 ---
-
-## Standards (The Rules Droidz Follows)
-
-**Important: You don't need to create these yourself!**
-
-### For NEW Projects (Droidz creates them for you)
-
-When you start a new project, Droidz automatically creates standards during planning:
-
-```
-You: @droidz-orchestrator Build a recipe app with Next.js
-
-Droidz Planner:
-  📚 Researching recipe apps...
-  ✅ Created mission
-  ✅ Created roadmap
-  ✅ Creating standards for Next.js projects...
-     → Coding conventions (Next.js best practices)
-     → Architecture (app router patterns)
-     → Security (env variables, API keys)
-  ✅ Standards created and ready!
-```
-
-**Droidz automatically creates:**
-- `standards/coding-conventions.md` (based on your tech stack)
-- `standards/architecture.md` (based on framework patterns)
-- `standards/security.md` (based on your needs)
-
-### For EXISTING Projects (Ask Droidz to analyze)
-
-If you already have code, ask the orchestrator to create standards from your existing code:
-
-```
-You: @droidz-orchestrator Analyze my project and create standards
-
-Droidz:
-  🔍 Reading your code...
-  ✅ Found: React with TypeScript
-  ✅ Detected patterns: Hooks, Context API
-  ✅ Creating standards based on your code...
-  ✅ Standards created!
-```
-
-**Droidz will:**
-- Look at your existing code
-- Find what patterns you use
-- Create standards that match YOUR style
-- Save them to `standards/` folder
-
-### Customizing Standards (Optional)
-
-You can edit the standards files if you want:
-
-1. **standards/coding-conventions.md**
-   - How you want code to look
-   - Naming rules
-   - Comment rules
-
-2. **standards/architecture.md**
-   - How to organize files
-   - What patterns to use
-
-3. **standards/security.md**
-   - Security rules
-   - What's not allowed
-
-**All AI helpers automatically follow these rules!**
 
 ---
 
