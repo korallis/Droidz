@@ -16,8 +16,9 @@ export async function validateEnvironment(apiKey?: string) {
   checks.push({ name: "droid", ok: droid.code === 0, info: droid.stdout.trim() });
   const git = await run("git", ["rev-parse", "--is-inside-work-tree"]);
   checks.push({ name: "git repo", ok: git.code === 0, info: git.stdout.trim() });
-  const origin = await run("git", ["remote", "get-url", "origin"]);
-  checks.push({ name: "git origin", ok: origin.code === 0, info: origin.stdout.trim() || origin.stderr.trim() });
+  const remotes = await run("git", ["remote", "-v"]);
+  const remInfo = remotes.stdout.trim().split(/\r?\n/).filter(Boolean)[0] || remotes.stderr.trim();
+  checks.push({ name: "git remotes", ok: remotes.code === 0 && remotes.stdout.trim().length > 0, info: remInfo });
   const gh = await run("gh", ["auth", "status"]);
   checks.push({ name: "gh auth", ok: gh.code === 0 });
   if (apiKey) {

@@ -72,7 +72,6 @@ async function acquireRepoLock(repoRoot: string, baseDir: string) {
 }
 
 export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, repoRoot: string) {
-  const prompt = buildPrompt(task.specialist, task);
   const { workspace, approvals, guardrails } = cfg;
   const prep = await prepareWorkspace(repoRoot, workspace.baseDir, task.branch, task.key, workspace.mode ?? workspace.useWorktrees);
   const workDir = prep.workDir;
@@ -83,7 +82,7 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
   // Load AGENTS.md guidance
   const guide = await loadAgentsGuide(repoRoot);
   const agentsText = truncateGuide(guide.text);
-  const prompt = buildPrompt(task.specialist, task, agentsText);
+  const promptText = buildPrompt(task.specialist, task, agentsText);
 
   const args = [
     "exec",
@@ -93,10 +92,10 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
     workDir,
     "--output-format",
     "text",
-    prompt,
+    promptText,
   ];
   const env = { ...(process.env as any), LINEAR_API_KEY: cfg.linear.apiKey || "" } as any;
-  const res = await run("droid", args, workDir);
+  const res = await run("droid", args, workDir, env);
 
   // Try to find a JSON summary in output
   const summaryMatch = res.stdout.match(/\{\s*\"status\"[\s\S]*?\}\s*$/);

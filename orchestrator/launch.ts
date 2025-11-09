@@ -65,6 +65,12 @@ async function spawn(cmd: string, args: string[], cwd: string) {
   return { code, out, err };
 }
 
+function isApiKeyValid(k?: string) {
+  if (!k) return false;
+  if (k.includes("__PUT_YOUR_LINEAR_API_KEY_HERE__")) return false;
+  return k.length >= 10;
+}
+
 async function main() {
   const root = process.cwd();
   let cfg = await loadConfig(root);
@@ -75,11 +81,11 @@ async function main() {
     if (!cfg) { console.error("Setup failed to generate config."); process.exit(1); }
   }
   // Ensure Linear API key exists before continuing
-  if (!cfg.linear.apiKey) {
+  if (!isApiKeyValid(cfg.linear.apiKey)) {
     console.log("Linear API key is missing. Opening setup to capture it...");
     await spawn("bun", [path.join("orchestrator", "setup.ts")], root);
     cfg = await loadConfig(root);
-    if (!cfg?.linear?.apiKey) { console.error("Linear API key still missing. Aborting."); process.exit(1); }
+    if (!isApiKeyValid(cfg?.linear?.apiKey)) { console.error("Linear API key still missing. Aborting."); process.exit(1); }
   }
 
   await ensureGitRepo(root);
