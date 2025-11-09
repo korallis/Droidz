@@ -23,7 +23,29 @@ async function ensureGitRepo(root: string) {
     ["/orchestrator/config.json", "/orchestrator/plan.json", "/.runs/"].forEach(l => lines.add(l));
     await fs.writeFile(gi, Array.from(lines).join("\n") + "\n");
   } catch {}
-  console.log("Git initialized. You can add a remote later (gh repo create ...) and commit when ready.");
+  console.log("Git initialized.");
+}
+
+async function ensureGitRemote(root: string) {
+  // Get existing remotes
+  const rem = await Bun.spawn(["git", "remote", "-v"], { cwd: root, stdout: "pipe", stderr: "pipe" });
+  const out = await new Response(rem.stdout).text();
+  const names = Array.from(new Set(out.split(/\r?\n/).map(l => l.split(/\s+/)[0]).filter(Boolean)));
+  const hasAny = names.length > 0;
+  const q = hasAny ? "Create another git remote? (y/N): " : "No git remote set. Create one now? (y/N): ";
+  const ans = await ask(q);
+  if (!ans.toLowerCase().startsWith("y")) return;
+  const defaultName = names.includes("origin") ? "origin-2" : "origin";
+  const name = (await ask(`Remote name [${defaultName}]: `)) || defaultName;
+  const url = await ask("Remote URL (e.g., https://github.com/user/repo.git or git@github.com:user/repo.git): ");
+  if (!url) { console.log("No URL provided. Skipping remote setup."); return; }
+  const add = await Bun.spawn(["git", "remote", "add", name, url], { cwd: root, stdout: "pipe", stderr: "pipe" });
+  const addCode = await add.exited;
+  if (addCode === 0) console.log(`Remote '${name}' added → ${url}`);
+  else {
+    const err = await new Response(add.stderr).text();
+    console.warn("Failed to add remote:", err.trim());
+  }
 }
 
 async function loadConfig(root: string): Promise<OrchestratorConfig | null> {
@@ -61,6 +83,7 @@ async function main() {
   }
 
   await ensureGitRepo(root);
+  await ensureGitRemote(root);
 
   console.log("Validating environment...");
   const checks = await validateEnvironment(cfg.linear.apiKey);
