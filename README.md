@@ -1,143 +1,93 @@
-# Droidz — Parallel Agentic Framework for Linear (Bun‑only)
+# Droidz — your friendly project helper (Bun‑only)
 
-Droidz helps you turn ideas or existing Linear projects into working code by running multiple specialized AI droids in parallel. It guides you with a simple wizard, plans the work, creates (or connects to) a Linear project, and then gets to work.
+Droidz is a simple helper that plans your work and asks the Droid app to do it. 
+You tell it your idea (or point it at an existing Linear project). It shows you a plan first. 
+When you say “Yes”, it does the work for you.
 
-- No npm/npx. Uses Bun + Factory Droid CLI.
-- Works for new projects (from an idea) and existing projects.
-- Runs safe, token‑efficient plans and always asks before executing.
+— No scary steps. No coding needed. —
 
----
-
-## What you need (simple checklist)
-- A Linear account and API key (you can create one in Linear → Settings → API keys).
+## What you need
+- A Linear account (and an API key — we’ll ask you to paste it)
 - Bun installed (https://bun.sh)
-- Factory Droid CLI installed and on your PATH (`droid --help` should work)
-- Custom Droids enabled in your Factory setup (the wizard generates presets in `.factory/droids`)
-- Optional: GitHub CLI (`gh auth status`) if you want auto PRs (default behavior is to open a PR for review)
+- Droid CLI installed (run `droid --help` to check)
+- Optional: GitHub CLI (`gh auth status`) if you want Pull Requests
 
-Tip: You don’t need to be technical. The wizard asks simple questions and does the rest.
+If your repo has a file named `AGENTS.md` (rules for helpers), we follow it.
 
----
-
-## 1‑minute install (into your project)
-Run this from the root of the project you want to work on:
+## Install (takes ~1 minute)
+Run this inside the project folder you want to work on:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
 ```
 
-This copies the `orchestrator/` folder into your project and makes the tools ready to run.
+This adds an `orchestrator/` folder with everything set up.
 
-Note: If your Factory CLI supports Custom Droids, the wizard will also generate specialist droids in `.factory/droids/` (codegen, test, infra, refactor, integration, generalist). If not enabled, Droidz will still work using built‑in prompts.
-
----
-
-## Start the wizard (it also sets up Custom Droids)
+## Start (the wizard)
 ```sh
 bun orchestrator/launch.ts
 ```
-The wizard will:
-1) Check your environment (Bun, Droid CLI, git, Linear access)
-2) Ask if you want a NEW project (from an idea) or use an EXISTING Linear project
-3) Offer a dry‑run plan so you can review everything
-4) Ask “Start execution now?” and then run tasks in parallel
+What you’ll see:
+1) Small checks (Bun, Droid, git, Linear access)
+2) Pick NEW project (from an idea) or EXISTING Linear project
+3) We show you a plan (a clear list of tickets/steps)
+4) You can edit the plan (we save it to `orchestrator/plan.json`)
+5) We only start after you say “Yes”
 
----
+## If you choose NEW project
+- We ask: “What’s your idea?” (Example: “Build a To‑Do app with Next.js”)
+- We make a simple, complete plan (epics + tickets with short acceptance)
+- You can edit the plan
+- After you confirm, we ask the Droid app to create the Linear project and all tickets for you (using best practices)
 
-## Path A: NEW project from an idea (no setup needed)
-- You’ll be asked: “What’s your project or feature idea?”
-- Droidz will plan epics and tasks (short, clear, token‑efficient), create a Linear Project for you, and add issues with best‑practice labels.
-- You’ll see a plan first, then you can start execution.
+## If you choose an EXISTING Linear project
+- Tell us the project name (and a sprint/cycle if you have one)
+- We read the tickets and make a plan
+- You can edit the plan, then say “Yes” to start
 
-What happens during execution:
-- Each ticket is marked In Progress in Linear, and a branch is created automatically
-- Workspaces: choose one of three modes per your needs:
-  - Worktree: safest and fastest parallel mode (recommended)
-  - Clone: lightweight local clone per ticket (parallel)
-  - Branch: single repo with per-ticket branches; Droidz builds changes in a temporary shadow copy in parallel and then applies them to the branch automatically
-- Specialist droids implement and test the change
-- A Pull Request is opened for review by default
-- Linear tickets get short status comments and a final summary
+## What happens when you start
+- We mark each ticket “In Progress” and create a branch
+- The Droid app writes code, runs tests, and opens a Pull Request for review
+- We add short status notes on the Linear ticket
+- When all tickets are done, you’ll see a summary
 
-Run it later again:
-```sh
-bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurrency 10
-```
+By default we open a PR for review (we do NOT auto‑merge).
+You can turn on auto‑merge in the wizard later if you want.
 
----
+## Where we work (pick one)
+- Worktree (best): like giving each ticket its own desk — fastest and safest for many tickets at once
+- Clone: like making a copy of your folder for each ticket — also parallel, just a little heavier
+- Branch: one desk for all — we work in scratch space first, then safely paste changes onto the right branch
 
-## Path B: EXISTING Linear project
-- Select “Existing project” in the wizard
-- Enter your Linear project name (and a sprint/cycle name if you want)
-- Droidz verifies the project and prepares standard labels if needed
-- You’ll see a dry‑run plan; confirm to start execution
-
-Run it later again:
-```sh
-bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurrency 10
-```
-
----
-
-## Simple settings you may be asked about
-- Linear API key: stored locally so Droidz can create/read issues and comment
-- Concurrency: how many tasks to run in parallel (default: 10)
-- PR approvals: auto (open PRs automatically), require_manual (default), or disallow_push (local only)
-- Workspaces: the wizard asks to use git worktrees (default, faster/lighter) or the standard default (single repo with per-ticket branches). If you choose the standard default, tasks run sequentially to avoid conflicts (concurrency=1).
-- Comments: whether to post progress comments back to Linear
-- Custom Droids: wizard creates specialist droids under `.factory/droids/` based on your repo or idea; make sure your Factory CLI has custom droids enabled so they’re picked up
-
-Everything is saved in `orchestrator/config.json` so you don’t have to re‑enter it.
-
-Note: Do not share your Linear API key. If your project uses git, avoid committing `orchestrator/config.json` (it contains your key).
-
----
+The wizard will help you pick. You can change it anytime.
 
 ## Common commands
-- Launch the wizard (recommended):
+- Start the wizard (recommended):
 ```sh
 bun orchestrator/launch.ts
 ```
 
-- Only run the setup questions:
-```sh
-bun orchestrator/setup.ts
-```
-
-- Create a new Linear project from an idea (skips the full wizard):
-```sh
-bun orchestrator/new-project.ts
-```
-
-- Show plan only (no changes):
+- See the plan only (no changes):
 ```sh
 bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10 --plan
 ```
 
-- Execute tasks now:
+- Run now (after you’ve reviewed the plan):
 ```sh
 bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10
 ```
 
----
+## Friendly notes
+- We always show a plan and ask before doing anything
+- We follow your `AGENTS.md` rules if present
+- If your Droid supports Custom Droids, we set them up for you automatically
+- You can stop anytime and run again later — it will pick up where it left off
 
-## What you’ll see while it runs
-- A live summary in your terminal (queued/running/completed)
-- Short status updates added to the Linear ticket being worked on
-- PRs are opened by default for review (auto‑merge is optional; the wizard will ask).
+## Troubleshooting
+- “It can’t find my project” → Re‑run the wizard, check the exact name in Linear
+- “I don’t have a sprint” → Leave sprint empty — we’ll use the whole project
+- “I want auto‑merge” → Turn on auto‑merge in the wizard (you can also pick squash/merge/rebase)
+- “PRs aren’t opening” → Make sure `gh auth status` says you’re logged in
+- “What does it change?” → It only starts after you confirm; all changes go through a Pull Request
 
-You can stop at any time; re‑running will pick up again with the same settings.
-
----
-
-## Troubleshooting (plain English)
-- “It can’t find my project”: Re‑run the wizard and check the exact Linear project name
-- “I don’t have a sprint”: Leave sprint blank; Droidz will work off the entire project
-- “PRs aren’t created”: Turn PR approvals to `auto` in the wizard (or config) and ensure `gh auth status` is logged in
-- “Tests or build fail”: The droids will report failures; you can fix manually or re‑run
-- “My API key is wrong”: Re‑run the wizard and paste the correct key
-
----
-
-## How it works (one‑paragraph, optional)
-Droidz fetches your Linear issues, routes each to a specialist (feature, test, infra, refactor, integration), prepares an isolated workspace, and drives the Factory `droid exec` tool to make focused changes, run tests, and (optionally) open PRs — in parallel.
+That’s it. Tell us what you want to build — we’ll show you the plan, and then the Droid app will do the work for you. 😊
