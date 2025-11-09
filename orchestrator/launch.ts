@@ -8,13 +8,20 @@ import { findProjectByName, findCycleByName } from "./linear";
 
 function rl() { return readline.createInterface({ input: process.stdin, output: process.stdout }); }
 function ask(q: string) { const r = rl(); return new Promise<string>(res => r.question(q, a => { r.close(); res(a.trim()); })); }
+
+async function spawnInteractive(cmd: string, args: string[], cwd: string) {
+  const p = Bun.spawn([cmd, ...args], { cwd, stdin: "inherit", stdout: "inherit", stderr: "inherit" });
+  const code = await p.exited;
+  return { code };
+}
+
 async function ensureGitRepo(root: string) {
   const p = Bun.spawn(["git", "rev-parse", "--is-inside-work-tree"], { cwd: root, stdout: "pipe", stderr: "pipe" });
   const code = await p.exited;
   if (code === 0) return;
   const ans = await ask("No git repo found here. Initialize git now? (y/N): ");
   if (!ans.toLowerCase().startsWith("y")) return;
-  await Bun.spawn(["git", "init"], { cwd: root }).exited;
+  await Bun.spawn(["git", "init"], { cwd: root, stdin: "inherit", stdout: "inherit", stderr: "inherit" }).exited;
   // Ensure we don't commit secrets or temp files
   const gi = path.join(root, ".gitignore");
   try {
@@ -39,7 +46,7 @@ async function ensureGitRemote(root: string) {
   const name = (await ask(`Remote name [${defaultName}]: `)) || defaultName;
   const url = await ask("Remote URL (e.g., https://github.com/user/repo.git or git@github.com:user/repo.git): ");
   if (!url) { console.log("No URL provided. Skipping remote setup."); return; }
-  const add = await Bun.spawn(["git", "remote", "add", name, url], { cwd: root, stdout: "pipe", stderr: "pipe" });
+  const add = await Bun.spawn(["git", "remote", "add", name, url], { cwd: root, stdin: "inherit", stdout: "inherit", stderr: "inherit" });
   const addCode = await add.exited;
   if (addCode === 0) console.log(`Remote '${name}' added → ${url}`);
   else {
@@ -76,14 +83,14 @@ async function main() {
   let cfg = await loadConfig(root);
   if (!cfg) {
     console.log("No config found. Running setup...");
-    await spawn("bun", [path.join("orchestrator", "setup.ts")], root);
+    await spawnInteractive("bun", [path.join("orchestrator", "setup.ts")], root);
     cfg = await loadConfig(root);
     if (!cfg) { console.error("Setup failed to generate config."); process.exit(1); }
   }
   // Ensure Linear API key exists before continuing
   if (!isApiKeyValid(cfg.linear.apiKey)) {
     console.log("Linear API key is missing. Opening setup to capture it...");
-    await spawn("bun", [path.join("orchestrator", "setup.ts")], root);
+    await spawnInteractive("bun", [path.join("orchestrator", "setup.ts")], root);
     cfg = await loadConfig(root);
     if (!isApiKeyValid(cfg?.linear?.apiKey)) { console.error("Linear API key still missing. Aborting."); process.exit(1); }
   }
@@ -106,8 +113,8 @@ async function main() {
     if (wt) cfg!.workspace.mode = wt as any;
     await saveConfig(root, cfg!);
 
-    const res = await spawn("bun", [path.join("orchestrator", "new-project.ts")], root);
-    if (res.code !== 0) { console.error(res.err || res.out); process.exit(1); }
+    const res = await spawnInteractive("bun", [path.join("orchestrator", "new-project.ts")], root);
+    if (res.code !== 0) { console.error("New project setup failed."); process.exit(1); }
     cfg = await loadConfig(root);
   } else {
     // Ensure existing project is valid
