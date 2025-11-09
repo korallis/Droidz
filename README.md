@@ -1,93 +1,149 @@
-# Droidz — your friendly project helper (Bun‑only)
+# Droidz — Agentic Framework that drives Droid CLI (Bun‑only)
 
-Droidz is a simple helper that plans your work and asks the Droid app to do it. 
-You tell it your idea (or point it at an existing Linear project). It shows you a plan first. 
-When you say “Yes”, it does the work for you.
+Droidz plans with you first, then asks the Droid CLI to do the work.
+- NEW projects: you describe the idea → Droidz shows a plan → you edit/confirm → Droid CLI creates the Linear project & tickets → executes tasks in parallel.
+- EXISTING projects: Droidz reads tickets → proposes a plan → you edit/confirm → Droid CLI implements in parallel.
 
-— No scary steps. No coding needed. —
+It always asks before changing anything and follows your AGENTS.md.
 
-## What you need
-- A Linear account (and an API key — we’ll ask you to paste it)
-- Bun installed (https://bun.sh)
-- Droid CLI installed (run `droid --help` to check)
-- Optional: GitHub CLI (`gh auth status`) if you want Pull Requests
+---
 
-If your repo has a file named `AGENTS.md` (rules for helpers), we follow it.
-
-## Install (takes ~1 minute)
+## Quick install (1 minute)
 Run this inside the project folder you want to work on:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
 ```
 
-This adds an `orchestrator/` folder with everything set up.
+This adds an `orchestrator/` folder and a Custom Droid preset.
 
-## Start (the wizard)
+---
+
+## What you need
+- Linear API key (Linear → Settings → API Keys)
+- Bun installed: https://bun.sh (check with `bun --version`)
+- Droid CLI installed and on PATH (check with `droid --help`)
+- Optional: GitHub CLI (`gh auth status`) if you want PRs
+- Optional: `AGENTS.md` in your repo (we follow it)
+
+Tip: You can paste your Linear API key when asked by the wizard, or export it first so Droid can use it:
+
+```sh
+export LINEAR_API_KEY=lk_************************
+```
+
+---
+
+## Recommended: Use inside Droid CLI (pure‑Droid flow)
+This lets you do everything from the Droid CLI, including planning and confirmation.
+
+1) Start Droid CLI:
+```sh
+droid
+```
+2) Pick the custom droid named:
+- `droidz-orchestrator`
+
+3) Follow the prompts:
+- Choose NEW or EXISTING project
+- (NEW) Describe your idea (e.g., “Build a To‑Do app with Next.js 14 + TypeScript”)
+- The droid shows a JSON-only plan (epics → tasks with acceptance & labels). You can ask it to edit/refine the plan.
+- Confirm when ready. The droid will then run the Bun scripts for you to create the Linear project/tickets and start execution.
+
+Notes
+- The custom droid obeys your `AGENTS.md` and uses `LINEAR_API_KEY` from your environment.
+- It runs: `bun orchestrator/new-project.ts` (NEW) or `bun orchestrator/run.ts` (EXISTING) after you confirm the plan.
+- All implementation work (branching, tests, commits, PRs, Linear comments) is done by the Droid CLI workers.
+
+---
+
+## Alternative: Use the Bun wizard
+If you prefer a simple terminal wizard without Droid selecting:
+
 ```sh
 bun orchestrator/launch.ts
 ```
-What you’ll see:
-1) Small checks (Bun, Droid, git, Linear access)
-2) Pick NEW project (from an idea) or EXISTING Linear project
-3) We show you a plan (a clear list of tickets/steps)
-4) You can edit the plan (we save it to `orchestrator/plan.json`)
-5) We only start after you say “Yes”
+The wizard will:
+1) Check your setup (Bun, Droid, git, Linear)
+2) Ask to initialize git and set a remote if missing
+3) Ask for the Linear API key (masked) if missing
+4) Ask for NEW vs EXISTING project
+5) Ask for a workspace mode (see below)
+6) Show a plan (saved to `orchestrator/plan.json`) and allow you to edit it
+7) Only after you confirm, it will execute
 
-## If you choose NEW project
-- We ask: “What’s your idea?” (Example: “Build a To‑Do app with Next.js”)
-- We make a simple, complete plan (epics + tickets with short acceptance)
-- You can edit the plan
-- After you confirm, we ask the Droid app to create the Linear project and all tickets for you (using best practices)
+---
 
-## If you choose an EXISTING Linear project
-- Tell us the project name (and a sprint/cycle if you have one)
-- We read the tickets and make a plan
-- You can edit the plan, then say “Yes” to start
+## Workspace modes (how we run in parallel)
+Pick one in the wizard or set it in `orchestrator/config.json` via `workspace.mode`:
+- worktree (recommended): Each ticket gets its own isolated worktree → fastest & safest parallel mode
+- clone: Each ticket gets a lightweight local clone → also parallel
+- branch: Single repo with per-ticket branches → Droidz builds changes in a shadow copy in parallel, then applies patches safely to the branch
+
+You can change this any time.
+
+---
 
 ## What happens when you start
-- We mark each ticket “In Progress” and create a branch
-- The Droid app writes code, runs tests, and opens a Pull Request for review
-- We add short status notes on the Linear ticket
-- When all tickets are done, you’ll see a summary
+- Each ticket is set to “In Progress” and a branch is created
+- Droid CLI implements the work, runs tests, and opens a Pull Request for review (default) or auto‑merge if you enable it
+- Short status comments are added to the Linear ticket
+- When done, you’ll see a summary
 
-By default we open a PR for review (we do NOT auto‑merge).
-You can turn on auto‑merge in the wizard later if you want.
+By default we open PRs for review (no auto‑merge). You can enable auto‑merge during setup.
 
-## Where we work (pick one)
-- Worktree (best): like giving each ticket its own desk — fastest and safest for many tickets at once
-- Clone: like making a copy of your folder for each ticket — also parallel, just a little heavier
-- Branch: one desk for all — we work in scratch space first, then safely paste changes onto the right branch
+---
 
-The wizard will help you pick. You can change it anytime.
+## Editing the plan
+- The plan is saved to `orchestrator/plan.json`
+- You can reorder or adjust items and re‑run
+- NEW projects: the plan is used to create a Linear Project with best practices (labels, parent/child tasks, dependency links, sensible names)
+
+---
+
+## Git helpers
+- If no repo is found, the wizard offers to `git init` and adds a safe `.gitignore` (ignores `orchestrator/config.json`, `orchestrator/plan.json`, `.runs/`)
+- The wizard also offers to add a remote and asks for the name (default `origin`) and URL
+
+---
 
 ## Common commands
-- Start the wizard (recommended):
+- Launch the Droid CLI orchestrator (recommended):
+```sh
+droid  # then pick droidz-orchestrator and follow prompts
+```
+
+- Launch the Bun wizard:
 ```sh
 bun orchestrator/launch.ts
 ```
 
-- See the plan only (no changes):
+- Show plan only (no changes):
 ```sh
 bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10 --plan
 ```
 
-- Run now (after you’ve reviewed the plan):
+- Execute now (after confirming the plan):
 ```sh
 bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 10
 ```
 
-## Friendly notes
-- We always show a plan and ask before doing anything
-- We follow your `AGENTS.md` rules if present
-- If your Droid supports Custom Droids, we set them up for you automatically
-- You can stop anytime and run again later — it will pick up where it left off
+---
+
+## AGENTS.md (we obey your rules)
+If your repo has an `AGENTS.md`, we load it and pass key guidance into every worker prompt so the Droid CLI follows your rules.
+
+---
 
 ## Troubleshooting
-- “It can’t find my project” → Re‑run the wizard, check the exact name in Linear
-- “I don’t have a sprint” → Leave sprint empty — we’ll use the whole project
-- “I want auto‑merge” → Turn on auto‑merge in the wizard (you can also pick squash/merge/rebase)
-- “PRs aren’t opening” → Make sure `gh auth status` says you’re logged in
-- “What does it change?” → It only starts after you confirm; all changes go through a Pull Request
+- “It keeps saying the Linear API key is missing” → Export `LINEAR_API_KEY` first or run the wizard to paste it; placeholders like `__PUT_YOUR_LINEAR_API_KEY_HERE__` are considered missing
+- “Droid CLI doesn’t show the custom droid” → Ensure `.factory/droids/orchestrator.droid.json` exists and your Droid build supports custom droids
+- “It doesn’t create PRs” → Check `gh auth status` and that a remote exists; approvals mode must not be `disallow_push`
+- “Workspaces confuse me” → Choose `worktree` (recommended) in the wizard; you can switch later in `orchestrator/config.json`
+- “I want auto‑merge” → Turn it on in the wizard when asked (you can also set the merge strategy)
 
-That’s it. Tell us what you want to build — we’ll show you the plan, and then the Droid app will do the work for you. 😊
+---
+
+## Why this design
+- Droid CLI does the actual work (git, code changes, tests, PRs, Linear updates). Droidz only plans, coordinates, and starts those Droid runs.
+- This keeps things simple, transparent, and easy to control from inside the Droid CLI itself.
