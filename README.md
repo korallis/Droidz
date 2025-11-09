@@ -51,7 +51,10 @@ The wizard will:
 
 What happens during execution:
 - Each ticket is marked In Progress in Linear, and a branch is created automatically
-- Each task gets its own workspace (either git worktree or a lightweight local clone)
+- Workspaces: choose one of three modes per your needs:
+  - Worktree: safest and fastest parallel mode (recommended)
+  - Clone: lightweight local clone per ticket (parallel)
+  - Branch: single repo with per-ticket branches; Droidz builds changes in a temporary shadow copy in parallel and then applies them to the branch automatically
 - Specialist droids implement and test the change
 - A Pull Request is opened for review by default
 - Linear tickets get short status comments and a final summary

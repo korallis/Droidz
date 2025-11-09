@@ -1,5 +1,6 @@
 import { spawn } from "bun";
 import path from "path";
+import { promises as fs } from "fs";
 import { buildPrompt } from "./workerPrompt";
 import { OrchestratorConfig, TaskSpec } from "./types";
 import { commentOnIssue, getTeamStartedStateId, setIssueState, getProjectTeam, getTeamStateIdByName } from "./linear";
@@ -12,7 +13,8 @@ async function run(cmd: string, args: string[], cwd: string): Promise<{ code: nu
   return { code, stdout: out, stderr: err };
 }
 
-async function prepareWorkspace(repoRoot: string, baseDir: string, branch: string, key: string, useWorktrees: boolean | undefined): Promise<string> {
+async function prepareWorkspace(repoRoot: string, baseDir: string, branch: string, key: string, mode: OrchestratorConfig["workspace"]["mode"] | boolean | undefined): Promise<{ workDir: string; mode: "worktree" | "branch" | "clone" }>
+{
   const workDir = path.resolve(repoRoot, baseDir, key);
   await run("mkdir", ["-p", workDir], repoRoot).catch(() => {});
 
@@ -22,28 +24,58 @@ async function prepareWorkspace(repoRoot: string, baseDir: string, branch: strin
 
   await run("git", ["fetch", "--all"], repoRoot);
 
-  if (useWorktrees !== false) {
-    // Worktree mode: isolated directory per ticket
+  // Back-compat: boolean useWorktrees maps to mode
+  const resolvedMode: "worktree" | "clone" | "branch" = (typeof mode === "boolean") ? (mode ? "worktree" : "branch") : (mode || "worktree");
+
+  if (resolvedMode === "worktree") {
     await run("git", ["worktree", "remove", "-f", workDir], repoRoot).catch(() => {});
     const res = await run("git", ["worktree", "add", "-B", branch, workDir, "HEAD"], repoRoot);
     if (res.code !== 0) throw new Error(`worktree failed: ${res.stderr}`);
-    return workDir;
-  } else {
-    // Standard default workflow: single repo, branch per ticket (sequential)
-    const clean = await run("git", ["status", "--porcelain"], repoRoot);
-    if (clean.stdout.trim().length > 0) {
-      throw new Error("Working tree not clean. Commit or stash changes before running without worktrees.");
-    }
-    const checkout = await run("git", ["checkout", "-B", branch], repoRoot);
+    return { workDir, mode: "worktree" };
+  }
+
+  if (resolvedMode === "clone") {
+    await run("rm", ["-rf", workDir], repoRoot).catch(() => {});
+    const clone = await run("git", ["clone", "--local", ".", workDir], repoRoot);
+    if (clone.code !== 0) throw new Error(`clone failed: ${clone.stderr}`);
+    const checkout = await run("git", ["checkout", "-B", branch], workDir);
     if (checkout.code !== 0) throw new Error(`checkout failed: ${checkout.stderr}`);
-    return repoRoot;
+    return { workDir, mode: "clone" };
+  }
+
+  // branch mode: shadow copy (no clone). We'll later compute a patch and apply it under a repo lock.
+  await run("rm", ["-rf", workDir], repoRoot).catch(() => {});
+  // Prefer rsync if available for speed
+  const rs = await run("which", ["rsync"], repoRoot);
+  if (rs.code === 0) {
+    const rsync = await run("rsync", ["-a", "--delete", "--exclude", ".git", repoRoot + "/", workDir + "/"], repoRoot);
+    if (rsync.code !== 0) throw new Error(`shadow copy failed: ${rsync.stderr}`);
+  } else {
+    const cp = await run("cp", ["-R", repoRoot + "/", workDir + "/"], repoRoot);
+    if (cp.code !== 0) throw new Error(`shadow copy failed: ${cp.stderr}`);
+    await run("rm", ["-rf", path.join(workDir, ".git")], repoRoot).catch(() => {});
+  }
+  return { workDir, mode: "branch" };
+}
+
+async function acquireRepoLock(repoRoot: string, baseDir: string) {
+  const lockDir = path.resolve(repoRoot, baseDir, ".apply.lock");
+  for (;;) {
+    try {
+      await fs.mkdir(lockDir);
+      return () => fs.rmdir(lockDir).catch(() => {});
+    } catch {
+      await new Promise(r => setTimeout(r, 200));
+    }
   }
 }
 
 export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, repoRoot: string) {
   const prompt = buildPrompt(task.specialist, task);
   const { workspace, approvals, guardrails } = cfg;
-  const workDir = await prepareWorkspace(repoRoot, workspace.baseDir, task.branch, task.key, workspace.useWorktrees);
+  const prep = await prepareWorkspace(repoRoot, workspace.baseDir, task.branch, task.key, workspace.mode ?? workspace.useWorktrees);
+  const workDir = prep.workDir;
+  const mode = prep.mode;
 
   if (!guardrails.dryRun) {
     // Set issue state to In Progress (started)
@@ -82,13 +114,35 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
   const summary = summaryMatch ? summaryMatch[0] : null;
 
   if (approvals.prs !== "disallow_push" && !guardrails.dryRun) {
-    // push and create PR
-    await run("git", ["add", "-A"], workDir);
-    await run("git", ["commit", "-m", `${task.key}: ${task.title}`], workDir).catch(() => {});
-    await run("git", ["push", "-u", "origin", task.branch], workDir);
-    const prCreate = await run("gh", ["pr", "create", "--fill", "--head", task.branch], workDir);
-    const urlMatch = prCreate.stdout.match(/https?:\/\/\S+/);
-    const prUrl = urlMatch ? urlMatch[0] : "";
+    let prUrl = "";
+    if (mode === "worktree" || mode === "clone") {
+      // push and create PR directly from the isolated workspace
+      await run("git", ["add", "-A"], workDir);
+      await run("git", ["commit", "-m", `${task.key}: ${task.title}`], workDir).catch(() => {});
+      await run("git", ["push", "-u", "origin", task.branch], workDir);
+      const prCreate = await run("gh", ["pr", "create", "--fill", "--head", task.branch], workDir);
+      const urlMatch = prCreate.stdout.match(/https?:\/\/\S+/);
+      prUrl = urlMatch ? urlMatch[0] : "";
+    } else {
+      // branch mode: compute patch and apply under repo lock, then create PR from repoRoot
+      const diff = await run("git", ["--no-pager", "diff", "--no-index", "--binary", repoRoot, workDir], repoRoot);
+      const patchPath = path.join(workDir, "changes.patch");
+      await fs.writeFile(patchPath, diff.stdout);
+      const release = await acquireRepoLock(repoRoot, workspace.baseDir);
+      try {
+        await run("git", ["checkout", "-B", task.branch], repoRoot);
+        const apply = await run("git", ["apply", "--index", "--whitespace=fix", patchPath], repoRoot);
+        if (apply.code !== 0) throw new Error(`git apply failed: ${apply.stderr}`);
+        await run("git", ["add", "-A"], repoRoot);
+        await run("git", ["commit", "-m", `${task.key}: ${task.title}`], repoRoot).catch(() => {});
+        await run("git", ["push", "-u", "origin", task.branch], repoRoot);
+        const prCreate = await run("gh", ["pr", "create", "--fill", "--head", task.branch], repoRoot);
+        const urlMatch = prCreate.stdout.match(/https?:\/\/\S+/);
+        prUrl = urlMatch ? urlMatch[0] : "";
+      } finally {
+        await release();
+      }
+    }
 
     // If auto-merge enabled, set it up; else move to review state
     const mergeCfg = cfg.merge || { autoMerge: false, strategy: "squash", requireChecks: true } as any;

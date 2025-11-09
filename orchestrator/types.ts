@@ -4,7 +4,7 @@ export interface OrchestratorConfig {
   linear: { project: string; sprint: string; updateComments: boolean; apiKey?: string; teamId?: string; projectId?: string };
   concurrency: number;
   approvals: { prs: ApprovalsMode };
-  workspace: { baseDir: string; branchPattern: string; useWorktrees?: boolean };
+  workspace: { baseDir: string; branchPattern: string; useWorktrees?: boolean; mode?: "worktree" | "clone" | "branch" };
   guardrails: { dryRun: boolean; secretScan: boolean; testsRequired: boolean; maxJobMinutes: number };
   merge?: { autoMerge: boolean; strategy: "squash" | "merge" | "rebase"; requireChecks: boolean; reviewStateName?: string; doneStateName?: string };
   routing: { rules: Array<{ labels: string[]; droid: SpecialistKind }>; fallback: SpecialistKind };
