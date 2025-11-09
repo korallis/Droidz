@@ -59,8 +59,18 @@ Traditional AI coding: "Build feature X" → unpredictable results, no plan, no 
 
 ## Installation
 
+One command installs everything:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+```
+
+Or clone and install:
+
+```bash
+git clone https://github.com/korallis/Droidz.git
+cd Droidz
+bash scripts/install.sh ../my-project  # or just "bash scripts/install.sh" for current dir
 ```
 
 This installs:
@@ -69,6 +79,14 @@ This installs:
 - `.claude/agents/` - 5 specialized droids
 - `config.yml` - Configuration
 - `droidz/` - Working directory for specs and products
+
+**Quick verification:**
+```bash
+ls .claude/agents/  # Should see 5 droids
+ls workflows/       # Should see planning, specification, implementation
+```
+
+📖 **[Complete Installation Guide](INSTALL.md)** - Troubleshooting, manual install, uninstall, upgrade
 
 ---
 
@@ -82,16 +100,33 @@ This installs:
 
 ## Quick Start
 
-### 1. Open Droid CLI
+### 1. Install Droidz
+
+```bash
+# In your project directory
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+```
+
+Verify installation:
+```bash
+ls .claude/agents/  # Should see: droidz-orchestrator.md, droidz-planner.md, etc.
+```
+
+### 2. Open Droid CLI
 
 ```bash
 droid
 ```
 
-### 2. Start with the Orchestrator
+### 3. Start with the Orchestrator
 
 ```
 @droidz-orchestrator I want to build [your project idea]
+```
+
+Example:
+```
+@droidz-orchestrator I want to build a recipe sharing app with Next.js 14 and Supabase
 ```
 
 The orchestrator will guide you through:
@@ -395,17 +430,29 @@ use_ref_docs: true       # Documentation with Ref
 
 ## Troubleshooting
 
+**"Installation says success but folders are empty"**
+- GitHub's CDN may be cached. Try using commit SHA:
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/ba5c9c7/scripts/install.sh | bash
+  ```
+- Or clone the repo directly:
+  ```bash
+  git clone https://github.com/korallis/Droidz.git
+  cd Droidz && bash scripts/install.sh
+  ```
+
 **"Droids not showing up"**
 - Check `.claude/agents/` exists and has `droidz-*.md` files
+- Run: `ls .claude/agents/` - should see 5 files
 - Restart Droid CLI
 
 **"Parallel execution not working"**
-- Ensure git repo initialized
+- Ensure git repo initialized: `git status`
 - Check worktrees: `git worktree list`
 - Verify `config.yml` has `parallel.enabled: true`
 
 **"Standards not being followed"**
-- Check `standards/*.md` files exist
+- Check `standards/*.md` files exist: `ls standards/`
 - Verify standards are clear and specific
 - Mention standards explicitly in prompts
 
@@ -413,6 +460,11 @@ use_ref_docs: true       # Documentation with Ref
 - Ensure tools are available in Droid CLI
 - Check `config.yml` has research enabled
 - Tools are optional; droids work without them
+
+**Need help?**
+- [Open an issue](https://github.com/korallis/Droidz/issues)
+- Check the [workflows/](workflows/) to understand how each phase works
+- Review [standards/](standards/) to see what droids follow
 
 ---
 
