@@ -47,8 +47,10 @@ chmod +x "$TARGET/orchestrator/run.ts" || true
 cat <<'EON'
 Install complete.
 Next steps:
-  1) bun orchestrator/launch.ts
-     - Interactive setup (writes orchestrator/config.json)
-     - Choose NEW project from idea or EXISTING project
-     - Optionally run a dry-run plan, then start execution
+  1) Start Droid CLI:  droid
+  2) Pick the custom droid: droidz-orchestrator
+  3) Follow the prompts:
+     - Choose NEW (describe your idea) or EXISTING project
+     - Review/edit the JSON plan
+     - Confirm to let Droid run everything (branches, PRs, Linear updates)
 EON
