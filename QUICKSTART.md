@@ -122,16 +122,24 @@ config.yml              # Configuration
 
 ## Configuration
 
-Edit `config.yml`:
+Edit `config.yml` to customize:
 
 ```yaml
 parallel:
-  max_concurrent_tasks: 5    # Number of parallel workers
+  enabled: true
+  max_concurrent_tasks: 5    # Change this! (Default: 5, Range: 1-10)
   workspace_mode: worktree   # worktree | clone | branch
   
 use_exa_research: true       # Enable Exa for research
 use_ref_docs: true           # Enable Ref for docs
 ```
+
+**Customize Parallel Workers:**
+- **Default: 5 workers** (good for most projects)
+- **Increase to 8-10** for large features with many independent tasks
+- **Decrease to 2-3** for tightly coupled work or limited resources
+
+More details in [README.md](README.md#customizing-parallel-execution)
 
 ---
 

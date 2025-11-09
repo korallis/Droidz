@@ -400,6 +400,43 @@ Your support helps make Droidz even better!
 
 ---
 
+## Customizing Parallel Execution
+
+Want more (or fewer) AI helpers working at the same time? Easy!
+
+### How to Change the Number of Parallel Workers
+
+Edit `config.yml` in your project:
+
+```yaml
+# Parallel execution settings
+parallel:
+  enabled: true
+  max_concurrent_tasks: 5          # ← Change this number!
+  workspace_mode: worktree          # worktree | clone | branch
+```
+
+**Examples:**
+- `max_concurrent_tasks: 3` → 3 AI helpers working simultaneously
+- `max_concurrent_tasks: 5` → 5 AI helpers (default, good for most projects)
+- `max_concurrent_tasks: 10` → 10 AI helpers (for very large features)
+
+**When to Adjust:**
+
+**Increase (8-10 workers)** if:
+- Your feature has many independent tasks
+- Your computer is powerful
+- You want maximum speed
+
+**Decrease (2-3 workers)** if:
+- Your tasks are tightly coupled
+- You have limited API quota
+- You prefer more control
+
+**Note:** More workers = faster, but only if you have enough independent tasks!
+
+---
+
 ## FAQ (Questions People Ask)
 
 ### Q: Do I need to know how to code?
@@ -425,6 +462,9 @@ Your support helps make Droidz even better!
 
 ### Q: Does parallel really make it 5x faster?
 **A:** Usually 3-5x faster, depending on the task. Some things can't be parallelized.
+
+### Q: How do I change the number of parallel workers?
+**A:** Edit `max_concurrent_tasks` in `config.yml`. Default is 5, but you can set it higher (up to 10) or lower (down to 2) based on your needs.
 
 ---
 
