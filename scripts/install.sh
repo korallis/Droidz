@@ -29,16 +29,22 @@ fi
 
 # Ensure target structure
 mkdir -p "$TARGET/orchestrator"
+mkdir -p "$TARGET/.factory/droids"
 
 # Copy orchestrator files
 cp -R "$ROOT_DIR/orchestrator/"* "$TARGET/orchestrator/" 2>/dev/null || true
+
+# Copy custom droids preset (do not overwrite existing)
+if [ -f "$ROOT_DIR/.factory/droids/orchestrator.droid.json" ] && [ ! -f "$TARGET/.factory/droids/orchestrator.droid.json" ]; then
+  cp "$ROOT_DIR/.factory/droids/orchestrator.droid.json" "$TARGET/.factory/droids/orchestrator.droid.json"
+fi
 
 # Copy README if missing (do not overwrite user's README)
 if [ ! -f "$TARGET/README.md" ] && [ -f "$ROOT_DIR/README.md" ]; then
   cp "$ROOT_DIR/README.md" "$TARGET/README.md"
 fi
 
-# Make TS launch scripts runnable via bun
+# Make TS launch scripts runnable if user wants Bun wizard later
 chmod +x "$TARGET/orchestrator/launch.ts" || true
 chmod +x "$TARGET/orchestrator/setup.ts" || true
 chmod +x "$TARGET/orchestrator/new-project.ts" || true
