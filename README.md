@@ -80,7 +80,7 @@ bun orchestrator/run.ts --project "Your Project" --sprint "Sprint 1" --concurren
 - Linear API key: stored locally so Droidz can create/read issues and comment
 - Concurrency: how many tasks to run in parallel (default: 10)
 - PR approvals: auto (open PRs automatically), require_manual (default), or disallow_push (local only)
-- Workspaces: the wizard asks to use git worktrees (default, faster/lighter) or the standard default (a simple per-ticket local clone); both are safe
+- Workspaces: the wizard asks to use git worktrees (default, faster/lighter) or the standard default (single repo with per-ticket branches). If you choose the standard default, tasks run sequentially to avoid conflicts (concurrency=1).
 - Comments: whether to post progress comments back to Linear
 - Custom Droids: wizard creates specialist droids under `.factory/droids/` based on your repo or idea; make sure your Factory CLI has custom droids enabled so they’re picked up
 
@@ -121,7 +121,7 @@ bun orchestrator/run.ts --project "Project X" --sprint "Sprint 1" --concurrency 
 ## What you’ll see while it runs
 - A live summary in your terminal (queued/running/completed)
 - Short status updates added to the Linear ticket being worked on
-- Optional: branches and PRs created automatically if you turn on auto approvals
+- PRs are opened by default for review (auto‑merge is optional; the wizard will ask).
 
 You can stop at any time; re‑running will pick up again with the same settings.
 

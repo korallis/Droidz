@@ -6,6 +6,7 @@ export interface OrchestratorConfig {
   approvals: { prs: ApprovalsMode };
   workspace: { baseDir: string; branchPattern: string; useWorktrees?: boolean };
   guardrails: { dryRun: boolean; secretScan: boolean; testsRequired: boolean; maxJobMinutes: number };
+  merge?: { autoMerge: boolean; strategy: "squash" | "merge" | "rebase"; requireChecks: boolean; reviewStateName?: string; doneStateName?: string };
   routing: { rules: Array<{ labels: string[]; droid: SpecialistKind }>; fallback: SpecialistKind };
   specialists?: Array<{ name: SpecialistKind; enabled: boolean }>;
   profile?: Record<string, unknown>;

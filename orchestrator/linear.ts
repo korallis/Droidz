@@ -117,6 +117,18 @@ export async function getTeamStartedStateId(apiKey: string, teamId: string): Pro
   return started?.id || null;
 }
 
+export async function getTeamStateIdByName(apiKey: string, teamId: string, namePattern: string): Promise<string | null> {
+  const q = `#graphql
+    query($id: String!) { team(id: $id) { states(first: 50) { nodes { id name type } } } }
+  `;
+  type R = { team: { states: { nodes: Array<{ id: string; name: string; type: string }> } } | null };
+  const data = await gql<R>(apiKey, q, { id: teamId });
+  const states = data.team?.states?.nodes || [];
+  const re = new RegExp(namePattern, "i");
+  const match = states.find(s => re.test(s.name));
+  return match?.id || null;
+}
+
 export async function setIssueState(apiKey: string, identifier: string, stateId: string): Promise<boolean> {
   const issueId = await getIssueId(apiKey, identifier);
   const m = `#graphql

@@ -2,7 +2,7 @@ import { spawn } from "bun";
 import path from "path";
 import { buildPrompt } from "./workerPrompt";
 import { OrchestratorConfig, TaskSpec } from "./types";
-import { commentOnIssue, getTeamStartedStateId, setIssueState, getProjectTeam } from "./linear";
+import { commentOnIssue, getTeamStartedStateId, setIssueState, getProjectTeam, getTeamStateIdByName } from "./linear";
 
 async function run(cmd: string, args: string[], cwd: string): Promise<{ code: number; stdout: string; stderr: string }> {
   const p = spawn([cmd, ...args], { cwd, stdout: "pipe", stderr: "pipe" });
@@ -14,29 +14,30 @@ async function run(cmd: string, args: string[], cwd: string): Promise<{ code: nu
 
 async function prepareWorkspace(repoRoot: string, baseDir: string, branch: string, key: string, useWorktrees: boolean | undefined): Promise<string> {
   const workDir = path.resolve(repoRoot, baseDir, key);
-  await run("mkdir", ["-p", workDir], repoRoot);
+  await run("mkdir", ["-p", workDir], repoRoot).catch(() => {});
 
   // Ensure this is a git repo
   const isGit = await run("git", ["rev-parse", "--is-inside-work-tree"], repoRoot);
-  if (isGit.code !== 0) throw new Error("Not a git repository. Initialize git and add a remote 'origin' to use parallel branches/PRs.");
+  if (isGit.code !== 0) throw new Error("Not a git repository. Initialize git and add a remote 'origin' to use branches/PRs.");
 
   await run("git", ["fetch", "--all"], repoRoot);
 
   if (useWorktrees !== false) {
-    // Worktree mode
+    // Worktree mode: isolated directory per ticket
     await run("git", ["worktree", "remove", "-f", workDir], repoRoot).catch(() => {});
     const res = await run("git", ["worktree", "add", "-B", branch, workDir, "HEAD"], repoRoot);
     if (res.code !== 0) throw new Error(`worktree failed: ${res.stderr}`);
+    return workDir;
   } else {
-    // Lightweight clone mode
-    await run("rm", ["-rf", workDir], repoRoot).catch(() => {});
-    const clone = await run("git", ["clone", "--no-hardlinks", "--local", ".", workDir], repoRoot);
-    if (clone.code !== 0) throw new Error(`clone failed: ${clone.stderr}`);
-    const checkout = await run("git", ["checkout", "-B", branch], workDir);
+    // Standard default workflow: single repo, branch per ticket (sequential)
+    const clean = await run("git", ["status", "--porcelain"], repoRoot);
+    if (clean.stdout.trim().length > 0) {
+      throw new Error("Working tree not clean. Commit or stash changes before running without worktrees.");
+    }
+    const checkout = await run("git", ["checkout", "-B", branch], repoRoot);
     if (checkout.code !== 0) throw new Error(`checkout failed: ${checkout.stderr}`);
+    return repoRoot;
   }
-
-  return workDir;
 }
 
 export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, repoRoot: string) {
@@ -80,15 +81,50 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
   const summaryMatch = res.stdout.match(/\{\s*\"status\"[\s\S]*?\}\s*$/);
   const summary = summaryMatch ? summaryMatch[0] : null;
 
-  if (approvals.prs === "auto" && !guardrails.dryRun) {
+  if (approvals.prs !== "disallow_push" && !guardrails.dryRun) {
     // push and create PR
     await run("git", ["add", "-A"], workDir);
     await run("git", ["commit", "-m", `${task.key}: ${task.title}`], workDir).catch(() => {});
     await run("git", ["push", "-u", "origin", task.branch], workDir);
-    await run("gh", ["pr", "create", "--fill", "--head", task.branch], workDir);
-  }
+    const prCreate = await run("gh", ["pr", "create", "--fill", "--head", task.branch], workDir);
+    const urlMatch = prCreate.stdout.match(/https?:\/\/\S+/);
+    const prUrl = urlMatch ? urlMatch[0] : "";
 
-  if (!guardrails.dryRun && cfg.linear && cfg.linear.updateComments) {
+    // If auto-merge enabled, set it up; else move to review state
+    const mergeCfg = cfg.merge || { autoMerge: false, strategy: "squash", requireChecks: true } as any;
+    if (mergeCfg.autoMerge) {
+      const args = ["pr", "merge", prUrl || task.branch];
+      if (mergeCfg.requireChecks) args.push("--auto");
+      if (mergeCfg.strategy === "squash") args.push("--squash");
+      else if (mergeCfg.strategy === "merge") args.push("--merge");
+      else if (mergeCfg.strategy === "rebase") args.push("--rebase");
+      args.push("--delete-branch");
+      await run("gh", args, workDir).catch(e => console.warn("Auto-merge setup failed:", e));
+      // Optionally set Done state will be handled by CI webhook or future enhancement
+    } else {
+      // Move to In Review if available
+      try {
+        let teamId = cfg.linear.teamId;
+        if (!teamId && cfg.linear.projectId) {
+          const team = await getProjectTeam(cfg.linear.apiKey || "", cfg.linear.projectId);
+          teamId = team?.id;
+        }
+        if (teamId) {
+          const reviewName = (mergeCfg.reviewStateName || "In Review") as string;
+          const reviewId = await getTeamStateIdByName(cfg.linear.apiKey || "", teamId, reviewName);
+          if (reviewId) await setIssueState(cfg.linear.apiKey || "", task.key, reviewId);
+        }
+      } catch (e) {
+        console.warn("Could not set issue to review state:", String(e));
+      }
+    }
+
+    if (cfg.linear && cfg.linear.updateComments) {
+      const link = prUrl ? `\nPR: ${prUrl}` : "";
+      const notes = summary ? `\n\nSummary:\n\n${"```"}\n${summary}\n${"```"}` : "";
+      await commentOnIssue(cfg.linear.apiKey || "", task.key, `PR created for ${task.specialist} on ${task.branch}.${link}${notes}`);
+    }
+  } else if (!guardrails.dryRun && cfg.linear && cfg.linear.updateComments) {
     const notes = summary ? `\n\nSummary:\n\n${"```"}\n${summary}\n${"```"}` : "";
     await commentOnIssue(cfg.linear.apiKey || "", task.key, `Completed run for ${task.specialist} on ${task.branch}.${notes}`);
   }

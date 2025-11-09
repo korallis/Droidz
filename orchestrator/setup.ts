@@ -55,11 +55,11 @@ async function main() {
   const concurrencyStr = d(await question(`Max parallel tasks${existing?.concurrency?` [${existing.concurrency}]`:" [10]"}: `), String(existing?.concurrency ?? 10));
   const concurrency = Math.max(1, parseInt(concurrencyStr, 10) || 10);
 
-  const approvals = d(await question(`PR approvals mode: auto | require_manual | disallow_push${existing?.approvals?.prs?` [${existing.approvals.prs}]`:" [auto]"}: `), existing?.approvals?.prs || "auto");
+  const approvals = d(await question(`PR approvals mode: auto | require_manual | disallow_push${existing?.approvals?.prs?` [${existing.approvals.prs}]`:" [require_manual]"}: `), existing?.approvals?.prs || "require_manual");
 
   const baseDir = d(await question(`Workspace base dir${existing?.workspace?.baseDir?` [${existing.workspace.baseDir}]`:" [.runs]"}: `), existing?.workspace?.baseDir || ".runs");
   const branchPattern = d(await question(`Branch pattern${existing?.workspace?.branchPattern?` [${existing.workspace.branchPattern}]`:" [{type}/{issueKey}-{slug}]"}: `), existing?.workspace?.branchPattern || "{type}/{issueKey}-{slug}");
-  const useWorktreesStr = d(await question(`Workspace mode: use git worktrees (faster/lighter) or standard default (per-ticket local clone)? Use worktrees? (y/n)${existing?.workspace?.useWorktrees!==undefined?` [${existing.workspace.useWorktrees?"y":"n"}]`:" [y]"}: `), existing?.workspace?.useWorktrees===undefined?"y":(existing.workspace.useWorktrees?"y":"n"));
+  const useWorktreesStr = d(await question(`Workspace mode: use git worktrees (faster/lighter) or standard default (single repo per-ticket branches)? Use worktrees? (y/n)${existing?.workspace?.useWorktrees!==undefined?` [${existing.workspace.useWorktrees?"y":"n"}]`:" [y]"}: `), existing?.workspace?.useWorktrees===undefined?"y":(existing.workspace.useWorktrees?"y":"n"));
   const useWorktrees = String(useWorktreesStr).toLowerCase().startsWith("y");
 
   const dryRunStr = d(await question(`Default dry-run mode? (y/n)${existing?.guardrails?.dryRun!==undefined?` [${existing.guardrails.dryRun?"y":"n"}]`:" [n]"}: `), existing?.guardrails?.dryRun?"y":"n");
@@ -99,6 +99,17 @@ async function main() {
       { name: "generalist", enabled: true }
     ]
   };
+
+  // Merge behavior options
+  const autoMergeStr = d(await question(`Enable auto-merge after PR when checks pass? (y/n)${existing?.merge?.autoMerge!==undefined?` [${existing.merge.autoMerge?"y":"n"}]`:" [n]"}: `), existing?.merge?.autoMerge?"y":"n");
+  const autoMerge = String(autoMergeStr).toLowerCase().startsWith("y");
+  const mergeStrategy = d(await question(`Merge strategy (squash|merge|rebase)${existing?.merge?.strategy?` [${existing.merge.strategy}]`:" [squash]"}: `), existing?.merge?.strategy || "squash");
+  const requireChecksStr = d(await question(`Require checks for merge? (y/n)${existing?.merge?.requireChecks!==undefined?` [${existing.merge.requireChecks?"y":"n"}]`:" [y]"}: `), existing?.merge?.requireChecks===undefined?"y":(existing.merge.requireChecks?"y":"n"));
+  const requireChecks = String(requireChecksStr).toLowerCase().startsWith("y");
+  const reviewStateName = d(await question(`State name for PRs awaiting review${existing?.merge?.reviewStateName?` [${existing.merge.reviewStateName}]`:" [In Review]"}: `), existing?.merge?.reviewStateName || "In Review");
+  const doneStateName = d(await question(`State name for completed issues${existing?.merge?.doneStateName?` [${existing.merge.doneStateName}]`:" [Done]"}: `), existing?.merge?.doneStateName || "Done");
+
+  cfg.merge = { autoMerge, strategy: mergeStrategy as any, requireChecks, reviewStateName, doneStateName };
 
   await saveConfig(repoRoot, cfg);
 

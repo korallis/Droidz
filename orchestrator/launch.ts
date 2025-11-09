@@ -84,6 +84,8 @@ async function main() {
   if (upd) cfg!.linear.updateComments = upd.toLowerCase().startsWith("y");
   const wt = await ask(`Workspace mode: use git worktrees (faster/lighter) or standard default (per-ticket local clone)? Use worktrees? (y/n) [${cfg!.workspace.useWorktrees!==false?"y":"n"}]: `);
   if (wt) cfg!.workspace.useWorktrees = wt.toLowerCase().startsWith("y");
+  const am = await ask(`Enable auto-merge after PR when checks pass? (y/n) [${cfg!.merge?.autoMerge?"y":"n"}]: `);
+  if (am) cfg!.merge = { ...(cfg!.merge||{}), autoMerge: am.toLowerCase().startsWith("y") } as any;
   await saveConfig(root, cfg!);
 
   console.log("\nReady for execution?");

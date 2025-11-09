@@ -63,8 +63,12 @@ async function main() {
   }
   const project = (args.get("project") as string) || cfg.linear.project;
   const sprint = (args.get("sprint") as string) || cfg.linear.sprint;
-  const concurrency = Number((args.get("concurrency") as string) || cfg.concurrency || 4);
+  let concurrency = Number((args.get("concurrency") as string) || cfg.concurrency || 4);
   const planOnly = Boolean(args.get("plan"));
+  if (cfg.workspace && cfg.workspace.useWorktrees === false && concurrency > 1) {
+    console.warn("Worktrees disabled: forcing concurrency=1 to avoid branch conflicts in a single workspace.");
+    concurrency = 1;
+  }
 
   const profile = await detectRepoProfile(repoRoot);
   console.log("Detected repo profile:", profile);

@@ -7,7 +7,14 @@
   },
   "concurrency": 10,
   "approvals": {
-    "prs": "auto"
+    "prs": "require_manual"
+  },
+  "merge": {
+    "autoMerge": false,
+    "strategy": "squash",
+    "requireChecks": true,
+    "reviewStateName": "In Review",
+    "doneStateName": "Done"
   },
   "workspace": {
     "baseDir": ".runs",
