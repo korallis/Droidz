@@ -8,6 +8,23 @@ import { findProjectByName, findCycleByName } from "./linear";
 
 function rl() { return readline.createInterface({ input: process.stdin, output: process.stdout }); }
 function ask(q: string) { const r = rl(); return new Promise<string>(res => r.question(q, a => { r.close(); res(a.trim()); })); }
+async function ensureGitRepo(root: string) {
+  const p = Bun.spawn(["git", "rev-parse", "--is-inside-work-tree"], { cwd: root, stdout: "pipe", stderr: "pipe" });
+  const code = await p.exited;
+  if (code === 0) return;
+  const ans = await ask("No git repo found here. Initialize git now? (y/N): ");
+  if (!ans.toLowerCase().startsWith("y")) return;
+  await Bun.spawn(["git", "init"], { cwd: root }).exited;
+  // Ensure we don't commit secrets or temp files
+  const gi = path.join(root, ".gitignore");
+  try {
+    const existing = await fs.readFile(gi, "utf-8").catch(() => "");
+    const lines = new Set(existing.split(/\r?\n/).filter(Boolean));
+    ["/orchestrator/config.json", "/orchestrator/plan.json", "/.runs/"].forEach(l => lines.add(l));
+    await fs.writeFile(gi, Array.from(lines).join("\n") + "\n");
+  } catch {}
+  console.log("Git initialized. You can add a remote later (gh repo create ...) and commit when ready.");
+}
 
 async function loadConfig(root: string): Promise<OrchestratorConfig | null> {
   try { return JSON.parse(await fs.readFile(path.join(root, "orchestrator", "config.json"), "utf-8")); } catch { return null; }
@@ -35,6 +52,15 @@ async function main() {
     cfg = await loadConfig(root);
     if (!cfg) { console.error("Setup failed to generate config."); process.exit(1); }
   }
+  // Ensure Linear API key exists before continuing
+  if (!cfg.linear.apiKey) {
+    console.log("Linear API key is missing. Opening setup to capture it...");
+    await spawn("bun", [path.join("orchestrator", "setup.ts")], root);
+    cfg = await loadConfig(root);
+    if (!cfg?.linear?.apiKey) { console.error("Linear API key still missing. Aborting."); process.exit(1); }
+  }
+
+  await ensureGitRepo(root);
 
   console.log("Validating environment...");
   const checks = await validateEnvironment(cfg.linear.apiKey);
@@ -46,6 +72,11 @@ async function main() {
 
   const useNew = (await ask("Create a NEW Linear project from an idea? (y/N): ")).toLowerCase().startsWith("y");
   if (useNew) {
+    // Choose workspace mode up front for clarity
+    const wt = await ask(`Workspace mode (worktree|clone|branch) [${cfg!.workspace.mode || (cfg!.workspace.useWorktrees===false?"branch":"worktree")}]: `);
+    if (wt) cfg!.workspace.mode = wt as any;
+    await saveConfig(root, cfg!);
+
     const res = await spawn("bun", [path.join("orchestrator", "new-project.ts")], root);
     if (res.code !== 0) { console.error(res.err || res.out); process.exit(1); }
     cfg = await loadConfig(root);
