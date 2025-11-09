@@ -3,9 +3,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { OrchestratorConfig, TaskSpec } from "./types";
 import { detectRepoProfile } from "./detectors";
-import { fetchIssuesByProjectAndCycle, commentOnIssue } from "./linear";
 import { routeSpecialist } from "./routing";
 import { runSpecialist } from "./workers";
+import { loadAgentsGuide, truncateGuide } from "./agents";
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40);
@@ -43,6 +43,16 @@ function topoSort<T extends { key: string; deps: string[] }>(items: T[]): T[] {
   return out.length === items.length ? out : items; // fallback
 }
 
+async function runDroidJson(prompt: string, cwd: string): Promise<any | null> {
+  const p = Bun.spawn(["droid", "exec", "--output-format", "text", "--cwd", cwd, prompt], { stdout: "pipe", stderr: "pipe" });
+  const out = await new Response(p.stdout).text();
+  const err = await new Response(p.stderr).text();
+  if (err.trim()) console.error(err);
+  const m = out.match(/\{[\s\S]*\}\s*$/);
+  if (!m) return null;
+  try { return JSON.parse(m[0]); } catch { return null; }
+}
+
 async function main() {
   const repoRoot = process.cwd();
   const cfg = await loadConfig(repoRoot);
@@ -65,24 +75,19 @@ async function main() {
   const sprint = (args.get("sprint") as string) || cfg.linear.sprint;
   let concurrency = Number((args.get("concurrency") as string) || cfg.concurrency || 4);
   const planOnly = Boolean(args.get("plan"));
-  if (cfg.workspace && cfg.workspace.useWorktrees === false && concurrency > 1) {
-    console.warn("Worktrees disabled: forcing concurrency=1 to avoid branch conflicts in a single workspace.");
-    concurrency = 1;
-  }
+  const planFile = (args.get("plan-file") as string) || "";
+
 
   const profile = await detectRepoProfile(repoRoot);
   console.log("Detected repo profile:", profile);
 
-  let issues = await fetchIssuesByProjectAndCycle(cfg.linear.apiKey || "", project, sprint);
-  if (!issues.length) {
-    console.log(`No issues found for project='${project}' and sprint='${sprint}'. Falling back to project-only.`);
-    const { fetchIssuesByProject } = await import("./linear");
-    issues = await fetchIssuesByProject(cfg.linear.apiKey || "", project);
-  }
-  if (!issues.length) {
-    console.log("No issues found.");
-    return;
-  }
+  // Ask Droid to list issues for this project (and sprint if provided)
+  const agents = await loadAgentsGuide(repoRoot);
+  const agentsText = truncateGuide(agents.text);
+  const listPrompt = `List all issues for Linear project \"${project}\"${sprint?` in sprint/cycle \"${sprint}\"`:''} as compact JSON ONLY: {"issues":[{"id":"","identifier":"","title":"","description":"","labels":[],"blockedBy":[]}]}\nUse LINEAR_API_KEY from env. Do not print secrets.` + (agentsText?`\n\nGuidelines (AGENTS.md):\n${agentsText}`:"");
+  const resJson = await runDroidJson(listPrompt, repoRoot);
+  const issues = Array.isArray(resJson?.issues) ? resJson.issues : [];
+  if (!issues.length) { console.log("No issues found."); return; }
 
   const tasks: TaskSpec[] = issues.map(iss => {
     const specialist = routeSpecialist(iss.labels, cfg);
@@ -101,7 +106,22 @@ async function main() {
     };
   });
 
-  const order = topoSort(tasks);
+  let order = topoSort(tasks);
+  // Apply plan override if provided
+  if (planFile) {
+    try {
+      const raw = await fs.readFile(path.resolve(planFile), "utf-8");
+      const override = JSON.parse(raw) as { plan: Array<{ key: string }> };
+      const orderMap = new Map(order.map((t, i) => [t.key, t]));
+      const overridden: TaskSpec[] = [];
+      for (const p of override.plan || []) if (orderMap.has(p.key)) overridden.push(orderMap.get(p.key)!);
+      const rest = order.filter(t => !overridden.find(o => o.key === t.key));
+      order = [...overridden, ...rest];
+    } catch (e) {
+      console.warn("Could not apply plan-file override:", String(e));
+    }
+  }
+
   console.log(`Planning ${tasks.length} tasks with concurrency ${concurrency}`);
 
   if (planOnly || cfg.guardrails.dryRun) {
@@ -118,11 +138,9 @@ async function main() {
     const t = queue.shift()!;
     const p = (async () => {
       try {
-        if (cfg.linear.updateComments) await commentOnIssue(cfg.linear.apiKey || "", t.key, `Queued for execution with ${t.specialist}.`);
         await runSpecialist(t, cfg, repoRoot);
       } catch (e: any) {
         console.error(`Task ${t.key} failed:`, e.message || e);
-        if (cfg.linear.updateComments) await commentOnIssue(cfg.linear.apiKey || "", t.key, `Failed: ${"```"}${String(e)}${"```"}`);
       } finally {
         running.delete(pr);
         await spawnNext();

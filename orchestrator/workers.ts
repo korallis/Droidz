@@ -3,10 +3,11 @@ import path from "path";
 import { promises as fs } from "fs";
 import { buildPrompt } from "./workerPrompt";
 import { OrchestratorConfig, TaskSpec } from "./types";
-import { commentOnIssue, getTeamStartedStateId, setIssueState, getProjectTeam, getTeamStateIdByName } from "./linear";
+// Droid CLI performs git/Linear work; orchestrator only schedules
+import { loadAgentsGuide, truncateGuide } from "./agents";
 
-async function run(cmd: string, args: string[], cwd: string): Promise<{ code: number; stdout: string; stderr: string }> {
-  const p = spawn([cmd, ...args], { cwd, stdout: "pipe", stderr: "pipe" });
+async function run(cmd: string, args: string[], cwd: string, env?: Record<string, string>): Promise<{ code: number; stdout: string; stderr: string }> {
+  const p = spawn([cmd, ...args], { cwd, stdout: "pipe", stderr: "pipe", env });
   const out = await new Response(p.stdout).text();
   const err = await new Response(p.stderr).text();
   const code = await p.exited;
@@ -77,25 +78,12 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
   const workDir = prep.workDir;
   const mode = prep.mode;
 
-  if (!guardrails.dryRun) {
-    // Set issue state to In Progress (started)
-    try {
-      let teamId = cfg.linear.teamId;
-      if (!teamId && cfg.linear.projectId) {
-        const team = await getProjectTeam(cfg.linear.apiKey || "", cfg.linear.projectId);
-        teamId = team?.id;
-      }
-      if (teamId) {
-        const startedId = await getTeamStartedStateId(cfg.linear.apiKey || "", teamId);
-        if (startedId) await setIssueState(cfg.linear.apiKey || "", task.key, startedId);
-      }
-    } catch (e) {
-      console.warn("Could not set issue to In Progress:", String(e));
-    }
-    if (cfg.linear && cfg.linear.updateComments) {
-      await commentOnIssue(cfg.linear.apiKey || "", task.key, `Starting work with ${task.specialist} in branch ${task.branch}.`);
-    }
-  }
+  // All Linear/git operations are handled by the Droid in this workspace.
+
+  // Load AGENTS.md guidance
+  const guide = await loadAgentsGuide(repoRoot);
+  const agentsText = truncateGuide(guide.text);
+  const prompt = buildPrompt(task.specialist, task, agentsText);
 
   const args = [
     "exec",
@@ -107,6 +95,7 @@ export async function runSpecialist(task: TaskSpec, cfg: OrchestratorConfig, rep
     "text",
     prompt,
   ];
+  const env = { ...(process.env as any), LINEAR_API_KEY: cfg.linear.apiKey || "" } as any;
   const res = await run("droid", args, workDir);
 
   // Try to find a JSON summary in output
