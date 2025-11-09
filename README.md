@@ -93,6 +93,22 @@ You should see 5 files (these are your AI helpers):
 - droidz-implementer.md (the builder)
 - droidz-verifier.md (the quality checker)
 
+### Step 3: Enable Custom Droids in Claude Code
+
+**IMPORTANT: You must do this to make the droids work!**
+
+1. **Enable Custom Droids**
+   - In Claude Code, go to `/Settings`
+   - Find the option to enable custom droids
+   - Turn it ON ✅
+
+2. **Import the Droids**
+   - Run the command `/droids`
+   - Select **"Import from Claude Code"** option
+   - This loads your 5 AI helpers into Claude Code
+
+**Without these steps, the droids won't work properly!**
+
 ---
 
 ## How to Use It
