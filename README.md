@@ -120,6 +120,7 @@ Type this (but replace the example with YOUR idea):
 1. **Planning (2-5 minutes)**
    - Droidz researches recipe apps
    - Creates a plan with features
+   - **Creates project standards automatically** (coding rules, architecture, security)
    - Shows you the plan (you can edit it!)
 
 2. **Specification (5-10 minutes)**
@@ -128,17 +129,17 @@ Type this (but replace the example with YOUR idea):
    - Breaks it into 5 separate tasks
 
 3. **Building (10-30 minutes)** ⚡ THIS IS WHERE PARALLEL HAPPENS!
-   - 🤖 Helper 1: Builds login form
-   - 🤖 Helper 2: Builds password system
-   - 🤖 Helper 3: Builds session management
-   - 🤖 Helper 4: Builds user profile
-   - 🤖 Helper 5: Builds logout feature
+   - 🤖 Helper 1: Builds login form (following standards)
+   - 🤖 Helper 2: Builds password system (following standards)
+   - 🤖 Helper 3: Builds session management (following standards)
+   - 🤖 Helper 4: Builds user profile (following standards)
+   - 🤖 Helper 5: Builds logout feature (following standards)
    
    **All working at the same time!**
 
 4. **Checking (5 minutes)**
    - Runs tests
-   - Checks code quality
+   - Checks code quality matches standards
    - Makes sure everything works
 
 **Done! Your feature is ready!** ✅
@@ -162,6 +163,7 @@ Droidz Planner:
      3. Task Categories
      4. Search & Filter
      5. Dark Mode
+  ✅ Created standards (Next.js best practices automatically!)
 
 You: Let's build "Create/Edit/Delete Tasks"
 
@@ -279,12 +281,14 @@ When you install Droidz, you get:
 │   ├── planning/            ← How to research & plan
 │   ├── specification/       ← How to write details
 │   └── implementation/      ← How to build & check
-├── 📁 standards/            ← Quality rules
-│   ├── coding-conventions.md  ← How to write clean code
-│   ├── architecture.md        ← How to structure projects
-│   └── security.md            ← How to stay safe
+├── 📁 standards/            ← Quality rules (templates - Droidz fills these!)
+│   ├── coding-conventions.md  ← Droidz creates based on your tech stack
+│   ├── architecture.md        ← Droidz creates based on your framework
+│   └── security.md            ← Droidz creates based on your needs
 └── 📁 droidz/                ← Where plans & results go
 ```
+
+**Note:** The `standards/` folder contains templates. When you start a project, Droidz automatically fills them with rules specific to YOUR tech stack!
 
 ---
 
@@ -386,6 +390,9 @@ Your support helps make Droidz even better!
 
 ### Q: Do I need to know how to code?
 **A:** Not really! Droidz helps with planning and building. But understanding what you want helps.
+
+### Q: Do I need to create the standards files myself?
+**A:** No! Droidz creates them automatically during planning (for new projects) or you can ask it to analyze your existing code.
 
 ### Q: Can it build anything?
 **A:** Most web apps and tools! Works best for: websites, apps, APIs, tools.
