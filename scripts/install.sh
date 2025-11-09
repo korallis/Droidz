@@ -3,24 +3,61 @@ set -e
 
 echo "🤖 Installing Droidz - Spec-Driven Development for Droid CLI..."
 
+# Configuration
+REPO="${DROIDZ_REPO:-korallis/Droidz}"
+BRANCH="${DROIDZ_BRANCH:-main}"
+TARGET_DIR="${1:-.}"
+
 # Detect if we're running from repo or curl pipe
 if [ -n "$BASH_SOURCE" ] && [ -f "$BASH_SOURCE" ]; then
-  # Running directly from repo
+  # Running directly from cloned repo
   SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
   PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+  CLEANUP_TEMP=false
   echo "📦 Installing from local repo: $PROJECT_ROOT"
 else
-  # Running from curl pipe - use current directory
-  PROJECT_ROOT="$(pwd)"
-  echo "📦 Installing from current directory: $PROJECT_ROOT"
+  # Running from curl pipe - download from GitHub
+  echo "📦 Downloading from GitHub: $REPO @ $BRANCH"
+  
+  TAR_URL="https://codeload.github.com/${REPO}/tar.gz/refs/heads/${BRANCH}"
+  TMP_DIR="$(mktemp -d)"
+  CLEANUP_TEMP=true
+  
+  echo "⬇️  Downloading..."
+  if ! curl -fsSL "$TAR_URL" -o "$TMP_DIR/repo.tar.gz"; then
+    echo "❌ Failed to download from GitHub"
+    rm -rf "$TMP_DIR"
+    exit 1
+  fi
+  
+  echo "📦 Extracting..."
+  tar -xzf "$TMP_DIR/repo.tar.gz" -C "$TMP_DIR"
+  
+  # Find the extracted directory (GitHub creates folder named repo-branch)
+  PROJECT_ROOT="$(find "$TMP_DIR" -maxdepth 1 -type d -name "${REPO##*/}-*" | head -n 1)"
+  
+  if [ -z "$PROJECT_ROOT" ] || [ ! -d "$PROJECT_ROOT" ]; then
+    echo "❌ Could not find extracted directory"
+    rm -rf "$TMP_DIR"
+    exit 1
+  fi
+  
+  echo "✅ Downloaded to: $PROJECT_ROOT"
 fi
 
-# Target directory (where we're installing)
-TARGET_DIR="${1:-.}"
-TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
-
+# Resolve target directory to absolute path
+TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd || pwd)"
 echo "📂 Target: $TARGET_DIR"
 echo ""
+
+# Verify source directories exist
+for dir in workflows standards .claude/agents; do
+  if [ ! -d "$PROJECT_ROOT/$dir" ]; then
+    echo "❌ Required directory not found: $dir"
+    [ "$CLEANUP_TEMP" = true ] && rm -rf "$TMP_DIR"
+    exit 1
+  fi
+done
 
 # Create target directories
 mkdir -p "$TARGET_DIR/.claude/agents"
@@ -30,38 +67,35 @@ mkdir -p "$TARGET_DIR/droidz"
 
 # Copy workflows
 echo "📋 Copying workflows..."
-if [ -d "$PROJECT_ROOT/workflows" ]; then
-  cp -r "$PROJECT_ROOT/workflows/"* "$TARGET_DIR/workflows/" 2>/dev/null || true
-  echo "✅ Workflows copied (planning, specification, implementation)"
-else
-  echo "❌ workflows/ not found at $PROJECT_ROOT/workflows"
+if ! cp -r "$PROJECT_ROOT/workflows/"* "$TARGET_DIR/workflows/" 2>/dev/null; then
+  echo "❌ Failed to copy workflows"
+  [ "$CLEANUP_TEMP" = true ] && rm -rf "$TMP_DIR"
   exit 1
 fi
+echo "✅ Workflows copied (planning, specification, implementation)"
 
 # Copy standards
 echo "📐 Copying standards templates..."
-if [ -d "$PROJECT_ROOT/standards" ]; then
-  cp -r "$PROJECT_ROOT/standards/"* "$TARGET_DIR/standards/" 2>/dev/null || true
-  echo "✅ Standards templates copied (customize these for your project)"
-else
-  echo "❌ standards/ not found at $PROJECT_ROOT/standards"
+if ! cp -r "$PROJECT_ROOT/standards/"* "$TARGET_DIR/standards/" 2>/dev/null; then
+  echo "❌ Failed to copy standards"
+  [ "$CLEANUP_TEMP" = true ] && rm -rf "$TMP_DIR"
   exit 1
 fi
+echo "✅ Standards templates copied (customize these for your project)"
 
 # Copy custom droids
 echo "🤖 Copying custom droids..."
-if [ -d "$PROJECT_ROOT/.claude/agents" ]; then
-  cp -r "$PROJECT_ROOT/.claude/agents/"* "$TARGET_DIR/.claude/agents/" 2>/dev/null || true
-  echo "✅ Custom droids copied:"
-  echo "   - droidz-planner (product planning with Exa)"
-  echo "   - droidz-spec-writer (specifications with Ref)"
-  echo "   - droidz-implementer (parallel worker)"
-  echo "   - droidz-verifier (verification)"
-  echo "   - droidz-orchestrator (workflow coordinator)"
-else
-  echo "❌ .claude/agents/ not found at $PROJECT_ROOT/.claude/agents"
+if ! cp -r "$PROJECT_ROOT/.claude/agents/"* "$TARGET_DIR/.claude/agents/" 2>/dev/null; then
+  echo "❌ Failed to copy droids"
+  [ "$CLEANUP_TEMP" = true ] && rm -rf "$TMP_DIR"
   exit 1
 fi
+echo "✅ Custom droids copied:"
+echo "   - droidz-planner (product planning with Exa)"
+echo "   - droidz-spec-writer (specifications with Ref)"
+echo "   - droidz-implementer (parallel worker)"
+echo "   - droidz-verifier (verification)"
+echo "   - droidz-orchestrator (workflow coordinator)"
 
 # Copy config
 echo "⚙️  Copying configuration..."
@@ -73,7 +107,13 @@ if [ -f "$PROJECT_ROOT/config.yml" ]; then
     echo "⚠️  config.yml already exists, skipping (won't overwrite)"
   fi
 else
-  echo "⚠️  config.yml not found (optional)"
+  echo "⚠️  config.yml not found in source"
+fi
+
+# Cleanup temp directory if we downloaded
+if [ "$CLEANUP_TEMP" = true ]; then
+  rm -rf "$TMP_DIR"
+  echo "🧹 Cleaned up temporary files"
 fi
 
 echo ""
