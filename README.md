@@ -531,7 +531,7 @@ nano config.yml
 # Ensure: workspace.mode = "worktree"
 ```
 
-### "Tool 'Create' is not available for model X"
+### "Invalid tools: Task" error
 
 **Fix:** This was fixed in v2.0.2 - update your droids
 ```bash
@@ -542,7 +542,11 @@ git pull origin main
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-**Background:** Specialist droids should have undefined `tools` field (not explicit arrays). When undefined, Factory provides ALL tools. See `TOOL_COMPATIBILITY.md` for details.
+**Background:** 
+- `Task` is NOT a tool you list in the tools array
+- It's automatically available when Custom Droids are enabled
+- Orchestrator creates plans that YOU delegate via: "Use droidz-codegen to implement X"
+- See `TOOL_COMPATIBILITY.md` for complete architecture details
 
 ---
 
