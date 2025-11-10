@@ -108,28 +108,18 @@ runtime:
 
 **What you get:** All 5 robots + Linear ticket tracking + Exa/Ref search = Maximum automation! 🚀
 
-### Step 1: Get Your Magic Keys (API Keys)
+### Step 1: Get Ready for Robot Powers! 🔑
 
-Think of API keys like passwords that let robots access special tools.
+**Option A: Super Easy (Recommended)**
+We'll add MCP servers in Step 5 - no keys needed upfront!
 
-**Get these 3 keys** (free, takes 5 minutes):
+**Option B: Use API Keys (Alternative)**
+If you prefer config files, get these keys (we'll use them in Step 5):
 
-1. **Linear Key** (fancy to-do list):
-   - Go to https://linear.app/settings/api
-   - Click "Create Key"
-   - Copy the key (looks like `lin_api_abc123...`)
+1. **Linear** (project management): https://linear.app/settings/api
+2. **Exa** (smart search): https://exa.ai/api-keys
 
-2. **Exa Key** (smart search):
-   - Go to https://exa.ai/api-keys
-   - Sign up free
-   - Copy your key (looks like `exa_abc123...`)
-
-3. **Ref Key** (documentation finder):
-   - Go to https://ref.sh/api
-   - Create account
-   - Copy your key (looks like `ref_abc123...`)
-
-**Keep these keys safe!** We'll use them in Step 4.
+Keep these safe for Step 5! Or just skip this - robots work without setup too!
 
 ### Step 2: Install Bun (Recommended)
 
@@ -201,45 +191,49 @@ You should see:
 ✅ droidz-integration (connects services)
 ```
 
-### Step 5: Add Your Magic Keys
+### Step 5: Give Robots Superpowers! ⚡
 
-Open the config file:
+**Best Way (Recommended):** Use MCP Servers for direct access!
+
 ```bash
-# Use any text editor
-nano config.yml
-# or
-code config.yml  # if you have VS Code
+droid
 ```
 
-Find these lines and paste your keys:
+Then add these magic connections:
+```
+/mcp add exa      # Super search power!
+/mcp add linear   # Project management power!
+/mcp add ref      # Documentation power!
+```
 
+Exit and restart:
+```
+Exit (Ctrl+C)
+droid
+```
+
+**Done!** Robots now have direct access to powerful tools! 🚀
+
+**Alternative Way:** Use config.yml (still works great!)
+
+If you prefer config files:
+```bash
+nano config.yml
+```
+
+Add your keys:
 ```yaml
 linear:
-  api_key: "lin_api_YOUR_KEY_HERE"  # Paste Linear key
-  team_id: ""  # Leave empty for now
-  project_name: ""  # IMPORTANT: If you have an existing Linear project, put its name here!
-  project_id: ""  # Optional
+  api_key: "lin_api_YOUR_KEY"  # Get from https://linear.app/settings/api
+  project_name: "MyProject"  # If you have existing project
 
 exa:
-  api_key: "exa_YOUR_KEY_HERE"  # Paste Exa key
-  enabled: true
+  api_key: "exa_YOUR_KEY"  # Get from https://exa.ai/api-keys
 
-ref:
-  api_key: "ref_YOUR_KEY_HERE"  # Paste Ref key
-  enabled: true
+# Note: Ref requires MCP server (use /mcp add ref)
 ```
 
-**Important for Existing Linear Projects:**
-If you already have a Linear project you want Droidz to work on:
-- Add your project name to `project_name` (must match exactly!)
-- Example: `project_name: "My Mobile App"`
-- Droidz will fetch tickets from that project
-
-**For New Projects:**
-- Leave `project_name` empty
-- Droidz will create a new Linear project when you tell it what to build!
-
-**Save the file!** (Ctrl+O in nano, or Cmd+S in VS Code)
+**No Setup?** That's OK too! Robots will use basic WebSearch (still works!)
 
 ### Step 6: Build Something Amazing!
 
