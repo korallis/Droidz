@@ -91,15 +91,19 @@ done
 # Make scripts executable
 chmod +x orchestrator/*.ts 2>/dev/null || true
 
-# Download or update config.yml
+# Download config.example.yml template
+log_info "Downloading configuration template..."
+curl -fsSL "${GITHUB_RAW}/config.example.yml" -o "config.example.yml"
+log_success "Downloaded config.example.yml"
+
+# Handle config.yml
 if [ -f "config.yml" ]; then
-    log_warning "config.yml already exists - creating config.yml.example instead"
-    curl -fsSL "${GITHUB_RAW}/config.yml" -o "config.yml.example"
-    log_success "Downloaded config.yml.example (check for new settings)"
+    log_warning "config.yml already exists - preserving your existing configuration"
+    log_info "Compare with config.example.yml to see new settings"
 else
-    curl -fsSL "${GITHUB_RAW}/config.yml" -o "config.yml"
-    log_success "Downloaded config.yml"
-    log_warning "Remember to update config.yml with your Linear API key!"
+    cp config.example.yml config.yml
+    log_success "Created config.yml from template"
+    log_warning "IMPORTANT: Add your API keys to config.yml before using!"
 fi
 
 # Download documentation
@@ -119,17 +123,39 @@ done
 curl -fsSL "${GITHUB_RAW}/docs/V2_ARCHITECTURE.md" -o "docs/V2_ARCHITECTURE.md"
 log_success "Downloaded architecture documentation"
 
-# Create .gitignore entry if needed
+# Create .gitignore entries if needed
 if [ -f ".gitignore" ]; then
+    # Add .runs/ if not present
     if ! grep -q ".runs/" .gitignore 2>/dev/null; then
         echo "" >> .gitignore
         echo "# Droidz worktrees" >> .gitignore
         echo ".runs/" >> .gitignore
         log_success "Added .runs/ to .gitignore"
     fi
+    
+    # Add config.yml if not present (CRITICAL for security)
+    if ! grep -q "config.yml" .gitignore 2>/dev/null; then
+        echo "" >> .gitignore
+        echo "# Configuration file with API keys (NEVER commit this!)" >> .gitignore
+        echo "config.yml" >> .gitignore
+        echo "" >> .gitignore
+        echo "# Keep the example template" >> .gitignore
+        echo "!config.example.yml" >> .gitignore
+        log_success "Added config.yml to .gitignore (keeps your API keys safe!)"
+    fi
 else
-    echo ".runs/" > .gitignore
-    log_success "Created .gitignore with .runs/"
+    # Create new .gitignore with both entries
+    cat > .gitignore << 'EOF'
+# Droidz worktrees
+.runs/
+
+# Configuration file with API keys (NEVER commit this!)
+config.yml
+
+# Keep the example template
+!config.example.yml
+EOF
+    log_success "Created .gitignore with security settings"
 fi
 
 # Summary
@@ -158,10 +184,12 @@ echo "3. Verify droids loaded:"
 echo "   ${BLUE}/droids${NC}"
 echo "   You should see: droidz-orchestrator, droidz-codegen, etc."
 echo ""
-echo "4. Configure Linear API (if using Linear):"
-echo "   Add to your environment:"
-echo "   ${BLUE}export LINEAR_API_KEY=\"lin_api_...\"${NC}"
-echo "   Or update config.yml"
+echo "4. Add your API keys to config.yml:"
+echo "   ${BLUE}# Edit config.yml and add your API keys${NC}"
+echo "   - Linear: https://linear.app/settings/api"
+echo "   - Exa: https://exa.ai/api-keys"
+echo "   - Ref: https://ref.sh/api"
+echo "   ${YELLOW}NOTE: config.yml is in .gitignore - your keys are safe!${NC}"
 echo ""
 echo "5. Start building:"
 echo "   ${BLUE}droid${NC}"

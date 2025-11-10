@@ -1,2 +1,8 @@
 # Droidz worktrees
 .runs/
+
+# Configuration file with API keys (NEVER commit this!)
+config.yml
+
+# Keep the example template
+!config.example.yml

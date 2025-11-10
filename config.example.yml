@@ -1,7 +1,12 @@
 version: 1.0.0
 
-# Droidz Configuration
+# Droidz Configuration Template
 # Spec-driven development with parallel execution for Droid CLI
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file to 'config.yml': cp config.example.yml config.yml
+# 2. Add your API keys in config.yml (or use environment variables)
+# 3. Never commit config.yml to git (it should be in .gitignore)
 
 # Profile to use (default includes planning, spec, implementation workflows)
 profile: default
@@ -36,14 +41,32 @@ use_ref_docs: true
 # MCP servers are OPTIONAL - Droidz works without them using helper scripts
 mcp_tools_enabled: true  # Enable MCP support in Factory
 
+# API Keys Configuration
+# IMPORTANT: Add your actual API keys in config.yml (not this template file!)
+# You can use environment variables or paste keys directly
+
 # Linear Integration (Optional - for automated ticket processing)
 # Get your API key from: https://linear.app/settings/api
 # Get your team ID from your Linear workspace URL or API
 linear:
-  api_key: "${LINEAR_API_KEY}"  # Use environment variable for security
+  api_key: "${LINEAR_API_KEY}"  # Environment variable or paste your key here
   team_id: ""  # Your Linear team ID (e.g., "abc123def456")
   update_comments: true  # Post PR links as comments on tickets
   auto_status_updates: true  # Automatically update ticket status
+
+# Exa AI Search (Optional - for AI-powered web and code search)
+# Get your API key from: https://exa.ai/api-keys
+# Exa provides intelligent search optimized for AI agents
+exa:
+  api_key: "${EXA_API_KEY}"  # Environment variable or paste your key here
+  enabled: true  # Enable Exa search for research and documentation
+
+# Ref Documentation Search (Optional - for documentation lookup)
+# Get your API key from: https://ref.sh/api
+# Ref provides access to public and private documentation
+ref:
+  api_key: "${REF_API_KEY}"  # Environment variable or paste your key here
+  enabled: true  # Enable Ref for documentation searches
 
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development

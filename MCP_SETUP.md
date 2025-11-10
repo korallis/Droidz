@@ -2,28 +2,89 @@
 
 ## 🎯 Overview
 
-Droidz droids can access **MCP (Model Context Protocol) servers** for extended functionality like Linear, Exa, and Ref. However, MCP servers are **NOT configured in droid files** - they're added via Factory's `/mcp` command and become available to **all droids automatically**.
+Droidz droids can access **MCP (Model Context Protocol) servers** for extended functionality like Linear, Exa, and Ref. 
+
+**Two ways to configure:**
+1. **Config.yml (Recommended)** - Store API keys in `config.yml` for easy management
+2. **Factory CLI** - Add MCP servers via `/mcp` command (user-specific)
 
 ---
 
-## 🔍 How MCP Works in Factory
+## 📋 Quick Setup (config.yml Method)
 
-### Key Concepts
+**This is the easiest way!** Your API keys are stored in `config.yml` and used automatically.
 
+### Step 1: Get Your API Keys
+
+1. **Linear:** https://linear.app/settings/api
+2. **Exa:** https://exa.ai/api-keys
+3. **Ref:** https://ref.sh/api
+
+### Step 2: Add Keys to config.yml
+
+Edit your `config.yml`:
+
+```yaml
+# API Keys Configuration
+linear:
+  api_key: "lin_api_YOUR_KEY_HERE"  # Paste your Linear key
+  team_id: "YOUR_TEAM_ID"
+  
+exa:
+  api_key: "exa_YOUR_KEY_HERE"  # Paste your Exa key
+  enabled: true
+  
+ref:
+  api_key: "ref_YOUR_KEY_HERE"  # Paste your Ref key
+  enabled: true
+```
+
+### Step 3: Verify Security
+
+Make sure `config.yml` is in your `.gitignore`:
+
+```bash
+# Check if config.yml is ignored
+git check-ignore config.yml
+# Should output: config.yml
+
+# If not, add it:
+echo "config.yml" >> .gitignore
+```
+
+**⚠️ IMPORTANT:** Never commit `config.yml` to git! It contains your API keys.
+
+---
+
+## 🔍 How MCP Works
+
+### Using config.yml (Recommended)
+
+When you add API keys to `config.yml`, Droidz helper scripts use them to:
+- Fetch Linear tickets
+- Update issue statuses
+- Search with Exa
+- Query documentation with Ref
+
+**Benefits:**
+- ✅ Easy to set up
+- ✅ Works immediately
+- ✅ All team members can use same config
+- ✅ Keys stored locally (not in git)
+
+### Using Factory CLI (Alternative)
+
+You can also add MCP servers directly via Factory CLI:
+
+**Key Concepts:**
 1. **MCP servers are user-configured** - Each user adds them via `/mcp add` command
 2. **Tools become available dynamically** - Once configured, MCP tools work in all droids
 3. **No code changes needed** - Droids automatically get access to configured MCP tools
 4. **Optional by design** - Users only add the MCPs they need
 
-### Why Not in Droid Tools Array?
+**Why Not in Droid Tools Array?**
 
-According to [Factory documentation](https://docs.factory.ai/cli/configuration/custom-droids):
-
-> **Tool categories → concrete tools**
-> | Category | Tool IDs |
-> | `mcp` | Dynamically populated (if any) |
-
-MCP tools are **dynamically populated** - they're not referenced directly in the tools array!
+According to [Factory documentation](https://docs.factory.ai/cli/configuration/custom-droids), MCP tools are **dynamically populated** - they're not referenced directly in the tools array!
 
 ---
 
@@ -97,7 +158,9 @@ droid
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Factory CLI Setup (Alternative Method)
+
+If you prefer to configure MCP servers via Factory CLI instead of config.yml:
 
 ### Step 1: Get API Keys
 
