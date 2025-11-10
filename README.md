@@ -41,15 +41,24 @@ droid
 droid         # Restart
 ```
 
-**Step 3: Start building!**
+**Step 3: Get a plan!**
 ```
-Use droidz-orchestrator to build a todo app with:
+Use droidz-orchestrator to plan a todo app with:
 - Add tasks
 - Mark tasks done  
 - Delete tasks
 ```
 
-**That's it!** Robots start working in parallel. ✨
+**Step 4: Follow the plan!**
+Orchestrator creates delegation instructions. YOU execute them:
+```
+"Use droidz-codegen to implement TASK-1"
+"Use droidz-test to implement TASK-2"
+```
+
+**That's it!** Specialists work in parallel. ✨
+
+> **📘 New to v2.0.2?** See [HOW_TO_USE_DROIDZ.md](./HOW_TO_USE_DROIDZ.md) for the corrected workflow!
 
 ---
 
@@ -63,6 +72,12 @@ Use droidz-orchestrator to build a todo app with:
 - [New Project Workflow](#-new-project-workflow)
 - [Sample Workflows](#-sample-workflows)
 - [Troubleshooting](#-troubleshooting)
+
+## 📘 Additional Documentation
+
+- **[HOW_TO_USE_DROIDZ.md](./HOW_TO_USE_DROIDZ.md)** - Complete usage guide with corrected architecture
+- **[TOOL_COMPATIBILITY.md](./TOOL_COMPATIBILITY.md)** - Tool availability and model compatibility
+- **[SOLUTION_SUMMARY.md](./SOLUTION_SUMMARY.md)** - v2.0.2 fix details
 
 ---
 
@@ -101,6 +116,13 @@ Task 5 ┘
 ```
 
 **How?** Git worktrees! Each robot gets its own isolated workspace.
+
+**How YOU use it:** Orchestrator plans, YOU delegate to specialists:
+```
+Step 1: "Use droidz-orchestrator to plan X"
+Step 2: Orchestrator outputs: "Use droidz-codegen for task 1", etc.
+Step 3: YOU run those commands (in parallel if possible)
+```
 
 ---
 
