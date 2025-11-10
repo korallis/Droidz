@@ -5,7 +5,7 @@ set -e
 # Installs or updates Droidz in your project
 # Updated: 2025-01-10 - Simplified MCP setup
 
-DROIDZ_VERSION="2.0.1"
+DROIDZ_VERSION="2.1.0"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 
 # Colors for output
@@ -39,7 +39,7 @@ if [ ! -d ".git" ]; then
 fi
 
 # Detect if this is an install or update
-if [ -d ".factory/droids" ] && [ -f "orchestrator/linear-fetch.ts" ]; then
+if [ -d ".factory/droids" ] && [ -f "orchestrator/task-coordinator.ts" ]; then
     MODE="update"
     log_info "Existing Droidz installation detected. Updating..."
 else
@@ -53,7 +53,6 @@ echo ""
 log_info "Creating directories..."
 mkdir -p .factory/droids
 mkdir -p orchestrator
-mkdir -p docs
 log_success "Directories created"
 
 # Download droids
@@ -78,19 +77,16 @@ done
 log_info "Downloading orchestrator scripts..."
 
 SCRIPTS=(
-    "linear-fetch.ts"
-    "linear-update.ts"
     "worktree-setup.ts"
     "task-coordinator.ts"
+    "types.ts"
+    "config.json"
 )
 
 for script in "${SCRIPTS[@]}"; do
     curl -fsSL "${GITHUB_RAW}/orchestrator/${script}" -o "orchestrator/${script}"
     log_success "Downloaded ${script}"
 done
-
-# Make scripts executable
-chmod +x orchestrator/*.ts 2>/dev/null || true
 
 # Download config.example.yml template
 log_info "Downloading configuration template..."
@@ -109,20 +105,10 @@ fi
 
 # Download documentation
 log_info "Downloading documentation..."
-
-DOCS=(
-    "QUICK_START_V2.md"
-    "CHANGELOG.md"
-)
-
-for doc in "${DOCS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/${doc}" -o "${doc}"
-    log_success "Downloaded ${doc}"
-done
-
-# Download architecture docs
-curl -fsSL "${GITHUB_RAW}/docs/V2_ARCHITECTURE.md" -o "docs/V2_ARCHITECTURE.md"
-log_success "Downloaded architecture documentation"
+curl -fsSL "${GITHUB_RAW}/README.md" -o "README.md"
+log_success "Downloaded README.md"
+curl -fsSL "${GITHUB_RAW}/CHANGELOG.md" -o "CHANGELOG.md"
+log_success "Downloaded CHANGELOG.md"
 
 # Create .gitignore entries if needed
 if [ -f ".gitignore" ]; then
@@ -202,7 +188,7 @@ echo "   droid"
 echo "   Then say: Use droidz-orchestrator to build [your idea]"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📚 Docs: QUICK_START_V2.md | docs/V2_ARCHITECTURE.md"
+echo "📚 Docs: README.md | CHANGELOG.md"
 echo "💝 Support: paypal.me/leebarry84"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
