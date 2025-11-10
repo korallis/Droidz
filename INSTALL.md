@@ -12,19 +12,32 @@ Simple installation guide for Droidz V2.
 # 1. Install Factory CLI
 curl -fsSL https://app.factory.ai/cli | sh
 
-# 2. Go to your project
+# 2. Install Bun (Recommended - 3-10x faster!)
+curl -fsSL https://bun.sh/install | bash
+# Restart terminal, then verify:
+bun --version
+
+# Alternative: Use Node.js (already installed?)
+node --version
+
+# 3. Go to your project
 cd your-project
 
-# 3. Install Droidz
+# 4. Install Droidz
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 
-# 4. Enable custom droids
+# 5. Add your API keys (optional)
+nano config.yml
+# Add Linear, Exa, and Ref API keys
+# See API_KEYS_SETUP.md for details
+
+# 6. Enable custom droids
 droid
 /settings
 # Toggle "Custom Droids" ON
 # Exit and restart: droid
 
-# 5. Verify
+# 7. Verify
 /droids
 # Should see all droidz-* robots
 ```
@@ -59,11 +72,13 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 - ✅ Orchestrator scripts (orchestrator/*.ts)
 - ✅ Documentation (QUICK_START_V2.md, etc.)
 - ✅ Architecture docs
+- ✅ config.example.yml (template)
 
 **What's preserved:**
-- ✅ Your config.yml (gets config.yml.example instead)
+- ✅ Your config.yml (your API keys are safe!)
 - ✅ Your custom settings
 - ✅ Your git history
+- ✅ Your .gitignore (config.yml remains gitignored)
 
 ---
 
@@ -87,8 +102,12 @@ your-project/
 │   ├── worktree-setup.ts            # Git worktree manager
 │   └── task-coordinator.ts          # Coordinator bridge
 ├── docs/
-│   └── V2_ARCHITECTURE.md           # Technical docs
-├── config.yml                       # Configuration
+│   ├── V2_ARCHITECTURE.md           # Technical docs
+│   └── (other docs)
+├── config.yml                       # YOUR configuration (gitignored!)
+├── config.example.yml               # Template (safe to commit)
+├── API_KEYS_SETUP.md               # Security guide
+├── MCP_SETUP.md                    # MCP server setup
 ├── QUICK_START_V2.md               # Quick start guide
 └── CHANGELOG.md                     # Version history
 ```

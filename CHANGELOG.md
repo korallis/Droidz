@@ -2,6 +2,122 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.2.0] - 2025-11-10
+
+### 🚀 Major Enhancements
+
+#### Runtime Configuration & Performance
+- **Added Bun runtime support** - Bun is now the recommended JavaScript runtime (3-10x faster than npm/node)
+- **Automatic fallback** - Droidz automatically uses npm/node if Bun is not installed
+- **Configurable runtime** - Users can choose between Bun, npm, pnpm, or yarn in config.yml
+- **Performance benefits** - Clear documentation of speed improvements with Bun
+- **Installation guide** - Step-by-step instructions for all runtime options
+
+#### Secure API Key Management
+- **Added Exa and Ref API keys** - config.yml now supports all three services (Linear, Exa, Ref)
+- **Security-first approach** - config.yml is now gitignored by default
+- **Template system** - config.example.yml serves as safe template to commit
+- **Environment variables** - Support for ${VAR} syntax in config files
+- **Comprehensive security guide** - New API_KEYS_SETUP.md with emergency procedures
+
+#### Complete Documentation Refactor
+- **5-year-old friendly README** - Complete rewrite in simple, accessible language
+- **Reduced by 35%** - From 1,230 lines to 808 lines (clearer, more focused)
+- **4 clear setup paths** - Different paths for new/existing projects, with/without features
+- **Decision tree** - "Which Setup Am I?" section helps users choose the right path
+- **Visual structure** - Better use of emojis, headers, and formatting
+- **Scenario coverage** - All combinations of Linear/MCP documented
+
+#### Enhanced MCP Setup
+- **config.yml method** - Added as recommended approach (easier than Factory CLI)
+- **Quick setup guide** - 3-step process to add API keys
+- **Security verification** - Instructions to check gitignore status
+- **Dual approach** - Both config.yml and Factory CLI methods documented
+
+### 📝 Files Added
+- `API_KEYS_SETUP.md` - Comprehensive security guide (288 lines)
+  - How to get API keys
+  - Security best practices
+  - Environment variable setup
+  - Team collaboration guide
+  - Key rotation procedures
+  - Emergency procedures for leaked keys
+- `config.example.yml` - Safe template for configuration
+
+### 🔧 Files Updated
+
+#### Core Configuration
+- `config.yml` → `config.example.yml` - Renamed and added to git, real config.yml now gitignored
+- `.gitignore` - Added config.yml, kept config.example.yml
+- `config.example.yml` - Added:
+  - Runtime configuration section (Bun/npm/pnpm/yarn)
+  - Exa API key configuration
+  - Ref API key configuration
+  - Clear security warnings
+
+#### Documentation
+- `README.md` - Complete refactor (808 lines, was 1,230):
+  - Added "Which Setup Am I?" decision tree
+  - Added "⚡ Requirements" section for runtimes
+  - Created 4 clear setup paths with step-by-step instructions
+  - Added runtime installation to all paths
+  - Simplified all technical explanations with analogies
+  - Added comprehensive troubleshooting (runtime-specific)
+  - Added "With vs Without" comparison sections
+- `MCP_SETUP.md` - Updated:
+  - Added config.yml quick setup method
+  - Security verification steps
+  - Dual approach (config.yml + Factory CLI)
+- `install.sh` - Updated:
+  - Downloads config.example.yml
+  - Creates config.yml from template
+  - Adds config.yml to .gitignore automatically
+  - Clear instructions for API keys
+
+### ✨ Impact
+
+**Before this release:**
+- No runtime configuration (assumed Bun installed)
+- config.yml tracked in git (security risk)
+- README was 1,230 lines (overwhelming)
+- Only Linear API key supported
+- MCP setup only via Factory CLI
+
+**After this release:**
+- ✅ Runtime configurable (Bun/npm/pnpm/yarn) with auto-fallback
+- ✅ API keys never committed (config.yml gitignored)
+- ✅ README 35% shorter and 5-year-old friendly
+- ✅ All three API keys supported (Linear, Exa, Ref)
+- ✅ MCP setup via config.yml (easier method)
+- ✅ Complete security guide included
+- ✅ 4 clear paths for all scenarios
+
+### 🎯 Key Benefits
+
+1. **Better Performance**: Bun support provides 3-10x speed improvement
+2. **More Secure**: API keys never committed, comprehensive security guide
+3. **Easier to Understand**: README refactored for maximum clarity
+4. **More Flexible**: Support for all runtimes and all MCP services
+5. **Better Onboarding**: Clear decision tree and step-by-step paths
+
+### 🔒 Security Improvements
+
+- config.yml automatically gitignored
+- config.example.yml provides safe template
+- API_KEYS_SETUP.md guides secure practices
+- Emergency procedures for leaked keys
+- Team collaboration best practices
+- Key rotation documentation
+
+### ⚡ Performance Improvements
+
+- Bun runtime: 3-10x faster script execution
+- Clear performance messaging in README
+- Automatic detection and fallback
+- User choice preserved (can use npm/node)
+
+---
+
 ## [2.1.0] - 2025-11-10
 
 ### 🚀 Major Enhancements

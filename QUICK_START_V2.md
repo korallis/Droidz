@@ -12,10 +12,25 @@ Droidz V2 is a **Factory-native multi-agent system** that transforms Linear tick
 ## Prerequisites
 
 1. **Factory CLI** installed and configured
-2. **Custom Droids** enabled (experimental feature)
-3. **Linear API key** in environment
-4. **GitHub CLI** (`gh`) installed and authenticated
-5. **Git repository** with remote origin
+2. **JavaScript Runtime** - Bun (recommended) or Node.js/npm
+3. **Custom Droids** enabled (experimental feature)
+4. **API Keys** (optional) - Linear, Exa, Ref for enhanced features
+5. **GitHub CLI** (`gh`) installed and authenticated
+6. **Git repository** with remote origin
+
+### Install JavaScript Runtime
+
+**Option 1: Bun (Recommended - 3-10x faster!)**
+```bash
+curl -fsSL https://bun.sh/install | bash
+bun --version
+```
+
+**Option 2: Node.js (Already have it?)**
+```bash
+node --version  # Check if installed
+# If not: Download from https://nodejs.org
+```
 
 ## Installation
 
@@ -47,12 +62,50 @@ droid
 # (and others)
 ```
 
-### 3. Set Environment Variables
+### 3. Configure API Keys (Optional but Recommended)
+
+**Quick Method - Edit config.yml:**
+
+```bash
+# Open config.yml in your editor
+nano config.yml
+# or
+code config.yml
+```
+
+Add your API keys:
+
+```yaml
+# Linear Integration (Optional)
+linear:
+  api_key: "lin_api_YOUR_KEY_HERE"  # Get from: https://linear.app/settings/api
+  team_id: "YOUR_TEAM_ID"
+
+# Exa AI Search (Optional)
+exa:
+  api_key: "exa_YOUR_KEY_HERE"  # Get from: https://exa.ai/api-keys
+  enabled: true
+
+# Ref Documentation (Optional)  
+ref:
+  api_key: "ref_YOUR_KEY_HERE"  # Get from: https://ref.sh/api
+  enabled: true
+
+# Runtime Configuration
+runtime:
+  package_manager: "bun"  # or "npm", "pnpm", "yarn"
+```
+
+**Alternative - Use Environment Variables:**
 
 ```bash
 export LINEAR_API_KEY="lin_api_..."
+export EXA_API_KEY="exa_..."
+export REF_API_KEY="ref_..."
 export GITHUB_TOKEN="ghp_..."  # If not already authenticated with gh
 ```
+
+**Note:** config.yml is gitignored for security. Your keys never get committed!
 
 ## Usage
 

@@ -1,4 +1,14 @@
-# Droidz Quick Start (V2)
+# ⚠️ DEPRECATED - Use QUICK_START_V2.md Instead
+
+> **This file is outdated and kept for reference only.**
+>
+> **Please use:** [QUICK_START_V2.md](QUICK_START_V2.md) for current setup instructions.
+>
+> Or see the main [README.md](README.md) for the simplest 5-year-old friendly guide.
+
+---
+
+# Droidz Quick Start (V2 - OLD VERSION)
 
 Get your robot team working in 3 easy steps!
 
