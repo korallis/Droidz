@@ -6,3 +6,6 @@ config.yml
 
 # Keep the example template
 !config.example.yml
+
+# Claude Code agents folder (personal, not for repo)
+.claude/

@@ -98,11 +98,6 @@ async function main() {
         labels: ticket.labels
       },
       ready: true,
-      // Include paths for helper scripts
-      helpers: {
-        linearUpdate: path.join(repoRoot || process.cwd(), "orchestrator", "linear-update.ts"),
-        linearFetch: path.join(repoRoot || process.cwd(), "orchestrator", "linear-fetch.ts")
-      },
       // Configuration hints
       config: {
         testsRequired: fullConfig?.guardrails?.testsRequired ?? true,

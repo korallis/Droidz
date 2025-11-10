@@ -68,92 +68,25 @@ If mode is "clone" or "branch", **STOP** and fix the config before delegating to
 
 ## Research & Documentation Tools
 
-**MCP Tools (Dynamically Available):**
-MCP tools like Exa, Linear, and Ref are automatically available if the user configured them via `/mcp add`.
-They're NOT in your tools array, but you can still call them directly - Factory provides them dynamically!
+**MCP Tools (Automatically Available):**
+If the user configured MCP servers via `/mcp add`, Factory automatically provides those tools to you (Exa, Linear, Ref, etc.). You don't call them explicitly - just use your available tools naturally and Factory handles the rest.
 
-### Exa - Web & Code Research
+**For research and documentation:**
+- Use **WebSearch** for general web research
+- Use **FetchUrl** to read specific documentation pages
+- If user has Exa/Ref MCP configured, those will be available automatically
 
-**Try Exa first (if MCP server configured):**
-```typescript
-const results = await exa___web_search_exa("React hooks patterns", { numResults: 5 });
+**For Linear project management:**
+- If user has Linear MCP configured, those tools will be available automatically
+- Otherwise, ask user to describe their project and tasks manually
+
+**For Factory.ai documentation:**
 ```
-
-**If Exa not available, use WebSearch:**
-```bash
-WebSearch: "React hooks patterns best practices"
-```
-
-### Ref - Documentation Search
-
-**Try Ref first (if MCP server configured):**
-```typescript
-const docs = await ref___ref_search_documentation("Next.js app router");
-const content = await ref___ref_read_url("https://nextjs.org/docs/14/app");
-```
-
-**If Ref not available, use WebSearch + FetchUrl:**
-```bash
-WebSearch: "Next.js 14 app router official documentation"
-FetchUrl: https://nextjs.org/docs/14/app
-```
-
-### Linear - Project Management
-
-**PRIMARY: Use Linear MCP tools (dynamically available):**
-```typescript
-// Fetch tickets
-const issues = await linear___list_issues({ 
-  project: "FlowScribe",
-  state: "backlog" 
-});
-
-// Update ticket status
-await linear___update_issue({ 
-  id: "issue-uuid",
-  state: "In Progress"
-});
-
-// Post PR link as comment
-await linear___create_comment({ 
-  issueId: "issue-uuid",
-  body: "PR created: https://github.com/..." 
-});
-```
-
-**FALLBACK (only if Linear MCP fails):**
-Helper scripts exist but should rarely be needed. If MCP tools don't work, you can use:
-- `bun orchestrator/linear-fetch.ts --project "ProjectName"`
-- `bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"`
-
-### Factory.ai Documentation (for Factory questions)
-
-**Always use WebSearch + FetchUrl:**
-```bash
 WebSearch: "factory.ai Task tool documentation"
 FetchUrl: https://docs.factory.ai/cli/configuration/droids
 ```
 
-### Best Practice: Use MCP Tools Directly
-
-**MCP tools are your PRIMARY approach - just use them!**
-
-```typescript
-// Linear: Fetch tickets and manage workflow
-const issues = await linear___list_issues({ project: "MyProject" });
-await linear___update_issue({ id: "uuid", state: "In Progress" });
-await linear___create_comment({ issueId: "uuid", body: "PR: ..." });
-
-// Exa: Research patterns and best practices
-const results = await exa___web_search_exa("React hooks patterns");
-
-// Ref: Documentation search
-const docs = await ref___ref_search_documentation("Next.js app router");
-```
-
-**If MCP tool fails:** Only then try fallbacks (WebSearch, FetchUrl, or helper scripts).
-
-**Never fail the entire workflow if MCP tools aren't available**. The core parallel execution works great without them!
+**Key Principle:** Use your standard Factory tools (WebSearch, FetchUrl, Read, etc.). If user configured MCP servers, those tools become available automatically - no special code needed!
 
 ### What Works Without MCP Servers
 
@@ -185,7 +118,6 @@ linear:
   project_name: "YourProject"
 
 MCP servers provide:
-- Direct tool calls (no Execute + scripts)
 - Better web research during planning (Exa)
 - Automatic ticket fetching and updates (Linear)
 - Documentation search (Ref)
@@ -193,47 +125,32 @@ MCP servers provide:
 Droidz works great without them - they just make it simpler!
 ```
 
-**Key Principle**: Try MCP tools first, fall back gracefully if not available.
+## Tool Usage Pattern
 
-## Simple Tool Usage Pattern
+**Use your standard Factory tools:**
+- **Read**, **Grep**, **Glob**, **LS** - Explore codebase
+- **Create**, **Edit** - Modify files
+- **Execute** - Run commands
+- **WebSearch**, **FetchUrl** - Research and documentation
+- **TodoWrite** - Track progress
 
-**IMPORTANT: Always try MCP tools first!** They're dynamically provided by Factory when configured.
+**MCP tools (if configured):**
+Factory automatically provides additional tools when users configure MCP servers:
+- Linear tools (for project management)
+- Exa tools (for enhanced web search)
+- Ref tools (for documentation search)
 
-```typescript
-// Linear - Use MCP tools directly (PRIMARY)
-const issues = await linear___list_issues({ project: "FlowScribe" });
-await linear___update_issue({ id: "uuid", state: "In Progress" });
-await linear___create_comment({ issueId: "uuid", body: "PR ready!" });
-
-// Research - Use Exa MCP (PRIMARY)
-const results = await exa___web_search_exa("React hooks patterns");
-
-// Documentation - Use Ref MCP (PRIMARY)
-const docs = await ref___ref_search_documentation("Next.js app router");
-```
-
-If MCP tools fail, fallback options:
-- WebSearch: for general research
-- FetchUrl: for specific documentation
-- Execute scripts: for Linear (rarely needed)
+Just use your available tools naturally - Factory handles MCP integration automatically!
 
 ## Workflow
 
 ### 1. Fetch Tickets
 
-**PRIMARY: Use Linear MCP tools directly**
-```typescript
-// Fetch tickets from Linear
-const issues = await linear___list_issues({ 
-  project: "MyProject",
-  state: "backlog"
-});
+**If user has Linear MCP configured:**
+Linear tools will be available automatically. Use them to fetch tickets from their project.
 
-// Each issue has: id, identifier, title, description, state, labels, etc.
-```
-
-**If user doesn't have Linear configured:**
-Ask user to describe their project and tasks in text. You can still create a task plan and execute it!
+**If user doesn't have Linear:**
+Ask user to describe their project and tasks. You can still create a task plan and execute it!
 
 ### 2. Plan Tasks
 Create a structured task list with dependencies:
@@ -369,9 +286,8 @@ const result = Task({
 
 ## Your Responsibilities
 
-1. **Set Linear Status**: Mark ticket as "In Progress"
-   - If Linear MCP available: \`await linear___update_issue({ id: "uuid", state: "In Progress" })\`
-   - Fallback: \`Execute: bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"\`
+1. **Set Linear Status** (if Linear MCP configured):
+   - Use Linear tools to mark ticket as "In Progress"
 
 2. **Implement Feature**:
    - Work ONLY in the workspace directory provided
@@ -400,9 +316,8 @@ const result = Task({
    gh pr create --fill --head feature/login-form
    \`\`\`
 
-7. **Update Linear with PR**:
-   - If Linear MCP available: \`await linear___create_comment({ issueId: "uuid", body: "PR: [URL]" })\`
-   - Fallback: \`Execute: bun orchestrator/linear-update.ts --issue PROJ-123 --comment "PR: [URL]"\`
+7. **Update Linear with PR** (if Linear MCP configured):
+   - Use Linear tools to post PR URL as a comment
 
 8. **Return Result**:
    Respond with JSON summary:
