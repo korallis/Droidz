@@ -1,169 +1,132 @@
-# Code Execution Pattern for MCP Integration
+# Droidz MCP Integration Pattern (UPDATED)
 
-## 🎯 The Problem
+## 🎯 Current Approach: Direct MCP Tools with Graceful Fallbacks
 
-When you told the orchestrator to "test exa integration by searching for Convex best practices," it used `WebSearch` instead of your Exa API key from config.yml.
+Droidz orchestrator now uses **direct MCP tool calls** when available, with automatic fallbacks to simpler methods.
 
-**Why?** Because Droidz was calling MCP tools directly (e.g., `exa___web_search_exa()`), which requires:
-1. MCP servers configured via Factory CLI (`/mcp add`)
-2. Per-user setup (not project-based)
-3. Complex authentication
+### The Pattern
 
-## ✅ The Solution: Code Execution Pattern
+**1. Try MCP tools first (if user has them configured):**
+```typescript
+const results = await exa___web_search_exa("React patterns");
+const issues = await linear___list_issues({ project: "MyProject" });
+const docs = await ref___ref_search_documentation("Next.js");
+```
 
-Per [Anthropic's article](https://www.anthropic.com/engineering/code-execution-with-mcp), the better pattern is:
+**2. Fall back gracefully if MCP not available:**
+```bash
+# WebSearch for research
+WebSearch: "React patterns best practices"
 
-**Use Execute tool → Call helper scripts → Scripts read config.yml**
+# Execute scripts for Linear (reads config.yml)
+Execute: bun orchestrator/linear-fetch.ts --project "MyProject"
+```
 
 ### Why This Works
 
-1. **API keys in project config** - No MCP server setup needed
-2. **Works immediately** - Just add keys to config.yml
-3. **Graceful errors** - Clear messages if keys missing
-4. **Factory compliant** - Execute tool always available
-5. **Team-friendly** - Everyone uses same config
+1. **MCP configured?** → Uses direct calls (fast, powerful)
+2. **No MCP?** → Falls back automatically (still works!)
+3. **User never sees errors** → Graceful degradation
+4. **Zero configuration required** → Works out of the box
+5. **Best of both worlds** → Power when available, simplicity when not
 
-## 📝 Implementation
+## 📝 How Orchestrator Uses Services
 
-### Created Helper Scripts
+### Exa - Web & Code Search
 
-#### 1. `orchestrator/exa-search.ts`
-
-Searches using Exa API with API key from config.yml:
-
+**Primary (MCP Server):**
 ```typescript
-// Reads exa.api_key from config.yml
-// Handles ${VAR} environment variable substitution
-// Returns JSON results
-
-// Usage:
-bun orchestrator/exa-search.ts --query "Convex best practices" --num-results 5
+const results = await exa___web_search_exa("Convex best practices", { numResults: 5 });
 ```
 
-**Features:**
-- Reads `exa.api_key` from config.yml
-- Supports environment variables (`${EXA_API_KEY}`)
-- Falls back to `EXA_API_KEY` env var
-- Returns structured JSON
-- Clear error messages if no key found
-
-#### 2. `orchestrator/linear-fetch.ts` & `linear-update.ts`
-
-Linear API integration using code execution pattern:
-
-```typescript
-// Reads linear.api_key from config.yml
-// Fetches tickets or updates status
-
-// Usage:
-bun orchestrator/linear-fetch.ts --project "FlowScribe"
-bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"
-```
-
-**Features:**
-- Reads `linear.api_key` from config.yml
-- Supports environment variables (`${LINEAR_API_KEY}`)
-- Returns structured JSON (ticket data or update results)
-- Clear error messages
-
-#### 3. `orchestrator/ref-search.ts` ⚠️ **MCP-Only (Placeholder)**
-
-**IMPORTANT:** Unlike Exa and Linear, Ref **does NOT provide a REST API**.
-
-This script is a **placeholder** that explains two options:
-
-**Option 1: Direct MCP Tools**
+**Fallback (Execute Script):**
 ```bash
-# Requires MCP server configured via Factory CLI
-droid
-/mcp add ref
-# Then use: ref___ref_search_documentation in droids
-```
-
-**Option 2: Programmatic MCP (Code Execution)**
-```typescript
-// In orchestrator droid, use code-execution tool:
-const code = `
-  const { ref } = await import("./servers/ref");
-  const results = await ref.searchDocumentation("query");
-  console.log(JSON.stringify(results, null, 2));
-`;
-// Execute via code-execution___execute_code
-```
-
-Running the script shows a helpful error:
-```bash
-$ bun orchestrator/ref-search.ts --query "Next.js"
-{
-  "error": "Ref documentation search requires MCP server",
-  "mcpOnly": true,
-  "option1": { /* Direct MCP setup steps */ },
-  "option2": { /* Programmatic MCP example */ }
-}
-```
-
-### Updated Orchestrator - How To Use Each Service
-
-**Exa (REST API) - Use Execute + script:**
-```bash
-# Uses config.yml API key
 Execute: bun orchestrator/exa-search.ts --query "Convex best practices" --num-results 5
-# Returns JSON with search results
 ```
 
-**Linear (GraphQL API) - Use Execute + script:**
-```bash
-# Uses config.yml API key
-Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
-# Returns JSON with 91 tickets
-```
+The script reads `exa.api_key` from config.yml and returns JSON results.
 
-**Ref (MCP tool) - Call directly:**
+### Linear - Project Management
+
+**Primary (MCP Server):**
 ```typescript
-// ✅ Already available in Factory - just call it!
-const refResults = await ref___ref_search_documentation("Next.js app router");
-// Returns: page titles and URLs
+const issues = await linear___list_issues({ project: "FlowScribe" });
+await linear___update_issue({ id: "issue-id", stateId: "in-progress-id" });
 ```
 
-**Key Difference:**
-- Exa & Linear: Have APIs → Scripts call fetch() → Execute tool runs scripts
-- Ref: No API → MCP tool available → Call directly (simpler!)
+**Fallback (Execute Scripts):**
+```bash
+Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+Execute: bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"
+```
 
-## 🧪 Test Results
+The scripts read `linear.api_key` from config.yml.
 
-**Tested with real API keys:**
+### Ref - Documentation Search
+
+**Primary (MCP Server):**
+```typescript
+const docs = await ref___ref_search_documentation("Next.js app router");
+const content = await ref___ref_read_url("https://nextjs.org/docs/14/app");
+```
+
+**Fallback (WebSearch + FetchUrl):**
+```bash
+WebSearch: "Next.js 14 app router official documentation"
+FetchUrl: https://nextjs.org/docs/14/app
+```
+
+**Note:** Ref has no REST API, so fallback uses general web tools.
+
+## 🎯 Decision Flow
+
+**The orchestrator automatically:**
+
+1. **Tries MCP tool first** - If user has `/mcp add exa` configured
+2. **Falls back gracefully** - Uses Execute scripts or WebSearch
+3. **Never errors** - Always finds a way to get the information
+
+## 🛠️ Setup for Users
+
+### Option 1: Use MCP Servers (Recommended for power users)
 
 ```bash
-$ bun orchestrator/exa-search.ts --query "Convex database best practices" --num-results 3
-{
-  "requestId": "e23b146f5b9c8ccdf116d29159ad37e6",
-  "results": [
-    {
-      "title": "Opinionated guidelines and best practices for building Convex...",
-      "url": "https://gist.github.com/srizvi/966e583693271d874bf65c2a95466339",
-      ...
-    },
-    {
-      "title": "Best Practices | Convex Developer Hub",
-      "url": "https://docs.convex.dev/understanding/best-practices/",
-      ...
-    },
-    {
-      "title": "Authorization Best Practices and Implementation Guide",
-      "url": "https://stack.convex.dev/authorization",
-      ...
-    }
-  ]
-}
+droid
+/mcp add exa
+/mcp add linear
+/mcp add ref
 ```
 
-✅ **Works perfectly!** Reads API key from config.yml and returns structured results.
+Orchestrator will use direct MCP tool calls automatically.
 
-## 📚 How to Use
+### Option 2: Use Execute Scripts (Fallback)
 
-### For Users
+Add API keys to `config.yml`:
+```yaml
+exa:
+  api_key: "exa_YOUR_KEY"
+linear:
+  api_key: "lin_api_YOUR_KEY"
+  project_name: "MyProject"
+```
 
-1. **Add API keys to config.yml:**
+Orchestrator will use Execute scripts if MCP not available.
+
+### Option 3: No Setup (Basic mode)
+
+Use WebSearch and FetchUrl for research. Still works, just less powerful!
+
+## 📚 For Users
+
+### Quick Start
+
+1. **Optional - Configure MCP servers** (best experience):
+   ```bash
+   droid
+   /mcp add exa
+   ```
+
+2. **Or add API keys to config.yml** (fallback):
    ```yaml
    exa:
      api_key: "your_exa_key_here"
@@ -205,117 +168,35 @@ Execute: bun orchestrator/exa-search.ts --query "{{TOPIC}} best practices" --num
 
 ## 📊 Service Integration Summary
 
-| Service | Integration Method | API Available | Status |
-|---------|-------------------|---------------|--------|
-| **Exa** | Code Execution (Execute + script) | ✅ REST API | ✅ **Working** |
-| **Linear** | Code Execution (Execute + script) | ✅ GraphQL API | ✅ **Working** |
-| **Ref** | MCP-only (no REST API) | ❌ MCP Tools Only | ⚠️ **MCP Required** |
+| Service | Primary Method | Fallback | Notes |
+|---------|---------------|----------|-------|
+| **Exa** | MCP tool | Execute script | REST API available |
+| **Linear** | MCP tool | Execute script | GraphQL API available |
+| **Ref** | MCP tool | WebSearch + FetchUrl | MCP-only (no REST API) |
 
-### Service Details
+## 📖 Resources
 
-**Exa** - AI-powered web search:
-- ✅ REST API at exa.ai
-- ✅ Works via code execution pattern
-- ✅ Tested with real API key
-- Returns: Search results, code context, web content
-
-**Linear** - Project management:
-- ✅ GraphQL API at api.linear.app
-- ✅ Works via code execution pattern  
-- ✅ Tested with real API key
-- Returns: Issues, projects, teams, comments
-
-**Ref** - Documentation search:
-- ❌ No public REST API
-- ✅ **MCP tool already available**: `ref___ref_search_documentation`
-- **Best approach**: Call MCP tool directly in orchestrator
-- No script needed (unlike Exa/Linear)
-- Placeholder script explains why it's different
-
-## 🎯 Benefits
-
-### Before (MCP Tool Calls)
-- ❌ Required MCP server setup via `/mcp add`
-- ❌ Per-user configuration (not in project)
-- ❌ Complex authentication with headers
-- ❌ Silent failures if not configured
-- ❌ Fell back to WebSearch without explanation
-
-### After (Code Execution Pattern)
-- ✅ Just add keys to config.yml
-- ✅ Project-based configuration
-- ✅ Simple configuration (one YAML field)
-- ✅ Clear error messages
-- ✅ Transparent to users
-
-## 🔄 Comparison Table
-
-| Aspect | Direct MCP Calls | Code Execution Pattern |
-|--------|------------------|------------------------|
-| Setup | `/mcp add` command | Add key to config.yml |
-| Scope | Per-user | Per-project |
-| Auth | HTTP headers | Config file |
-| Errors | Silent fallback | Clear messages |
-| Discovery | Hard to debug | Obvious from Execute output |
-| Teams | Each person sets up | One config file |
-| Factory Compliant | Requires MCP support | Uses Execute (always available) |
-
-## 📖 References
-
-- [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
 - [Factory.ai MCP Documentation](https://docs.factory.ai/cli/configuration/mcp)
+- [Droidz MCP Setup Guide](./MCP_SETUP.md)
 
-## 🚀 Next Steps
+## 🎯 Practical Example
 
-1. ✅ Helper scripts created (exa-search.ts, ref-search.ts)
-2. ✅ Orchestrator updated to use Execute pattern
-3. ✅ Tested with real API keys (Exa works!)
-4. ✅ Documentation created (this file)
-5. 🔄 Commit changes
-6. 🔄 Update user documentation
-
----
-
-**The code execution pattern is now the standard way Droidz uses API services!**
-
-Instead of requiring complex MCP server setup, users just add their API keys to config.yml and everything works automatically. 🎉
-
-## 🎯 Practical Example: Using All Three Together
-
-**Scenario:** Research Convex best practices, fetch related Linear tickets, and find official documentation
+**Scenario:** Research Convex best practices with Linear tickets
 
 ```typescript
-// In orchestrator droid:
+// Orchestrator tries MCP first, falls back automatically:
 
-// 1. Research with Exa (REST API → Execute + script)
-Execute: bun orchestrator/exa-search.ts --query "Convex database best practices" --num-results 5
-// Parse JSON response and extract key practices
+// 1. Try Exa MCP, fallback to Execute script
+const exaResults = await exa___web_search_exa("Convex database patterns");
+// or: Execute: bun orchestrator/exa-search.ts --query "Convex patterns"
 
-// 2. Get Linear tickets (GraphQL API → Execute + script)  
-Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
-// Parse JSON response: 91 tickets found
-// Filter for database-related tickets
+// 2. Try Linear MCP, fallback to Execute script
+const issues = await linear___list_issues({ project: "FlowScribe" });
+// or: Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
 
-// 3. Find official docs with Ref (MCP tool → call directly)
-const refResults = await ref___ref_search_documentation("Convex best practices");
-// Parse page titles and URLs
-// Returns: docs.convex.dev/understanding/best-practices/
-
-// 4. Combine results
-// - Exa: 3 high-quality blog posts and guides
-// - Linear: 15 database-related tickets to prioritize
-// - Ref: Official Convex documentation URLs
-// Create action plan based on all sources
+// 3. Try Ref MCP, fallback to WebSearch
+const docs = await ref___ref_search_documentation("Convex best practices");
+// or: WebSearch: "Convex best practices official documentation"
 ```
 
-**Result:** Complete research pipeline using the best integration method for each service!
-
-## 📝 Final Summary
-
-| Service | Method | Why | Status |
-|---------|--------|-----|--------|
-| **Exa** | Execute + script | Has REST API | ✅ Tested |
-| **Linear** | Execute + script | Has GraphQL API | ✅ Tested |
-| **Ref** | Direct MCP call | MCP-only (no API) | ✅ Tested |
-
-**All three services work perfectly - each using the optimal integration pattern!** 🎉
+**The orchestrator handles all fallback logic automatically - you just call the tools!**

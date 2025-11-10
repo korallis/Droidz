@@ -62,52 +62,45 @@ droid
 # (and others)
 ```
 
-### 3. Configure API Keys (Optional but Recommended)
+### 3. Configure API Access (Optional but Recommended)
 
-**Quick Method - Edit config.yml:**
+**Method 1: MCP Servers (Recommended - Direct tool access)**
 
 ```bash
-# Open config.yml in your editor
-nano config.yml
-# or
-code config.yml
+droid
+/mcp add exa      # AI search
+/mcp add linear   # Project management
+/mcp add ref      # Documentation
 ```
 
-Add your API keys:
+Orchestrator will use direct MCP tool calls for best performance!
 
+**Method 2: config.yml (Fallback - Still works great!)**
+
+```bash
+nano config.yml
+```
+
+Add API keys:
 ```yaml
-# Linear Integration (Optional)
 linear:
-  api_key: "lin_api_YOUR_KEY_HERE"  # Get from: https://linear.app/settings/api
-  team_id: "YOUR_TEAM_ID"
-  project_name: "Your Project Name"  # IMPORTANT: For existing projects!
-  project_id: ""  # Optional (auto-detected)
+  api_key: "lin_api_YOUR_KEY"  # https://linear.app/settings/api
+  project_name: "MyProject"
 
-# Exa AI Search (Optional)
 exa:
-  api_key: "exa_YOUR_KEY_HERE"  # Get from: https://exa.ai/api-keys
-  enabled: true
+  api_key: "exa_YOUR_KEY"  # https://exa.ai/api-keys
 
-# Ref Documentation (Optional)  
-ref:
-  api_key: "ref_YOUR_KEY_HERE"  # Get from: https://ref.sh/api
-  enabled: true
+# Note: Ref requires MCP server (no REST API)
 
-# Runtime Configuration
 runtime:
   package_manager: "bun"  # or "npm", "pnpm", "yarn"
 ```
 
-**Alternative - Use Environment Variables:**
+**Method 3: No Setup (Basic - Uses WebSearch)**
 
-```bash
-export LINEAR_API_KEY="lin_api_..."
-export EXA_API_KEY="exa_..."
-export REF_API_KEY="ref_..."
-export GITHUB_TOKEN="ghp_..."  # If not already authenticated with gh
-```
+Droidz works without any setup! Just less powerful research tools.
 
-**Note:** config.yml is gitignored for security. Your keys never get committed!
+**Note:** config.yml is gitignored for security!
 
 ## Usage
 

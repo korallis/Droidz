@@ -2,159 +2,107 @@
 
 ## 🎯 Overview
 
-Droidz droids can access **MCP (Model Context Protocol) servers** for extended functionality like Linear, Exa, and Ref. 
+Droidz orchestrator uses **direct MCP tool calls** when available, with automatic fallbacks.
 
-**Two ways to configure:**
-1. **Config.yml (Recommended)** - Store API keys in `config.yml` for easy management
-2. **Factory CLI** - Add MCP servers via `/mcp` command (user-specific)
+**Setup options (pick one):**
+1. **MCP Servers** (Recommended for power users) - Direct tool access via Factory CLI
+2. **Config.yml** (Fallback) - API keys for Execute scripts
+3. **No setup** (Basic mode) - Uses WebSearch/FetchUrl
 
 ---
 
-## 📋 Quick Setup (config.yml Method)
+## 🚀 Recommended: MCP Server Setup
 
-**This is the easiest way!** Your API keys are stored in `config.yml` and used automatically.
+**Best experience** - orchestrator uses direct tool calls!
 
-### Step 1: Get Your API Keys
-
-1. **Linear:** https://linear.app/settings/api
-2. **Exa:** https://exa.ai/api-keys
-3. **Ref:** https://ref.sh/api
-
-### Step 2: Add Keys to config.yml
-
-Edit your `config.yml`:
-
-```yaml
-# API Keys Configuration
-linear:
-  api_key: "lin_api_YOUR_KEY_HERE"  # Paste your Linear key
-  team_id: "YOUR_TEAM_ID"
-  
-exa:
-  api_key: "exa_YOUR_KEY_HERE"  # Paste your Exa key
-  enabled: true
-  
-ref:
-  api_key: "ref_YOUR_KEY_HERE"  # Paste your Ref key
-  enabled: true
-```
-
-### Step 3: Verify Security
-
-Make sure `config.yml` is in your `.gitignore`:
+### Step 1: Configure MCP Servers
 
 ```bash
-# Check if config.yml is ignored
-git check-ignore config.yml
-# Should output: config.yml
+droid
+/mcp add exa      # Web & code search
+/mcp add linear   # Project management
+/mcp add ref      # Documentation search
+```
 
-# If not, add it:
+### Step 2: Test
+
+```bash
+droid
+> Use droidz-orchestrator to search for "React patterns" with Exa
+```
+
+Orchestrator will automatically use MCP tools!
+
+## 🔄 Alternative: config.yml Fallback
+
+**If you don't want to set up MCP servers**, add API keys to config.yml:
+
+```yaml
+# Fallback API Keys
+linear:
+  api_key: "lin_api_YOUR_KEY"  # https://linear.app/settings/api
+  project_name: "MyProject"
+  
+exa:
+  api_key: "exa_YOUR_KEY"  # https://exa.ai/api-keys
+
+# Note: Ref has no REST API, needs MCP server
+```
+
+**Security:** Add `config.yml` to `.gitignore`!
+
+```bash
 echo "config.yml" >> .gitignore
 ```
 
-**⚠️ IMPORTANT:** Never commit `config.yml` to git! It contains your API keys.
+---
+
+## 🔍 How It Works
+
+**Droidz orchestrator automatically:**
+
+1. **Tries MCP tools first** - Calls `exa___web_search_exa()` directly
+2. **Falls back if needed** - Uses `Execute: bun orchestrator/exa-search.ts`
+3. **Final fallback** - Uses `WebSearch` for general queries
+
+**Result:** Always works, regardless of your setup!
+
+### Priority Order
+
+| Method | Speed | Setup Required |
+|--------|-------|----------------|
+| MCP direct calls | ⚡⚡⚡ Fastest | `/mcp add` commands |
+| Execute scripts | ⚡⚡ Fast | API keys in config.yml |
+| WebSearch/FetchUrl | ⚡ Basic | None |
 
 ---
 
-## 🔍 How MCP Works
+## 📦 MCP Servers for Droidz
 
-### Using config.yml (Recommended)
+### Quick Setup (All Three)
 
-When you add API keys to `config.yml`, Droidz helper scripts use them to:
-- Fetch Linear tickets
-- Update issue statuses
-- Search with Exa
-- Query documentation with Ref
-
-**Benefits:**
-- ✅ Easy to set up
-- ✅ Works immediately
-- ✅ All team members can use same config
-- ✅ Keys stored locally (not in git)
-
-### Using Factory CLI (Alternative)
-
-You can also add MCP servers directly via Factory CLI:
-
-**Key Concepts:**
-1. **MCP servers are user-configured** - Each user adds them via `/mcp add` command
-2. **Tools become available dynamically** - Once configured, MCP tools work in all droids
-3. **No code changes needed** - Droids automatically get access to configured MCP tools
-4. **Optional by design** - Users only add the MCPs they need
-
-**Why Not in Droid Tools Array?**
-
-According to [Factory documentation](https://docs.factory.ai/cli/configuration/custom-droids), MCP tools are **dynamically populated** - they're not referenced directly in the tools array!
-
----
-
-## 📦 Recommended MCP Servers for Droidz
-
-### 1. Linear (Project Management)
-
-**What it provides:**
-- Issue tracking and management
-- Project/sprint queries
-- Automated status updates
-- Comment posting
-
-**How to add:**
 ```bash
 droid
-/mcp add --type http linear https://api.linear.app/mcp \
-  -H "Authorization: Bearer YOUR_LINEAR_API_KEY"
+/mcp add exa      # AI search - get key from https://exa.ai/api-keys  
+/mcp add linear   # Project mgmt - get key from https://linear.app/settings/api
+/mcp add ref      # Documentation - get key from https://ref.sh/api
 ```
 
-**Get your API key:** https://linear.app/settings/api
+### What Each Server Provides
 
-**Available tools (once configured):**
-- `linear___list_issues`
-- `linear___get_issue`
-- `linear___create_issue`
-- `linear___update_issue`
-- `linear___create_comment`
-- `linear___list_projects`
-- `linear___list_teams`
+**Exa** - AI-powered search:
+- `exa___web_search_exa` - Web search optimized for AI
+- `exa___get_code_context_exa` - Code context search
 
-### 2. Exa (AI-Powered Search)
+**Linear** - Project management:
+- `linear___list_issues` - Fetch tickets
+- `linear___update_issue` - Update status
+- `linear___create_comment` - Add comments
+- Plus: create_issue, get_issue, list_projects, list_teams
 
-**What it provides:**
-- Web search optimized for AI
-- Code context search
-- Documentation discovery
-
-**How to add:**
-```bash
-droid
-/mcp add --type http exa https://mcp.exa.ai \
-  -H "Authorization: Bearer YOUR_EXA_API_KEY"
-```
-
-**Get your API key:** https://exa.ai/api-keys
-
-**Available tools (once configured):**
-- `exa___web_search_exa`
-- `exa___get_code_context_exa`
-
-### 3. Ref (Documentation Search)
-
-**What it provides:**
-- Public documentation search
-- Private documentation (if configured)
-- API reference lookup
-
-**How to add:**
-```bash
-droid
-/mcp add --type http ref https://mcp.ref.sh \
-  -H "Authorization: Bearer YOUR_REF_API_KEY"
-```
-
-**Get your API key:** https://ref.sh/api
-
-**Available tools (once configured):**
-- `ref___ref_search_documentation`
-- `ref___ref_read_url`
+**Ref** - Documentation:
+- `ref___ref_search_documentation` - Search docs
+- `ref___ref_read_url` - Read specific documentation pages
 
 ---
 
