@@ -7,6 +7,7 @@ set -e
 
 DROIDZ_VERSION="2.1.0"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
+CACHE_BUST="?v=${DROIDZ_VERSION}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -69,7 +70,7 @@ DROIDS=(
 )
 
 for droid in "${DROIDS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/droids/${droid}" -o ".factory/droids/${droid}"
+    curl -fsSL "${GITHUB_RAW}/.factory/droids/${droid}${CACHE_BUST}" -o ".factory/droids/${droid}"
     log_success "Downloaded ${droid}"
 done
 
@@ -84,13 +85,13 @@ SCRIPTS=(
 )
 
 for script in "${SCRIPTS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/orchestrator/${script}" -o "orchestrator/${script}"
+    curl -fsSL "${GITHUB_RAW}/orchestrator/${script}${CACHE_BUST}" -o "orchestrator/${script}"
     log_success "Downloaded ${script}"
 done
 
 # Download config.example.yml template
 log_info "Downloading configuration template..."
-curl -fsSL "${GITHUB_RAW}/config.example.yml" -o "config.example.yml"
+curl -fsSL "${GITHUB_RAW}/config.example.yml${CACHE_BUST}" -o "config.example.yml"
 log_success "Downloaded config.example.yml"
 
 # Handle config.yml
@@ -105,9 +106,9 @@ fi
 
 # Download documentation
 log_info "Downloading documentation..."
-curl -fsSL "${GITHUB_RAW}/README.md" -o "README.md"
+curl -fsSL "${GITHUB_RAW}/README.md${CACHE_BUST}" -o "README.md"
 log_success "Downloaded README.md"
-curl -fsSL "${GITHUB_RAW}/CHANGELOG.md" -o "CHANGELOG.md"
+curl -fsSL "${GITHUB_RAW}/CHANGELOG.md${CACHE_BUST}" -o "CHANGELOG.md"
 log_success "Downloaded CHANGELOG.md"
 
 # Create .gitignore entries if needed
