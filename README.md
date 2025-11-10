@@ -217,6 +217,8 @@ Find these lines and paste your keys:
 linear:
   api_key: "lin_api_YOUR_KEY_HERE"  # Paste Linear key
   team_id: ""  # Leave empty for now
+  project_name: ""  # IMPORTANT: If you have an existing Linear project, put its name here!
+  project_id: ""  # Optional
 
 exa:
   api_key: "exa_YOUR_KEY_HERE"  # Paste Exa key
@@ -226,6 +228,16 @@ ref:
   api_key: "ref_YOUR_KEY_HERE"  # Paste Ref key
   enabled: true
 ```
+
+**Important for Existing Linear Projects:**
+If you already have a Linear project you want Droidz to work on:
+- Add your project name to `project_name` (must match exactly!)
+- Example: `project_name: "My Mobile App"`
+- Droidz will fetch tickets from that project
+
+**For New Projects:**
+- Leave `project_name` empty
+- Droidz will create a new Linear project when you tell it what to build!
 
 **Save the file!** (Ctrl+O in nano, or Cmd+S in VS Code)
 
@@ -489,6 +501,19 @@ PROJ-3: Make settings [Done] ✅
 ```
 
 **Do you need it?** No! But it's nice if you work with a team.
+
+**Using an existing Linear project?**
+- Add your project name to `config.yml`:
+  ```yaml
+  linear:
+    project_name: "Your Project Name"
+  ```
+- Droidz will fetch tickets from that project
+- You can say: "Use droidz-orchestrator to process project 'Your Project Name' sprint 'Sprint-5'"
+
+**Starting fresh?**
+- Leave `project_name` empty
+- Droidz creates a new Linear project when you describe what to build!
 
 ### What are API Keys?
 

@@ -80,6 +80,8 @@ Add your API keys:
 linear:
   api_key: "lin_api_YOUR_KEY_HERE"  # Get from: https://linear.app/settings/api
   team_id: "YOUR_TEAM_ID"
+  project_name: "Your Project Name"  # IMPORTANT: For existing projects!
+  project_id: ""  # Optional (auto-detected)
 
 # Exa AI Search (Optional)
 exa:
@@ -111,6 +113,15 @@ export GITHUB_TOKEN="ghp_..."  # If not already authenticated with gh
 
 ### Basic Usage
 
+**Option 1: Work on Existing Linear Project**
+
+First, add your project name to config.yml:
+```yaml
+linear:
+  project_name: "MyProject"  # Your actual Linear project name
+```
+
+Then:
 ```bash
 # Start Factory
 droid
@@ -118,6 +129,18 @@ droid
 # Then say:
 > Use droidz-orchestrator to process project "MyProject" sprint "Sprint-5"
 ```
+
+**Option 2: Create New Linear Project**
+
+Leave `project_name` empty in config.yml, then:
+```bash
+droid
+
+# Describe what to build:
+> Use droidz-orchestrator to build a todo app with user authentication
+```
+
+Droidz will create the Linear project automatically!
 
 **What happens:**
 1. Orchestrator fetches all Linear tickets in Sprint-5

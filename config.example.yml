@@ -47,10 +47,27 @@ mcp_tools_enabled: true  # Enable MCP support in Factory
 
 # Linear Integration (Optional - for automated ticket processing)
 # Get your API key from: https://linear.app/settings/api
-# Get your team ID from your Linear workspace URL or API
+# 
+# HOW TO FIND YOUR LINEAR IDS:
+# 1. Team ID: Go to your team settings or use Linear API
+# 2. Project Name: The name of your Linear project (e.g., "Mobile App", "Website Redesign")
+# 3. Project ID: Found in Linear project URL or via API
+#
+# EXISTING PROJECT SETUP:
+# If you have an existing Linear project you want Droidz to work on:
+# - Set project_name to your project's name (must match exactly)
+# - Droidz will fetch tickets from this project
+# - You can also specify sprint/cycle when running orchestrator
+#
+# NEW PROJECT SETUP:
+# If starting fresh, leave project_name empty and say:
+# "Use droidz-orchestrator to build [your idea]"
+# Droidz will create a new Linear project automatically!
 linear:
   api_key: "${LINEAR_API_KEY}"  # Environment variable or paste your key here
   team_id: ""  # Your Linear team ID (e.g., "abc123def456")
+  project_name: ""  # IMPORTANT: Name of Linear project to work on (e.g., "My App")
+  project_id: ""  # Optional: Linear project ID (will be auto-detected if name provided)
   update_comments: true  # Post PR links as comments on tickets
   auto_status_updates: true  # Automatically update ticket status
 

@@ -14,6 +14,10 @@ This guide explains how to safely configure API keys for Linear, Exa, and Ref in
 - URL: https://linear.app/settings/api
 - Click "Create Key" → Copy the key
 - Format: `lin_api_...`
+- **Also need:** Your project name (for existing projects)
+  - Find in Linear: Go to your project
+  - Copy the exact project name
+  - Example: "Mobile App" or "Website Redesign"
 
 **Exa (AI Search)**
 - URL: https://exa.ai/api-keys
@@ -34,6 +38,8 @@ Open `config.yml` in your project and add your keys:
 linear:
   api_key: "lin_api_YOUR_ACTUAL_KEY_HERE"
   team_id: "YOUR_LINEAR_TEAM_ID"
+  project_name: "Your Project Name"  # IMPORTANT for existing projects!
+  project_id: ""  # Optional, auto-detected
   update_comments: true
   auto_status_updates: true
 
@@ -45,6 +51,13 @@ ref:
   api_key: "ref_YOUR_ACTUAL_KEY_HERE"
   enabled: true
 ```
+
+**Linear Project Configuration:**
+- **New project?** Leave `project_name` empty, Droidz will create one
+- **Existing project?** Add exact project name:
+  - Go to your Linear project
+  - Copy the project name exactly (case-sensitive!)
+  - Paste into `project_name` field
 
 ### 3. Verify Security Setup
 
