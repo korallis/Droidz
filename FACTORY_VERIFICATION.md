@@ -37,7 +37,7 @@ curl -fsSL https://app.factory.ai/cli | sh
 
 **INCORRECT (Before):**
 ```bash
-droid --auto high
+droid
 ```
 
 **CORRECT (After):**
@@ -171,11 +171,11 @@ Official example:
 
 1. **README.md**
    - Fixed installation command
-   - Fixed all `droid --auto high` → `droid`
+   - Fixed all `droid` → `droid`
    - Verified custom droids instructions
 
 2. **QUICK_START_V2.md**
-   - Fixed all `droid --auto high` → `droid`
+   - Fixed all `droid` → `droid`
    - Updated migration section (V2-only)
    - Removed V1 references
 

@@ -227,7 +227,7 @@ bun orchestrator/launch.ts
 bun orchestrator/launch.ts --mode=v2
 
 # Or invoke orchestrator droid directly
-droid --auto high
+droid
 > "Use droidz-orchestrator to process project MyProject sprint Sprint-1"
 ```
 

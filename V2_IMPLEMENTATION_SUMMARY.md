@@ -91,7 +91,7 @@ Successfully implemented a **Factory-native multi-agent system** (V2) while main
 
 ```
 User
-  └─> droid --auto high
+  └─> droid
       └─> "Use droidz-orchestrator to process project X sprint Y"
           └─> Orchestrator Droid
               ├─> linear-fetch.ts (get tickets)
@@ -145,7 +145,7 @@ droid
 ### 3. Run V2
 
 ```bash
-droid --auto high
+droid
 ```
 
 Then say:
@@ -203,7 +203,7 @@ V1 remains fully functional:
 bun orchestrator/launch.ts
 
 # V2 (Factory-native) - new option
-droid --auto high
+droid
 > "Use droidz-orchestrator..."
 ```
 

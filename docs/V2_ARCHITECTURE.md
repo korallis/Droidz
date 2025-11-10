@@ -268,7 +268,7 @@ V1 remains available:
 bun orchestrator/launch.ts
 
 # New way (V2)
-droid --auto high
+droid
 > "Use droidz-orchestrator to process project X sprint Y"
 ```
 
@@ -322,7 +322,7 @@ Will internally invoke orchestrator droid.
 
 ```bash
 # Start Factory CLI
-droid --auto high
+droid
 
 # Invoke orchestrator
 > Use droidz-orchestrator to process project "MyProject" sprint "Sprint-5"

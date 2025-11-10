@@ -116,7 +116,57 @@ You have access to comprehensive MCP integrations. **Use them freely whenever th
 
 ## Workflow
 
-### 1. Fetch Linear Tickets
+### 1. Detect Linear Configuration
+
+**BEFORE fetching tickets**, check if Linear is configured:
+
+```bash
+# Check if LINEAR_API_KEY is set
+echo $LINEAR_API_KEY
+```
+
+**If LINEAR_API_KEY is missing or empty:**
+
+Tell the user:
+```
+⚠️  No Linear API Key Detected
+
+Droidz can work in two modes:
+
+**Option 1: Use Linear (Recommended for teams)**
+Linear provides project management, issue tracking, and team collaboration.
+
+To set up Linear:
+1. Get your API key: https://linear.app/settings/api
+2. Export it: export LINEAR_API_KEY='your-key-here'
+3. Run the setup command: /setup-linear-project
+
+**Option 2: Continue without Linear (Solo developers)**
+You can still use Droidz with local issue tracking:
+- Create issues in a local markdown file
+- Git worktrees still work (parallel execution!)
+- PRs are still created automatically
+
+Would you like to:
+A) Set up Linear now? (I can help with /setup-linear-project)
+B) Continue without Linear?
+C) Learn more about both options?
+```
+
+**If user chooses Option A:**
+- Guide them to use the `/setup-linear-project` command
+- Wait for them to complete setup
+- Then proceed with workflow
+
+**If user chooses Option B:**
+- Switch to local mode (explained below)
+- Ask them to provide issues in markdown format or describe the project
+
+**If Linear IS configured (API key present):**
+
+Proceed with normal Linear workflow...
+
+### 2. Fetch Linear Tickets (If Linear is Configured)
 
 Execute the Linear fetch helper to get tickets for the current project and sprint:
 
@@ -139,7 +189,102 @@ This returns JSON:
 }
 ```
 
-### 2. Analyze and Plan
+### 2a. Local Mode Workflow (If No Linear)
+
+If the user chose to proceed without Linear, use this workflow:
+
+1. **Ask for project description**:
+```
+Please describe your project and what you'd like to build.
+
+Be as detailed as possible:
+- What's the main goal?
+- What features are needed?
+- Are there any specific technical requirements?
+- What's your tech stack?
+
+Example: "Build a task management app with user authentication, 
+CRUD operations for tasks, and a React frontend."
+```
+
+2. **Research and plan** using MCP tools:
+```typescript
+// Research similar projects
+const research = await exa___get_code_context_exa(
+  "{{USER_PROJECT_DESCRIPTION}} architecture best practices"
+);
+
+// Search for relevant documentation
+const docs = await ref___ref_search_documentation(
+  "{{TECH_STACK}} project structure best practices"
+);
+```
+
+3. **Generate task breakdown**:
+Create a structured task list with dependencies:
+```markdown
+## Generated Tasks
+
+### TASK-1: Setup Project Foundation
+**Labels**: infra
+**Description**: Initialize project structure, dependencies, and build config
+**Acceptance Criteria**:
+- Package.json configured
+- TypeScript/Babel setup
+- Development server running
+
+### TASK-2: Database Schema
+**Labels**: backend
+**Dependencies**: TASK-1
+**Description**: Design and implement database models
+**Acceptance Criteria**:
+- User and Task tables created
+- Migrations working
+- Seed data for testing
+
+### TASK-3: Authentication API
+**Labels**: backend
+**Dependencies**: TASK-2
+**Description**: Implement user auth endpoints
+**Acceptance Criteria**:
+- POST /auth/register
+- POST /auth/login
+- JWT token generation
+
+[... continue with all tasks ...]
+```
+
+4. **Present plan to user**:
+```
+📋 Generated Task Plan
+
+I've broken down your project into {{TASK_COUNT}} tasks across {{PHASE_COUNT}} phases:
+
+Phase 1: Foundation (sequential)
+  - TASK-1: Setup project (infra)
+  
+Phase 2: Backend Core (parallel - 3 tasks)
+  - TASK-2: Database schema (backend)
+  - TASK-3: Authentication API (backend)
+  - TASK-4: Task CRUD API (backend)
+  
+Phase 3: Frontend (parallel - 2 tasks)
+  - TASK-5: UI components (frontend)
+  - TASK-6: Auth forms (frontend)
+  
+Phase 4: Testing & Polish (parallel)
+  - TASK-7: API tests (test)
+  - TASK-8: UI tests (test)
+
+Would you like to:
+A) Proceed with this plan?
+B) Modify specific tasks?
+C) Add/remove tasks?
+```
+
+5. **After user approval**, proceed directly to Step 4 (Prepare Workspaces) using the generated tasks instead of Linear tickets.
+
+### 2b. Analyze and Plan (Linear Mode)
 
 - **Identify dependencies**: Tasks with `deps` must wait for blockers
 - **Determine parallelization**: Group independent tasks into phases

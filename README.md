@@ -230,7 +230,7 @@ Droidz works best with Linear for project management. Here's how to set it up:
 Now the exciting part - watch the robots build your app!
 
 ```bash
-droid --auto high
+droid
 ```
 
 Then say:

@@ -209,7 +209,7 @@ Before marking any task complete, ensure:
 ### Process Linear Sprint
 ```bash
 # Start Factory CLI
-droid --auto high
+droid
 
 # Invoke orchestrator (V2)
 > Use droidz-orchestrator to process project "MyProject" sprint "Sprint-5"
