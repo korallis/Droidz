@@ -66,13 +66,40 @@ If mode is "clone" or "branch", **STOP** and fix the config before delegating to
 
 **Never proceed without worktree mode unless git worktrees are unsupported.**
 
-## Available MCP Tools (Use When Available)
+## API Integration via Helper Scripts (RECOMMENDED PATTERN)
 
-You have access to comprehensive MCP integrations **when they are installed**. These tools enhance your capabilities but are optional.
+**CRITICAL CHANGE**: Use Execute tool with helper scripts that read API keys from config.yml!
 
-### MCP Tool Availability & Fallbacks
+Per Anthropic's code execution with MCP pattern, DO NOT call MCP tools directly. Instead, use helper scripts:
 
-**IMPORTANT**: MCP servers (Exa, Ref, etc.) must be installed separately. If a tool isn't available, use fallbacks:
+### Helper Scripts (Always Use These)
+
+**Exa Search** (reads `exa.api_key` from config.yml):
+```bash
+Execute: bun orchestrator/exa-search.ts --query "your search query" --num-results 10
+```
+
+**Ref Documentation** (reads `ref.api_key` from config.yml):
+```bash
+Execute: bun orchestrator/ref-search.ts --query "documentation query"
+```
+
+**Linear Integration** (reads `linear.api_key` from config.yml):
+```bash
+Execute: bun orchestrator/linear-fetch.ts --project "ProjectName" --sprint "Sprint-5"
+```
+
+### Why This Pattern?
+
+1. **Works immediately** - No MCP server setup required
+2. **Uses config.yml** - API keys read automatically from project config
+3. **Graceful errors** - Scripts show clear messages if keys missing
+4. **Factory compliant** - Uses Execute tool (always available)
+5. **Code execution pattern** - Per Anthropic recommendations
+
+### Fallback If No API Keys
+
+If scripts return errors (no API keys in config.yml), you can still:
 
 #### Linear Integration (Usually available via Factory)
 - `linear___list_issues`, `linear___create_issue`, `linear___update_issue`, etc.
@@ -265,36 +292,34 @@ Example: "Build a task management app with user authentication,
 CRUD operations for tasks, and a React frontend."
 ```
 
-2. **Research and plan** (use MCP tools if available):
-```typescript
-// Try to research similar projects (optional - graceful fallback)
-let research = null;
-try {
-  research = await exa___get_code_context_exa(
-    "{{USER_PROJECT_DESCRIPTION}} architecture best practices"
-  );
-  console.log("✅ Enhanced planning with Exa research");
-} catch (error) {
-  console.log("ℹ️  Proceeding without Exa research (not installed)");
-}
+2. **Research and plan** (use helper scripts with API keys from config.yml):
 
-// Try to search relevant documentation (optional - graceful fallback)
-let docs = null;
-try {
-  docs = await ref___ref_search_documentation(
-    "{{TECH_STACK}} project structure best practices"
-  );
-  console.log("✅ Found documentation via Ref");
-} catch (error) {
-  console.log("ℹ️  Proceeding without Ref docs (not installed)");
-}
+**CRITICAL: Use Execute tool with helper scripts, NOT direct MCP tool calls!**
 
-// Continue with task generation using available information
-// Even without MCP tools, you can still:
-// - Read user's existing code with Read/Grep
-// - Ask user for architecture details
-// - Generate sensible task breakdown based on description
+Per Anthropic's code execution pattern, call helper scripts that read API keys from config.yml:
+
+```bash
+# Research with Exa (if API key in config.yml)
+bun orchestrator/exa-search.ts --query "{{USER_PROJECT_DESCRIPTION}} architecture best practices" --num-results 5
+
+# Search documentation with Ref (if API key in config.yml)
+bun orchestrator/ref-search.ts --query "{{TECH_STACK}} project structure best practices"
 ```
+
+**Graceful fallback if API keys not configured:**
+- Scripts will return clear error messages if API keys missing
+- You can still proceed with planning based on:
+  - User's existing code (Read/Grep)
+  - User's description
+  - General best practices you know
+  - Ask user for specific requirements
+
+**Example Execute command:**
+```bash
+Execute: bun orchestrator/exa-search.ts --query "Convex database best practices" --num-results 5
+```
+
+This returns JSON with search results you can use for planning.
 
 3. **Generate task breakdown**:
 Create a structured task list with dependencies:
