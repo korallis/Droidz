@@ -53,6 +53,7 @@ echo ""
 # Create directories
 log_info "Creating directories..."
 mkdir -p .factory/droids
+mkdir -p .factory/commands
 mkdir -p orchestrator
 log_success "Directories created"
 
@@ -72,6 +73,19 @@ DROIDS=(
 for droid in "${DROIDS[@]}"; do
     curl -fsSL "${GITHUB_RAW}/.factory/droids/${droid}${CACHE_BUST}" -o ".factory/droids/${droid}"
     log_success "Downloaded ${droid}"
+done
+
+# Download custom commands
+log_info "Downloading custom slash commands..."
+
+COMMANDS=(
+    "droidz-orchestrator.md"
+    "setup-linear-project.md"
+)
+
+for command in "${COMMANDS[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/commands/${command}${CACHE_BUST}" -o ".factory/commands/${command}"
+    log_success "Downloaded ${command}"
 done
 
 # Download orchestrator scripts

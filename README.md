@@ -43,11 +43,13 @@ droid         # Restart
 
 **Step 3: Get a plan!**
 ```
-Use droidz-orchestrator to plan a todo app with:
+/droidz-orchestrator Use droidz-orchestrator to plan a todo app with:
 - Add tasks
 - Mark tasks done  
 - Delete tasks
 ```
+
+`/droidz-orchestrator` keeps the entire prompt intact when it forwards instructions to the planner.
 
 **Step 4: Follow the plan!**
 Orchestrator creates delegation instructions. YOU execute them:
@@ -257,7 +259,7 @@ droid
 ```
 
 ```
-Use droidz-orchestrator to process all tickets in project "MyApp"
+/droidz-orchestrator Use droidz-orchestrator to process all tickets in project "MyApp"
 ```
 
 **What happens:**
@@ -275,7 +277,7 @@ droid
 ```
 
 ```
-Use droidz-orchestrator to add dark mode to the app
+/droidz-orchestrator Use droidz-orchestrator to add dark mode to the app
 ```
 
 **What happens:**
@@ -331,12 +333,12 @@ droid
 
 **Option A: Process all tickets**
 ```
-Use droidz-orchestrator to process all tickets in project "MyApp"
+/droidz-orchestrator Use droidz-orchestrator to process all tickets in project "MyApp"
 ```
 
 **Option B: Process specific sprint**
 ```
-Use droidz-orchestrator to process sprint "Sprint 5" in project "MyApp"
+/droidz-orchestrator Use droidz-orchestrator to process sprint "Sprint 5" in project "MyApp"
 ```
 
 **Option C: Single ticket**
