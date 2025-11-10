@@ -122,7 +122,7 @@ Droidz needs Factory to work (Factory is like the playground where robots play).
 
 **Install Factory:**
 ```bash
-npm install -g @factory-ai/cli
+curl -fsSL https://app.factory.ai/cli | sh
 ```
 
 **Check it's installed:**
@@ -180,9 +180,9 @@ You should see:
 
 ### Basic Usage
 
-1. **Start Factory with high power:**
+1. **Start Factory:**
 ```bash
-droid --auto high
+droid
 ```
 
 2. **Talk to the boss robot:**
@@ -204,7 +204,7 @@ The boss robot will:
 Let's build a todo list app:
 
 ```bash
-droid --auto high
+droid
 ```
 
 Then say:
@@ -657,9 +657,10 @@ Much fancier! And Droidz can read it automatically!
 
 ```bash
 # 1. Start Factory
-droid --auto high
+droid
 
 # 2. Talk to the boss robot
+# Just type this when Factory starts:
 Use droidz-orchestrator to build [your amazing idea here]
 
 # 3. Watch the magic happen! ✨

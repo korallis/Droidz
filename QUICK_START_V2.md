@@ -59,8 +59,8 @@ export GITHUB_TOKEN="ghp_..."  # If not already authenticated with gh
 ### Basic Usage
 
 ```bash
-# Start Factory with high autonomy
-droid --auto high
+# Start Factory
+droid
 
 # Then say:
 > Use droidz-orchestrator to process project "MyProject" sprint "Sprint-5"
@@ -82,8 +82,9 @@ droid --auto high
 ### Single Ticket
 
 ```bash
-droid --auto high
+droid
 
+# Then say:
 > Use droidz-orchestrator to process ticket PROJ-123
 ```
 
@@ -372,18 +373,15 @@ Orchestrator will filter tickets based on labels.
 
 ## Migration from V1
 
-V1 (shell-based) still available:
+V1 (shell-based) has been retired. Droidz is now V2-only.
 
 ```bash
-# V1 (old way)
-bun orchestrator/launch.ts
+# Start Factory
+droid
 
-# V2 (new way)
-droid --auto high
-> "Use droidz-orchestrator..."
+# Then talk to orchestrator:
+> "Use droidz-orchestrator to process project X sprint Y"
 ```
-
-**Recommendation**: Test V2 in parallel, then gradually migrate.
 
 ## Support
 
@@ -394,4 +392,4 @@ droid --auto high
 
 ---
 
-**Ready to go?** Enable custom droids and start with `droid --auto high`! 🚀
+**Ready to go?** Enable custom droids and start with `droid`! 🚀
