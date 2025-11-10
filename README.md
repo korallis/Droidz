@@ -15,6 +15,20 @@ Then enable "Custom Droids" in Factory settings (`droid` → `/settings`) and yo
 
 ---
 
+## 🆕 What's New in V2
+
+**Latest Updates:**
+- ✅ **Fixed:** All droids now use only valid Factory tools (removed invalid MCP references)
+- ✅ **Added:** One-command installer for easy setup and updates
+- ✅ **Added:** Comprehensive MCP server setup guide (Linear, Exa, Ref)
+- ✅ **Added:** Real-time progress tracking with TodoWrite
+- ✅ **Added:** Complete Linear integration configuration
+- ✅ **Improved:** Simple 5-year-old friendly documentation
+
+**See [CHANGELOG.md](CHANGELOG.md) for full version history.**
+
+---
+
 ## 🎈 What is Droidz? (Explained Like You're 5)
 
 You know how when you want to build a LEGO castle, it takes a really long time if you do it alone?
@@ -904,7 +918,16 @@ Use droidz-orchestrator to build an app where kids can track feeding their pet, 
 **Fix:**
 1. Make sure "Custom Droids" is turned ON in `/settings`
 2. Restart Factory: Exit and run `droid` again
-3. Check you're in the Droidz folder
+3. Verify installation: Run installer again to ensure all files are present
+
+### Problem: "Invalid tools" Error
+
+**This was fixed in V2!** If you see this error:
+1. Update Droidz: `curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash`
+2. Restart Factory: `droid`
+3. Verify: `/droids` should show all droids without errors
+
+**See [DROID_TOOLS_FIX.md](DROID_TOOLS_FIX.md) for technical details.**
 
 ### Problem: Robot Says "Can't Find Linear Ticket"
 
@@ -1068,17 +1091,31 @@ If you're building something big:
 
 ## 🤝 Getting Help
 
-### Documentation
+### 📚 Documentation
 
-- **Quick Start:** [QUICK_START_V2.md](QUICK_START_V2.md)
-- **Architecture:** [docs/V2_ARCHITECTURE.md](docs/V2_ARCHITECTURE.md)  
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+**Quick Guides:**
+- 📖 **[QUICK_START_V2.md](QUICK_START_V2.md)** - Fast-track setup guide
+- 🚀 **[INSTALL.md](INSTALL.md)** - Detailed installation guide
+- 📋 **[CHANGELOG.md](CHANGELOG.md)** - Version history and updates
+
+**Configuration:**
+- ⚙️ **[MCP_SETUP.md](MCP_SETUP.md)** - MCP servers (Linear, Exa, Ref)
+- 🔧 **config.yml** - Main configuration file
+
+**Technical Docs:**
+- 🏗️ **[docs/V2_ARCHITECTURE.md](docs/V2_ARCHITECTURE.md)** - System architecture
+- 🔨 **[DROID_TOOLS_FIX.md](DROID_TOOLS_FIX.md)** - Tool configuration explained
+- 📦 **[INSTALLER_SUMMARY.md](INSTALLER_SUMMARY.md)** - Installer details
+
+**Troubleshooting:**
+- 🐛 **[INSTALLER_FIX.md](INSTALLER_FIX.md)** - Installer 404 fix
+- ✅ **[FACTORY_VERIFICATION.md](FACTORY_VERIFICATION.md)** - Factory CLI verification
 
 ### Questions?
 
-- 💬 **Ask on GitHub:** Open a Discussion
-- 🐛 **Found a bug?** Open an Issue
-- 📧 **Email:** (your email here)
+- 💬 **GitHub Discussions:** [Ask questions](https://github.com/korallis/Droidz/discussions)
+- 🐛 **Found a bug?** [Open an Issue](https://github.com/korallis/Droidz/issues)
+- ⭐ **Like Droidz?** [Star the repo](https://github.com/korallis/Droidz)
 
 ### Want to Help Make Droidz Better?
 
