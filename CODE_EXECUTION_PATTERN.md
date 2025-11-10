@@ -47,19 +47,60 @@ bun orchestrator/exa-search.ts --query "Convex best practices" --num-results 5
 - Returns structured JSON
 - Clear error messages if no key found
 
-#### 2. `orchestrator/ref-search.ts`
+#### 2. `orchestrator/linear-fetch.ts` & `linear-update.ts`
 
-Searches documentation using Ref API:
+Linear API integration using code execution pattern:
 
 ```typescript
-// Reads ref.api_key from config.yml
-// Returns documentation matches
+// Reads linear.api_key from config.yml
+// Fetches tickets or updates status
 
 // Usage:
-bun orchestrator/ref-search.ts --query "Next.js documentation"
+bun orchestrator/linear-fetch.ts --project "FlowScribe"
+bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"
 ```
 
-**Same features as exa-search.ts**
+**Features:**
+- Reads `linear.api_key` from config.yml
+- Supports environment variables (`${LINEAR_API_KEY}`)
+- Returns structured JSON (ticket data or update results)
+- Clear error messages
+
+#### 3. `orchestrator/ref-search.ts` ⚠️ **MCP-Only (Placeholder)**
+
+**IMPORTANT:** Unlike Exa and Linear, Ref **does NOT provide a REST API**.
+
+This script is a **placeholder** that explains two options:
+
+**Option 1: Direct MCP Tools**
+```bash
+# Requires MCP server configured via Factory CLI
+droid
+/mcp add ref
+# Then use: ref___ref_search_documentation in droids
+```
+
+**Option 2: Programmatic MCP (Code Execution)**
+```typescript
+// In orchestrator droid, use code-execution tool:
+const code = `
+  const { ref } = await import("./servers/ref");
+  const results = await ref.searchDocumentation("query");
+  console.log(JSON.stringify(results, null, 2));
+`;
+// Execute via code-execution___execute_code
+```
+
+Running the script shows a helpful error:
+```bash
+$ bun orchestrator/ref-search.ts --query "Next.js"
+{
+  "error": "Ref documentation search requires MCP server",
+  "mcpOnly": true,
+  "option1": { /* Direct MCP setup steps */ },
+  "option2": { /* Programmatic MCP example */ }
+}
+```
 
 ### Updated Orchestrator
 
@@ -148,6 +189,36 @@ Execute: bun orchestrator/exa-search.ts --query "{{TOPIC}} best practices" --num
   "config": "Edit config.yml and add: exa.api_key"
 }
 ```
+
+## 📊 Service Integration Summary
+
+| Service | Integration Method | API Available | Status |
+|---------|-------------------|---------------|--------|
+| **Exa** | Code Execution (Execute + script) | ✅ REST API | ✅ **Working** |
+| **Linear** | Code Execution (Execute + script) | ✅ GraphQL API | ✅ **Working** |
+| **Ref** | MCP-only (no REST API) | ❌ MCP Tools Only | ⚠️ **MCP Required** |
+
+### Service Details
+
+**Exa** - AI-powered web search:
+- ✅ REST API at exa.ai
+- ✅ Works via code execution pattern
+- ✅ Tested with real API key
+- Returns: Search results, code context, web content
+
+**Linear** - Project management:
+- ✅ GraphQL API at api.linear.app
+- ✅ Works via code execution pattern  
+- ✅ Tested with real API key
+- Returns: Issues, projects, teams, comments
+
+**Ref** - Documentation search:
+- ❌ No public REST API
+- ⚠️ MCP tools only (`ref___ref_search_documentation`)
+- Two options:
+  1. Direct MCP (requires Factory CLI setup)
+  2. Programmatic MCP (via code-execution tool)
+- Placeholder script explains setup
 
 ## 🎯 Benefits
 

@@ -3,9 +3,14 @@
  * Linear Update Helper
  * Updates Linear ticket status or posts comments
  * Used by specialist droids to update tickets
+ * 
+ * This implements the code execution pattern - reads API key from config.yml
  */
 
 import { setIssueState, commentOnIssue, getTeamStateIdByName, getIssueId } from "./linear";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+import YAML from "yaml";
 
 interface UpdateArgs {
   issue: string;
@@ -39,6 +44,27 @@ function parseArgs(): UpdateArgs {
   }
   
   return args;
+}
+
+function getApiKeyFromConfig(): string | null {
+  try {
+    const configPath = resolve(process.cwd(), "config.yml");
+    const configContent = readFileSync(configPath, "utf-8");
+    const config = YAML.parse(configContent);
+    
+    // Get API key from config
+    const apiKey = config?.linear?.api_key || "";
+    
+    // Handle environment variable substitution
+    if (apiKey.startsWith("${") && apiKey.endsWith("}")) {
+      const envVar = apiKey.slice(2, -1); // Remove ${ and }
+      return process.env[envVar] || null;
+    }
+    
+    return apiKey || null;
+  } catch (error) {
+    return null;
+  }
 }
 
 async function getTeamIdFromIssue(apiKey: string, issueIdentifier: string): Promise<string | null> {
@@ -86,15 +112,23 @@ async function main() {
     
     if (!args.issue) {
       console.error(JSON.stringify({
-        error: "Missing required --issue argument"
+        error: "Missing required --issue argument",
+        usage: "bun orchestrator/linear-update.ts --issue PROJ-123 [--status 'In Progress'] [--comment 'text']"
       }, null, 2));
       process.exit(1);
     }
     
-    const apiKey = args.apiKey || process.env.LINEAR_API_KEY || "";
+    // Get API key from args, config.yml, or environment
+    const apiKey = args.apiKey || 
+                   getApiKeyFromConfig() || 
+                   process.env.LINEAR_API_KEY || 
+                   "";
+    
     if (!apiKey) {
       console.error(JSON.stringify({
-        error: "Missing LINEAR_API_KEY environment variable or --api-key argument"
+        error: "No Linear API key found",
+        help: "Add your Linear API key to config.yml or set LINEAR_API_KEY environment variable",
+        config: "Edit config.yml and add: linear.api_key"
       }, null, 2));
       process.exit(1);
     }

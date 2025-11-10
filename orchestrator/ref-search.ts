@@ -1,8 +1,27 @@
 #!/usr/bin/env bun
 /**
  * Ref Documentation Search Helper
- * Searches documentation using Ref API with API key from config.yml or environment
- * This implements the code execution pattern from Anthropic's MCP article
+ * Searches documentation using Ref MCP server programmatically
+ * 
+ * IMPORTANT: Unlike Exa and Linear, Ref doesn't provide a REST API.
+ * This script is a PLACEHOLDER that explains the MCP-only approach.
+ * 
+ * To use Ref, you have TWO options:
+ * 
+ * 1. DIRECT MCP TOOLS (when available in Factory):
+ *    - Use ref___ref_search_documentation directly in droid
+ *    - Requires MCP server configured via Factory CLI
+ *    - See MCP_SETUP.md for instructions
+ * 
+ * 2. CODE EXECUTION MCP (programmatic):
+ *    - Use code-execution___execute_code tool
+ *    - Import ref server and call tools programmatically
+ *    - Example in orchestrator droid
+ * 
+ * This file exists to:
+ * - Document Ref's MCP-only nature
+ * - Provide placeholder for future REST API
+ * - Show expected error if called directly
  */
 
 import { readFileSync } from "fs";
@@ -52,64 +71,70 @@ function getApiKeyFromConfig(): string | null {
   }
 }
 
-async function searchRef(query: string, apiKey: string) {
-  const url = "https://api.ref.sh/search";
-  
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({ query }),
-  });
-  
-  if (!response.ok) {
-    throw new Error(`Ref API error: ${response.status} ${response.statusText}`);
-  }
-  
-  return await response.json();
-}
-
 async function main() {
-  try {
-    const args = parseArgs();
-    
-    if (!args.query) {
-      console.error(JSON.stringify({
-        error: "Missing required --query argument",
-        usage: "bun orchestrator/ref-search.ts --query 'your search query'"
-      }, null, 2));
-      process.exit(1);
-    }
-    
-    // Get API key from args, config.yml, or environment
-    const apiKey = args.apiKey || 
-                   getApiKeyFromConfig() || 
-                   process.env.REF_API_KEY || 
-                   "";
-    
-    if (!apiKey) {
-      console.error(JSON.stringify({
-        error: "No Ref API key found",
-        help: "Add your Ref API key to config.yml or set REF_API_KEY environment variable",
-        config: "Edit config.yml and add: ref.api_key"
-      }, null, 2));
-      process.exit(1);
-    }
-    
-    const results = await searchRef(args.query, apiKey);
-    
-    // Output results as JSON
-    console.log(JSON.stringify(results, null, 2));
-    
-  } catch (error) {
+  const args = parseArgs();
+  
+  if (!args.query) {
     console.error(JSON.stringify({
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      error: "Missing required --query argument",
+      usage: "bun orchestrator/ref-search.ts --query 'your search query'"
     }, null, 2));
     process.exit(1);
   }
+  
+  // Get API key (for documentation purposes)
+  const apiKey = args.apiKey || 
+                 getApiKeyFromConfig() || 
+                 process.env.REF_API_KEY || 
+                 "";
+  
+  // Ref is MCP-only, no REST API available
+  console.error(JSON.stringify({
+    error: "Ref documentation search requires MCP server",
+    explanation: "Ref doesn't provide a REST API like Exa or Linear",
+    mcpOnly: true,
+    
+    // Option 1: Direct MCP tools (requires MCP server setup)
+    option1: {
+      method: "Direct MCP Tools",
+      requirement: "MCP server configured via Factory CLI",
+      setup: [
+        "1. Get API key from https://ref.tools",
+        "2. Configure MCP: droid",
+        "3. Run: /mcp add ref",
+        "4. Use: ref___ref_search_documentation in droids"
+      ],
+      documentation: "See MCP_SETUP.md for detailed instructions"
+    },
+    
+    // Option 2: Code execution MCP (programmatic)
+    option2: {
+      method: "Programmatic MCP via code-execution tool",
+      description: "Use code-execution___execute_code to call Ref MCP programmatically",
+      example: `
+// In orchestrator droid, use code-execution tool:
+const code = \`
+  const { ref } = await import("./servers/ref");
+  const results = await ref.searchDocumentation("${args.query}");
+  console.log(JSON.stringify(results, null, 2));
+\`;
+Execute: code-execution___execute_code with code above
+      `.trim(),
+      note: "This works if code-execution MCP server is configured"
+    },
+    
+    // What was requested
+    yourQuery: args.query,
+    hasApiKey: !!apiKey,
+    
+    // Why this script exists
+    purpose: "This script exists to document Ref's MCP-only nature and guide users to proper setup",
+    
+    // Future possibility
+    future: "If Ref releases a REST API in the future, this script can be updated to use it"
+  }, null, 2));
+  
+  process.exit(1);
 }
 
 main();
