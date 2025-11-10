@@ -212,6 +212,8 @@ droid
 
 That's it! Robots now have superpowers. 🦸
 
+> **Heads-up:** All bundled droids now omit the `tools` field, so once an MCP server is enabled it’s instantly available to every specialist—no extra configuration required.
+
 ### Option 3: Existing Linear Project 📋
 
 **Best for:** Teams with existing Linear setup
