@@ -10,10 +10,12 @@ profile: default
 install_droids: true
 
 # Use Exa for research during planning and specification
-use_exa_research: true
+# DISABLED: exa tools not available in Droid CLI environment
+use_exa_research: false
 
 # Use Ref for documentation lookup
-use_ref_docs: true
+# DISABLED: ref tools not available in Droid CLI environment
+use_ref_docs: false
 
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development

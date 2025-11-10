@@ -5,43 +5,35 @@ Create a comprehensive specification document for a feature using research and c
 ## Prerequisites
 - `droidz/specs/[spec-slug]/planning/requirements.md` must exist
 
-## Step 1: Research with Ref
+## Step 1: Research Documentation
 
 Search for relevant documentation and implementation guides:
 
-```typescript
-// Find documentation for the tech stack being used
-const docs = await ref___ref_search_documentation({
-  query: "[Tech stack framework] [Feature concept] implementation guide"
-});
+**Note:** This workflow is designed for Factory CLI. When running in Droid CLI, use WebSearch and FetchUrl instead of ref tools.
 
-// Find API documentation for any third-party services
-const apiDocs = await ref___ref_search_documentation({
-  query: "[Service name] API authentication setup"
-});
+```bash
+# Option 1: Using WebSearch (available in both Factory and Droid CLI)
+# Search for technical documentation
+# Example: "Next.js authentication implementation guide"
+# Example: "Stripe API setup documentation"
 
-// Read specific documentation URLs
-const detailedDocs = await ref___ref_read_url({
-  url: "[Exact URL from search results]"
-});
+# Option 2: Using FetchUrl (available in both Factory and Droid CLI)  
+# Once you have specific URLs from search results, fetch the content
+# Example: https://docs.stripe.com/api/authentication
 ```
 
-## Step 2: Research with Exa Code
+## Step 2: Find Implementation Examples
 
-Find implementation examples and patterns:
+Find implementation examples and patterns using web search:
 
-```typescript
-// Find code examples for this feature type
-const codeExamples = await exa___get_code_context_exa({
-  query: "[Framework] [Feature] implementation examples best practices",
-  tokensNum: 8000
-});
+**Note:** This workflow is designed for Factory CLI. When running in Droid CLI, use WebSearch instead of exa tools.
 
-// Find integration patterns
-const integrationPatterns = await exa___get_code_context_exa({
-  query: "[Service A] integrate with [Service B] [Framework] example",
-  tokensNum: 5000
-});
+```bash
+# Using WebSearch (available in both Factory and Droid CLI)
+# Search for code examples and best practices
+# Example: "React authentication implementation best practices GitHub"
+# Example: "Next.js API routes examples"
+# Example: "Stripe payment integration tutorial"
 ```
 
 ## Step 3: Analyze Existing Codebase

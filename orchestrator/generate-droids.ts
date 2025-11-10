@@ -30,21 +30,33 @@ async function main() {
   await fs.mkdir(outDir, { recursive: true });
 
   for (const s of SPECIALISTS) {
-    const file = path.join(outDir, `${s.id}.droid.json`);
-    const obj = {
-      name: `droidz-${s.id}`,
-      description: s.desc,
-      model: "gpt-5-codex",
-      policies: {
-        require_tests_pass: cfg.guardrails?.testsRequired ?? true,
-        secret_scan: cfg.guardrails?.secretScan ?? true
-      },
-      prompt: systemPrompt(s.id)
-    };
-    await fs.writeFile(file, JSON.stringify(obj, null, 2));
+    // Create Markdown file with YAML frontmatter (Factory CLI format)
+    const file = path.join(outDir, `${s.id}.md`);
+    
+    // Available tools in Droid CLI - only use these
+    const availableTools = ["Read", "LS", "Execute", "Edit", "Grep", "Glob", "Create", "TodoWrite"];
+    
+    const markdownContent = `---
+name: droidz-${s.id}
+description: ${s.desc}
+model: gpt-5-codex
+tools: ${JSON.stringify(availableTools)}
+---
+
+${systemPrompt(s.id)}
+
+## Policies
+
+- Tests must pass before completion
+- Secret scanning enabled
+- No hardcoded credentials
+`;
+    
+    await fs.writeFile(file, markdownContent);
   }
   console.log(`Custom droid presets written to ${outDir}.`);
-  console.log("If your Droid CLI supports custom droids, enable them to load these presets.");
+  console.log("Droids created as Markdown files with YAML frontmatter (Factory CLI format).");
+  console.log("Enable custom droids in settings (/settings) to use them.");
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

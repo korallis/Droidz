@@ -1,6 +1,8 @@
-# Droidz Quick Start
+# Droidz Quick Start (V2)
 
-Get started in 2 minutes.
+Get your robot team working in 3 easy steps!
+
+> **Note:** This is for Droidz V2 (Factory-native). V1 has been retired.
 
 ---
 
