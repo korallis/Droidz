@@ -26,6 +26,15 @@ use_ref_docs: true
 # - desktop-commander: Advanced file/process operations
 mcp_tools_enabled: true
 
+# Linear Integration (Optional - for automated ticket processing)
+# Get your API key from: https://linear.app/settings/api
+# Get your team ID from your Linear workspace URL or API
+linear:
+  api_key: "${LINEAR_API_KEY}"  # Use environment variable for security
+  team_id: ""  # Your Linear team ID (e.g., "abc123def456")
+  update_comments: true  # Post PR links as comments on tickets
+  auto_status_updates: true  # Automatically update ticket status
+
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development
 parallel:
@@ -33,11 +42,22 @@ parallel:
   max_concurrent_tasks: 5  # DEFAULT: 5 workers (Range: 2-10)
                           # Increase to 8-10 for large features with many independent tasks
                           # Decrease to 2-3 only if tasks are tightly coupled
-  workspace_mode: worktree  # RECOMMENDED: worktree (enables true parallel execution)
-                           # worktree = isolated git working trees (fastest, safest)
-                           # clone = full repo copies (slower, more disk space)
-                           # branch = shadow copies (no git isolation, use as last resort)
-                           # ALWAYS use 'worktree' unless git worktrees are not supported
+
+# Git workspace configuration
+workspace:
+  base_dir: ".runs"  # Directory for isolated workspaces
+  branch_pattern: "feature/{issueKey}-{slug}"  # Branch naming pattern
+  mode: worktree  # RECOMMENDED: worktree (enables true parallel execution)
+              # worktree = isolated git working trees (fastest, safest)
+              # clone = full repo copies (slower, more disk space)
+              # branch = shadow copies (no git isolation, use as last resort)
+              # ALWAYS use 'worktree' unless git worktrees are not supported
+
+# Safety guardrails
+guardrails:
+  tests_required: true  # Require tests to pass before PRs
+  secret_scan: true  # Scan for secrets before commits
+  lint_on_change: false  # Run linter on changed files
 
 # Standards enforcement
 standards:
