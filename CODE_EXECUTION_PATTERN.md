@@ -102,19 +102,32 @@ $ bun orchestrator/ref-search.ts --query "Next.js"
 }
 ```
 
-### Updated Orchestrator
+### Updated Orchestrator - How To Use Each Service
 
-Changed from:
-```typescript
-// OLD - Direct MCP tool calls (requires MCP server setup)
-const results = await exa___web_search_exa("Convex best practices");
-```
-
-To:
+**Exa (REST API) - Use Execute + script:**
 ```bash
-# NEW - Code execution pattern (uses config.yml)
+# Uses config.yml API key
 Execute: bun orchestrator/exa-search.ts --query "Convex best practices" --num-results 5
+# Returns JSON with search results
 ```
+
+**Linear (GraphQL API) - Use Execute + script:**
+```bash
+# Uses config.yml API key
+Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+# Returns JSON with 91 tickets
+```
+
+**Ref (MCP tool) - Call directly:**
+```typescript
+// ✅ Already available in Factory - just call it!
+const refResults = await ref___ref_search_documentation("Next.js app router");
+// Returns: page titles and URLs
+```
+
+**Key Difference:**
+- Exa & Linear: Have APIs → Scripts call fetch() → Execute tool runs scripts
+- Ref: No API → MCP tool available → Call directly (simpler!)
 
 ## 🧪 Test Results
 
@@ -214,11 +227,10 @@ Execute: bun orchestrator/exa-search.ts --query "{{TOPIC}} best practices" --num
 
 **Ref** - Documentation search:
 - ❌ No public REST API
-- ⚠️ MCP tools only (`ref___ref_search_documentation`)
-- Two options:
-  1. Direct MCP (requires Factory CLI setup)
-  2. Programmatic MCP (via code-execution tool)
-- Placeholder script explains setup
+- ✅ **MCP tool already available**: `ref___ref_search_documentation`
+- **Best approach**: Call MCP tool directly in orchestrator
+- No script needed (unlike Exa/Linear)
+- Placeholder script explains why it's different
 
 ## 🎯 Benefits
 
