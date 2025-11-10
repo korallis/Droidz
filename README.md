@@ -58,8 +58,6 @@ Orchestrator creates delegation instructions. YOU execute them:
 
 **That's it!** Specialists work in parallel. ✨
 
-> **📘 New to v2.0.2?** See [HOW_TO_USE_DROIDZ.md](./HOW_TO_USE_DROIDZ.md) for the corrected workflow!
-
 ---
 
 ## 📖 Table of Contents
@@ -73,11 +71,13 @@ Orchestrator creates delegation instructions. YOU execute them:
 - [Sample Workflows](#-sample-workflows)
 - [Troubleshooting](#-troubleshooting)
 
-## 📘 Additional Documentation
+## 📘 Important Notes
 
-- **[HOW_TO_USE_DROIDZ.md](./HOW_TO_USE_DROIDZ.md)** - Complete usage guide with corrected architecture
-- **[TOOL_COMPATIBILITY.md](./TOOL_COMPATIBILITY.md)** - Tool availability and model compatibility
-- **[SOLUTION_SUMMARY.md](./SOLUTION_SUMMARY.md)** - v2.0.2 fix details
+**v2.0.2 Architecture Update:**
+- Orchestrator is now a **planner** (creates execution plans)
+- YOU are the **delegator** (invoke specialists via "Use droidz-X...")
+- Custom droids cannot delegate to other droids per Factory.ai docs
+- See usage examples below for correct workflow
 
 ---
 
@@ -568,7 +568,7 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 - `Task` is NOT a tool you list in the tools array
 - It's automatically available when Custom Droids are enabled
 - Orchestrator creates plans that YOU delegate via: "Use droidz-codegen to implement X"
-- See `TOOL_COMPATIBILITY.md` for complete architecture details
+- Custom droids cannot delegate to other droids (Factory.ai architecture)
 
 ---
 

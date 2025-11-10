@@ -9,3 +9,9 @@ config.yml
 
 # Claude Code agents folder (personal, not for repo)
 .claude/
+
+# Documentation files (keep only README.md and CHANGELOG.md in git)
+HOW_TO_USE_DROIDZ.md
+TOOL_COMPATIBILITY.md
+SOLUTION_SUMMARY.md
+V2.0.2_MIGRATION_GUIDE.md
