@@ -2,6 +2,17 @@
 
 **Imagine having a team of robot helpers that build your software while you watch!**
 
+## ⚡ Quick Install
+
+```bash
+# In your project folder:
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+Then enable "Custom Droids" in Factory settings (`droid` → `/settings`) and you're ready! 🚀
+
+[Full setup guide below ↓](#-quick-start-super-easy)
+
 ---
 
 ## 🎈 What is Droidz? (Explained Like You're 5)
@@ -114,31 +125,32 @@ When all robots finish, Droidz combines their work into one complete app!
 
 ---
 
-## 🚀 Quick Start (3 Easy Steps)
+## 🚀 Quick Start (Super Easy!)
 
-### Step 1: Make Sure You Have Factory
+### Step 1: Install Factory
 
 Droidz needs Factory to work (Factory is like the playground where robots play).
 
-**Install Factory:**
 ```bash
 curl -fsSL https://app.factory.ai/cli | sh
 ```
 
-**Check it's installed:**
+### Step 2: Install Droidz (One Command!)
+
+Go to your project folder and run:
+
 ```bash
-droid --version
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-### Step 2: Get Your Robot Team
+**That's it!** The install script will:
+- ✅ Download all robot helpers (droids)
+- ✅ Set up orchestrator scripts
+- ✅ Create configuration files
+- ✅ Add documentation
 
-**Download the robots:**
-```bash
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-```
+### Step 3: Enable Robot Mode
 
-**Turn on robot mode in Factory:**
 ```bash
 droid
 ```
@@ -157,7 +169,7 @@ Find "Custom Droids" and turn it ON (it might say "Experimental" - that's okay!)
 droid
 ```
 
-### Step 3: Make Sure Robots Are There
+### Step 4: Verify Robots Are Ready
 
 In Factory, type:
 ```
@@ -173,6 +185,18 @@ You should see:
 - ✅ droidz-integration
 
 **If you see them all, you're ready!** 🎉
+
+---
+
+## 🔄 Updating Droidz
+
+Already have Droidz? Update to the latest version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+The installer is smart - it updates existing files and preserves your config!
 
 ---
 
@@ -656,14 +680,19 @@ Much fancier! And Droidz can read it automatically!
 **Let's get started!**
 
 ```bash
-# 1. Start Factory
+# 1. Install Droidz in your project
+cd your-project
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+
+# 2. Enable custom droids in Factory (/settings)
+
+# 3. Start Factory
 droid
 
-# 2. Talk to the boss robot
-# Just type this when Factory starts:
+# 4. Talk to the boss robot
 Use droidz-orchestrator to build [your amazing idea here]
 
-# 3. Watch the magic happen! ✨
+# 5. Watch the magic happen! ✨
 ```
 
 **What will YOU build today?** 🎈

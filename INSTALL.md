@@ -1,307 +1,348 @@
 # Droidz Installation Guide
 
-Complete installation instructions for all scenarios.
+Simple installation guide for Droidz V2.
 
 ---
 
-## Quick Install (Recommended)
+## 🚀 Quick Install (Recommended)
 
-### One-Line Install
+### For New Projects
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+# 1. Install Factory CLI
+curl -fsSL https://app.factory.ai/cli | sh
+
+# 2. Go to your project
+cd your-project
+
+# 3. Install Droidz
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+
+# 4. Enable custom droids
+droid
+/settings
+# Toggle "Custom Droids" ON
+# Exit and restart: droid
+
+# 5. Verify
+/droids
+# Should see all droidz-* robots
 ```
 
-This downloads Droidz from GitHub and installs it in the current directory.
+### For Existing Projects
 
-**What it does:**
-1. Downloads the latest version from GitHub
-2. Extracts workflows, standards, and droids
-3. Sets up your project for spec-driven development
-
-**Verify installation:**
-```bash
-ls .claude/agents/    # Should show 5 droids
-ls workflows/         # Should show planning, specification, implementation
-ls standards/         # Should show 3 standard files
-cat config.yml        # Should show configuration
-```
-
----
-
-## Alternative: Clone and Install
-
-If you want to customize or inspect before installing:
-
-```bash
-# Clone the repository
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-
-# Install in current project
-bash scripts/install.sh
-
-# Or install in specific directory
-bash scripts/install.sh /path/to/your/project
-```
-
----
-
-## Installation Methods Comparison
-
-| Method | Speed | Use Case |
-|--------|-------|----------|
-| `curl \| bash` | Fast | Quick setup, production use |
-| Clone + install | Slower | Customization, inspection, development |
-| Manual copy | Manual | Full control, air-gapped systems |
-
----
-
-## Environment Variables
-
-Customize the installation:
+Already have a project? Same command!
 
 ```bash
-# Install from a fork
-DROIDZ_REPO="your-org/your-fork" \
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+cd your-existing-project
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
 
-# Install specific branch
-DROIDZ_BRANCH="develop" \
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+The installer is smart:
+- ✅ Detects existing installations
+- ✅ Updates files to latest version
+- ✅ Preserves your config.yml settings
+- ✅ Safe to run multiple times
 
-# Combine both
-DROIDZ_REPO="your-org/fork" DROIDZ_BRANCH="custom" \
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
+---
+
+## 🔄 Updating Droidz
+
+Already have Droidz? Update to the latest version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+**What gets updated:**
+- ✅ All droid definitions (.factory/droids/)
+- ✅ Orchestrator scripts (orchestrator/*.ts)
+- ✅ Documentation (QUICK_START_V2.md, etc.)
+- ✅ Architecture docs
+
+**What's preserved:**
+- ✅ Your config.yml (gets config.yml.example instead)
+- ✅ Your custom settings
+- ✅ Your git history
+
+---
+
+## 📦 What Gets Installed
+
+The install script adds these files to your project:
+
+```
+your-project/
+├── .factory/
+│   └── droids/                      # Robot helpers
+│       ├── droidz-orchestrator.md   # Boss robot
+│       ├── codegen.md               # Code writer
+│       ├── test.md                  # Test writer
+│       ├── refactor.md              # Code cleaner
+│       ├── infra.md                 # Infrastructure
+│       └── integration.md           # External services
+├── orchestrator/                    # Helper scripts
+│   ├── linear-fetch.ts              # Fetch Linear tickets
+│   ├── linear-update.ts             # Update tickets
+│   ├── worktree-setup.ts            # Git worktree manager
+│   └── task-coordinator.ts          # Coordinator bridge
+├── docs/
+│   └── V2_ARCHITECTURE.md           # Technical docs
+├── config.yml                       # Configuration
+├── QUICK_START_V2.md               # Quick start guide
+└── CHANGELOG.md                     # Version history
+```
+
+**Total size:** ~500KB (just text files!)
+
+---
+
+## 🛠️ Manual Installation
+
+Prefer to install manually? Here's how:
+
+### 1. Create Directories
+
+```bash
+mkdir -p .factory/droids
+mkdir -p orchestrator
+mkdir -p docs
+```
+
+### 2. Download Droids
+
+```bash
+cd .factory/droids
+
+# Download each droid
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/droidz-orchestrator.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/codegen.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/test.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/refactor.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/infra.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/integration.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/generalist.md
+
+cd ../..
+```
+
+### 3. Download Orchestrator Scripts
+
+```bash
+cd orchestrator
+
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/orchestrator/linear-fetch.ts
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/orchestrator/linear-update.ts
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/orchestrator/worktree-setup.ts
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/orchestrator/task-coordinator.ts
+
+chmod +x *.ts
+cd ..
+```
+
+### 4. Download Config and Docs
+
+```bash
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/config.yml
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/QUICK_START_V2.md
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/CHANGELOG.md
+
+cd docs
+curl -O https://raw.githubusercontent.com/korallis/Droidz/main/docs/V2_ARCHITECTURE.md
+cd ..
+```
+
+### 5. Update .gitignore
+
+```bash
+echo ".runs/" >> .gitignore
 ```
 
 ---
 
-## Verify Installation
+## ⚙️ Configuration
+
+### Linear Integration (Optional)
+
+If you're using Linear for ticket management:
+
+1. **Get API Key:** https://linear.app/settings/api
+2. **Set environment variable:**
+   ```bash
+   export LINEAR_API_KEY="lin_api_..."
+   ```
+3. **Update config.yml:**
+   ```yaml
+   linear:
+     teamId: "your-team-id"
+     apiKey: "${LINEAR_API_KEY}"
+   ```
+
+### GitHub CLI (Required for PRs)
+
+Install and authenticate:
+
+```bash
+# Install gh
+brew install gh  # macOS
+# or: https://cli.github.com/
+
+# Authenticate
+gh auth login
+```
+
+### Factory CLI (Required)
+
+```bash
+# Install
+curl -fsSL https://app.factory.ai/cli | sh
+
+# Verify
+droid --version
+```
+
+---
+
+## ✅ Verify Installation
 
 ### Check Files Exist
 
 ```bash
-# Essential files
-ls .claude/agents/droidz-orchestrator.md
-ls workflows/planning/create-product-roadmap.md
-ls standards/security.md
+ls .factory/droids/droidz-*.md
+ls orchestrator/*.ts
 ls config.yml
-
-# Count installed droids
-ls .claude/agents/ | wc -l  # Should be 5
-
-# Check workflow structure
-tree workflows/  # or: ls -R workflows/
 ```
 
-### Verify Content
+Should see all files listed.
+
+### Check Factory Recognizes Droids
 
 ```bash
-# Check droids have content
-wc -l .claude/agents/*.md
-
-# Should show:
-#   ~450 lines droidz-implementer.md
-#   ~850 lines droidz-orchestrator.md
-#   ~370 lines droidz-planner.md
-#   ~505 lines droidz-spec-writer.md
-#   ~558 lines droidz-verifier.md
+droid
+/droids
 ```
 
-### Test in Droid CLI
+Should show:
+- droidz-orchestrator
+- droidz-codegen
+- droidz-test
+- droidz-refactor
+- droidz-infra
+- droidz-integration
+
+### Test with Simple Task
 
 ```bash
 droid
 ```
 
-Then in Droid:
+Then say:
 ```
-@droidz-orchestrator hello
+Use droidz-orchestrator to create a simple hello world function
 ```
 
-If the droid responds, installation is successful!
+Should see:
+- ✅ Orchestrator creates plan
+- ✅ Delegates to codegen
+- ✅ Code is created
+- ✅ Tests run (if configured)
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
-### Empty Directories After Install
+### Problem: "Custom droids not found"
 
-**Symptom:** Installation succeeds but `workflows/`, `standards/`, `.claude/agents/` are empty.
+**Solution:**
+1. Make sure Custom Droids is enabled: `droid` → `/settings`
+2. Restart Factory: Exit and run `droid` again
+3. Verify files exist: `ls .factory/droids/`
 
-**Cause:** GitHub's CDN cache may be serving an old version of the installer.
-
-**Solution 1 - Use Commit SHA:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/ba5c9c7/scripts/install.sh | bash
-```
-
-**Solution 2 - Clone directly:**
-```bash
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-bash scripts/install.sh
-```
-
-**Solution 3 - Wait:**
-GitHub's CDN cache clears within 5-10 minutes. Try again later.
-
-### Permission Denied
-
-**Symptom:** `Permission denied` errors during installation.
+### Problem: "Permission denied" when running install script
 
 **Solution:**
 ```bash
-# Ensure target directory is writable
-ls -ld .
-
-# If installing to system directory, use sudo (not recommended)
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | sudo bash
+# Download and run manually
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh > install.sh
+chmod +x install.sh
+./install.sh
 ```
 
-### Droids Not Loading in Droid CLI
-
-**Symptom:** Custom droids don't appear in Droid CLI.
-
-**Check:**
-```bash
-# Verify files exist
-ls .claude/agents/
-
-# Check file permissions
-ls -la .claude/agents/
-
-# Verify YAML frontmatter
-head -10 .claude/agents/droidz-orchestrator.md
-# Should start with: ---
-#                    name: Droidz Orchestrator
-#                    ...
-```
-
-**Solution:**
-- Ensure `.claude/agents/` directory exists
-- Verify `.md` files have proper YAML frontmatter
-- Restart Droid CLI
-
-### Config File Not Created
-
-**Symptom:** `config.yml` missing after installation.
-
-**This is normal if:**
-- You already have a `config.yml` (installer won't overwrite)
-- You're running an old cached version
+### Problem: "Not in a git repository"
 
 **Solution:**
 ```bash
-# Copy manually from repo
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/config.yml > config.yml
+git init
+git remote add origin <your-repo-url>
+```
+
+The installer requires a git repository.
+
+### Problem: Install script fails partway through
+
+**Solution:**
+Safe to re-run! The script is idempotent:
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
 ---
 
-## Uninstall
+## 🗑️ Uninstalling
 
-To remove Droidz from a project:
+To remove Droidz from your project:
 
 ```bash
-rm -rf .claude/agents/droidz-*.md
-rm -rf workflows/ standards/ droidz/
-rm config.yml
+# Remove droids
+rm -rf .factory/droids/droidz-*.md
+
+# Remove orchestrator scripts
+rm -rf orchestrator/
+
+# Remove docs
+rm -f QUICK_START_V2.md CHANGELOG.md
+rm -f docs/V2_ARCHITECTURE.md
+
+# Remove config (optional)
+rm -f config.yml
 ```
 
-**Note:** This only removes Droidz files, not your project code or specs created during usage.
-
-To keep your specs and products:
+Or keep the files and just disable in Factory:
 ```bash
-# Backup first
-cp -r droidz/ droidz-backup/
-
-# Then uninstall
-rm -rf .claude/agents/droidz-*.md workflows/ standards/
+droid
+/settings
+# Toggle "Custom Droids" OFF
 ```
 
 ---
 
-## Upgrading
+## 💡 Next Steps
 
-To upgrade to the latest version:
+After installation:
 
-```bash
-# Backup current standards (they may be customized)
-cp -r standards/ standards-backup/
-
-# Reinstall
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/scripts/install.sh | bash
-
-# Review and merge your custom standards
-diff standards/ standards-backup/
-```
-
-**Note:** `config.yml` won't be overwritten if it exists, so your settings are preserved.
+1. **Read Quick Start:** [QUICK_START_V2.md](QUICK_START_V2.md)
+2. **Configure Linear:** Add your API key to config.yml
+3. **Try Example:** Build something simple to test
+4. **Read Architecture:** [docs/V2_ARCHITECTURE.md](docs/V2_ARCHITECTURE.md)
+5. **Start Building:** Use orchestrator for real projects!
 
 ---
 
-## Manual Installation
+## 📚 Additional Resources
 
-If automated installation doesn't work, install manually:
-
-1. **Download the repository:**
-   ```bash
-   curl -L https://github.com/korallis/Droidz/archive/refs/heads/main.zip -o droidz.zip
-   unzip droidz.zip
-   cd Droidz-main
-   ```
-
-2. **Copy files:**
-   ```bash
-   cp -r workflows ../your-project/
-   cp -r standards ../your-project/
-   cp -r .claude/agents ../your-project/.claude/
-   cp config.yml ../your-project/
-   ```
-
-3. **Verify:**
-   ```bash
-   cd ../your-project
-   ls .claude/agents/ workflows/ standards/
-   ```
+- **Quick Start Guide:** QUICK_START_V2.md
+- **Architecture Docs:** docs/V2_ARCHITECTURE.md
+- **Changelog:** CHANGELOG.md
+- **GitHub:** https://github.com/korallis/Droidz
+- **Factory Docs:** https://docs.factory.ai
 
 ---
 
-## Next Steps
+## 💝 Support
 
-After successful installation:
+Like Droidz? Consider supporting development:
 
-1. **Customize standards** for your project:
-   ```bash
-   vi standards/coding-conventions.md
-   vi standards/architecture.md
-   vi standards/security.md
-   ```
+**PayPal:** https://paypal.me/leebarry84  
+**Email:** leebarry84@icloud.com
 
-2. **Read the workflows** to understand the process:
-   ```bash
-   cat workflows/planning/create-product-roadmap.md
-   ```
-
-3. **Start Droid CLI:**
-   ```bash
-   droid
-   ```
-
-4. **Build something:**
-   ```
-   @droidz-orchestrator I want to build a task management app
-   ```
-
----
-
-## Support
-
-- **Issues:** https://github.com/korallis/Droidz/issues
-- **README:** [README.md](README.md)
-- **Workflows:** [workflows/](workflows/)
-- **Standards:** [standards/](standards/)
-
-Happy building! 🚀
+Your support helps make Droidz even better! 🚀
