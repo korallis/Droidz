@@ -345,20 +345,45 @@ const result = Task({
 });
 ```
 
-### 6. Monitor Progress
+### 6. Monitor Progress and Track Time
+
+**Track execution start time:**
+```typescript
+const executionStart = Date.now();
+const taskStartTimes = {};
+const taskCompletionTimes = {};
+```
 
 As specialists work:
 
 - Update TodoWrite: `pending` → `in_progress` → `completed`
 - Track PR URLs and Linear status
+- **Record task start and completion times**
 - Handle any failures (mark as blocked, notify)
 
 Example update after specialist completes:
 
 ```typescript
+// When task starts
+taskStartTimes["PROJ-120"] = Date.now();
+
+// Update TodoWrite
 TodoWrite({
   todos: [
-    {id: "PROJ-120", content: "Auth API endpoint - ✅ PR#44", status: "completed", priority: "high"},
+    {id: "PROJ-120", content: "Auth API endpoint - 🔄 In Progress", status: "in_progress", priority: "high"},
+    {id: "PROJ-123", content: "Login form component", status: "pending", priority: "high"},
+    {id: "PROJ-124", content: "Login tests", status: "pending", priority: "medium"}
+  ]
+});
+
+// When task completes
+const taskDurationMs = Date.now() - taskStartTimes["PROJ-120"];
+taskCompletionTimes["PROJ-120"] = Math.round(taskDurationMs / 1000 / 60); // minutes
+
+// Update TodoWrite with completion
+TodoWrite({
+  todos: [
+    {id: "PROJ-120", content: "Auth API endpoint - ✅ PR#44 (15 min)", status: "completed", priority: "high"},
     {id: "PROJ-123", content: "Login form component - 🔄 In Progress", status: "in_progress", priority: "high"},
     {id: "PROJ-124", content: "Login tests", status: "pending", priority: "medium"}
   ]
@@ -387,9 +412,26 @@ const testResult = Task({subagent_type: "droidz-test", ...});
 // They'll work in parallel, each in their own worktree
 ```
 
-### 9. Final Summary
+### 9. Final Summary with Time Savings
 
-When all tasks complete, provide summary:
+**Track execution time from start to finish:**
+
+```typescript
+// At the start of execution
+const startTime = Date.now();
+const taskTimes = {}; // Track individual task completion times
+
+// When each task completes, record its time
+taskTimes[taskId] = completionTimeInMinutes;
+
+// At the end, calculate savings
+const totalParallelTime = (Date.now() - startTime) / 1000 / 60; // minutes
+const totalSequentialTime = Object.values(taskTimes).reduce((a, b) => a + b, 0);
+const timeSavings = totalSequentialTime - totalParallelTime;
+const speedupFactor = (totalSequentialTime / totalParallelTime).toFixed(1);
+```
+
+**Present final summary with time comparison:**
 
 ```markdown
 ## 🎉 Sprint Execution Complete
@@ -397,12 +439,20 @@ When all tasks complete, provide summary:
 **Completed**: 12 tickets
 **PRs Created**: 12
 **Tests Passing**: ✅ All green
-**Average Time**: 8 minutes per ticket
+
+### ⚡ Time Savings (Parallel vs Sequential)
+
+**Parallel Execution Time**: 45 minutes
+**Sequential Time Would Be**: 156 minutes (12 tasks × ~13 min avg)
+**Time Saved**: 111 minutes (1 hour 51 minutes)
+**Speed Increase**: 3.5x faster! 🚀
+
+*This is the power of git worktrees - each specialist worked in complete isolation, allowing true parallel execution.*
 
 ### Pull Requests
-- PROJ-120: Auth API endpoint - https://github.com/org/repo/pull/44
-- PROJ-123: Login form component - https://github.com/org/repo/pull/45
-- PROJ-124: Login tests - https://github.com/org/repo/pull/46
+- PROJ-120: Auth API endpoint - https://github.com/org/repo/pull/44 (15 min)
+- PROJ-123: Login form component - https://github.com/org/repo/pull/45 (12 min)
+- PROJ-124: Login tests - https://github.com/org/repo/pull/46 (10 min)
 ...
 
 ### Blocked/Failed
@@ -420,9 +470,10 @@ When all tasks complete, provide summary:
 2. **Isolated Workspaces**: Each specialist gets their own git worktree
 3. **Real-Time Updates**: Keep TodoWrite current so users see progress
 4. **Parallel When Possible**: Maximize concurrency for independent tasks
-5. **LLM-Driven Routing**: Use labels as hints, but apply judgment
-6. **Comprehensive Prompts**: Give specialists everything they need in one prompt
-7. **Error Handling**: If specialist fails, mark task as blocked and report details
+5. **Track Time Savings**: Record execution times and show parallel vs sequential comparison
+6. **LLM-Driven Routing**: Use labels as hints, but apply judgment
+7. **Comprehensive Prompts**: Give specialists everything they need in one prompt
+8. **Error Handling**: If specialist fails, mark task as blocked and report details
 
 ## Error Recovery
 
