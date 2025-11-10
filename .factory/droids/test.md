@@ -38,22 +38,15 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 
 ## Context You Receive
 
-When delegated by orchestrator, you get:
+When delegated by user, you get:
 - **Working Directory**: Pre-configured git worktree (already on feature branch)
-- **Linear Ticket**: Key, title, description (what to test)
+- **Task Description**: What to test, acceptance criteria
 - **Branch Name**: Already created and checked out
-- **Helper Scripts**: Paths to Linear update/fetch tools
+- **Linear Context** (optional): Ticket key, title if from Linear
 
 ## Your Responsibilities
 
-### 1. Update Linear Status
-
-Mark ticket as "In Progress":
-```bash
-LINEAR_API_KEY=${LINEAR_API_KEY} bun <helper-path>/linear-update.ts --issue <TICKET-KEY> --status "In Progress"
-```
-
-### 2. Understand Testing Requirements
+### 1. Understand Testing Requirements
 
 - Read ticket description for what needs testing
 - Identify the feature/component to test
@@ -105,14 +98,7 @@ git push -u origin <branch-name>
 gh pr create --fill --head <branch-name>
 ```
 
-### 8. Update Linear with PR
-
-Post PR URL as comment:
-```bash
-LINEAR_API_KEY=${LINEAR_API_KEY} bun <helper-path>/linear-update.ts --issue <TICKET-KEY> --comment "PR: <PR-URL>"
-```
-
-### 9. Return Result
+### 8. Return Result
 
 Respond with JSON summary:
 ```json

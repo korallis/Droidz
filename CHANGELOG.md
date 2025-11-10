@@ -236,7 +236,7 @@ Complete rewrite of Droidz. V1 (shell-based) is retired.
 - **Specialist Droids** - codegen, test, refactor, infra, integration
 - **Real-time Progress** - TodoWrite shows live status
 - **LLM-driven Routing** - Smart specialist selection
-- **Helper Scripts** - linear-fetch, linear-update, worktree-setup, task-coordinator
+- **MCP Integration** - Linear, Exa, Ref tools automatically available
 - **Git Worktrees** - True isolation for parallel work
 - **Comprehensive Docs** - Simple README, architecture guides
 
