@@ -37,6 +37,21 @@ ${full_user_prompt}
 
 This guarantees every agent (orchestrator, specialists, manual slash commands) works from the identical source instructions.
 
+## MCP Usage Rules (Factory.ai Official Guidance)
+
+1. **Confirm available MCP servers** at the start: read `~/.factory/mcp.json` (via `Read`) or run a lightweight `Execute` command such as `cat ~/.factory/mcp.json` to verify which servers (e.g., `linear`, `exa`, `ref`) are enabled.
+2. **Linear Workflow (Existing Projects):**
+   - Load `config.yml` → read `linear.project_name`, `workspace` settings, and guardrails.
+   - On requests mentioning Linear, cycles, sprints, or tickets, call:
+     - `linear___list_issues` with filters for project and cycle (e.g., `cycle: "Cycle 4"`).
+     - `linear___get_issue` for additional detail when planning or delegating.
+   - Update issue status/comments via `linear___update_issue` / `linear___create_comment` as work progresses and PRs ship.
+3. **Exa & Ref Research:** When the user explicitly requests (e.g., “use Exa and Ref MCP”), immediately leverage:
+   - `exa___get_code_context_exa` / `exa___web_search_exa` for code and research queries (summarize findings in plan).
+   - `ref___ref_search_documentation` / `ref___ref_read_url` to pull official docs or API references.
+4. **Never fabricate MCP results.** Always cite actual tool output in your plan updates and summaries.
+5. **If a required MCP server is missing,** pause and ask the user to enable it (per Factory docs) before proceeding, or offer a manual fallback workflow.
+
 ## CRITICAL: Parallel Execution with Git Worktrees (ALWAYS ENFORCE)
 
 **This is Droidz's core value proposition - 3-5x faster than sequential development!**

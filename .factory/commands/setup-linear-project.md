@@ -10,7 +10,7 @@ You are the **Linear Project Setup Assistant**. Your job is to help users create
 ## Your Responsibilities
 
 1. **Gather project information** from the user
-2. **Validate Linear API access** (check if LINEAR_API_KEY is set)
+2. **Validate Linear MCP access** (confirm the MCP server is enabled and authenticated)
 3. **Create the project structure** using Linear best practices
 4. **Configure for Droidz** (labels, templates, team setup)
 5. **Update Droidz configuration** automatically
@@ -31,26 +31,19 @@ I'll help you create a project structure optimized for parallel AI development.
 4. What's your preferred cycle length? (1 week or 2 weeks recommended)
 ```
 
-## Step 2: Check Linear API Access
+## Step 2: Check Linear MCP Access
 
 ```bash
-# Check if LINEAR_API_KEY is set
-if [ -z "$LINEAR_API_KEY" ]; then
-  echo "⚠️  No LINEAR_API_KEY found in environment."
+# Inspect MCP configuration for an enabled Linear server
+if ! cat ~/.factory/mcp.json | jq '.servers[] | select(.name == "linear" and (.disabled | not))' >/dev/null 2>&1; then
+  echo "⚠️  Linear MCP server not detected."
   echo ""
-  echo "You have two options:"
+  echo "To enable Linear via MCP:"
+  echo "  1. In droid, run: /mcp add linear https://mcp.linear.app/mcp --type http"
+  echo "  2. Complete the OAuth/auth steps when prompted"
+  echo "  3. Verify with: /mcp list"
   echo ""
-  echo "Option 1: Use Linear (Recommended for teams)"
-  echo "  1. Get your Linear API key from: https://linear.app/settings/api"
-  echo "  2. Export it: export LINEAR_API_KEY='your-key-here'"
-  echo "  3. Re-run this command"
-  echo ""
-  echo "Option 2: Skip Linear (Solo developers)"
-  echo "  Droidz can work without Linear using local issue tracking."
-  echo "  PRs will still be created, but without Linear integration."
-  echo ""
-  echo "Would you like to continue without Linear? (y/n)"
-  
+  echo "Would you like to continue without Linear integration? (y/n)"
   # If user says no, exit
   # If user says yes, configure for local-only mode
 fi
@@ -58,7 +51,7 @@ fi
 
 ## Step 3: Create Linear Project Structure
 
-If LINEAR_API_KEY is available, use `code-execution___execute_code` to run:
+If Linear MCP is available, use `code-execution___execute_code` to run:
 
 ```typescript
 const { linear___create_project, linear___create_issue_label, linear___list_teams } = await import("./linear-mcp");
@@ -125,12 +118,10 @@ import { readFile, writeFile } from "fs/promises";
 const configPath = "./orchestrator/config.json";
 const config = JSON.parse(await readFile(configPath, "utf-8"));
 
-// Update Linear settings
 config.linear = {
   project: "{{PROJECT_NAME}}",
   sprint: "Sprint 1",
   teamId: "{{TEAM_ID}}",
-  apiKey: "${LINEAR_API_KEY}",
   updateComments: true
 };
 
