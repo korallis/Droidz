@@ -51,12 +51,16 @@ droid         # Restart
 
 Whatever you type after the command is passed verbatim to the planner.
 
-**Step 4: Follow the plan!**
-Orchestrator creates delegation instructions. YOU execute them:
-```
-"Use droidz-codegen to implement TASK-1"
-"Use droidz-test to implement TASK-2"
-```
+**Step 4: Watch it build!**
+Droidz orchestrator automatically spins up git worktrees, delegates to the specialist droids via Factory’s Task tool, and streams progress while they work in parallel. Sit back and monitor the updates.
+
+**Need manual control?** You can still call specialists directly with slash commands:
+- `/droidz-codegen <prompt>` – feature implementation
+- `/droidz-test <prompt>` – automated testing work
+- `/droidz-refactor <prompt>` – cleanup and tech debt
+- `/droidz-infra <prompt>` – CI/CD & tooling fixes
+- `/droidz-integration <prompt>` – external service integrations
+- `/droidz-generalist <prompt>` – flexible helper for mixed tasks
 
 **That's it!** Specialists work in parallel. ✨
 
@@ -75,10 +79,10 @@ Orchestrator creates delegation instructions. YOU execute them:
 
 ## 📘 Important Notes
 
-**v2.0.2 Architecture Update:**
-- Orchestrator is now a **planner** (creates execution plans)
-- YOU are the **delegator** (invoke specialists via "Use droidz-X...")
-- Custom droids cannot delegate to other droids per Factory.ai docs
+- **v2.0.2 Architecture Update:**
+  - Orchestrator is now a **planner/executor** (creates plans and invokes specialists automatically)
+  - Manual `/droidz-<name>` slash commands remain available when you need to override or retry a task
+- Factory’s Task tool performs safe sub-agent delegation automatically (per Factory.ai docs)
 - See usage examples below for correct workflow
 
 ---
@@ -119,12 +123,12 @@ Task 5 ┘
 
 **How?** Git worktrees! Each robot gets its own isolated workspace.
 
-**How YOU use it:** Orchestrator plans, YOU delegate to specialists:
-```
-Step 1: "Use droidz-orchestrator to plan X"
-Step 2: Orchestrator outputs: "Use droidz-codegen for task 1", etc.
-Step 3: YOU run those commands (in parallel if possible)
-```
+**How it works in practice:**
+1. Run `/droidz-orchestrator <your request>` (e.g., build a todo app).
+2. The orchestrator analyzes the repo, drafts a parallel-safe plan, and uses Factory’s Task tool to launch specialist droids automatically.
+3. Monitor the streamed updates, review generated PRs, and merge when ready.
+
+Need to retry or customize a single task? Trigger a specialist directly with `/droidz-codegen ...`, `/droidz-test ...`, etc.
 
 ---
 
@@ -181,8 +185,10 @@ Works immediately! No configuration needed.
 
 **Usage:**
 ```
-Use droidz-orchestrator to build a todo app
+/droidz-orchestrator build a todo app
 ```
+
+That single command is enough. The orchestrator gathers context from your repo, drafts a plan, and runs the specialists in parallel. Linear and other MCP services are optional enhancements.
 
 ### Option 2: MCP Servers (Recommended) ⚡
 
@@ -234,7 +240,7 @@ droid
 
 Then say:
 ```
-Use droidz-orchestrator to build a blog with:
+/droidz-orchestrator build a blog with:
 - List all posts
 - Read a post
 - Create new posts (auth required)
@@ -262,13 +268,15 @@ droid
 /droidz-orchestrator process all tickets in project "MyApp"
 ```
 
-**What happens:**
+**What happens (Linear connected):**
 1. Fetches all tickets from Linear
 2. Analyzes dependencies
 3. Groups into parallel-safe batches
 4. Processes 5 tickets simultaneously
 5. Updates Linear status automatically
 6. Creates PRs for each
+
+**No Linear?** Orchestrator asks for the backlog details in-chat, builds a plan locally, and runs the same parallel execution flow—skipping only the Linear updates.
 
 ### Example 3: Single Feature
 
@@ -282,14 +290,9 @@ droid
 
 **What happens:**
 1. Researches dark mode patterns (if Exa configured)
-2. Creates tasks:
-   - Theme context/state
-   - CSS variables
-   - Toggle component
-   - Persist preference
-   - Update all pages
-3. Delegates to specialists
-4. Creates single PR with all changes
+2. Creates tasks covering theme state, styling, toggle UI, persistence, and propagation
+3. Delegates to specialists via Task tool and runs them in parallel
+4. Creates a PR with all changes (Linear updates included only if connected)
 
 ---
 
@@ -343,7 +346,7 @@ droid
 
 **Option C: Single ticket**
 ```
-Use droidz-orchestrator to implement ticket MYAPP-123
+/droidz-orchestrator implement ticket MYAPP-123
 ```
 
 ### Step 5: Review PRs
@@ -396,7 +399,7 @@ droid
 ```
 
 ```
-Use droidz-orchestrator to build a task management app:
+/droidz-orchestrator build a task management app:
 
 Features:
 - User authentication (email/password)
@@ -449,7 +452,7 @@ gh pr merge 3  # Then UI
 ### Workflow 1: E-commerce Site
 
 ```
-Use droidz-orchestrator to build an e-commerce site:
+/droidz-orchestrator build an e-commerce site:
 - Product catalog with search/filter
 - Shopping cart (localStorage)
 - Checkout flow (Stripe integration)
@@ -463,7 +466,7 @@ Use droidz-orchestrator to build an e-commerce site:
 ### Workflow 2: API Service
 
 ```
-Use droidz-orchestrator to build a REST API:
+/droidz-orchestrator build a REST API:
 - User authentication (JWT)
 - CRUD for posts, comments, likes
 - Rate limiting
@@ -477,7 +480,7 @@ Use droidz-orchestrator to build a REST API:
 ### Workflow 3: Refactor Legacy Code
 
 ```
-Use droidz-orchestrator to refactor the authentication system:
+/droidz-orchestrator refactor the authentication system:
 - Extract auth logic to reusable hooks
 - Add TypeScript types throughout
 - Improve error handling
@@ -490,7 +493,7 @@ Use droidz-orchestrator to refactor the authentication system:
 ### Workflow 4: Add Feature to Existing App
 
 ```
-Use droidz-orchestrator to add real-time notifications:
+/droidz-orchestrator add real-time notifications:
 - WebSocket connection manager
 - Notification bell UI component
 - Mark as read functionality
@@ -569,8 +572,8 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 **Background:** 
 - `Task` is NOT a tool you list in the tools array
 - It's automatically available when Custom Droids are enabled
-- Orchestrator creates plans that YOU delegate via: "Use droidz-codegen to implement X"
-- Custom droids cannot delegate to other droids (Factory.ai architecture)
+- Orchestrator uses the Task tool to invoke specialist droids automatically, following Factory.ai guidance
+- Manual `/droidz-<name>` commands are only needed if you want to retry or customize a single task
 
 ---
 

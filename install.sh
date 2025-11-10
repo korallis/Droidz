@@ -80,6 +80,12 @@ log_info "Downloading custom slash commands..."
 
 COMMANDS=(
     "droidz-orchestrator.md"
+    "droidz-codegen.md"
+    "droidz-generalist.md"
+    "droidz-infra.md"
+    "droidz-integration.md"
+    "droidz-refactor.md"
+    "droidz-test.md"
     "setup-linear-project.md"
 )
 
