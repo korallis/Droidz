@@ -163,71 +163,46 @@ droid
 # You should see: droidz-orchestrator, droidz-codegen, droidz-test, etc.
 ```
 
-#### **Phase 2: Plan Your App in Linear (10 minutes)**
+#### **Phase 2: Let Droidz Plan It For You! 🤖 (2 minutes)**
 
-Droidz works best with Linear for project management. Here's how to set it up:
+**OPTION 1: Automatic Planning (Recommended) ✨**
 
-1. **Create a Linear project**: "Task Management App"
+If you have a Linear API key, Droidz will automatically create the project and tickets for you!
 
-2. **Create an epic** (big feature):
-   - Name: "Core Task Management"
-   - Description: Basic CRUD operations for tasks
-
-3. **Break it into tickets** (small pieces):
-   ```
-   TASK-1: Create task model and database schema
-   TASK-2: Build API endpoint to create tasks
-   TASK-3: Build API endpoint to list tasks
-   TASK-4: Build API endpoint to update tasks
-   TASK-5: Build API endpoint to delete tasks
-   TASK-6: Create React component for task list
-   TASK-7: Create React form for adding tasks
-   TASK-8: Write tests for task API
-   TASK-9: Write tests for task components
-   TASK-10: Deploy app to production
-   ```
-
-4. **Label your tickets**:
-   - TASK-1, 2, 3, 4, 5: `backend` label
-   - TASK-6, 7: `frontend` label
-   - TASK-8, 9: `test` label
-   - TASK-10: `infra` label
-
-5. **Add dependencies** (which tasks must finish first):
-   - TASK-2 depends on TASK-1 (need database before API)
-   - TASK-3, 4, 5 depend on TASK-1
-   - TASK-6, 7 depend on TASK-2, 3
-   - TASK-8 depends on TASK-1 through TASK-5
-   - TASK-9 depends on TASK-6, 7
-   - TASK-10 depends on everything
-
-6. **Get your Linear API key**:
+1. **Get your Linear API key** (one-time setup):
    - Go to https://linear.app/settings/api
    - Create a new API key
    - Save it: `export LINEAR_API_KEY="your-key-here"`
 
-#### **Phase 3: Configure Droidz (2 minutes)**
-
-1. **Update orchestrator config**:
+2. **Tell Droidz what you want to build**:
 ```bash
-# Edit orchestrator/config.json
-{
-  "linear": {
-    "project": "Task Management App",
-    "sprint": "Sprint 1",
-    "teamId": "your-linear-team-id",
-    "apiKey": "${LINEAR_API_KEY}"
-  },
-  "workspace": {
-    "mode": "worktree"  // ← THIS IS KEY for parallel execution!
-  },
-  "concurrency": 5  // 5 robots working at once
-}
+droid
 ```
 
-#### **Phase 4: Launch Droidz! (The Magic Happens) ✨**
+Then say:
+```
+Use droidz-orchestrator to build a task management app with:
+- User authentication (email/password)
+- Create, read, update, delete tasks
+- Task lists and forms
+- Tests for everything
+- Deploy to production
+```
 
-Now the exciting part - watch the robots build your app!
+**That's it!** Droidz will:
+- ✅ Create a Linear project automatically
+- ✅ Break it into 10-12 optimized tickets
+- ✅ Add proper labels (backend, frontend, test, infra)
+- ✅ Set up dependencies (what must finish first)
+- ✅ Start building immediately in parallel!
+
+**No manual planning needed!** 🎉
+
+---
+
+**OPTION 2: Work Without Linear (Local Mode)**
+
+Don't have Linear? No problem! Droidz works great without it:
 
 ```bash
 droid
@@ -235,10 +210,44 @@ droid
 
 Then say:
 ```
-Use droidz-orchestrator to process project "Task Management App" sprint "Sprint 1"
+Use droidz-orchestrator to build a task management app with:
+- User authentication (email/password)
+- Create, read, update, delete tasks
+- Task lists and forms
+- Tests for everything
 ```
 
-**What happens next (in real-time):**
+**Droidz will:**
+- ✅ Analyze your request
+- ✅ Create a local execution plan
+- ✅ Build in parallel with git worktrees (3-5x speed!)
+- ✅ Create PRs for each feature
+
+**You just won't get:**
+- ❌ Linear project management UI
+- ❌ Ticket tracking and updates
+- ❌ Team collaboration features
+
+But the core parallel building still works! 🚀
+
+---
+
+**OPTION 3: Manual Linear Planning (Advanced)**
+
+Prefer to create Linear tickets yourself? You can:
+
+1. Create a Linear project: "Task Management App"
+2. Create tickets manually with proper labels and dependencies
+3. Configure `orchestrator/config.json` with your project name
+4. Run: `droidz-orchestrator to process project "Task Management App"`
+
+See the [Manual Linear Setup Guide](docs/manual-linear-setup.md) for details.
+
+---
+
+#### **Phase 3: Watch the Magic Happen! ✨**
+
+After you tell Droidz what to build (from Phase 2), here's what happens in real-time:
 
 ```
 🔍 Fetching tickets from Linear...
@@ -376,7 +385,7 @@ Now **you** take control:
 
 #### **Phase 6: Your App is Live! 🎉**
 
-Total time: **~40 minutes** (5 setup + 10 planning + 18 building + 15 review)
+Total time: **~25 minutes** (5 setup + 2 describing what you want + 18 building)
 
 **What you got:**
 - ✅ Complete database schema
@@ -387,8 +396,7 @@ Total time: **~40 minutes** (5 setup + 10 planning + 18 building + 15 review)
 - ✅ All code reviewed and documented
 
 **What you did:**
-- Planned the work in Linear
-- Told Droidz to build it
+- Described what you wanted to build (2 minutes!)
 - Reviewed the PRs
 - Clicked "Merge"
 
@@ -1026,12 +1034,15 @@ After robots finish, **look at the code** they created!
 
 **You're still the boss!** Robots help you, but you make final decisions.
 
-### Tip 4: Use Linear for Big Projects
+### Tip 4: Let Droidz Plan Big Projects
 
 If you're building something big:
-1. Break it into small tasks in Linear
-2. Tell Droidz: "Process my Linear sprint"
-3. Watch robots do all the tasks!
+1. Get a Linear API key (optional but helpful)
+2. Tell Droidz what you want to build
+3. Droidz automatically creates and organizes all the tasks
+4. Watch robots do all the work!
+
+**No manual planning needed!** Just describe your vision.
 
 ---
 
