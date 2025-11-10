@@ -830,6 +830,26 @@ guardrails:
   secretScan: true         # Check for passwords in code
 ```
 
+### MCP Servers (Super Powers - Optional!)
+
+**What are MCP servers?**
+MCP servers give your robots extra special powers! Like:
+- 🔍 **Exa** - Super smart web searching
+- 📚 **Ref** - Finding documentation really fast
+- 📋 **Linear** - Talking directly to your to-do list
+
+**How to add them:**
+```bash
+droid
+/mcp add --type http exa https://mcp.exa.ai -H "Authorization: Bearer YOUR_KEY"
+```
+
+**Do you NEED them?**
+Nope! Droidz works great without them. But if you have API keys, they make robots even more powerful!
+
+**Want to learn more?**
+See [MCP_SETUP.md](MCP_SETUP.md) for complete instructions.
+
 ---
 
 ## 🎓 Examples for Kids (and Adults!)

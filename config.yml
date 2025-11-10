@@ -18,13 +18,23 @@ use_exa_research: true
 use_ref_docs: true
 
 # MCP Tools Configuration
-# All custom droids have access to comprehensive MCP tool integrations:
-# - Linear: Issue tracking and project management
-# - Exa: Web search and code context research
-# - Ref: Documentation search (public and private)
-# - code-execution: Execute TypeScript for MCP interactions
-# - desktop-commander: Advanced file/process operations
-mcp_tools_enabled: true
+# MCP (Model Context Protocol) servers extend droid capabilities
+# NOTE: MCP servers are configured per-user via Factory CLI, not here!
+# 
+# To add MCP servers (Linear, Exa, Ref, etc.):
+#   1. Start Factory: droid
+#   2. Add server: /mcp add --type http <name> <url> -H "Authorization: Bearer <key>"
+#   3. Verify: /mcp list
+#
+# See MCP_SETUP.md for detailed instructions
+#
+# Once configured, MCP tools become available to ALL droids automatically:
+# - Linear: Issue tracking (linear___list_issues, linear___update_issue, etc.)
+# - Exa: AI search (exa___web_search_exa, exa___get_code_context_exa)
+# - Ref: Documentation (ref___ref_search_documentation, ref___ref_read_url)
+#
+# MCP servers are OPTIONAL - Droidz works without them using helper scripts
+mcp_tools_enabled: true  # Enable MCP support in Factory
 
 # Linear Integration (Optional - for automated ticket processing)
 # Get your API key from: https://linear.app/settings/api
