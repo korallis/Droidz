@@ -17,12 +17,12 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting integration work
 
 ### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search for API integration examples and patterns
+- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search for API integration examples and patterns
 - `exa___get_code_context_exa`: Find SDK usage, API docs, authentication patterns
 - **Example**: Research Stripe API integration or OAuth2 flows before implementing
 
 ### Ref Documentation
-- `ref___ref_search_documentation`: Search API documentation (public and private)
+- `WebSearch or FetchUrl (ref is MCP-only)`: Search API documentation (public and private)
 - `ref___ref_read_url`: Read specific API reference pages
 - **Example**: Look up Twilio API docs or Shopify SDK reference
 

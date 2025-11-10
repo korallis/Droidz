@@ -17,12 +17,12 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting infrastructure work
 
 ### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search for CI/CD patterns, deployment strategies
+- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search for CI/CD patterns, deployment strategies
 - `exa___get_code_context_exa`: Find GitHub Actions examples, Docker patterns, deployment configs
 - **Example**: Research GitHub Actions caching strategies or Docker multi-stage builds
 
 ### Ref Documentation
-- `ref___ref_search_documentation`: Search CI/CD documentation
+- `WebSearch or FetchUrl (ref is MCP-only)`: Search CI/CD documentation
 - `ref___ref_read_url`: Read specific platform docs (GitHub Actions, CircleCI, etc.)
 - **Example**: Look up GitHub Actions syntax or Docker best practices
 

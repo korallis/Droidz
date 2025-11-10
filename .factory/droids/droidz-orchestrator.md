@@ -79,9 +79,11 @@ Per Anthropic's code execution with MCP pattern, DO NOT call MCP tools directly.
 Execute: bun orchestrator/exa-search.ts --query "your search query" --num-results 10
 ```
 
-**Ref Documentation** (reads `ref.api_key` from config.yml):
+**Ref Documentation** (MCP tool - NO script available):
 ```bash
-Execute: bun orchestrator/ref-search.ts --query "documentation query"
+# ⚠️ ref-search.ts is just a placeholder! Use WebSearch or FetchUrl instead
+WebSearch: "Next.js 14 app router official documentation"
+FetchUrl: https://nextjs.org/docs/14/app
 ```
 
 **Linear Integration** (reads `linear.api_key` from config.yml):
@@ -97,107 +99,138 @@ Execute: bun orchestrator/linear-fetch.ts --project "ProjectName" --sprint "Spri
 4. **Factory compliant** - Uses Execute tool (always available)
 5. **Code execution pattern** - Per Anthropic recommendations
 
-### Fallback If No API Keys
+### ⚠️ CRITICAL: DO NOT Call MCP Tools Directly!
 
-If scripts return errors (no API keys in config.yml), you can still:
+**Tools NOT in your tools array:**
+- ❌ `exa___web_search_exa()` - NOT AVAILABLE
+- ❌ `ref___ref_search_documentation()` - NOT AVAILABLE  
+- ❌ `linear___list_issues()` - NOT AVAILABLE
+- ❌ `code-execution___execute_code()` - NOT AVAILABLE
 
-#### Linear Integration (Usually available via Factory)
-- `linear___list_issues`, `linear___create_issue`, `linear___update_issue`, etc.
-- **Fallback**: Use shell scripts (`bun orchestrator/linear-fetch.ts`)
-- **Check**: Tool calls will succeed if Linear MCP is configured
+**These will cause errors!** Your tools array only has:
+✅ Read, LS, Execute, Edit, Grep, Glob, Create, TodoWrite, WebSearch, FetchUrl
 
-#### Exa Search (Optional - Web & Code Research)
-- `exa___web_search_exa`: Neural/keyword web search
-- `exa___get_code_context_exa`: Find code examples, API docs
-- **Fallback if NOT installed**: 
-  - Use `FetchUrl` to search directly (e.g., "https://www.google.com/search?q=...")
-  - Read existing documentation with `Read` tool
-  - Ask user for more details about tech stack
-- **Check**: Wrap in try/catch:
-  ```typescript
-  try {
-    const research = await exa___web_search_exa("React hooks patterns");
-  } catch (error) {
-    // Exa not installed - use fallback
-    console.log("ℹ️  Exa MCP not installed - proceeding without research");
-  }
-  ```
+### Correct Research Pattern (What Actually Works)
 
-#### Ref Documentation (Optional)
-- `ref___ref_search_documentation`: Search documentation
-- `ref___ref_read_url`: Read doc pages
-- **Fallback if NOT installed**:
-  - Use `FetchUrl` for public documentation URLs
-  - Use `Read` for local documentation files
-  - Ask user for documentation links
-- **Check**: Same try/catch pattern as Exa
+#### 1. Exa Search (via Execute + script)
 
-#### Code Execution (Usually available via Factory)
-- `code-execution___execute_code`: Run TypeScript
-- **Fallback**: Use `Execute` tool with Node.js/Bun directly
-
-#### Desktop Commander (Usually available via Factory)
-- Advanced file operations and process management
-- **Fallback**: Use standard `Read`, `Edit`, `Execute` tools
-
-### Best Practice: Graceful Degradation
-
-**Always check if optional tools are available before using them**:
-
-```typescript
-// GOOD: Try optional tool, fallback if unavailable
-let research = null;
-try {
-  research = await exa___get_code_context_exa("Stripe integration patterns");
-  console.log("✅ Using Exa for research");
-} catch (error) {
-  console.log("ℹ️  Exa not available - proceeding without external research");
-  // Still works! Just without enhanced research
-}
-
-// Then continue with task planning based on what you have
+**✅ CORRECT:**
+```bash
+Execute: bun orchestrator/exa-search.ts --query "React hooks patterns" --num-results 5
 ```
 
-**Never fail the entire workflow if optional tools are missing**. Exa and Ref enhance planning but aren't required.
+**If no API key configured:**
+```bash
+WebSearch: "React hooks patterns best practices"
+```
 
-### What Works Without MCP Tools
+#### 2. Ref Documentation (NO SCRIPT - use alternatives)
 
-Even without Exa/Ref, you can still:
+**⚠️ IMPORTANT:** ref-search.ts is just a placeholder explaining why Ref is different!
+
+**✅ CORRECT alternatives:**
+```bash
+# Option 1: WebSearch for docs
+WebSearch: "Next.js 14 app router official documentation"
+
+# Option 2: Direct FetchUrl if you know the URL
+FetchUrl: https://nextjs.org/docs/14/app/building-your-application/routing
+```
+
+**❌ WRONG:** `Execute: bun orchestrator/ref-search.ts` - This just returns an error message!
+
+#### 3. Linear Integration (via Execute + script)
+
+**✅ CORRECT:**
+```bash
+# Fetch tickets
+Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+
+# Update ticket
+Execute: bun orchestrator/linear-update.ts --issue LEE-123 --status "In Progress"
+```
+
+#### 4. Factory.ai Documentation (ALWAYS use this for Factory questions)
+
+**✅ CORRECT pattern:**
+```bash
+# First: Search with Exa
+Execute: bun orchestrator/exa-search.ts --query "factory.ai Task tool delegation" --num-results 3
+
+# Then: Fetch specific pages
+FetchUrl: https://docs.factory.ai/cli/configuration/droids
+```
+
+**Example queries for Factory.ai:**
+- "factory.ai custom droids configuration"
+- "factory.ai Task tool parameters"
+- "factory.ai MCP tools integration"
+
+### What About Other MCP Tools?
+
+**code-execution, desktop-commander, etc.:**
+- ❌ NOT in your tools array
+- ❌ Will cause errors if you try to call them
+- ✅ Use standard tools instead: Read, Edit, Execute, etc.
+
+### Best Practice: Handle Missing API Keys Gracefully
+
+**When Execute scripts fail (no API key in config.yml), use fallbacks:**
+
+```typescript
+// GOOD: Try Exa script, fallback to WebSearch
+Execute: bun orchestrator/exa-search.ts --query "React patterns"
+// If error (no API key), then:
+WebSearch: "React hooks patterns best practices"
+
+// GOOD: For documentation, use WebSearch + FetchUrl
+WebSearch: "Next.js 14 app router documentation"
+FetchUrl: https://nextjs.org/docs/14/app
+```
+
+**Never fail the entire workflow if API keys are missing**. Research tools enhance planning but aren't required.
+
+### What Works Without API Keys
+
+Even without Exa/Linear API keys, you can still:
 - ✅ Read the user's existing codebase with `Read`, `Grep`, `Glob`
+- ✅ Use WebSearch and FetchUrl for research
 - ✅ Generate task breakdowns based on user description
 - ✅ Create git worktrees for parallel execution
 - ✅ Delegate to specialist droids
 - ✅ Create PRs automatically
-- ✅ Use Linear if configured (via shell scripts as fallback)
 
-The core parallel execution functionality **does not require** Exa or Ref!
+The core parallel execution functionality **does not require** API keys!
 
-### Setting Up Optional MCP Tools
+### How To Add API Keys
 
-Tell users they can enhance Droidz with:
+Tell users to enhance Droidz with API keys:
 
 ```
-💡 Optional: Install MCP tools for enhanced capabilities
+💡 Optional: Add API keys to config.yml for enhanced research
 
 **Exa (Web & Code Search)**
-droid
-> /mcp
-# Install Exa MCP server following Factory.ai docs
+1. Get API key from https://exa.ai
+2. Edit config.yml:
+   exa:
+     api_key: "your_key_here"
 
-**Ref (Documentation Search)**  
-droid
-> /mcp
-# Install Ref MCP server
+**Linear (Project Management)**
+1. Get API key from https://linear.app/settings/api  
+2. Edit config.yml:
+   linear:
+     api_key: "your_key_here"
+     project_name: "YourProject"
 
 These are optional but provide:
-- Better API research during planning
-- Automatic best practices lookup
-- Documentation search for unfamiliar tech
+- Better web research during planning (Exa)
+- Automatic ticket fetching and updates (Linear)
+- Faster development with proper integration
 
 Droidz works great without them - they just make planning smarter!
 ```
 
-**Key Principle**: If an MCP tool is available, use it to enhance planning. If not, proceed with core functionality.
+**Key Principle**: Use API-powered tools when available (Exa, Linear), fall back to WebSearch/FetchUrl if not.
 
 ## Workflow
 

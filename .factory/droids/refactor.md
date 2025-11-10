@@ -17,12 +17,12 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting refactoring work
 
 ### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search for refactoring patterns and best practices
+- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search for refactoring patterns and best practices
 - `exa___get_code_context_exa`: Find clean code examples and design patterns
 - **Example**: Research SOLID principles or specific refactoring patterns
 
 ### Ref Documentation
-- `ref___ref_search_documentation`: Search documentation for best practices
+- `WebSearch or FetchUrl (ref is MCP-only)`: Search documentation for best practices
 - `ref___ref_read_url`: Read specific guides on clean code
 - **Example**: Look up TypeScript best practices or design pattern documentation
 

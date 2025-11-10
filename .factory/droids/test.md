@@ -17,12 +17,12 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting test work
 
 ### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search for testing patterns and best practices
+- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search for testing patterns and best practices
 - `exa___get_code_context_exa`: Find test examples for specific frameworks
 - **Example**: Research Jest mocking patterns or Vitest best practices
 
 ### Ref Documentation
-- `ref___ref_search_documentation`: Search testing framework documentation
+- `WebSearch or FetchUrl (ref is MCP-only)`: Search testing framework documentation
 - `ref___ref_read_url`: Read specific testing guides
 - **Example**: Look up React Testing Library API or Vitest configuration
 

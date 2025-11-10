@@ -17,12 +17,12 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting work
 
 ### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search the web for solutions and patterns
+- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search the web for solutions and patterns
 - `exa___get_code_context_exa`: Find code examples and best practices
 - **Example**: Research the best approach for unfamiliar tasks
 
 ### Ref Documentation
-- `ref___ref_search_documentation`: Search documentation for guidance
+- `WebSearch or FetchUrl (ref is MCP-only)`: Search documentation for guidance
 - `ref___ref_read_url`: Read specific documentation pages
 - **Example**: Look up framework documentation or language features
 
