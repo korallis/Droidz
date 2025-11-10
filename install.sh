@@ -99,11 +99,11 @@ log_success "Downloaded config.example.yml"
 # Handle config.yml
 if [ -f "config.yml" ]; then
     log_warning "config.yml already exists - preserving your existing configuration"
-    log_info "Compare with config.example.yml to see new settings"
+    log_info "Compare with config.example.yml to see new simplified settings"
 else
     cp config.example.yml config.yml
     log_success "Created config.yml from template"
-    log_warning "IMPORTANT: Add your API keys to config.yml before using!"
+    log_info "Simple config - just set your Linear project name (optional)"
 fi
 
 # Download documentation
@@ -184,12 +184,15 @@ echo "3. Verify droids loaded:"
 echo "   ${BLUE}/droids${NC}"
 echo "   You should see: droidz-orchestrator, droidz-codegen, etc."
 echo ""
-echo "4. Add your API keys to config.yml:"
-echo "   ${BLUE}# Edit config.yml and add your API keys${NC}"
-echo "   - Linear: https://linear.app/settings/api"
-echo "   - Exa: https://exa.ai/api-keys"
-echo "   - Ref: https://ref.sh/api"
-echo "   ${YELLOW}NOTE: config.yml is in .gitignore - your keys are safe!${NC}"
+echo "4. Add MCP servers (recommended):"
+echo "   ${BLUE}/mcp add exa${NC}      # AI search"
+echo "   ${BLUE}/mcp add linear${NC}   # Project management"
+echo "   ${BLUE}/mcp add ref${NC}      # Documentation"
+echo "   ${YELLOW}Get API keys: exa.ai, linear.app/settings/api, ref.sh${NC}"
+echo ""
+echo "   ${GREEN}OR${NC} just set your Linear project name in config.yml:"
+echo "   ${BLUE}linear:${NC}"
+echo "   ${BLUE}  project_name: \"MyProject\"${NC}"
 echo ""
 echo "5. Start building:"
 echo "   ${BLUE}droid${NC}"
