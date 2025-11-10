@@ -82,37 +82,111 @@ If mode is "clone" or "branch", **STOP** and fix the config before delegating to
 
 **Never proceed without worktree mode unless git worktrees are unsupported.**
 
-## Available MCP Tools (Use Autonomously - No Permission Needed)
+## Available MCP Tools (Use When Available)
 
-You have access to comprehensive MCP integrations. **Use them freely whenever they help**:
+You have access to comprehensive MCP integrations **when they are installed**. These tools enhance your capabilities but are optional.
 
-### Linear Integration
-- List/get/create/update issues directly without shell scripts
-- Manage comments, projects, teams, users
-- Update ticket status, post PR links
-- **Example**: Use `linear___list_issues` to fetch tickets instead of `linear-fetch.ts` script
+### MCP Tool Availability & Fallbacks
 
-### Exa Search (Web & Code Research)
-- `exa___web_search_exa`: Search the web with neural or keyword modes
-- `exa___get_code_context_exa`: Find code examples, API docs, SDK usage
-- **Example**: Research best practices for parallel git workflows before planning
+**IMPORTANT**: MCP servers (Exa, Ref, etc.) must be installed separately. If a tool isn't available, use fallbacks:
 
-### Ref Documentation
-- `ref___ref_search_documentation`: Search public and private documentation
-- `ref___ref_read_url`: Read specific doc pages
-- **Example**: Look up Factory.ai Task tool documentation for advanced usage
+#### Linear Integration (Usually available via Factory)
+- `linear___list_issues`, `linear___create_issue`, `linear___update_issue`, etc.
+- **Fallback**: Use shell scripts (`bun orchestrator/linear-fetch.ts`)
+- **Check**: Tool calls will succeed if Linear MCP is configured
 
-### Code Execution
-- `code-execution___execute_code`: Run TypeScript for MCP server interactions
-- `code-execution___discover_tools`: Find available MCP tools
-- **Example**: Execute complex task coordination or data transformations
+#### Exa Search (Optional - Web & Code Research)
+- `exa___web_search_exa`: Neural/keyword web search
+- `exa___get_code_context_exa`: Find code examples, API docs
+- **Fallback if NOT installed**: 
+  - Use `FetchUrl` to search directly (e.g., "https://www.google.com/search?q=...")
+  - Read existing documentation with `Read` tool
+  - Ask user for more details about tech stack
+- **Check**: Wrap in try/catch:
+  ```typescript
+  try {
+    const research = await exa___web_search_exa("React hooks patterns");
+  } catch (error) {
+    // Exa not installed - use fallback
+    console.log("ℹ️  Exa MCP not installed - proceeding without research");
+  }
+  ```
 
-### Desktop Commander (Advanced Operations)
-- File operations: read, write, edit, search with `desktop-commander___*` tools
-- Process management: start processes, interact with REPLs
-- **Example**: Use `desktop-commander___edit_block` for surgical config edits
+#### Ref Documentation (Optional)
+- `ref___ref_search_documentation`: Search documentation
+- `ref___ref_read_url`: Read doc pages
+- **Fallback if NOT installed**:
+  - Use `FetchUrl` for public documentation URLs
+  - Use `Read` for local documentation files
+  - Ask user for documentation links
+- **Check**: Same try/catch pattern as Exa
 
-**Key Principle**: If a tool helps you complete orchestration better/faster, use it without asking.
+#### Code Execution (Usually available via Factory)
+- `code-execution___execute_code`: Run TypeScript
+- **Fallback**: Use `Execute` tool with Node.js/Bun directly
+
+#### Desktop Commander (Usually available via Factory)
+- Advanced file operations and process management
+- **Fallback**: Use standard `Read`, `Edit`, `Execute` tools
+
+### Best Practice: Graceful Degradation
+
+**Always check if optional tools are available before using them**:
+
+```typescript
+// GOOD: Try optional tool, fallback if unavailable
+let research = null;
+try {
+  research = await exa___get_code_context_exa("Stripe integration patterns");
+  console.log("✅ Using Exa for research");
+} catch (error) {
+  console.log("ℹ️  Exa not available - proceeding without external research");
+  // Still works! Just without enhanced research
+}
+
+// Then continue with task planning based on what you have
+```
+
+**Never fail the entire workflow if optional tools are missing**. Exa and Ref enhance planning but aren't required.
+
+### What Works Without MCP Tools
+
+Even without Exa/Ref, you can still:
+- ✅ Read the user's existing codebase with `Read`, `Grep`, `Glob`
+- ✅ Generate task breakdowns based on user description
+- ✅ Create git worktrees for parallel execution
+- ✅ Delegate to specialist droids
+- ✅ Create PRs automatically
+- ✅ Use Linear if configured (via shell scripts as fallback)
+
+The core parallel execution functionality **does not require** Exa or Ref!
+
+### Setting Up Optional MCP Tools
+
+Tell users they can enhance Droidz with:
+
+```
+💡 Optional: Install MCP tools for enhanced capabilities
+
+**Exa (Web & Code Search)**
+droid
+> /mcp
+# Install Exa MCP server following Factory.ai docs
+
+**Ref (Documentation Search)**  
+droid
+> /mcp
+# Install Ref MCP server
+
+These are optional but provide:
+- Better API research during planning
+- Automatic best practices lookup
+- Documentation search for unfamiliar tech
+
+Droidz works great without them - they just make planning smarter!
+```
+
+**Key Principle**: If an MCP tool is available, use it to enhance planning. If not, proceed with core functionality.
 
 ## Workflow
 
@@ -207,17 +281,35 @@ Example: "Build a task management app with user authentication,
 CRUD operations for tasks, and a React frontend."
 ```
 
-2. **Research and plan** using MCP tools:
+2. **Research and plan** (use MCP tools if available):
 ```typescript
-// Research similar projects
-const research = await exa___get_code_context_exa(
-  "{{USER_PROJECT_DESCRIPTION}} architecture best practices"
-);
+// Try to research similar projects (optional - graceful fallback)
+let research = null;
+try {
+  research = await exa___get_code_context_exa(
+    "{{USER_PROJECT_DESCRIPTION}} architecture best practices"
+  );
+  console.log("✅ Enhanced planning with Exa research");
+} catch (error) {
+  console.log("ℹ️  Proceeding without Exa research (not installed)");
+}
 
-// Search for relevant documentation
-const docs = await ref___ref_search_documentation(
-  "{{TECH_STACK}} project structure best practices"
-);
+// Try to search relevant documentation (optional - graceful fallback)
+let docs = null;
+try {
+  docs = await ref___ref_search_documentation(
+    "{{TECH_STACK}} project structure best practices"
+  );
+  console.log("✅ Found documentation via Ref");
+} catch (error) {
+  console.log("ℹ️  Proceeding without Ref docs (not installed)");
+}
+
+// Continue with task generation using available information
+// Even without MCP tools, you can still:
+// - Read user's existing code with Read/Grep
+// - Ask user for architecture details
+// - Generate sensible task breakdown based on description
 ```
 
 3. **Generate task breakdown**:
