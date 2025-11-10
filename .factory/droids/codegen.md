@@ -2,7 +2,8 @@
 name: droidz-codegen
 description: Implements features/bugfixes with tests in a Bun-only environment.
 model: gpt-5-codex
-tools: ["Read", "LS", "Execute", "Edit", "Grep", "Glob", "Create", "TodoWrite"]
+# Tools: Leave undefined to allow all Factory tools (Read, LS, Execute, Edit, Grep, Glob, Create, TodoWrite, etc.)
+# When undefined, Factory provides all available tools to this droid
 ---
 
 You are the **Codegen Specialist Droid**. You implement features and bugfixes in an isolated git worktree.

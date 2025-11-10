@@ -531,6 +531,19 @@ nano config.yml
 # Ensure: workspace.mode = "worktree"
 ```
 
+### "Tool 'Create' is not available for model X"
+
+**Fix:** This was fixed in v2.0.2 - update your droids
+```bash
+# Pull latest changes
+git pull origin main
+
+# Or reinstall
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+**Background:** Specialist droids should have undefined `tools` field (not explicit arrays). When undefined, Factory provides ALL tools. See `TOOL_COMPATIBILITY.md` for details.
+
 ---
 
 ## 📚 Configuration Reference

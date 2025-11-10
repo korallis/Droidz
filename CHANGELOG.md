@@ -2,6 +2,32 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.0.2] - 2025-11-10
+
+### Fixed
+- **Critical: Tool compatibility for all models** - Fixed "Tool 'Create' is not available for model GPT-5-Codex" error
+  - Removed explicit `tools` arrays from specialist droids (codegen, test, infra, integration, refactor, generalist)
+  - When `tools` field is undefined, Factory provides ALL tools (Create, Edit, MultiEdit, ApplyPatch, etc.)
+  - This works for ALL models: Claude (Sonnet/Opus/Haiku), GPT-5/GPT-5-Codex, GLM-4.6
+  - Added `Task` tool to orchestrator for proper delegation
+  - Removed `Create`/`Edit` from orchestrator (it delegates, doesn't edit directly)
+
+### Added
+- **TOOL_COMPATIBILITY.md** - Comprehensive guide on Factory's tool system
+  - Explains tool categories and availability
+  - Documents all supported models
+  - Provides MCP enhancement options
+  - Includes troubleshooting guide
+- **SOLUTION_SUMMARY.md** - Executive summary of the tool compatibility fix
+  - Problem description and root cause
+  - Solution details
+  - Testing instructions
+
+### Documentation
+- Clarified that ALL Factory models support ALL tools when using Task delegation
+- Explained Factory's pattern: undefined `tools` = all tools available
+- Added references to official Factory.ai documentation
+
 ## [2.2.0] - 2025-11-10
 
 ### 🚀 Major Enhancements
