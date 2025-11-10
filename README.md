@@ -10,6 +10,8 @@ Imagine having a team of smart robots that can:
 
 **That's Droidz!**
 
+> **🚀 NEW (Latest Update):** The orchestrator now **automatically enforces** parallel execution with git worktrees! No more manual configuration needed - you get the 3-5x speed boost by default. [See what changed](#recent-improvements)
+
 ---
 
 ## What Does Droidz Do?
@@ -108,6 +110,12 @@ You should see 5 files (these are your AI helpers):
    - This loads your 5 AI helpers into Claude Code
 
 **Without these steps, the droids won't work properly!**
+
+> **✨ Already installed Droidz?** Make sure to reload your droids to get the latest improvements:
+> 1. In Droid CLI, type `/droids`
+> 2. Select "Reload Custom Droids"
+> 
+> This ensures you get the new **automatic parallel execution enforcement**!
 
 ---
 
@@ -346,6 +354,36 @@ ls .claude/agents/
 ```
 Should show 5 files. If not, run the install again.
 
+### "Parallel execution doesn't seem to be working"
+**First, verify your orchestrator is updated:**
+```bash
+cat .factory/droids/orchestrator.droid.json | grep "PRIMARY VALUE"
+```
+Should contain: `"Droidz's PRIMARY VALUE is PARALLEL EXECUTION"`
+
+If it doesn't, reload your droids:
+1. In Droid CLI, type `/droids`
+2. Select "Reload Custom Droids"
+
+**Check your config:**
+```bash
+cat config.yml | grep -A 8 "parallel:"
+```
+Should show:
+- `workspace_mode: worktree` ✅
+- `enabled: true` ✅
+- `max_concurrent_tasks: 5` (or higher) ✅
+
+**📖 For comprehensive troubleshooting, see:** [PARALLEL_EXECUTION_GUIDE.md](PARALLEL_EXECUTION_GUIDE.md)
+
+### "Git worktree commands are failing"
+**Common fixes:**
+1. Update Git to 2.5+ (`git --version`)
+2. Clean orphaned worktrees: `git worktree prune`
+3. Ensure you're on a branch: `git checkout main`
+
+**If worktrees still don't work**, Droidz will offer `clone` mode as a fallback (slower but functional).
+
 ### "Can I use this with my team?"
 Yes! Everyone can use the same Droidz setup.
 
@@ -354,6 +392,45 @@ Yes! Droidz is free. You only pay for Droid CLI usage (the AI tool).
 
 ### "What if something breaks?"
 The Verifier catches most problems. If something still breaks, Droidz creates a report showing exactly what went wrong.
+
+---
+
+## Recent Improvements
+
+### 🚀 Parallel Execution Now Enforced by Default
+
+**What Changed:**
+- ✅ The orchestrator now **automatically defaults** to git worktrees (the fastest mode)
+- ✅ The orchestrator **actively analyzes** your tasks for maximum parallelization
+- ✅ Setup wizard now **validates and warns** if you select non-optimal settings
+- ✅ Users now see **clear explanations** of the parallel execution strategy
+
+**Before:** The orchestrator would "suggest" worktrees but sometimes let users choose slower modes without warning.
+
+**After:** The orchestrator ENFORCES worktrees by default and explains: *"Using git worktrees - this allows 5 workers to build simultaneously in isolated environments"*
+
+**Why This Matters:**
+- 🚀 **Guaranteed speed**: You now automatically get the 3-5x performance boost
+- 🛡️ **Protected defaults**: Hard to accidentally disable the core feature
+- 📊 **Transparency**: You see exactly how parallelization works
+- 🔧 **Smart optimization**: Suggests increasing workers when you have many independent tasks
+
+**What You'll Notice:**
+When you run `@droidz-orchestrator`, you'll see:
+```
+✅ Using git worktrees - this allows 5 workers to build simultaneously
+✅ Planning to run 8 tasks with 5 parallel workers
+💡 TIP: You have 8 independent tasks. Consider increasing concurrency to 8.
+
+Execution Plan:
+  Phase 1: Foundation (sequential) - 1 task
+  Phase 2: Core Features (parallel) - 6 tasks with 5 workers  
+  Phase 3: Integration (sequential) - 1 task
+  
+Estimated: 30 min (vs 120 min sequential) = 4x faster!
+```
+
+**📖 Full details:** See [PARALLEL_EXECUTION_GUIDE.md](PARALLEL_EXECUTION_GUIDE.md)
 
 ---
 
@@ -466,6 +543,12 @@ parallel:
 ### Q: How do I change the number of parallel workers?
 **A:** Edit `max_concurrent_tasks` in `config.yml`. Default is 5, but you can set it higher (up to 10) or lower (down to 2) based on your needs.
 
+### Q: Will the orchestrator automatically use parallel execution?
+**A:** YES! As of the latest update, the orchestrator **automatically enforces** parallel execution with git worktrees. You don't need to configure anything - it's enabled by default. The orchestrator will even suggest increasing workers if you have many independent tasks. [Learn more](PARALLEL_EXECUTION_GUIDE.md)
+
+### Q: What if git worktrees don't work on my system?
+**A:** The orchestrator will detect this and automatically offer `clone` mode as a fallback (slightly slower but fully functional). You can also manually set `workspace_mode: clone` in `config.yml`.
+
 ---
 
 ## What People Say
@@ -483,6 +566,7 @@ parallel:
 - **GitHub**: https://github.com/korallis/Droidz
 - **Quick Start Guide**: [QUICKSTART.md](QUICKSTART.md)
 - **Installation Help**: [INSTALL.md](INSTALL.md)
+- **Parallel Execution Guide**: [PARALLEL_EXECUTION_GUIDE.md](PARALLEL_EXECUTION_GUIDE.md) ⭐ **NEW!**
 - **Report Issues**: https://github.com/korallis/Droidz/issues
 
 ---
