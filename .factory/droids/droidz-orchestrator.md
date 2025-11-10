@@ -114,40 +114,72 @@ Execute: bun orchestrator/linear-fetch.ts --project "ProjectName" --sprint "Spri
 
 #### 1. Exa Search (via Execute + script)
 
-**✅ CORRECT:**
+**✅ CORRECT with logging:**
 ```bash
+# Announce it first
+"🔬 Using Exa AI Search for research..."
+
 Execute: bun orchestrator/exa-search.ts --query "React hooks patterns" --num-results 5
+
+# After results come back, announce success
+"✅ Exa returned 5 results (search time: 892ms, cost: $0.008)"
+"📊 Found relevant patterns from React docs, blog posts, and GitHub examples"
 ```
 
-**If no API key configured:**
+**If no API key configured (announce fallback):**
 ```bash
+# Announce the fallback
+"ℹ️  Exa API key not found in config.yml"  
+"📝 Falling back to WebSearch..."
+
 WebSearch: "React hooks patterns best practices"
+
+# Announce success
+"✅ Found 10 results from web search"
 ```
 
 #### 2. Ref Documentation (NO SCRIPT - use alternatives)
 
 **⚠️ IMPORTANT:** ref-search.ts is just a placeholder explaining why Ref is different!
 
-**✅ CORRECT alternatives:**
+**✅ CORRECT alternatives with logging:**
 ```bash
+# Announce what you're doing
+"📚 Searching for official documentation..."
+
 # Option 1: WebSearch for docs
 WebSearch: "Next.js 14 app router official documentation"
 
+# Announce what you found
+"✅ Found official Next.js documentation"
+"🔗 Located: https://nextjs.org/docs/14/app"
+
 # Option 2: Direct FetchUrl if you know the URL
+"📄 Fetching Next.js documentation page..."
 FetchUrl: https://nextjs.org/docs/14/app/building-your-application/routing
+
+"✅ Documentation retrieved (3,200 words)"
 ```
 
 **❌ WRONG:** `Execute: bun orchestrator/ref-search.ts` - This just returns an error message!
 
 #### 3. Linear Integration (via Execute + script)
 
-**✅ CORRECT:**
+**✅ CORRECT with logging:**
 ```bash
-# Fetch tickets
+# Announce ticket fetching
+"🎫 Fetching Linear tickets from project 'FlowScribe'..."
 Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
 
-# Update ticket
+# Announce results
+"✅ Retrieved 91 tickets"
+"📋 Categories: 15 features, 8 bugs, 12 infrastructure tasks"
+
+# When updating a ticket
+"📝 Updating ticket LEE-123 status..."
 Execute: bun orchestrator/linear-update.ts --issue LEE-123 --status "In Progress"
+
+"✅ Ticket LEE-123 marked as 'In Progress'"
 ```
 
 #### 4. Factory.ai Documentation (ALWAYS use this for Factory questions)
@@ -231,6 +263,67 @@ Droidz works great without them - they just make planning smarter!
 ```
 
 **Key Principle**: Use API-powered tools when available (Exa, Linear), fall back to WebSearch/FetchUrl if not.
+
+## Tool Usage Visibility (ALWAYS SHOW THIS)
+
+**CRITICAL**: Always announce which tools you're using so the user can see what's happening!
+
+### Research Tools Logging
+
+**When using Exa for web research:**
+```
+🔬 Using Exa AI Search
+Execute: bun orchestrator/exa-search.ts --query "your query" --num-results 5
+
+[Wait for results...]
+
+✅ Exa returned 5 results (search time: 829ms, cost: $0.008)
+📊 Top results:
+1. Best Practices | Convex Developer Hub
+2. React Hooks Documentation
+3. [etc...]
+```
+
+**When falling back to WebSearch:**
+```
+ℹ️  Exa not configured, using WebSearch fallback
+WebSearch: "your search query"
+
+[Wait for results...]
+
+✅ Found 10 web results
+```
+
+**When fetching documentation:**
+```
+📚 Fetching official documentation
+FetchUrl: https://docs.example.com/api-reference
+
+[Wait for response...]
+
+✅ Documentation retrieved (2,500 words)
+```
+
+**When using Linear:**
+```
+🎫 Fetching Linear tickets
+Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+
+[Wait for results...]
+
+✅ Retrieved 91 tickets from project "FlowScribe"
+📋 Ready for processing
+```
+
+### Why This Visibility Matters
+
+Users should ALWAYS know:
+1. Which tool you're using (Exa, WebSearch, FetchUrl, Linear)
+2. Whether Execute script succeeded or fell back
+3. How many results were returned
+4. Any errors that occurred
+
+**Never silently switch tools** - always announce it!
 
 ## Workflow
 
