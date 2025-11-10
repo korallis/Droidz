@@ -279,3 +279,43 @@ Execute: bun orchestrator/exa-search.ts --query "{{TOPIC}} best practices" --num
 **The code execution pattern is now the standard way Droidz uses API services!**
 
 Instead of requiring complex MCP server setup, users just add their API keys to config.yml and everything works automatically. 🎉
+
+## 🎯 Practical Example: Using All Three Together
+
+**Scenario:** Research Convex best practices, fetch related Linear tickets, and find official documentation
+
+```typescript
+// In orchestrator droid:
+
+// 1. Research with Exa (REST API → Execute + script)
+Execute: bun orchestrator/exa-search.ts --query "Convex database best practices" --num-results 5
+// Parse JSON response and extract key practices
+
+// 2. Get Linear tickets (GraphQL API → Execute + script)  
+Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+// Parse JSON response: 91 tickets found
+// Filter for database-related tickets
+
+// 3. Find official docs with Ref (MCP tool → call directly)
+const refResults = await ref___ref_search_documentation("Convex best practices");
+// Parse page titles and URLs
+// Returns: docs.convex.dev/understanding/best-practices/
+
+// 4. Combine results
+// - Exa: 3 high-quality blog posts and guides
+// - Linear: 15 database-related tickets to prioritize
+// - Ref: Official Convex documentation URLs
+// Create action plan based on all sources
+```
+
+**Result:** Complete research pipeline using the best integration method for each service!
+
+## 📝 Final Summary
+
+| Service | Method | Why | Status |
+|---------|--------|-----|--------|
+| **Exa** | Execute + script | Has REST API | ✅ Tested |
+| **Linear** | Execute + script | Has GraphQL API | ✅ Tested |
+| **Ref** | Direct MCP call | MCP-only (no API) | ✅ Tested |
+
+**All three services work perfectly - each using the optimal integration pattern!** 🎉
