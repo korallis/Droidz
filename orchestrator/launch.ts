@@ -3,7 +3,7 @@ import path from "path";
 import { promises as fs } from "fs";
 import readline from "node:readline";
 import { OrchestratorConfig } from "./types";
-import { validateEnvironment } from "./validators";
+import { validateEnvironment, validateWorkspaceMode } from "./validators";
 import { findProjectByName, findCycleByName } from "./linear";
 
 function rl() { return readline.createInterface({ input: process.stdin, output: process.stdout }); }
@@ -101,6 +101,11 @@ async function main() {
   console.log("Validating environment...");
   const checks = await validateEnvironment(cfg.linear.apiKey);
   for (const c of checks) console.log(`- ${c.name}: ${c.ok ? "OK" : "MISSING"}${c.info?` (${c.info})`:""}`);
+  
+  // Validate workspace mode for parallel execution
+  console.log("\nValidating workspace configuration...");
+  validateWorkspaceMode(cfg);
+  
   // Ensure baseline custom droids exist
   try {
     await Bun.spawn(["bun", path.join("orchestrator", "generate-droids.ts")]).exited;

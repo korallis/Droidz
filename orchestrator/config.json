@@ -19,6 +19,7 @@
   "workspace": {
     "baseDir": ".runs",
     "branchPattern": "{type}/{issueKey}-{slug}",
+    "mode": "worktree",
     "useWorktrees": true
   },
   "guardrails": {

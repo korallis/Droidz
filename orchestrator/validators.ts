@@ -31,3 +31,16 @@ export async function validateEnvironment(apiKey?: string) {
   }
   return checks;
 }
+
+export function validateWorkspaceMode(config: { workspace: { mode?: string; useWorktrees?: boolean } }): void {
+  const mode = config.workspace.mode || (config.workspace.useWorktrees === false ? "branch" : "worktree");
+  
+  if (mode !== "worktree") {
+    console.warn(`\n⚠️  WARNING: Workspace mode is "${mode}" - NOT RECOMMENDED!`);
+    console.warn(`   Parallel execution requires "worktree" mode for 3-5x speed benefit.`);
+    console.warn(`   Current mode will be MUCH slower and may cause conflicts.`);
+    console.warn(`\n   FIX: Set workspace.mode = "worktree" in orchestrator/config.json\n`);
+  } else {
+    console.log(`✅ Workspace mode: worktree (optimal for parallel execution)`);
+  }
+}

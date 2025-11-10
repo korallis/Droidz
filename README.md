@@ -125,6 +125,460 @@ When all robots finish, Droidz combines their work into one complete app!
 
 ---
 
+## 🎬 End-to-End Workflow: Building an App with Droidz
+
+**Want to see how Droidz actually works?** Here's a complete walkthrough from "I have an idea" to "app is deployed"!
+
+### The Complete Journey
+
+Let's say you want to build a **Task Management App** (like Todoist or Asana, but simpler).
+
+#### **Phase 1: Setup Your Project (5 minutes)**
+
+1. **Create your project repository**:
+```bash
+mkdir my-task-app
+cd my-task-app
+git init
+git remote add origin https://github.com/yourname/my-task-app.git
+```
+
+2. **Install Droidz**:
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+3. **Enable Custom Droids in Factory**:
+```bash
+droid
+# Type: /settings
+# Find "Custom Droids" and turn it ON
+# Exit (Ctrl+C) and restart: droid
+```
+
+4. **Verify droids are ready**:
+```bash
+# In Factory CLI, type:
+/droids
+# You should see: droidz-orchestrator, droidz-codegen, droidz-test, etc.
+```
+
+#### **Phase 2: Plan Your App in Linear (10 minutes)**
+
+Droidz works best with Linear for project management. Here's how to set it up:
+
+1. **Create a Linear project**: "Task Management App"
+
+2. **Create an epic** (big feature):
+   - Name: "Core Task Management"
+   - Description: Basic CRUD operations for tasks
+
+3. **Break it into tickets** (small pieces):
+   ```
+   TASK-1: Create task model and database schema
+   TASK-2: Build API endpoint to create tasks
+   TASK-3: Build API endpoint to list tasks
+   TASK-4: Build API endpoint to update tasks
+   TASK-5: Build API endpoint to delete tasks
+   TASK-6: Create React component for task list
+   TASK-7: Create React form for adding tasks
+   TASK-8: Write tests for task API
+   TASK-9: Write tests for task components
+   TASK-10: Deploy app to production
+   ```
+
+4. **Label your tickets**:
+   - TASK-1, 2, 3, 4, 5: `backend` label
+   - TASK-6, 7: `frontend` label
+   - TASK-8, 9: `test` label
+   - TASK-10: `infra` label
+
+5. **Add dependencies** (which tasks must finish first):
+   - TASK-2 depends on TASK-1 (need database before API)
+   - TASK-3, 4, 5 depend on TASK-1
+   - TASK-6, 7 depend on TASK-2, 3
+   - TASK-8 depends on TASK-1 through TASK-5
+   - TASK-9 depends on TASK-6, 7
+   - TASK-10 depends on everything
+
+6. **Get your Linear API key**:
+   - Go to https://linear.app/settings/api
+   - Create a new API key
+   - Save it: `export LINEAR_API_KEY="your-key-here"`
+
+#### **Phase 3: Configure Droidz (2 minutes)**
+
+1. **Update orchestrator config**:
+```bash
+# Edit orchestrator/config.json
+{
+  "linear": {
+    "project": "Task Management App",
+    "sprint": "Sprint 1",
+    "teamId": "your-linear-team-id",
+    "apiKey": "${LINEAR_API_KEY}"
+  },
+  "workspace": {
+    "mode": "worktree"  // ← THIS IS KEY for parallel execution!
+  },
+  "concurrency": 5  // 5 robots working at once
+}
+```
+
+#### **Phase 4: Launch Droidz! (The Magic Happens) ✨**
+
+Now the exciting part - watch the robots build your app!
+
+```bash
+droid --auto high
+```
+
+Then say:
+```
+Use droidz-orchestrator to process project "Task Management App" sprint "Sprint 1"
+```
+
+**What happens next (in real-time):**
+
+```
+🔍 Fetching tickets from Linear...
+✅ Found 10 tickets
+
+📋 Analyzing dependencies...
+✅ Identified 3 execution phases
+
+🚀 Parallel Execution Strategy:
+- Mode: Git Worktrees (isolated environments for each task)
+- Concurrency: 5 workers running simultaneously
+- Tasks: 10 tickets to process
+- Estimated time: ~20 minutes
+- Sequential would take: ~100 minutes
+- Speed benefit: 5x faster! 🎉
+
+📊 Execution Plan:
+
+Phase 1 (Sequential - Foundation):
+  🔄 TASK-1: Create task model and database schema (backend)
+  
+Phase 2 (Parallel - 5 tasks at once!):
+  🔄 TASK-2: Build API endpoint to create tasks (backend)
+  🔄 TASK-3: Build API endpoint to list tasks (backend)
+  🔄 TASK-4: Build API endpoint to update tasks (backend)
+  🔄 TASK-5: Build API endpoint to delete tasks (backend)
+  🔄 TASK-8: Write tests for task API (test)
+  
+Phase 3 (Parallel - remaining tasks):
+  🔄 TASK-6: Create React component for task list (frontend)
+  🔄 TASK-7: Create React form for adding tasks (frontend)
+  🔄 TASK-9: Write tests for task components (test)
+  🔄 TASK-10: Deploy app to production (infra)
+
+Starting execution...
+```
+
+**Live Progress Updates:**
+
+```
+✅ TASK-1: COMPLETE - PR #101 (Database schema ready)
+   Worker: droidz-codegen-backend
+   Time: 8 minutes
+   Branch: backend/TASK-1-create-task-model
+   
+🔄 TASK-2: IN PROGRESS - Creating task endpoint
+   Worker: droidz-codegen-backend
+   Status: Writing API route handler...
+   
+🔄 TASK-3: IN PROGRESS - Building list endpoint
+   Worker: droidz-codegen-backend
+   Status: Adding query filters...
+   
+🔄 TASK-4: IN PROGRESS - Implementing update logic
+   Worker: droidz-codegen-backend
+   Status: Validating input data...
+   
+🔄 TASK-5: IN PROGRESS - Adding delete functionality
+   Worker: droidz-codegen-backend
+   Status: Checking permissions...
+   
+🔄 TASK-8: IN PROGRESS - Writing API tests
+   Worker: droidz-test
+   Status: Setting up test fixtures...
+```
+
+After ~12 minutes:
+
+```
+✅ TASK-2: COMPLETE - PR #102
+✅ TASK-3: COMPLETE - PR #103
+✅ TASK-4: COMPLETE - PR #104
+✅ TASK-5: COMPLETE - PR #105
+✅ TASK-8: COMPLETE - PR #108
+
+Starting Phase 3 (4 tasks in parallel)...
+
+🔄 TASK-6: IN PROGRESS - Building task list UI
+   Worker: droidz-codegen-frontend
+   Status: Creating React component...
+```
+
+After ~20 minutes total:
+
+```
+🎉 All Tasks Complete!
+
+📊 Final Summary:
+
+Completed: 10/10 tickets ✅
+Time taken: 18 minutes
+Sequential estimate: 100 minutes
+Speed improvement: 5.5x faster!
+
+Pull Requests Created:
+  ✅ PR #101: TASK-1 - Database schema (merged)
+  ✅ PR #102: TASK-2 - Create task endpoint (ready for review)
+  ✅ PR #103: TASK-3 - List tasks endpoint (ready for review)
+  ✅ PR #104: TASK-4 - Update task endpoint (ready for review)
+  ✅ PR #105: TASK-5 - Delete task endpoint (ready for review)
+  ✅ PR #106: TASK-6 - Task list component (ready for review)
+  ✅ PR #107: TASK-7 - Add task form (ready for review)
+  ✅ PR #108: TASK-8 - API tests (ready for review)
+  ✅ PR #109: TASK-9 - Component tests (ready for review)
+  ✅ PR #110: TASK-10 - Production deployment (ready for review)
+
+Linear Tickets:
+  All 10 tickets marked as "Done" with PR links posted
+
+Next Steps:
+  1. Review PRs on GitHub
+  2. Approve and merge PRs
+  3. Monitor deployment (TASK-10 PR)
+  4. App is live! 🚀
+```
+
+#### **Phase 5: Review and Merge (15 minutes)**
+
+Now **you** take control:
+
+1. **Review the PRs** on GitHub:
+   - Click each PR link
+   - Look at the code changes
+   - Run tests locally if you want
+   - Leave comments if anything needs changes
+
+2. **Merge approved PRs**:
+   ```bash
+   # Or just click "Merge" button on GitHub
+   ```
+
+3. **Check deployment**:
+   - TASK-10 PR includes deployment config
+   - Merge it to deploy to production!
+
+#### **Phase 6: Your App is Live! 🎉**
+
+Total time: **~40 minutes** (5 setup + 10 planning + 18 building + 15 review)
+
+**What you got:**
+- ✅ Complete database schema
+- ✅ Full REST API for tasks (CRUD)
+- ✅ React UI components
+- ✅ Comprehensive test coverage
+- ✅ Deployed to production
+- ✅ All code reviewed and documented
+
+**What you did:**
+- Planned the work in Linear
+- Told Droidz to build it
+- Reviewed the PRs
+- Clicked "Merge"
+
+**What the robots did:**
+- Everything else! 🤖
+
+---
+
+### 🔍 How It Actually Works (Under the Hood)
+
+**The Secret Sauce: Git Worktrees + Parallel AI Workers**
+
+#### **Step 1: The Orchestrator Plans**
+
+When you say "build Task Management App", here's what happens:
+
+1. **Orchestrator fetches tickets** from Linear using MCP tools:
+   ```typescript
+   // Behind the scenes:
+   linear___list_issues({project: "Task Management App"})
+   ```
+
+2. **Analyzes dependencies**:
+   - Sees TASK-2 depends on TASK-1
+   - Sees TASK-6, 7 depend on TASK-2, 3
+   - Creates execution phases (sequential when needed, parallel when possible)
+
+3. **Routes to specialists**:
+   - `backend` label → `droidz-codegen` (backend specialist)
+   - `frontend` label → `droidz-codegen` (frontend specialist)
+   - `test` label → `droidz-test`
+   - `infra` label → `droidz-infra`
+
+#### **Step 2: Git Worktrees Are Created**
+
+For each ticket, Droidz creates an **isolated workspace**:
+
+```
+Your-Project/
+├── main code/              ← Your original code (untouched!)
+├── .runs/
+│   ├── TASK-1/            ← Robot 1's private workspace
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── .git → (points to main .git)
+│   ├── TASK-2/            ← Robot 2's private workspace
+│   ├── TASK-3/            ← Robot 3's private workspace
+│   ├── TASK-4/            ← Robot 4's private workspace
+│   └── TASK-5/            ← Robot 5's private workspace
+```
+
+**Why this is magic:**
+- Each robot has a **complete copy** of your code
+- Changes in one workspace **don't affect** others
+- No merge conflicts between parallel workers!
+- Each robot works on its **own branch**
+
+#### **Step 3: Specialists Work in Parallel**
+
+Each specialist robot follows this process:
+
+**droidz-codegen (Building TASK-2):**
+```
+1. Updates Linear ticket to "In Progress" (using Linear MCP)
+2. Researches Stripe API (using Exa MCP for examples)
+3. Reads project docs (using Ref MCP)
+4. Implements the feature in its workspace
+5. Runs tests: `bun test`
+6. Commits changes: `git commit -m "TASK-2: Add create task endpoint"`
+7. Pushes branch: `git push origin backend/TASK-2-create-task-endpoint`
+8. Creates PR: `gh pr create --fill`
+9. Posts PR link to Linear: linear___create_comment()
+10. Returns success to orchestrator
+```
+
+**All happening at the same time** for TASK-2, TASK-3, TASK-4, TASK-5, and TASK-8!
+
+#### **Step 4: MCP Tools in Action**
+
+Throughout execution, droids use MCP tools **autonomously**:
+
+**Example: Implementing Stripe payment (TASK-15)**
+
+```
+droidz-codegen:
+  "I need to integrate Stripe. Let me research first..."
+  
+  [Uses exa___get_code_context_exa("Stripe SDK Node.js")]
+  → Finds official Stripe docs and code examples
+  
+  [Uses ref___ref_search_documentation("Stripe payment intents")]
+  → Reads Stripe API reference
+  
+  "Now I'll implement based on best practices..."
+  [Writes code]
+  
+  [Uses linear___update_issue() to mark progress]
+  → Updates ticket without being asked
+  
+  "Done! Creating PR..."
+  [Commits, pushes, creates PR]
+```
+
+**You didn't have to say:**
+- "Research Stripe API"
+- "Look up documentation"
+- "Update the Linear ticket"
+
+**The droid just did it automatically!** That's the power of MCP tools.
+
+#### **Step 5: Real-Time Visibility**
+
+The orchestrator uses **TodoWrite** to show you progress:
+
+```typescript
+TodoWrite({
+  todos: [
+    {id: "TASK-1", status: "completed", content: "✅ Database schema - PR #101"},
+    {id: "TASK-2", status: "in_progress", content: "🔄 Create endpoint - Writing tests..."},
+    {id: "TASK-3", status: "completed", content: "✅ List endpoint - PR #103"},
+    {id: "TASK-4", status: "pending", content: "⏳ Update endpoint - Waiting..."}
+  ]
+});
+```
+
+You see **exactly what's happening** in real-time!
+
+#### **Step 6: Aggregation and Summary**
+
+When all specialists finish:
+
+1. **Orchestrator collects results**:
+   - 10 PRs created
+   - All tests passing
+   - All Linear tickets updated
+
+2. **Shows you the summary**:
+   - Links to all PRs
+   - Time statistics
+   - Any issues encountered
+
+3. **You take over**:
+   - Review PRs
+   - Merge when ready
+   - Deploy to production
+
+---
+
+### 🧠 Why This Approach is Revolutionary
+
+**Traditional Development (One developer):**
+```
+Day 1: Plan architecture
+Day 2: Build database schema
+Day 3: Build first API endpoint
+Day 4: Build second API endpoint
+Day 5: Build third API endpoint
+Day 6: Build UI
+Day 7: Write tests
+Day 8: Deploy
+
+Total: 8 days ☹️
+```
+
+**Droidz Approach (5 AI workers in parallel):**
+```
+Hour 1: Plan (you + orchestrator)
+Hour 2-3: All workers build simultaneously
+  - Worker 1: Database
+  - Worker 2: API endpoints
+  - Worker 3: UI components
+  - Worker 4: Tests
+  - Worker 5: Deployment config
+Hour 4: Review and merge
+
+Total: 4 hours! 🚀
+```
+
+**That's 16x faster than traditional solo development!**
+
+### 🎯 Key Innovations
+
+1. **Git Worktrees**: True isolation = true parallelization
+2. **MCP Tools**: Autonomous research and integration = smarter decisions
+3. **Specialist Droids**: Right tool for the job = better quality
+4. **Orchestration**: Smart planning = optimal execution
+5. **Real-time Visibility**: TodoWrite updates = you're always informed
+
+---
+
 ## 🚀 Quick Start (Super Easy!)
 
 ### Step 1: Install Factory

@@ -10,12 +10,21 @@ profile: default
 install_droids: true
 
 # Use Exa for research during planning and specification
-# DISABLED: exa tools not available in Droid CLI environment
-use_exa_research: false
+# ENABLED: MCP tools are now available via custom droids
+use_exa_research: true
 
 # Use Ref for documentation lookup
-# DISABLED: ref tools not available in Droid CLI environment
-use_ref_docs: false
+# ENABLED: MCP tools are now available via custom droids
+use_ref_docs: true
+
+# MCP Tools Configuration
+# All custom droids have access to comprehensive MCP tool integrations:
+# - Linear: Issue tracking and project management
+# - Exa: Web search and code context research
+# - Ref: Documentation search (public and private)
+# - code-execution: Execute TypeScript for MCP interactions
+# - desktop-commander: Advanced file/process operations
+mcp_tools_enabled: true
 
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development
