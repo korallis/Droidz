@@ -10,7 +10,13 @@ Imagine having a team of smart robots that can:
 
 **That's Droidz!**
 
+---
+
+## 📢 Important Notices
+
 > **🚀 NEW (Latest Update):** The orchestrator now **automatically enforces** parallel execution with git worktrees! No more manual configuration needed - you get the 3-5x speed boost by default. [See what changed](#recent-improvements)
+
+> **✨ Existing Users:** Update your installation in 2 minutes! [Jump to update guide →](#updating-droidz-if-already-installed)
 
 ---
 
@@ -68,6 +74,27 @@ Each helper is in their own space, no bumping into each other!
 
 ---
 
+## Updating Droidz (If Already Installed)
+
+**Already have Droidz? Update in 2 minutes to get automatic parallel execution!**
+
+### Quick Update (Copy & Paste)
+
+```bash
+# 1. Update the orchestrator droid
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/.factory/droids/orchestrator.droid.json -o .factory/droids/orchestrator.droid.json
+
+# 2. Open Droid CLI and reload
+droid
+# Inside Droid CLI: /droids → "Reload Custom Droids"
+```
+
+**That's it!** Next time you use `@droidz-orchestrator`, you'll see parallel execution automatically enforced.
+
+**Need more details?** See [QUICK_UPDATE.md](QUICK_UPDATE.md) or [UPDATING.md](UPDATING.md)
+
+---
+
 ## Installation (Super Easy)
 
 ### Step 1: Copy and Paste This
@@ -110,14 +137,6 @@ You should see 5 files (these are your AI helpers):
    - This loads your 5 AI helpers into Claude Code
 
 **Without these steps, the droids won't work properly!**
-
-> **✨ Already installed Droidz?** Update to get the latest improvements:
-> 
-> **Quick Update (2 minutes):** See [QUICK_UPDATE.md](QUICK_UPDATE.md)
-> 
-> **Full Guide:** See [UPDATING.md](UPDATING.md)
-> 
-> This ensures you get the new **automatic parallel execution enforcement**!
 
 ---
 
