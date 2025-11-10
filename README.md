@@ -190,6 +190,8 @@ Works immediately! No configuration needed.
 
 That single command is enough. The orchestrator gathers context from your repo, drafts a plan, and runs the specialists in parallel. Linear and other MCP services are optional enhancements.
 
+Behind the scenes, Droidz preserves your entire prompt verbatim and forwards it to every delegated agent, so directives like “ignore all plans” or “use Exa and Ref MCP” stay intact end-to-end.
+
 ### Option 2: MCP Servers (Recommended) ⚡
 
 **Best for:** Teams, production projects
