@@ -33,27 +33,23 @@ droid
 
 Orchestrator will automatically use MCP tools!
 
-## 🔄 Alternative: config.yml Fallback
+## 🔄 Alternative: config.yml (Simple!)
 
-**If you don't want to set up MCP servers**, add API keys to config.yml:
+**Don't want MCP servers?** Just set your Linear project name:
 
 ```yaml
-# Fallback API Keys
 linear:
-  api_key: "lin_api_YOUR_KEY"  # https://linear.app/settings/api
-  project_name: "MyProject"
-  
-exa:
-  api_key: "exa_YOUR_KEY"  # https://exa.ai/api-keys
-
-# Note: Ref has no REST API, needs MCP server
+  project_name: "MyProject"  # For existing projects
 ```
 
-**Security:** Add `config.yml` to `.gitignore`!
+That's it! Orchestrator will use WebSearch for research.
 
-```bash
-echo "config.yml" >> .gitignore
-```
+**Advanced:** If you have Exa/Linear API keys and want to use Execute script fallbacks:
+- Add them to config.yml (see orchestrator/exa-search.ts, orchestrator/linear-fetch.ts)
+- Scripts will read keys and make API calls
+- Still works, just not as fast as MCP direct calls
+
+**Security:** config.yml is gitignored by default!
 
 ---
 
