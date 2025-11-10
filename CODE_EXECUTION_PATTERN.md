@@ -1,8 +1,11 @@
 # Droidz MCP Integration Pattern (UPDATED)
 
-## 🎯 Current Approach: Direct MCP Tools with Graceful Fallbacks
+## 🎯 Current Approach: Dynamic MCP Tools with Graceful Fallbacks
 
-Droidz orchestrator now uses **direct MCP tool calls** when available, with automatic fallbacks to simpler methods.
+**IMPORTANT:** MCP tools like `exa___web_search_exa`, `linear___list_issues`, etc. are **NOT in the tools array**.
+They're dynamically provided by Factory when users configure MCP servers via `/mcp add`.
+
+The orchestrator can call them directly, and Factory provides them automatically if available.
 
 ### The Pattern
 

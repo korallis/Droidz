@@ -2,12 +2,18 @@
 
 ## 🎯 Overview
 
-Droidz orchestrator uses **direct MCP tool calls** when available, with automatic fallbacks.
+Droidz orchestrator uses **dynamic MCP tools** when available, with automatic fallbacks.
+
+**How MCP Works:**
+- MCP tools are **dynamically provided by Factory** when you configure servers via `/mcp add`
+- They're **NOT in the tools array** - Factory makes them available automatically
+- The orchestrator can call them directly (e.g., `exa___web_search_exa()`)
+- If not configured, gracefully falls back to WebSearch or Execute scripts
 
 **Setup options (pick one):**
-1. **MCP Servers** (Recommended for power users) - Direct tool access via Factory CLI
+1. **MCP Servers** (Recommended) - Dynamic tools provided by Factory
 2. **Config.yml** (Fallback) - API keys for Execute scripts
-3. **No setup** (Basic mode) - Uses WebSearch/FetchUrl
+3. **No setup** (Basic) - Uses WebSearch/FetchUrl
 
 ---
 

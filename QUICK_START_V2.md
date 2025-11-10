@@ -8,6 +8,7 @@ Droidz V2 is a **Factory-native multi-agent system** that transforms Linear tick
 - **Custom specialist droids** for different types of work
 - **Git worktrees** for true isolation
 - **TodoWrite** for real-time progress tracking
+- **Dynamic MCP tools** (automatically available when you configure servers)
 
 ## Prerequisites
 
