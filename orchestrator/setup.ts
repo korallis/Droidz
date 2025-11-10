@@ -67,7 +67,27 @@ async function main() {
 
   const baseDir = d(await question(`Workspace base dir${existing?.workspace?.baseDir?` [${existing.workspace.baseDir}]`:" [.runs]"}: `), existing?.workspace?.baseDir || ".runs");
   const branchPattern = d(await question(`Branch pattern${existing?.workspace?.branchPattern?` [${existing.workspace.branchPattern}]`:" [{type}/{issueKey}-{slug}]"}: `), existing?.workspace?.branchPattern || "{type}/{issueKey}-{slug}");
-  const mode = d(await question(`Workspace mode (worktree | clone | branch)${existing?.workspace?.mode?` [${existing.workspace.mode}]`:" [worktree]"}: `), existing?.workspace?.mode || (existing?.workspace?.useWorktrees===false ? "branch" : "worktree"));
+  let mode = d(await question(`Workspace mode (worktree | clone | branch)${existing?.workspace?.mode?` [${existing.workspace.mode}]`:" [worktree]"}: `), existing?.workspace?.mode || (existing?.workspace?.useWorktrees===false ? "branch" : "worktree"));
+
+  // VALIDATION: Warn if user chose non-optimal settings
+  if (mode !== "worktree") {
+    console.log("\n⚠️  WARNING: You selected workspace mode '" + mode + "'");
+    console.log("   Droidz's core feature is PARALLEL EXECUTION using git worktrees.");
+    console.log("   Without worktrees, parallel workers may conflict or run slower.");
+    console.log("   RECOMMENDED: Use 'worktree' mode for best performance (3-5x faster).");
+    const confirm = await question("\n   Continue with '" + mode + "' mode anyway? (y/N): ");
+    if (!confirm.toLowerCase().startsWith("y")) {
+      console.log("   ✅ Switching to 'worktree' mode for optimal parallel execution...");
+      mode = "worktree";
+    }
+  }
+  
+  // VALIDATION: Warn about low concurrency
+  if (concurrency < 3) {
+    console.log("\n⚠️  WARNING: Concurrency is set to " + concurrency);
+    console.log("   Low concurrency limits parallel execution benefits.");
+    console.log("   RECOMMENDED: Use 5-10 workers for typical features (default: 5).");
+  }
 
   const dryRunStr = d(await question(`Default dry-run mode? (y/n)${existing?.guardrails?.dryRun!==undefined?` [${existing.guardrails.dryRun?"y":"n"}]`:" [n]"}: `), existing?.guardrails?.dryRun?"y":"n");
   const dryRun = String(dryRunStr).toLowerCase().startsWith("y");

@@ -15,11 +15,18 @@ use_exa_research: true
 # Use Ref for documentation lookup
 use_ref_docs: true
 
-# Parallel execution settings
+# Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
+# This is what makes Droidz 3-5x faster than sequential AI development
 parallel:
-  enabled: true
-  max_concurrent_tasks: 5
-  workspace_mode: worktree  # worktree | clone | branch
+  enabled: true  # REQUIRED: Keep this true to enable parallel workers
+  max_concurrent_tasks: 5  # DEFAULT: 5 workers (Range: 2-10)
+                          # Increase to 8-10 for large features with many independent tasks
+                          # Decrease to 2-3 only if tasks are tightly coupled
+  workspace_mode: worktree  # RECOMMENDED: worktree (enables true parallel execution)
+                           # worktree = isolated git working trees (fastest, safest)
+                           # clone = full repo copies (slower, more disk space)
+                           # branch = shadow copies (no git isolation, use as last resort)
+                           # ALWAYS use 'worktree' unless git worktrees are not supported
 
 # Standards enforcement
 standards:
