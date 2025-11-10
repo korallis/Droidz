@@ -52,6 +52,58 @@ That's Droidz! But instead of LEGO, it builds apps and websites!
 
 ---
 
+## ⚡ Requirements (Important!)
+
+**Droidz needs a JavaScript runtime to work.** Think of it like a translator that understands JavaScript code.
+
+### 🚀 Option 1: Bun (Recommended - Super Fast!)
+
+**Bun is like a sports car for JavaScript** - 3-10x faster than regular options!
+
+**Install Bun (takes 30 seconds):**
+
+```bash
+# One magic command:
+curl -fsSL https://bun.sh/install | bash
+
+# Check it worked:
+bun --version
+```
+
+**Why Bun?**
+- ⚡ **Much faster** (3-10x speed boost!)
+- ✅ **Works everywhere** (Mac, Linux, Windows WSL)
+- 🎯 **Built for modern development**
+- 📦 **Handles everything** (runs code, installs packages)
+
+### 🔧 Option 2: Use What You Have (npm/node)
+
+**Already have Node.js?** Droidz will automatically use it!
+
+**Check if you have Node:**
+```bash
+node --version
+# If this works, you're good! Droidz will use npm automatically.
+```
+
+**Don't have Node?** Install from: https://nodejs.org
+
+### 🎛️ Other Options (Advanced)
+
+You can also use:
+- **pnpm** (faster than npm): `npm install -g pnpm`
+- **yarn** (alternative): `npm install -g yarn`
+
+**Tell Droidz which one to use** in `config.yml`:
+```yaml
+runtime:
+  package_manager: "bun"  # or "npm", "pnpm", "yarn"
+```
+
+**Default:** Droidz uses Bun if installed, otherwise falls back to npm.
+
+---
+
 ## 🌟 Path 1: New Project + Full Power
 
 **What you get:** All 5 robots + Linear ticket tracking + Exa/Ref search = Maximum automation! 🚀
@@ -79,7 +131,21 @@ Think of API keys like passwords that let robots access special tools.
 
 **Keep these keys safe!** We'll use them in Step 4.
 
-### Step 2: Install Droidz
+### Step 2: Install Bun (Recommended)
+
+**Bun makes everything faster!** (Optional but recommended)
+
+```bash
+# Install Bun (30 seconds):
+curl -fsSL https://bun.sh/install | bash
+
+# Restart your terminal, then check:
+bun --version
+```
+
+**Don't want Bun?** Skip this! Droidz will use npm/node instead.
+
+### Step 3: Install Droidz
 
 ```bash
 # 1. Create your project folder
@@ -98,8 +164,9 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 - Downloaded 5 robot helpers
 - Created special folders for them
 - Made a config file for settings
+- Detected your runtime (Bun or npm)
 
-### Step 3: Turn On the Robots
+### Step 4: Turn On the Robots
 
 ```bash
 # Start Factory (the robot control center)
@@ -134,7 +201,7 @@ You should see:
 ✅ droidz-integration (connects services)
 ```
 
-### Step 4: Add Your Magic Keys
+### Step 5: Add Your Magic Keys
 
 Open the config file:
 ```bash
@@ -162,7 +229,7 @@ ref:
 
 **Save the file!** (Ctrl+O in nano, or Cmd+S in VS Code)
 
-### Step 5: Build Something Amazing!
+### Step 6: Build Something Amazing!
 
 ```bash
 droid
@@ -194,7 +261,17 @@ The robots will:
 
 **What you get:** All 5 robots working together - no Linear, no extra search stuff. Still 5x faster!
 
-### Step 1: Install Droidz
+### Step 1: Install Bun (Optional but Recommended)
+
+```bash
+# Makes robots 3-10x faster!
+curl -fsSL https://bun.sh/install | bash
+bun --version
+```
+
+**Don't want Bun?** Skip this - Droidz will use npm/node!
+
+### Step 2: Install Droidz
 
 ```bash
 # 1. Create project
@@ -209,7 +286,7 @@ git remote add origin https://github.com/yourname/my-simple-app.git
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-### Step 2: Turn On the Robots
+### Step 3: Turn On the Robots
 
 ```bash
 droid
@@ -224,7 +301,7 @@ droid
 
 Check robots: `/droids` (should see all 6 robots!)
 
-### Step 3: Start Building!
+### Step 4: Start Building!
 
 No config needed! Just tell the boss robot what to build:
 
@@ -255,7 +332,16 @@ Use droidz-orchestrator to build a calculator app with:
 
 **What you get:** Add Droidz to a project you already have!
 
-### Step 1: Go to Your Project
+### Step 1: Install Bun (Optional)
+
+**For best performance:**
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+**Already have Node?** Skip this - you're all set!
+
+### Step 2: Go to Your Project
 
 ```bash
 cd /path/to/your/existing/project
@@ -269,7 +355,7 @@ ls -la .git
 git init
 ```
 
-### Step 2: Install Droidz
+### Step 3: Install Droidz
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
@@ -279,10 +365,11 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 - Adds robot files to `.factory/droids/`
 - Creates `config.yml` (won't touch your existing files!)
 - Adds `.runs/` to `.gitignore` (robot workspace)
+- Detects your runtime (Bun/npm)
 
 **Your code is safe!** Robots work in separate folders.
 
-### Step 3: Turn On Robots
+### Step 4: Turn On Robots
 
 ```bash
 droid
@@ -292,17 +379,17 @@ droid
 /droids  # Verify robots loaded
 ```
 
-### Step 4: Optional - Add API Keys
+### Step 5: Optional - Add API Keys
 
 **Want Linear + search powers?**
 
-Edit `config.yml` and add your keys (see Path 1, Step 4)
+Edit `config.yml` and add your keys (see Path 1, Step 5)
 
 **Don't want them?** 
 
 Skip this! Robots still work without them.
 
-### Step 5: Ask Robots to Help!
+### Step 6: Ask Robots to Help!
 
 ```bash
 droid
@@ -589,10 +676,62 @@ linear:
 ### Problem: "Robots are slow"
 
 **Possible reasons:**
-1. Working one-at-a-time instead of parallel
+1. Not using Bun (npm/node is slower)
+   - **Solution:** Install Bun: `curl -fsSL https://bun.sh/install | bash`
+   - **Speed boost:** 3-10x faster!
+2. Working one-at-a-time instead of parallel
    - Check: config.yml has `parallel: enabled: true`
-2. Big feature = takes longer (normal!)
-3. Internet slow = robots download stuff slower
+3. Big feature = takes longer (normal!)
+4. Internet slow = robots download stuff slower
+
+### Problem: "bun command not found" or "node command not found"
+
+**Need to install a JavaScript runtime!**
+
+**Option 1 - Install Bun (recommended):**
+```bash
+curl -fsSL https://bun.sh/install | bash
+# Restart terminal
+bun --version
+```
+
+**Option 2 - Install Node.js:**
+- Download from: https://nodejs.org
+- Or use package manager:
+  ```bash
+  # Mac (with Homebrew)
+  brew install node
+  
+  # Ubuntu/Debian
+  sudo apt install nodejs npm
+  
+  # Windows
+  # Download installer from nodejs.org
+  ```
+
+**Already installed but not found?**
+```bash
+# Check if it's installed:
+which bun
+which node
+
+# If installed, add to PATH:
+# For Bun (add to ~/.zshrc or ~/.bashrc):
+export PATH="$HOME/.bun/bin:$PATH"
+
+# Reload:
+source ~/.zshrc  # or source ~/.bashrc
+```
+
+### Problem: "Scripts fail with Bun but work with npm"
+
+**Switch to npm in config.yml:**
+```yaml
+runtime:
+  package_manager: "npm"  # Change from "bun" to "npm"
+```
+
+Then try again. Some packages work better with specific runtimes.
 
 ### Problem: "I accidentally committed config.yml!"
 
