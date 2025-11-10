@@ -5,7 +5,7 @@ set -e
 # Installs or updates Droidz in your project
 # Updated: 2025-01-10 - Simplified MCP setup
 
-DROIDZ_VERSION="2.0.0"
+DROIDZ_VERSION="2.0.1"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 
 # Colors for output
