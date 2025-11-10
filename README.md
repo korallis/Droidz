@@ -111,9 +111,11 @@ You should see 5 files (these are your AI helpers):
 
 **Without these steps, the droids won't work properly!**
 
-> **✨ Already installed Droidz?** Make sure to reload your droids to get the latest improvements:
-> 1. In Droid CLI, type `/droids`
-> 2. Select "Reload Custom Droids"
+> **✨ Already installed Droidz?** Update to get the latest improvements:
+> 
+> **Quick Update (2 minutes):** See [QUICK_UPDATE.md](QUICK_UPDATE.md)
+> 
+> **Full Guide:** See [UPDATING.md](UPDATING.md)
 > 
 > This ensures you get the new **automatic parallel execution enforcement**!
 
@@ -566,6 +568,7 @@ parallel:
 - **GitHub**: https://github.com/korallis/Droidz
 - **Quick Start Guide**: [QUICKSTART.md](QUICKSTART.md)
 - **Installation Help**: [INSTALL.md](INSTALL.md)
+- **Updating Droidz**: [QUICK_UPDATE.md](QUICK_UPDATE.md) (2 min) | [UPDATING.md](UPDATING.md) (full guide) ⭐ **NEW!**
 - **Parallel Execution Guide**: [PARALLEL_EXECUTION_GUIDE.md](PARALLEL_EXECUTION_GUIDE.md) ⭐ **NEW!**
 - **Report Issues**: https://github.com/korallis/Droidz/issues
 
