@@ -120,50 +120,38 @@ Use WebSearch and FetchUrl for research. Still works, just less powerful!
 
 ### Quick Start
 
-1. **Optional - Configure MCP servers** (best experience):
+1. **Configure MCP servers** (recommended):
    ```bash
    droid
    /mcp add exa
+   /mcp add linear
+   /mcp add ref
    ```
 
-2. **Or add API keys to config.yml** (fallback):
+2. **Set Linear project name** in config.yml (for existing projects):
    ```yaml
-   exa:
-     api_key: "your_exa_key_here"
-   
-   ref:
-     api_key: "your_ref_key_here"
+   linear:
+     project_name: "MyProject"
    ```
 
-2. **Use orchestrator normally:**
+3. **Use orchestrator:**
    ```
    Use droidz-orchestrator to research Convex database patterns
    ```
 
-3. **Orchestrator automatically uses helper scripts:**
-   ```bash
-   Execute: bun orchestrator/exa-search.ts --query "Convex patterns" --num-results 10
-   ```
+Orchestrator automatically tries MCP tools, falls back to WebSearch if needed!
 
-### For Orchestrator
+### For Droid Users
 
-When you need to research something:
+Orchestrator handles everything automatically:
 
-```bash
-# Research with Exa
-Execute: bun orchestrator/exa-search.ts --query "{{TOPIC}} best practices" --num-results 5
-
-# Parse JSON response
-# Use results in your planning
 ```
+Use droidz-orchestrator to research React patterns
 
-**Graceful fallback if no API key:**
-```json
-{
-  "error": "No Exa API key found",
-  "help": "Add your Exa API key to config.yml or set EXA_API_KEY environment variable",
-  "config": "Edit config.yml and add: exa.api_key"
-}
+# Behind the scenes:
+# 1. Tries: exa___web_search_exa("React patterns") 
+# 2. Falls back to: WebSearch("React patterns")
+# 3. You get results either way!
 ```
 
 ## 📊 Service Integration Summary

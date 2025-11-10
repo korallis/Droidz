@@ -41,60 +41,27 @@ use_ref_docs: true
 # MCP servers are OPTIONAL - Droidz works without them using helper scripts
 mcp_tools_enabled: true  # Enable MCP support in Factory
 
-# API Keys Configuration
-# IMPORTANT: Add your actual API keys in config.yml (not this template file!)
-# You can use environment variables or paste keys directly
-
-# Linear Integration (Optional - for automated ticket processing)
-# Get your API key from: https://linear.app/settings/api
-# 
-# HOW TO FIND YOUR LINEAR IDS:
-# 1. Team ID: Go to your team settings or use Linear API
-# 2. Project Name: The name of your Linear project (e.g., "Mobile App", "Website Redesign")
-# 3. Project ID: Found in Linear project URL or via API
+# Linear Project Tracking
+# Used by orchestrator to know which project's tickets to fetch
 #
-# EXISTING PROJECT SETUP:
-# If you have an existing Linear project you want Droidz to work on:
-# - Set project_name to your project's name (must match exactly)
-# - Droidz will fetch tickets from this project
-# - You can also specify sprint/cycle when running orchestrator
+# EXISTING PROJECT:
+# Set project_name to your Linear project's name (must match exactly!)
+# Example: project_name: "Mobile App"
+# Orchestrator will fetch tickets from this project
 #
-# NEW PROJECT SETUP:
-# If starting fresh, leave project_name empty and say:
+# NEW PROJECT:
+# Leave project_name empty. When you say:
 # "Use droidz-orchestrator to build [your idea]"
-# Droidz will create a new Linear project automatically!
+# Droidz will create a new Linear project and populate this field automatically!
 linear:
-  api_key: "${LINEAR_API_KEY}"  # Environment variable or paste your key here
-  team_id: ""  # Your Linear team ID (e.g., "abc123def456")
-  project_name: ""  # IMPORTANT: Name of Linear project to work on (e.g., "My App")
-  project_id: ""  # Optional: Linear project ID (will be auto-detected if name provided)
-  update_comments: true  # Post PR links as comments on tickets
-  auto_status_updates: true  # Automatically update ticket status
-
-# Exa AI Search (Optional - for AI-powered web and code search)
-# Get your API key from: https://exa.ai/api-keys
-# Exa provides intelligent search optimized for AI agents
-exa:
-  api_key: "${EXA_API_KEY}"  # Environment variable or paste your key here
-  enabled: true  # Enable Exa search for research and documentation
-
-# Ref Documentation Search (Optional - for documentation lookup)
-# Get your API key from: https://ref.sh/api
-# Ref provides access to public and private documentation
-ref:
-  api_key: "${REF_API_KEY}"  # Environment variable or paste your key here
-  enabled: true  # Enable Ref for documentation searches
+  project_name: ""  # Name of your Linear project (leave empty for new projects)
 
 # Runtime Configuration
 # Choose which JavaScript runtime to use for orchestrator scripts
-# IMPORTANT: Droidz orchestrator scripts require a JavaScript runtime
 runtime:
   package_manager: "bun"  # Options: "bun" (recommended), "npm", "pnpm", "yarn"
   # Bun is 3-10x faster than npm/node and is the recommended choice
-  # If bun is not installed, Droidz will automatically fall back to npm/node
-  
-  # Install Bun (recommended): curl -fsSL https://bun.sh/install | bash
-  # Or use your existing: npm, pnpm, or yarn
+  # Install Bun: curl -fsSL https://bun.sh/install | bash
 
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development
