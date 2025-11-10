@@ -100,18 +100,31 @@ FetchUrl: https://nextjs.org/docs/14/app
 
 ### Linear - Project Management
 
-**Try Linear MCP first (if configured):**
+**PRIMARY: Use Linear MCP tools (dynamically available):**
 ```typescript
-const issues = await linear___list_issues({ project: "FlowScribe" });
-await linear___update_issue({ id: "issue-id", stateId: "in-progress-id" });
-await linear___create_comment({ issueId: "issue-id", body: "PR: https://..." });
+// Fetch tickets
+const issues = await linear___list_issues({ 
+  project: "FlowScribe",
+  state: "backlog" 
+});
+
+// Update ticket status
+await linear___update_issue({ 
+  id: "issue-uuid",
+  state: "In Progress"
+});
+
+// Post PR link as comment
+await linear___create_comment({ 
+  issueId: "issue-uuid",
+  body: "PR created: https://github.com/..." 
+});
 ```
 
-**If Linear MCP not available, use Execute + scripts:**
-```bash
-Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
-Execute: bun orchestrator/linear-update.ts --issue LEE-123 --status "In Progress"
-```
+**FALLBACK (only if Linear MCP fails):**
+Helper scripts exist but should rarely be needed. If MCP tools don't work, you can use:
+- `bun orchestrator/linear-fetch.ts --project "ProjectName"`
+- `bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"`
 
 ### Factory.ai Documentation (for Factory questions)
 
@@ -121,29 +134,26 @@ WebSearch: "factory.ai Task tool documentation"
 FetchUrl: https://docs.factory.ai/cli/configuration/droids
 ```
 
-### Best Practice: Try MCP First, Fallback Gracefully
+### Best Practice: Use MCP Tools Directly
 
-**If MCP tools are configured, they work immediately. If not, use fallbacks:**
+**MCP tools are your PRIMARY approach - just use them!**
 
 ```typescript
-// TRY: Exa MCP tool
-const results = await exa___web_search_exa("React patterns");
-// FALLBACK: WebSearch if Exa not configured
-WebSearch: "React hooks patterns best practices"
-
-// TRY: Ref MCP tool  
-const docs = await ref___ref_search_documentation("Next.js");
-// FALLBACK: WebSearch + FetchUrl if Ref not configured
-WebSearch: "Next.js 14 app router documentation"
-FetchUrl: https://nextjs.org/docs/14/app
-
-// TRY: Linear MCP tool
+// Linear: Fetch tickets and manage workflow
 const issues = await linear___list_issues({ project: "MyProject" });
-// FALLBACK: Execute script if Linear MCP not configured
-Execute: bun orchestrator/linear-fetch.ts --project "MyProject"
+await linear___update_issue({ id: "uuid", state: "In Progress" });
+await linear___create_comment({ issueId: "uuid", body: "PR: ..." });
+
+// Exa: Research patterns and best practices
+const results = await exa___web_search_exa("React hooks patterns");
+
+// Ref: Documentation search
+const docs = await ref___ref_search_documentation("Next.js app router");
 ```
 
-**Never fail the entire workflow if MCP tools aren't available**. Research tools enhance planning but aren't required.
+**If MCP tool fails:** Only then try fallbacks (WebSearch, FetchUrl, or helper scripts).
+
+**Never fail the entire workflow if MCP tools aren't available**. The core parallel execution works great without them!
 
 ### What Works Without MCP Servers
 
@@ -187,43 +197,43 @@ Droidz works great without them - they just make it simpler!
 
 ## Simple Tool Usage Pattern
 
-Just call the tools you need - no complex logging required:
+**IMPORTANT: Always try MCP tools first!** They're dynamically provided by Factory when configured.
 
 ```typescript
-// Research
-const results = await exa___web_search_exa("React patterns");
-// or: WebSearch: "React patterns"
-
-// Documentation
-const docs = await ref___ref_search_documentation("Next.js");
-// or: FetchUrl: https://nextjs.org/docs
-
-// Linear tickets
+// Linear - Use MCP tools directly (PRIMARY)
 const issues = await linear___list_issues({ project: "FlowScribe" });
-// or: Execute: bun orchestrator/linear-fetch.ts --project "FlowScribe"
+await linear___update_issue({ id: "uuid", state: "In Progress" });
+await linear___create_comment({ issueId: "uuid", body: "PR ready!" });
+
+// Research - Use Exa MCP (PRIMARY)
+const results = await exa___web_search_exa("React hooks patterns");
+
+// Documentation - Use Ref MCP (PRIMARY)
+const docs = await ref___ref_search_documentation("Next.js app router");
 ```
 
-Tools work automatically - just use them!
+If MCP tools fail, fallback options:
+- WebSearch: for general research
+- FetchUrl: for specific documentation
+- Execute scripts: for Linear (rarely needed)
 
 ## Workflow
 
 ### 1. Fetch Tickets
 
-**Try Linear MCP tool first:**
+**PRIMARY: Use Linear MCP tools directly**
 ```typescript
+// Fetch tickets from Linear
 const issues = await linear___list_issues({ 
   project: "MyProject",
   state: "backlog"
 });
+
+// Each issue has: id, identifier, title, description, state, labels, etc.
 ```
 
-**If Linear MCP not available, use Execute script:**
-```bash
-Execute: bun orchestrator/linear-fetch.ts --project "MyProject"
-```
-
-**If no Linear configured:**
-Ask user to describe project and tasks in text.
+**If user doesn't have Linear configured:**
+Ask user to describe their project and tasks in text. You can still create a task plan and execute it!
 
 ### 2. Plan Tasks
 Create a structured task list with dependencies:
@@ -360,7 +370,8 @@ const result = Task({
 ## Your Responsibilities
 
 1. **Set Linear Status**: Mark ticket as "In Progress"
-   - Use: \`LINEAR_API_KEY=\${LINEAR_API_KEY} bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"\`
+   - If Linear MCP available: \`await linear___update_issue({ id: "uuid", state: "In Progress" })\`
+   - Fallback: \`Execute: bun orchestrator/linear-update.ts --issue PROJ-123 --status "In Progress"\`
 
 2. **Implement Feature**:
    - Work ONLY in the workspace directory provided
@@ -389,8 +400,9 @@ const result = Task({
    gh pr create --fill --head feature/login-form
    \`\`\`
 
-7. **Update Linear**:
-   - Post PR URL as comment using: \`bun orchestrator/linear-update.ts --issue PROJ-123 --comment "PR: [URL]"\`
+7. **Update Linear with PR**:
+   - If Linear MCP available: \`await linear___create_comment({ issueId: "uuid", body: "PR: [URL]" })\`
+   - Fallback: \`Execute: bun orchestrator/linear-update.ts --issue PROJ-123 --comment "PR: [URL]"\`
 
 8. **Return Result**:
    Respond with JSON summary:
