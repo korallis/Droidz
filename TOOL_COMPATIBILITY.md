@@ -12,14 +12,19 @@ The error "Tool 'Create' is not available for model OpenAI GPT-5-Codex (Auto)" w
 
 According to [Factory.ai Custom Droids documentation](https://docs.factory.ai/cli/configuration/custom-droids):
 
-**Available Factory Tools:**
+**Available Factory Tools (for tools array):**
 - **Read-only:** `Read`, `LS`, `Grep`, `Glob`
 - **Edit:** `Create`, `Edit`, `MultiEdit`, `ApplyPatch`
 - **Execute:** `Execute`
 - **Web:** `WebSearch`, `FetchUrl`
 - **Progress:** `TodoWrite`
-- **Delegation:** `Task`
 - **MCP:** Dynamically populated (Linear, Exa, Ref, Desktop Commander, etc.)
+
+**Special: Task Delegation**
+- The Task tool is automatically registered by Factory when Custom Droids are enabled
+- It is NOT included in the `tools` array
+- Users invoke custom droids by saying: "Use droidz-codegen to implement X"
+- Custom droids cannot delegate to other droids - only the main session can
 
 ### Tool Configuration in Droid Frontmatter
 
@@ -43,16 +48,21 @@ tools: ["Read", "LS", "Execute"]  # Explicit list
 
 ### For Orchestrator Droid
 
-The orchestrator **delegates** work via the Task tool, so it doesn't need `Create`/`Edit`:
+The orchestrator **plans** the work and creates delegation instructions for the USER. It does NOT delegate directly:
 
 ```yaml
 ---
 name: droidz-orchestrator
-description: Coordinates parallel execution
+description: Plans parallel execution strategy
 model: gpt-5-codex
-tools: ["Read", "LS", "Execute", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl", "Task"]
+tools: ["Read", "LS", "Execute", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 ```
+
+**Note:** `Task` is NOT in the tools array because:
+1. Custom droids cannot invoke other custom droids
+2. Only the main droid session (user) can delegate to custom droids
+3. Orchestrator creates a PLAN that tells the user which droids to invoke
 
 ### For Specialist Droids (Codegen, Test, Refactor, etc.)
 
@@ -85,24 +95,49 @@ All these models support the same Factory toolset:
 | GPT-5 Codex | `gpt-5-codex` | ✅ All tools |
 | Droid Core (GLM-4.6) | `glm-4.6` | ✅ All tools |
 
-## Task Tool Delegation
+## How Custom Droid Delegation Works
 
-When the orchestrator calls the Task tool:
+### Correct Architecture
 
-```typescript
-Task({
-  subagent_type: "droidz-codegen",
-  description: "Implement feature X",
-  prompt: "Detailed instructions..."
-});
+```
+User (main droid session)
+    ↓
+    Says: "Use droidz-codegen to implement X"
+    ↓
+Factory delegates to → droidz-codegen specialist
+    ↓
+Specialist has ALL tools (if undefined)
+    ↓
+Specialist uses Create, Edit, Execute, etc.
+    ↓
+Results returned to User
 ```
 
-**What happens:**
-1. Factory spawns a new droid instance (`droidz-codegen`)
-2. The specialist droid gets its own tools based on its `tools` field
-3. If `tools` is undefined → ALL Factory tools available
-4. The specialist can use `Create`, `Edit`, etc. to do the work
-5. Results are returned to the orchestrator
+### What the Orchestrator Does
+
+The orchestrator is a **planning droid** that:
+1. Analyzes Linear tickets
+2. Creates execution plan
+3. Outputs instructions like:
+
+```
+NEXT STEPS:
+
+Session 1: "Use droidz-codegen to implement PROJ-123"
+Session 2: "Use droidz-test to add tests for PROJ-124"
+Session 3: "Use droidz-refactor to clean up PROJ-125"
+
+All can run in parallel using git worktrees.
+```
+
+### How User Delegates
+
+In their main droid session, user says:
+```
+"Use droidz-codegen to implement PROJ-123 with this context: [paste context from orchestrator]"
+```
+
+Factory automatically invokes the `droidz-codegen` custom droid with full tool access.
 
 ## MCP Tools (Optional Enhancement)
 

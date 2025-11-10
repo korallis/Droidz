@@ -2,19 +2,22 @@
 
 ## Problem
 
-The orchestrator was failing with error:
+The orchestrator was failing with errors:
 ```
-❌ Tool 'Create' is not available for model OpenAI GPT-5-Codex (Auto)
+❌ Invalid tools: Task. Available tools: Read, LS, Execute, Edit, ApplyPatch, Grep, Glob, Create, WebSearch, TodoWrite, FetchUrl...
 ```
+
+Previously attempted fix added "Task" to tools array, which is incorrect.
 
 ## Root Cause
 
-The droid definitions had **explicit tools arrays** that listed individual tools:
-```yaml
-tools: ["Read", "LS", "Execute", "Edit", "Grep", "Glob", "Create", "TodoWrite"]
-```
+**Misunderstanding of Factory's Custom Droid architecture:**
 
-When Factory delegates via the Task tool, if a droid specifies explicit tools, it may encounter validation issues or restrictions.
+1. The `Task` tool is NOT something you list in tools arrays
+2. Task is automatically registered by Factory when Custom Droids are enabled
+3. Custom droids CANNOT delegate to other custom droids
+4. Only the USER (in main droid session) can invoke custom droids
+5. Orchestrator should be a PLANNER, not a DELEGATOR
 
 ## Solution Applied
 
@@ -23,16 +26,17 @@ When Factory delegates via the Task tool, if a droid specifies explicit tools, i
 **File:** `.factory/droids/droidz-orchestrator.md`
 
 **Changes:**
-- Removed `Create`, `Edit` from tools (orchestrator delegates, doesn't edit directly)
-- Added `Task` tool for delegation
+- Removed `Task` from tools array (it's not a valid tool to list)
+- Changed description from "coordinates" to "plans"
+- Orchestrator is now a PLANNER that creates delegation instructions
 - Kept essential tools: `Read`, `LS`, `Execute`, `Grep`, `Glob`, `TodoWrite`, `WebSearch`, `FetchUrl`
 
 ```yaml
 ---
 name: droidz-orchestrator
-description: Coordinates parallel Linear ticket execution
+description: Plans parallel execution strategy for Linear tickets - creates delegation plan for user
 model: gpt-5-codex
-tools: ["Read", "LS", "Execute", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl", "Task"]
+tools: ["Read", "LS", "Execute", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 ```
 
