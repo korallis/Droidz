@@ -1481,6 +1481,28 @@ You now have a **super-smart coding assistant** that:
 
 ---
 
+## 💬 Join Our Discord Community
+
+**This framework was built specifically for Ray Fernando's Discord members!** 🎯
+
+If you love this framework, you'll love our community even more! Join us to:
+
+- 🚀 **Get early access** to new features and updates
+- 💡 **Share tips and tricks** with other power users
+- 🤝 **Connect directly** with the framework creator and contributors
+- 🆘 **Get priority support** when you need help
+- 📢 **Influence development** - your feedback shapes the roadmap
+- 🎓 **Access exclusive content** - tutorials, workflows, and best practices
+- 🔥 **See real-world examples** from other developers
+
+[![Join Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+
+### **[👉 Sign Up Here](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+*This framework exists because of our amazing Discord community. Come be part of it!*
+
+---
+
 ## 💝 Support This Project
 
 If this framework saves you time and makes your coding better, consider buying me a coffee! ☕

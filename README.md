@@ -29,6 +29,23 @@ git checkout Claude-Code
 
 ---
 
+## 💬 Join Our Discord Community
+
+This framework was **built specifically for Ray Fernando's Discord members!** 🎯
+
+Join our exclusive community to:
+- 🚀 Get early access to new features
+- 💡 Share tips and best practices
+- 🤝 Connect with other developers using the framework
+- 🆘 Get help and support from the community
+- 📢 Stay updated on framework improvements
+
+**[Join Ray Fernando's Discord →](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+*This framework was created to supercharge coding workflows for our Discord community!*
+
+---
+
 ## 🎯 What Is This?
 
 **Droidz Claude Code** is an intelligent framework that transforms Claude into your **ultimate coding assistant** with:
@@ -243,6 +260,26 @@ git checkout Claude-Code
 Start coding and watch the magic happen! ✨
 
 ---
+
+---
+
+## 💬 Join Our Discord Community
+
+This framework was **built specifically for Ray Fernando's Discord members!** 🎯
+
+Join our exclusive community to:
+- 🚀 Get early access to new features
+- 💡 Share tips and best practices with other developers
+- 🤝 Connect with the framework creator and contributors
+- 🆘 Get priority help and support
+- 📢 Influence future development
+- 🎓 Access exclusive tutorials and workflows
+
+[![Join Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+
+**[Sign up here →](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+*This framework was created to supercharge coding workflows for our Discord community!*
 
 ---
 
