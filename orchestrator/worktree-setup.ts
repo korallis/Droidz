@@ -7,7 +7,6 @@
 
 import { spawn } from "bun";
 import path from "path";
-import { promises as fs } from "fs";
 
 async function run(cmd: string, args: string[], cwd: string, env?: Record<string, string>): Promise<{ code: number; stdout: string; stderr: string }> {
   const p = spawn([cmd, ...args], { cwd, stdout: "pipe", stderr: "pipe", env });
@@ -98,12 +97,20 @@ export async function prepareWorkspace(
 
 // CLI interface when run directly
 async function main() {
+  const modeArg = process.argv[6];
+  const mode =
+    modeArg === "true"
+      ? true
+      : modeArg === "false"
+        ? false
+        : (modeArg as "worktree" | "clone" | "branch" | undefined);
+
   const args = {
     repoRoot: process.argv[2] || process.cwd(),
     baseDir: process.argv[3] || ".runs",
     branch: process.argv[4],
     key: process.argv[5],
-    mode: (process.argv[6] as any) || "worktree"
+    mode: mode ?? "worktree"
   };
   
   if (!args.branch || !args.key) {
@@ -121,9 +128,10 @@ async function main() {
     );
     
     console.log(JSON.stringify(result, null, 2));
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
     console.error(JSON.stringify({
-      error: error.message || String(error)
+      error: err.message
     }, null, 2));
     process.exit(1);
   }
@@ -131,5 +139,5 @@ async function main() {
 
 // Run if executed directly
 if (import.meta.main) {
-  main();
+  void main();
 }

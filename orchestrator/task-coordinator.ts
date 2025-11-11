@@ -7,7 +7,7 @@
  */
 
 import { prepareWorkspace } from "./worktree-setup";
-import type { OrchestratorConfig, TaskSpec } from "./types";
+import type { OrchestratorConfig } from "./types";
 import path from "path";
 import { promises as fs } from "fs";
 
@@ -108,14 +108,15 @@ async function main() {
     
     console.log(JSON.stringify(result, null, 2));
     
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
     console.error(JSON.stringify({
       success: false,
-      error: error.message || String(error),
-      stack: error.stack
+      error: err.message,
+      stack: err.stack
     }, null, 2));
     process.exit(1);
   }
 }
 
-main();
+void main();
