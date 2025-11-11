@@ -7,8 +7,18 @@ config.yml
 # Keep the example template
 !config.example.yml
 
-# Claude Code agents folder (personal, not for repo)
-.claude/
+# Claude Code - User-specific files only (but keep framework files)
+.claude/memory/user/*.json
+.claude/memory/org/*.json
+.claude/.checkpoints/
+.claude/commands/*.local.md
+
+# Keep framework files in git
+!.claude/agents/
+!.claude/skills/
+!.claude/standards/
+!.claude/memory/org/README.md
+!.claude/memory/user/README.md
 
 # Dependencies are resolved via bun and should not be committed
 node_modules/
