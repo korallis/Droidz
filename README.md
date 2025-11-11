@@ -1,650 +1,128 @@
-# Droidz 🤖
-
-**5 Robot helpers that build your app together - while you sleep! 5x faster than working alone.**
-
-## 🎈 What is Droidz?
-
-Imagine building a LEGO castle. Doing it alone takes ALL day. 😴
-
-But with 5 friends helping:
-- Friend 1 builds walls
-- Friend 2 builds towers  
-- Friend 3 builds doors
-- Friend 4 builds flag
-- Friend 5 builds moat
-
-**Everyone works at the SAME TIME = Done in 1 hour!** 🚀
-
-Droidz is like that, but for building apps! 5 robot helpers work together in parallel.
-
-### How Fast Is It Really?
-
-**Without Droidz:** Build 10 features = 10 hours (one at a time)
-**With Droidz:** Build 10 features = 2 hours (5 robots work simultaneously!)
-
-Real speed: **3-5x faster** than traditional AI coding tools.
-
----
-
-## 🚀 Quick Start (5 Minutes)
-
-**Step 1: Install**
-```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
-```
-
-**Step 2: Enable robots**
-```bash
-droid
-/settings     # Turn ON "Custom Droids"
-/quit
-droid         # Restart
-```
-
-**Step 3: Get a plan!**
-```
-/droidz-orchestrator plan a todo app with:
-- Add tasks
-- Mark tasks done  
-- Delete tasks
-```
-
-Whatever you type after the command is passed verbatim to the planner.
-
-**Step 4: Watch it build!**
-Droidz orchestrator automatically spins up git worktrees, delegates to the specialist droids via Factory’s Task tool, and streams progress while they work in parallel. Sit back and monitor the updates.
-
-**Need manual control?** You can still call specialists directly with slash commands:
-- `/droidz-codegen <prompt>` – feature implementation
-- `/droidz-test <prompt>` – automated testing work
-- `/droidz-refactor <prompt>` – cleanup and tech debt
-- `/droidz-infra <prompt>` – CI/CD & tooling fixes
-- `/droidz-integration <prompt>` – external service integrations
-- `/droidz-generalist <prompt>` – flexible helper for mixed tasks
-
-**That's it!** Specialists work in parallel. ✨
-
----
-
-## 📖 Table of Contents
-
-- [How It Works](#-how-it-works)
-- [Installation](#-installation)
-- [Setup Options](#-setup-options)
-- [Usage Examples](#-usage-examples)
-- [Existing Project Workflow](#-existing-project-workflow)
-- [New Project Workflow](#-new-project-workflow)
-- [Sample Workflows](#-sample-workflows)
-- [Troubleshooting](#-troubleshooting)
-
-## 📘 Important Notes
-
-- **v2.0.2 Architecture Update:**
-  - Orchestrator is now a **planner/executor** (creates plans and invokes specialists automatically)
-  - Manual `/droidz-<name>` slash commands remain available when you need to override or retry a task
-- Factory’s Task tool performs safe sub-agent delegation automatically (per Factory.ai docs)
-- See usage examples below for correct workflow
-
----
-
-## 🧠 How It Works
-
-### The Team
-
-**Orchestrator (The Boss)**
-- Reads your request
-- Breaks it into tasks
-- Assigns tasks to specialists
-- Monitors progress
-
-**5 Specialist Robots**
-1. **codegen** - Writes feature code
-2. **test** - Creates tests
-3. **refactor** - Cleans up code
-4. **infra** - Fixes CI/CD and tooling
-5. **integration** - Connects external services
-
-### The Magic: Parallel Execution
-
-Traditional AI: Does tasks **one by one** ⏳
-```
-Task 1 → Task 2 → Task 3 → Task 4 → Task 5
-[10 min each = 50 minutes total]
-```
-
-Droidz: Does tasks **at the same time** ⚡
-```
-Task 1 ┐
-Task 2 ├─ All 5 work together
-Task 3 ├─ [10 min total!]
-Task 4 ├─
-Task 5 ┘
-```
-
-**How?** Git worktrees! Each robot gets its own isolated workspace.
-
-**How it works in practice:**
-1. Run `/droidz-orchestrator <your request>` (e.g., build a todo app).
-2. The orchestrator analyzes the repo, drafts a parallel-safe plan, and uses Factory’s Task tool to launch specialist droids automatically.
-3. Monitor the streamed updates, review generated PRs, and merge when ready.
-
-Need to retry or customize a single task? Trigger a specialist directly with `/droidz-codegen ...`, `/droidz-test ...`, etc.
-
----
-
-## 💻 Installation
-
-### Prerequisites
-
-1. **Git repository** (your project folder)
-2. **JavaScript runtime** (Bun recommended, npm works too)
-3. **Factory CLI** (AI coding tool)
-4. **GitHub CLI** (`gh` command)
-
-### Install Bun (Recommended - 3-10x faster!)
-
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-
-**Or use npm/node** (already installed? Skip this!)
-
-### Install Droidz
-
-```bash
-# In your project folder:
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
-```
-
-### Enable Custom Droids
-
-```bash
-droid
-/settings
-# Toggle "Custom Droids" to ON
-/quit
-droid
-/droids  # Verify you see droidz-orchestrator, etc.
-```
-
----
-
-## ⚙️ Setup Options
-
-### Option 1: No Setup (Basic Mode) 🎯
-
-**Best for:** Quick testing, solo developers
-
-Works immediately! No configuration needed.
-
-**What you get:**
-- ✅ Parallel execution (5x speed!)
-- ✅ Automatic PR creation
-- ✅ Code generation
-- ⚠️ Basic research (WebSearch only)
-
-**Usage:**
-```
-/droidz-orchestrator build a todo app
-```
-
-That single command is enough. The orchestrator gathers context from your repo, drafts a plan, and runs the specialists in parallel. Linear and other MCP services are optional enhancements.
-
-Behind the scenes, Droidz preserves your entire prompt verbatim and forwards it to every delegated agent, so directives like “ignore all plans” or “use Exa and Ref MCP” stay intact end-to-end.
-
-### Option 2: MCP Servers (Recommended) ⚡
-
-**Best for:** Teams, production projects
-
-**What you get:**
-- ✅ Everything from Basic
-- ✅ AI-powered search (Exa)
-- ✅ Linear ticket management
-- ✅ Documentation search (Ref)
-
-**Setup (2 minutes):**
-```bash
-droid
-/mcp add exa      # Get key from exa.ai/api-keys
-/mcp add linear   # Get key from linear.app/settings/api  
-/mcp add ref      # Get key from ref.sh/api
-```
-
-That's it! Robots now have superpowers. 🦸
-
-> **Heads-up:** All bundled droids now omit the `tools` field, so once an MCP server is enabled it’s instantly available to every specialist—no extra configuration required.
-
-### Option 3: Existing Linear Project 📋
-
-**Best for:** Teams with existing Linear setup
-
-**Setup:**
-```bash
-# Edit config.yml
-nano config.yml
-```
-
-Add your project name:
-```yaml
-linear:
-  project_name: "MyProject"  # Must match Linear exactly!
-```
-
-Now orchestrator knows which tickets to fetch!
-
----
-
-## 🎯 Usage Examples
-
-### Example 1: Build Something New
-
-```bash
-droid
-```
-
-Then say:
-```
-/droidz-orchestrator build a blog with:
-- List all posts
-- Read a post
-- Create new posts (auth required)
-- Markdown support
-```
-
-**What happens:**
-1. Orchestrator breaks it into 8 tasks
-2. Creates Linear project (if you have MCP)
-3. Spawns 5 robots working in parallel
-4. Each robot:
-   - Creates isolated workspace (git worktree)
-   - Implements their task
-   - Runs tests
-   - Creates PR
-5. Done in ~15 minutes! (Would take 1+ hour alone)
-
-### Example 2: Process Linear Tickets
-
-```bash
-droid
-```
-
-```
-/droidz-orchestrator process all tickets in project "MyApp"
-```
-
-**What happens (Linear connected):**
-1. Fetches all tickets from Linear
-2. Analyzes dependencies
-3. Groups into parallel-safe batches
-4. Processes 5 tickets simultaneously
-5. Updates Linear status automatically
-6. Creates PRs for each
-
-**No Linear?** Orchestrator asks for the backlog details in-chat, builds a plan locally, and runs the same parallel execution flow—skipping only the Linear updates.
-
-### Example 3: Single Feature
-
-```bash
-droid
-```
-
-```
-/droidz-orchestrator add dark mode to the app
-```
-
-**What happens:**
-1. Researches dark mode patterns (if Exa configured)
-2. Creates tasks covering theme state, styling, toggle UI, persistence, and propagation
-3. Delegates to specialists via Task tool and runs them in parallel
-4. Creates a PR with all changes (Linear updates included only if connected)
-
----
-
-## 🏗️ Existing Project Workflow
-
-**Scenario:** You have a React app, want to add features.
-
-### Step 1: Install Droidz
-
-```bash
-cd my-existing-app
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
-```
-
-### Step 2: (Optional) Connect Linear
-
-If you have existing Linear project:
-
-```bash
-nano config.yml
-```
-
-```yaml
-linear:
-  project_name: "MyApp"  # Your Linear project name
-```
-
-### Step 3: Add MCP Servers (Optional)
-
-```bash
-droid
-/mcp add linear  # Connect to your Linear
-/mcp add exa     # Better research
-```
-
-### Step 4: Process Your Tickets
-
-```bash
-droid
-```
-
-**Option A: Process all tickets**
-```
-/droidz-orchestrator process all tickets in project "MyApp"
-```
-
-**Option B: Process specific sprint**
-```
-/droidz-orchestrator process sprint "Sprint 5" in project "MyApp"
-```
-
-**Option C: Single ticket**
-```
-/droidz-orchestrator implement ticket MYAPP-123
-```
-
-### Step 5: Review PRs
-
-```bash
-gh pr list  # See all PRs created
-gh pr view 42  # Review a specific PR
-gh pr merge 42  # Merge when ready
-```
-
-**Cleanup:**
-```bash
-git worktree remove .runs/MYAPP-123  # Remove worktree after merge
-```
-
----
-
-## 🆕 New Project Workflow
-
-**Scenario:** Starting from scratch.
-
-### Step 1: Create Project
-
-```bash
-mkdir my-new-app
-cd my-new-app
-git init
-git remote add origin https://github.com/you/my-new-app.git
-```
-
-### Step 2: Install Droidz
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
-```
-
-### Step 3: Enable Robots
-
-```bash
-droid
-/settings  # Turn ON "Custom Droids"
-/quit
-droid
-```
-
-### Step 4: Describe What to Build
-
-```bash
-droid
-```
-
-```
-/droidz-orchestrator build a task management app:
-
-Features:
-- User authentication (email/password)
-- Create, read, update, delete tasks
-- Mark tasks as done/undone
-- Filter by status (all/active/completed)
-- Dark mode toggle
-- Responsive design
-
-Tech stack:
-- React + TypeScript
-- Tailwind CSS
-- Supabase for backend
-- React Router
-```
-
-### Step 5: Let Robots Work
-
-**Orchestrator will:**
-1. Create Linear project (if MCP configured)
-2. Break into ~15 tasks
-3. Research best practices (if Exa configured)
-4. Spawn 5 robots
-5. Each robot works on their tasks in parallel
-6. Creates 15 PRs
-
-**Time:** ~30-40 minutes (would take 3-4 hours solo!)
-
-### Step 6: Review and Merge
-
-```bash
-# See all PRs
-gh pr list
-
-# Review PRs by feature area
-gh pr view 1   # Auth system
-gh pr view 2   # Task CRUD
-gh pr view 3   # UI components
-
-# Merge in dependency order
-gh pr merge 1  # Base first
-gh pr merge 2  # Then features
-gh pr merge 3  # Then UI
-```
-
----
-
-## 🎬 Sample Workflows
-
-### Workflow 1: E-commerce Site
-
-```
-/droidz-orchestrator build an e-commerce site:
-- Product catalog with search/filter
-- Shopping cart (localStorage)
-- Checkout flow (Stripe integration)
-- Order history
-- Admin panel for products
-- Tech: Next.js 14, TypeScript, Tailwind, Stripe
-```
-
-**Output:** 25-30 PRs, ready in ~1 hour
-
-### Workflow 2: API Service
-
-```
-/droidz-orchestrator build a REST API:
-- User authentication (JWT)
-- CRUD for posts, comments, likes
-- Rate limiting
-- OpenAPI documentation
-- Tests with 80%+ coverage
-- Tech: Express, TypeScript, PostgreSQL, Prisma
-```
-
-**Output:** 15-20 PRs, ready in ~45 minutes
-
-### Workflow 3: Refactor Legacy Code
-
-```
-/droidz-orchestrator refactor the authentication system:
-- Extract auth logic to reusable hooks
-- Add TypeScript types throughout
-- Improve error handling
-- Add unit tests
-- Update documentation
-```
-
-**Output:** 5-8 PRs, ready in ~20 minutes
-
-### Workflow 4: Add Feature to Existing App
-
-```
-/droidz-orchestrator add real-time notifications:
-- WebSocket connection manager
-- Notification bell UI component
-- Mark as read functionality
-- Notification settings page
-- Backend endpoint for notifications
-- Tech: Socket.io, React, existing Express backend
-```
-
-**Output:** 6-8 PRs, ready in ~25 minutes
-
----
-
-## 🔧 Troubleshooting
-
-### "Custom droids not found"
-
-**Fix:** Enable custom droids
-```bash
-droid
-/settings  # Toggle ON "Custom Droids"
-/quit
-droid
-```
-
-### "Not a git repository"
-
-**Fix:** Initialize git
-```bash
-git init
-git remote add origin https://github.com/you/repo.git
-```
-
-### "No tickets found"
-
-**Fix:** Check Linear project name
-```bash
-nano config.yml
-# Make sure project_name matches exactly!
-```
-
-### "Worktree creation failed"
-
-**Fix:** Clean up old worktrees
-```bash
-git worktree list
-git worktree remove .runs/OLD-123
-```
-
-### "Tests failing in parallel"
-
-**Fix:** Install dependencies in worktree
-```bash
-cd .runs/PROJ-123
-bun install  # or npm install
-```
-
-### "Robots running sequentially, not parallel"
-
-**Fix:** Check worktree mode
-```bash
-nano config.yml
-# Ensure: workspace.mode = "worktree"
-```
-
-### "Invalid tools: Task" error
-
-**Fix:** This was fixed in v2.0.2 - update your droids
-```bash
-# Pull latest changes
-git pull origin main
-
-# Or reinstall
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
-```
-
-**Background:** 
-- `Task` is NOT a tool you list in the tools array
-- It's automatically available when Custom Droids are enabled
-- Orchestrator uses the Task tool to invoke specialist droids automatically, following Factory.ai guidance
-- Manual `/droidz-<name>` commands are only needed if you want to retry or customize a single task
-
----
-
-## 📚 Configuration Reference
-
-### config.yml Structure
-
-```yaml
-# Linear project tracking (optional)
-linear:
-  project_name: "MyProject"  # For existing projects
-
-# Runtime (required)
-runtime:
-  package_manager: "bun"  # or "npm", "pnpm", "yarn"
-
-# Parallel execution (don't change!)
-parallel:
-  enabled: true
-  max_concurrent_tasks: 5  # 5 robots working simultaneously
-
-# Git worktrees (don't change!)
-workspace:
-  mode: worktree  # Critical for parallel execution!
-  base_dir: ".runs"
-  branch_pattern: "feature/{issueKey}-{slug}"
-
-# Safety (optional)
-guardrails:
-  tests_required: true
-  secret_scan: true
-```
-
----
-
-## 🎓 Advanced Topics
-
-### Using with Monorepos
-
-Droidz works great with monorepos! Each robot can work on different packages simultaneously.
-
-### Custom Specialist Droids
-
-You can create your own specialist droids for domain-specific tasks.
-
-### CI/CD Integration
-
-Droidz-created PRs work with your existing CI/CD pipeline.
-
-### Team Workflows
-
-Multiple developers can use Droidz simultaneously - robots use unique worktrees.
-
----
-
-## 🤝 Support
-
-- **Documentation:** [QUICK_START_V2.md](QUICK_START_V2.md)
-- **Architecture:** [docs/V2_ARCHITECTURE.md](docs/V2_ARCHITECTURE.md)
-- **Issues:** https://github.com/korallis/Droidz/issues
-
----
-
-## 💝 Like Droidz?
-
-Consider supporting: https://paypal.me/leebarry84
-
----
-
-**Happy building! 🚀🤖**
+# Droidz: Robot Friends That Build Your App Together
+
+> **Tagline:** Five specialist robots share the work, so your features ship 3–5× faster while you supervise.
+
+## TL;DR (for busy adults and curious kids)
+- **Droidz is a toolkit** that plugs into the Factory CLI and gives you an orchestrator plus five specialist droids.
+- **The orchestrator plans first**, then launches multiple specialists in parallel using git worktrees, the Task tool, and TodoWrite.
+- **Specialist droids = tiny experts** (codegen, infra, integration, refactor, tests, generalist). Call them directly for quick jobs or let the orchestrator coordinate them for big tasks.
+- **Install once with `install.sh`**, enable Custom Droids in the Factory CLI, and start prompting. The installer no longer overwrites your README.
+- **Optional power-ups:** connect MCP servers (Linear, Exa, Ref) so droids can fetch tickets, research, and documentation automatically.
+
+## What Is Droidz?
+### The short version
+Droidz turns the Factory CLI into a small team of robot helpers. You explain the job once, they split it up, work in isolated git worktrees, and hand back pull requests plus testing notes.
+
+### Why five robots?
+- **Codegen Droid** writes and updates code while following repo patterns.
+- **Test Droid** adds or fixes tests so changes are safe.
+- **Refactor Droid** cleans existing code without breaking behavior.
+- **Infra Droid** keeps CI/tooling healthy.
+- **Integration Droid** connects external APIs using env vars only.
+- **Generalist Droid** jumps in when a task does not fit the boxes above.
+
+### What makes Droidz different?
+- **Parallel execution:** the orchestrator always chooses git worktree mode so multiple tickets run at once.
+- **Task tool delegation:** every specialist is launched with Factory’s Task tool, which streams progress and keeps context isolated.
+- **TodoWrite plans:** the orchestrator keeps a single, always-up-to-date TodoWrite list so humans and robots see the same plan.
+- **MCP aware:** when Linear, Exa, or Ref MCP servers are available, the orchestrator confirms and uses them automatically.
+
+## Install in Three Friendly Steps
+1. **Check your tools.** Make sure you have `git`, the [Bun runtime](https://bun.sh), and the Factory CLI (`droid`) installed.
+2. **Run the installer from your repo root.**
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+   ```
+   The script creates `.factory/droids`, `.factory/commands`, and `orchestrator/` files, installs Bun dependencies, and leaves your README untouched.
+3. **Enable Custom Droids inside Factory CLI.**
+   ```text
+   droid
+   /settings → toggle "Custom Droids" ON
+   (restart the CLI)
+   ```
+   Afterwards run `/droids` to confirm you see the Droidz specialists.
+
+> 💡 **Optional:** Add MCP servers with `/mcp add exa`, `/mcp add linear`, and `/mcp add ref` so the orchestrator can research, fetch tickets, and read docs without extra prompts.
+
+## Meet the Robot Team
+| Droid | Superpower | Great For | Built-in Tools |
+| --- | --- | --- | --- |
+| `droidz-orchestrator` | Plans work, checks MCP servers, keeps TodoWrite list, launches specialists in parallel | Whole sprints, multi-ticket batches | Read, LS, Grep, Glob, Execute, TodoWrite, WebSearch, FetchUrl, all MCP tools |
+| `droidz-codegen` | Implements features and bug fixes | New components, API changes, bug tickets | All Factory tools + MCP |
+| `droidz-test` | Writes and repairs tests, tracks coverage | Adding missing tests, stabilizing suites | All Factory tools + MCP |
+| `droidz-refactor` | Improves structure without changing behavior | Cleanup, tech debt, migrations | All Factory tools + MCP |
+| `droidz-infra` | Tends CI, build scripts, deployment configs | Pipeline fixes, lint/build issues | All Factory tools + MCP |
+| `droidz-integration` | Connects third-party APIs safely | Stripe, Twilio, Linear integrations | All Factory tools + MCP |
+| `droidz-generalist` | Safe fallback that nudges stuck work forward | Mixed or ambiguous tickets | All Factory tools + MCP |
+
+> 🧸 **Explain like I’m five:** Imagine seven toy robots. One boss robot (the orchestrator) reads your mission, writes a chore list, and sends the other six robots to different play mats so they can build at the same time.
+
+## Two Ways to Work
+### 1. Autopilot: `/droidz-orchestrator`
+Use this when you want the full planning experience or need multiple tickets done in parallel. The orchestrator will:
+1. Read your entire prompt verbatim (no summaries).
+2. Confirm MCP access (Linear cycles, Exa research, Ref docs).
+3. Build a TodoWrite plan that marks which tasks can run together.
+4. Create git worktrees via `orchestrator/task-coordinator.ts` so every specialist gets its own branch.
+5. Launch the specialists with the Task tool and stream progress.
+6. Finish with a summary plus a speed comparison (parallel vs sequential).
+
+### 2. Manual Control: Specialist Slash Commands
+Call a specialist directly when the job is simple or sequential:
+- `/droidz-codegen Implement ticket LEE-512` – one-off feature or bug fix.
+- `/droidz-test Improve tests for payments` – targeted testing work.
+- `/droidz-refactor Clean up auth middleware` – safe refactor.
+
+> **Rule of thumb:** If the task feels like “one quick change,” go direct. If it sounds like “three or more pieces” or a sprint, use the orchestrator.
+
+## What Happens During an Orchestrator Run?
+1. **Listen:** The orchestrator copies your prompt exactly into `full_user_prompt` so every specialist sees the same instructions.
+2. **Scout:** Reads project files (AGENTS.md, config.yml, README), checks `.factory/mcp.json`, and verifies `workspace.mode === "worktree"` in `orchestrator/config.json`.
+3. **Research (optional):** If you asked for it—or if Linear/Exa/Ref MCPs exist—it pulls ticket data, searches code examples, or reads docs.
+4. **Plan:** Writes a TodoWrite list with statuses (`pending → in_progress → completed`), grouping items into sequential and parallel phases.
+5. **Setup:** Calls `task-coordinator.ts`, which clones a fresh git worktree, creates the feature branch, and returns the workspace path plus guardrail hints (tests required, secret scan, etc.).
+6. **Delegate:** Invokes the Task tool with the right `subagent_type` (`droidz-codegen`, `droidz-test`, …) and streams tool outputs. Specialists run Bun commands, edits, tests, and git operations inside their isolated worktree.
+7. **Wrap up:** Marks todos complete, reports timing (parallel vs sequential), lists PR URLs, and updates Linear if allowed.
+
+This flow follows Factory’s recommended multi-agent pattern: TodoWrite for progress, Task tool for delegation, git worktrees for isolation, MCP for context, and human-readable summaries.
+
+## Common Use Cases
+| Scenario | Recommended Flow | Why It Shines |
+| --- | --- | --- |
+| **New product from scratch** | `/droidz-orchestrator` with a feature list | Automatically plans phases (infra → backend → frontend → tests) and spins up multiple branches so you get a full MVP quickly.
+| **Process a sprint backlog** | `/droidz-orchestrator process sprint "Cycle 4"` | Pulls Linear tickets, groups by skill (frontend/backend/test), and runs several in parallel.
+| **Burn down bugs** | `/droidz-codegen Fix bug LEE-441` or orchestrator for batches | Specialists focus on one bug each; orchestrator keeps track of PRs and test status.
+| **Raise test coverage** | `/droidz-test Add tests for checkout` | Uses Bun to run tests, adds missing cases, and reports coverage.
+| **CI/tooling fire drill** | `/droidz-infra repair pipeline` | Updates GitHub Actions, lint configs, or build scripts while keeping diffs small.
+| **Integrate third-party service** | `/droidz-integration connect Stripe` | Adds clients using env vars only, updates config, and writes verification steps.
+
+## Tips & Best Practices
+- **One prompt = one story.** Give the orchestrator everything it needs (tickets, requirements, constraints) in a single message so it can share the same story with every specialist.
+- **Describe parallel hopes.** Mention if tickets are independent; the orchestrator will mark them as parallel in TodoWrite.
+- **Keep secrets secret.** API keys belong in `config.yml` or environment variables. The installer already adds `config.yml` to `.gitignore`.
+- **Run Bun-friendly commands.** Specialists prefer `bun test`, `bun run lint`, etc. Avoid `npm` or `npx` unless absolutely necessary.
+- **Review PRs like usual.** Each specialist returns PR URLs and notes. Merge when you are happy.
+- **Clean worktrees when done.** After merging, run `git worktree remove .runs/<ticket>` to free disk space.
+
+## Troubleshooting Cheat Sheet
+| Symptom | Likely Cause | Quick Fix |
+| --- | --- | --- |
+| Orchestrator says "worktree mode disabled" | `orchestrator/config.json` set to `clone` or `branch` | Edit the file (or rerun installer) so `workspace.mode` is `"worktree"` |
+| Droids cannot see MCP tools | MCP server not configured or disabled | `/mcp list` → ensure `linear`, `exa`, `ref` show `enabled`; add them if missing |
+| Todo list looks duplicated | Multiple planning passes | Stick with orchestrator output; it updates the same TodoWrite list as tasks finish |
+| Tests fail in a worktree | Missing dependencies inside worktree | Inside `.runs/<ticket>` run `bun install` or follow error hints |
+| Installer overwrote files you edited | Running on top of local changes | Commit or stash before reinstall; README is now safe |
+
+## Friendly Glossary
+- **Git worktree:** A separate copy of your repository that shares history but has its own working folder. Droidz uses `.runs/<ticket>` folders so robots never bump into each other.
+- **Task tool:** Factory’s way to launch a sub-agent. It streams every tool call so you can watch specialists work.
+- **TodoWrite:** A tool that writes the entire to-do list at once. The orchestrator updates it every time something starts or finishes.
+- **MCP (Model Context Protocol):** A plug system that lets droids talk to services like Linear (tickets), Exa (code/web search), or Ref (documentation).
+- **Bun:** The JavaScript runtime Droidz uses for scripts, installs, and tests.
+
+## Need More Help?
+- **CHANGELOG.md** – See what changed last release.
+- **Factory.ai docs** – `/settings` → open in browser, or visit [docs.factory.ai](https://docs.factory.ai).
+- **Support the project** – If Droidz saves you time, consider saying thanks at [paypal.me/leebarry84](https://paypal.me/leebarry84).
+
+Now grab your favourite snack, open the Factory CLI, and tell `/droidz-orchestrator` what to build. The robots have your back. 🤖✨

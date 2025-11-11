@@ -183,10 +183,8 @@ else
     log_info "Simple config - just set your Linear project name (optional)"
 fi
 
-# Download documentation
-log_info "Downloading documentation..."
-curl -fsSL "${GITHUB_RAW}/README.md${CACHE_BUST}" -o "README.md"
-log_success "Downloaded README.md"
+# Download documentation (keep local README untouched)
+log_info "Downloading documentation updates..."
 curl -fsSL "${GITHUB_RAW}/CHANGELOG.md${CACHE_BUST}" -o "CHANGELOG.md"
 log_success "Downloaded CHANGELOG.md"
 
