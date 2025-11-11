@@ -2,11 +2,21 @@
 
 > **The smartest coding assistant framework for Claude Code - with auto-detection, auto-standards, and auto-optimization!**
 
-## ⚡ Quick Start (5 Seconds!)
+## ⚡ One-Line Installation
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+```
+
+**That's it!** The framework installs automatically with zero configuration.
+
+### Manual Installation
+
+Already have the repo? Just checkout the branch:
 
 ```bash
 git checkout Claude-Code
-# That's it! Framework auto-activates. Start coding! 🚀
+# Framework auto-activates. Start coding! 🚀
 ```
 
 ---
@@ -209,10 +219,17 @@ Claude: "I'll create a type-safe auth flow using
 
 ## 🎉 Get Started Now!
 
+### One-Line Install (Recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+```
+
+### Alternative: Manual Install
+
 ```bash
 cd /path/to/your/project
 git checkout Claude-Code
-# Framework activates automatically!
 ```
 
 Start coding and watch the magic happen! ✨
