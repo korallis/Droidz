@@ -3,9 +3,9 @@ set -e
 
 # Droidz Installer
 # Installs or updates Droidz in your project
-# Updated: 2025-01-10 - Simplified MCP setup
+# Updated: 2025-11-11 - Align linting/toolchain defaults
 
-DROIDZ_VERSION="2.1.0"
+DROIDZ_VERSION="2.1.1"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}"
 
@@ -33,6 +33,12 @@ log_error() {
     echo -e "${RED}✗${NC} $1"
 }
 
+# Ensure Bun runtime is available (required for dependencies and scripts)
+if ! command -v bun >/dev/null 2>&1; then
+    log_error "Bun runtime not found. Install Bun from https://bun.sh before running the installer."
+    exit 1
+fi
+
 # Check if we're in a git repo
 if [ ! -d ".git" ]; then
     log_error "Not in a git repository. Please run this from your project root."
@@ -56,6 +62,46 @@ mkdir -p .factory/droids
 mkdir -p .factory/commands
 mkdir -p orchestrator
 log_success "Directories created"
+
+# Ensure package.json exists
+if [ ! -f "package.json" ]; then
+    log_info "package.json not found. Initializing Bun project..."
+    bun init --yes >/dev/null 2>&1
+    log_success "Initialized package.json"
+else
+    log_info "package.json detected – preserving existing settings"
+fi
+
+# Ensure package.json uses ESM modules
+if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
+import json
+from pathlib import Path
+
+path = Path("package.json")
+pkg = json.loads(path.read_text())
+updated = False
+
+if pkg.get("type") != "module":
+    pkg["type"] = "module"
+    updated = True
+
+if updated:
+    path.write_text(json.dumps(pkg, indent=2) + "\n")
+PY
+    log_success "Ensured package.json is configured for ES modules"
+else
+    log_warning "python3 not found. Please ensure package.json includes \"type\": \"module\"."
+fi
+
+# Install runtime and linting dependencies
+log_info "Installing runtime dependency: yaml"
+bun add yaml >/dev/null 2>&1
+log_success "Added yaml dependency"
+
+log_info "Installing development dependencies for linting and types"
+bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
+log_success "Installed development dependencies"
 
 # Download droids
 log_info "Downloading robot helpers (droids)..."
@@ -109,6 +155,19 @@ for script in "${SCRIPTS[@]}"; do
     log_success "Downloaded ${script}"
 done
 
+# Download root-level configs
+log_info "Downloading TypeScript and ESLint configuration..."
+
+ROOT_CONFIGS=(
+    "tsconfig.json"
+    "eslint.config.js"
+)
+
+for config_file in "${ROOT_CONFIGS[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/${config_file}${CACHE_BUST}" -o "${config_file}"
+    log_success "Downloaded ${config_file}"
+done
+
 # Download config.example.yml template
 log_info "Downloading configuration template..."
 curl -fsSL "${GITHUB_RAW}/config.example.yml${CACHE_BUST}" -o "config.example.yml"
@@ -151,6 +210,20 @@ if [ -f ".gitignore" ]; then
         echo "!config.example.yml" >> .gitignore
         log_success "Added config.yml to .gitignore (keeps your API keys safe!)"
     fi
+
+    # Ensure dependencies are ignored
+    if ! grep -q "node_modules/" .gitignore 2>/dev/null; then
+        echo "" >> .gitignore
+        echo "# Dependency artifacts" >> .gitignore
+        echo "node_modules/" >> .gitignore
+        log_success "Added node_modules/ to .gitignore"
+    fi
+
+    if ! grep -q "bun.lockb" .gitignore 2>/dev/null; then
+        echo "" >> .gitignore
+        echo "bun.lockb" >> .gitignore
+        log_success "Added bun.lockb to .gitignore"
+    fi
 else
     # Create new .gitignore with both entries
     cat > .gitignore << 'EOF'
@@ -162,6 +235,10 @@ config.yml
 
 # Keep the example template
 !config.example.yml
+
+# Dependency artifacts
+node_modules/
+bun.lockb
 EOF
     log_success "Created .gitignore with security settings"
 fi
