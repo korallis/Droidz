@@ -481,11 +481,20 @@ main() {
         echo -e "${YELLOW}This will install the Droidz Claude Code Framework.${NC}"
         echo -e "Install location: ${BOLD}$(pwd)/.claude${NC}"
         echo ""
-        read -p "Continue with installation? (y/N) " -n 1 -r
-        echo ""
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log_info "Installation cancelled by user"
-            exit 0
+
+        # Check if running in a terminal (interactive) or piped (curl | bash)
+        if [[ -t 0 ]]; then
+            # Interactive mode - prompt for confirmation
+            read -p "Continue with installation? (y/N) " -n 1 -r
+            echo ""
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                log_info "Installation cancelled by user"
+                exit 0
+            fi
+        else
+            # Non-interactive mode (piped from curl) - auto-proceed
+            log_info "Running in non-interactive mode, proceeding with installation..."
+            echo ""
         fi
     fi
     
