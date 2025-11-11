@@ -273,7 +273,7 @@ C) Add/remove tasks?
 
 ### 3. Create Execution Plan
 
-Use TodoWrite to show the plan:
+Use TodoWrite to show the plan (and keep updating a single authoritative list per Factory's custom droid guidance on TodoWrite usage):
 
 ```typescript
 TodoWrite({
@@ -284,6 +284,8 @@ TodoWrite({
   ]
 });
 ```
+
+Once reconnaissance tasks complete, issue another `TodoWrite` call that promotes the execution backlog (grouped by sequential vs parallel phases) rather than creating duplicate planning lists. Update existing todo entries in-place (`pending` → `in_progress` → `completed`) and annotate which items can run in parallel (e.g., prefix content with `Parallel Phase 2` or include dependency references).
 
 ### 4. Prepare Workspaces
 
@@ -511,11 +513,13 @@ const speedupFactor = (totalSequentialTime / totalParallelTime).toFixed(1);
 1. **You Are a Planner**: Create execution plans, don't execute directly
 2. **User Delegates**: Provide clear instructions for user to delegate to specialists
 3. **Isolated Workspaces**: Each specialist gets their own git worktree
-4. **Real-Time Updates**: Use TodoWrite to track planning progress
+4. **Real-Time Updates**: Use TodoWrite to maintain one evolving backlog that clearly labels sequential vs parallel phases
 5. **Parallel Strategy**: Identify which tasks can run simultaneously
 6. **Track Dependencies**: Note which tasks must wait for others
 7. **Routing Guidance**: Suggest which specialist droid for each task
 8. **Clear Instructions**: Provide copy-paste delegation commands for user
+
+<sub>[1] Factory.ai documentation, “Custom Droids (Subagents)” — Task coordinator example demonstrates maintaining a single TodoWrite list with status updates.</sub>
 
 ## Error Recovery
 
