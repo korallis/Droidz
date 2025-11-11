@@ -152,9 +152,51 @@ ORCHESTRATOR_FILES=(
 )
 
 for file in "${ORCHESTRATOR_FILES[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o ".factory/orchestrator/${file}"
-    log_success "Downloaded ${file}"
-done
+    if [ "$file" = "config.json" ]; then
+        tmp_file=$(mktemp)
+        curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o "$tmp_file"
+
+        target_file=".factory/orchestrator/${file}"
+
+        if [ ! -f "$target_file" ]; then
+            mv "$tmp_file" "$target_file"
+            log_success "Downloaded ${file}"
+        else
+            if command -v python3 >/dev/null 2>&1; then
+                python3 - "$tmp_file" "$target_file" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+default_path = Path(sys.argv[1])
+current_path = Path(sys.argv[2])
+
+default_cfg = json.loads(default_path.read_text())
+current_cfg = json.loads(current_path.read_text())
+
+def merge(default, current):
+    if isinstance(default, dict) and isinstance(current, dict):
+        for key, value in default.items():
+            if key not in current:
+                current[key] = value
+            else:
+                current[key] = merge(value, current[key])
+        return current
+    return current
+
+merged = merge(default_cfg, current_cfg)
+current_path.write_text(json.dumps(merged, indent=2) + "\n")
+PY
+                log_success "Updated ${file} with new defaults"
+            else
+                log_warning "python3 not found. Skipping merge for ${file}; existing customization preserved."
+            fi
+            rm -f "$tmp_file"
+        fi
+    else
+        curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o ".factory/orchestrator/${file}"
+        log_success "Downloaded ${file}"
+    fi
 done
 
 # Download config.example.yml template
