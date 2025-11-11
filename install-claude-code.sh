@@ -11,7 +11,7 @@
 #   ./install-claude-code.sh
 #
 # Version: 2.0.0
-# Updated: January 2025
+# Updated: November 11, 2025
 #
 
 set -euo pipefail  # Exit on error, undefined vars, pipe failures
@@ -391,7 +391,7 @@ MORE INFO:
     Docs:   https://github.com/korallis/Droidz/blob/Claude-Code/CLAUDE-CODE-FRAMEWORK.md
 
 VERSION:
-    2.0.0 (January 2025)
+    2.0.0 (November 11, 2025)
 
 EOF
 }

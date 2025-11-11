@@ -2,15 +2,21 @@
 
 > **The smartest coding assistant framework for Claude Code - with auto-detection, auto-standards, and auto-optimization!**
 
-## ⚡ One-Line Installation
+## ⚡ Installation Options
+
+### Option 1: One-Line Install (Recommended)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
 ```
 
-**That's it!** The framework installs automatically with zero configuration.
+### Option 2: Simple Install (Using wget)
 
-### Manual Installation
+```bash
+wget -O - https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+```
+
+### Option 3: Manual Install
 
 Already have the repo? Just checkout the branch:
 
@@ -18,6 +24,8 @@ Already have the repo? Just checkout the branch:
 git checkout Claude-Code
 # Framework auto-activates. Start coding! 🚀
 ```
+
+**That's it!** The framework installs automatically with zero configuration.
 
 ---
 
@@ -236,7 +244,21 @@ Start coding and watch the magic happen! ✨
 
 ---
 
+---
+
+## 💝 Support This Project
+
+If this framework saves you time and makes your coding better, consider buying me a coffee! ☕
+
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.com/paypalme/leebarry84)
+
+**PayPal:** leebarry84@icloud.com
+
+Your support helps maintain and improve this framework for everyone! 🙏
+
+---
+
 **Made with ❤️ for developers who want perfect code without the hassle**
 
 *Framework Version: 2.0 (Claude Code Edition)*  
-*Updated: January 2025*
+*Updated: November 11, 2025*

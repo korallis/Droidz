@@ -1479,6 +1479,20 @@ You now have a **super-smart coding assistant** that:
 
 ---
 
+---
+
+## 💝 Support This Project
+
+If this framework saves you time and makes your coding better, consider buying me a coffee! ☕
+
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.com/paypalme/leebarry84)
+
+**PayPal:** leebarry84@icloud.com
+
+Your support helps maintain and improve this framework for everyone! 🙏
+
+---
+
 *Made with ❤️ by developers, for developers*  
 *Framework Version: 2.0 (Claude Code Edition)*  
-*Last Updated: January 2025*
+*Last Updated: November 11, 2025*
