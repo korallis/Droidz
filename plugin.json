@@ -1,0 +1,173 @@
+{
+  "name": "droidz-claude-code",
+  "displayName": "Droidz - Ultimate Claude Code Framework",
+  "version": "2.1.0",
+  "description": "Multi-layer context management, automatic tech stack detection, intelligent optimization, and cross-session memory for Claude Code",
+  "author": "Lee Barry",
+  "license": "MIT",
+  "homepage": "https://github.com/korallis/Droidz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/korallis/Droidz.git",
+    "branch": "Claude-Code"
+  },
+  "keywords": [
+    "claude-code",
+    "agentic",
+    "context-management",
+    "multi-agent",
+    "parallel-execution",
+    "git-worktree",
+    "auto-standards",
+    "security",
+    "optimization"
+  ],
+  "capabilities": {
+    "agents": [
+      "droidz-orchestrator",
+      "droidz-codegen",
+      "droidz-test",
+      "droidz-refactor",
+      "droidz-infra",
+      "droidz-integration",
+      "droidz-generalist"
+    ],
+    "skills": [
+      "tech-stack-analyzer",
+      "context-optimizer",
+      "standards-enforcer"
+    ],
+    "commands": [
+      "analyze-tech-stack",
+      "optimize-context",
+      "check-standards",
+      "load-memory",
+      "save-decision"
+    ],
+    "hooks": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "UserPromptSubmit",
+      "SubagentStop",
+      "Notification",
+      "Stop"
+    ]
+  },
+  "components": {
+    "agents": ".claude/agents/*.md",
+    "skills": ".claude/skills/*.md",
+    "commands": ".claude/commands/*.md",
+    "hooks": {
+      "config": ".claude/settings.json",
+      "scripts": ".claude/hooks/*.sh"
+    },
+    "standards": {
+      "templates": ".claude/standards/templates/*.md"
+    },
+    "memory": {
+      "org": ".claude/memory/org/",
+      "user": ".claude/memory/user/"
+    }
+  },
+  "features": {
+    "hierarchicalContext": {
+      "enabled": true,
+      "description": "Multi-layer CLAUDE.md loading with directory-specific standards"
+    },
+    "autoTechStack": {
+      "enabled": true,
+      "description": "Automatic tech stack detection and standards generation"
+    },
+    "contextOptimization": {
+      "enabled": true,
+      "threshold": 0.70,
+      "aggressiveThreshold": 0.90,
+      "description": "Intelligent context optimization (60-80% reduction)"
+    },
+    "standardsEnforcement": {
+      "enabled": true,
+      "autoFix": true,
+      "blockCritical": true,
+      "description": "Automatic code standards and security enforcement"
+    },
+    "persistentMemory": {
+      "enabled": true,
+      "autoSave": true,
+      "description": "Cross-session memory for decisions and patterns"
+    },
+    "parallelExecution": {
+      "enabled": true,
+      "mode": "worktree",
+      "maxConcurrent": 5,
+      "description": "Git worktree-based parallel agent execution (3-5x speedup)"
+    }
+  },
+  "requirements": {
+    "claudeCode": ">=2.0.0",
+    "git": ">=2.30.0",
+    "bun": ">=1.0.0"
+  },
+  "supportedFrameworks": [
+    "React",
+    "Next.js",
+    "Vue",
+    "Nuxt",
+    "Angular",
+    "Svelte",
+    "Express",
+    "Fastify",
+    "NestJS",
+    "Python/FastAPI",
+    "Rust",
+    "Go"
+  ],
+  "installation": {
+    "method": "git-clone",
+    "steps": [
+      "git clone https://github.com/korallis/Droidz.git",
+      "cd Droidz",
+      "git checkout Claude-Code",
+      "Optional: Run /analyze-tech-stack to detect your project"
+    ]
+  },
+  "configuration": {
+    "defaults": {
+      "contextManagement": {
+        "autoOptimize": true,
+        "optimizationThreshold": 0.70
+      },
+      "standards": {
+        "enforcement": {
+          "security": "block",
+          "typescript": "warn",
+          "performance": "suggest",
+          "style": "auto-fix"
+        }
+      },
+      "memory": {
+        "autoSave": true
+      }
+    }
+  },
+  "changelog": {
+    "2.1.0": {
+      "date": "2025-11-11",
+      "changes": [
+        "Added multi-layer hierarchical context management",
+        "Added automatic tech stack detection and standards generation",
+        "Added intelligent context optimization (60-80% reduction)",
+        "Added automatic standards enforcement with security scanning",
+        "Added persistent cross-session memory system",
+        "Added 5 slash commands and 7 event hooks",
+        "Added framework templates for React, TypeScript, Vue, Python",
+        "Preserved git worktree parallel execution (3-5x speedup)"
+      ]
+    }
+  },
+  "links": {
+    "documentation": "https://github.com/korallis/Droidz/blob/Claude-Code/CLAUDE-CODE-MIGRATION.md",
+    "issues": "https://github.com/korallis/Droidz/issues",
+    "examples": "https://github.com/korallis/Droidz/tree/Claude-Code/.claude"
+  }
+}

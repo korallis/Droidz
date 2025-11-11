@@ -1,0 +1,104 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "name": "load-project-context",
+        "type": "prompt",
+        "prompt": "Load project context by:\n1. Checking if tech stack has been analyzed\n2. Loading organization memory if available\n3. Verifying all CLAUDE.md standards are accessible\n4. Reporting current project setup\n\nIf tech stack not analyzed, suggest running /analyze-tech-stack"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Execute",
+        "hooks": [
+          {
+            "name": "dangerous-command-check",
+            "type": "prompt",
+            "prompt": "Check if command is dangerous (rm -rf, dd, mkfs, etc.).\nIf dangerous, require explicit user confirmation.\nIf safe, proceed without interruption."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Create|Edit|Write",
+        "hooks": [
+          {
+            "name": "auto-lint",
+            "type": "command",
+            "command": ".claude/hooks/auto-lint.sh",
+            "description": "Automatically run linter on changed files"
+          },
+          {
+            "name": "check-standards",
+            "type": "prompt",
+            "prompt": "After file modification, check if file matches project standards:\n1. Load applicable CLAUDE.md files\n2. Check for security issues (hardcoded secrets, SQL injection, etc.)\n3. If critical issues found, report immediately\n4. For non-critical issues, queue for next review"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "name": "context-usage-monitor",
+        "type": "command",
+        "command": ".claude/hooks/monitor-context.sh",
+        "description": "Monitor context window usage and suggest optimization if >70%"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "name": "update-linear-ticket",
+        "type": "prompt",
+        "prompt": "If Linear MCP is available and task relates to a ticket:\n1. Check if PR was created\n2. Update ticket status to 'In Review' or 'Done'\n3. Add PR link as comment\n4. Update TodoWrite progress"
+      },
+      {
+        "name": "update-memory",
+        "type": "prompt",
+        "prompt": "After subagent completes, check if any decisions or patterns were established:\n1. If architectural decision made, save to org memory\n2. If new pattern discovered, add to patterns\n3. If preference expressed, save to user memory"
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "error|failed|exception",
+        "hooks": [
+          {
+            "name": "error-analysis",
+            "type": "prompt",
+            "prompt": "When error notification received:\n1. Analyze error message and stack trace\n2. Check if similar error seen before (in memory)\n3. Suggest fix based on standards and patterns\n4. Save error pattern if novel"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "name": "session-summary",
+        "type": "prompt",
+        "prompt": "Before ending session:\n1. Summarize what was accomplished\n2. Note any incomplete tasks\n3. Save important decisions to memory\n4. Suggest next steps"
+      }
+    ]
+  },
+  "contextManagement": {
+    "autoOptimize": true,
+    "optimizationThreshold": 0.70,
+    "aggressiveThreshold": 0.90,
+    "createCheckpoints": true
+  },
+  "standards": {
+    "enforcement": {
+      "security": "block",
+      "typescript": "warn",
+      "performance": "suggest",
+      "style": "auto-fix"
+    },
+    "autoFix": {
+      "enabled": true,
+      "requireApproval": false
+    }
+  },
+  "memory": {
+    "autoSave": true,
+    "saveDecisions": true,
+    "savePatterns": true,
+    "savePreferences": true
+  }
+}
