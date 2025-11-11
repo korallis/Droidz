@@ -42,7 +42,7 @@ function branchFromPattern(pattern: string, issueKey: string, title: string, typ
 
 async function loadConfigIfNeeded(repoRoot: string): Promise<OrchestratorConfig | null> {
   try {
-    const configPath = path.join(repoRoot, "orchestrator", "config.json");
+    const configPath = path.join(repoRoot, ".factory", "orchestrator", "config.json");
     const content = await fs.readFile(configPath, "utf-8");
     return JSON.parse(content);
   } catch {

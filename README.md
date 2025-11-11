@@ -33,7 +33,7 @@ Droidz turns the Factory CLI into a small team of robot helpers. You explain the
    ```bash
    curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
    ```
-   The script creates `.factory/droids`, `.factory/commands`, and `orchestrator/` files, installs Bun dependencies, and leaves your README untouched.
+   The script creates `.factory/droids`, `.factory/commands`, and `.factory/orchestrator/` files, installs Bun dependencies, and leaves your README untouched.
 3. **Enable Custom Droids inside Factory CLI.**
    ```text
    droid
@@ -63,7 +63,7 @@ Use this when you want the full planning experience or need multiple tickets don
 1. Read your entire prompt verbatim (no summaries).
 2. Confirm MCP access (Linear cycles, Exa research, Ref docs).
 3. Build a TodoWrite plan that marks which tasks can run together.
-4. Create git worktrees via `orchestrator/task-coordinator.ts` so every specialist gets its own branch.
+4. Create git worktrees via `.factory/orchestrator/task-coordinator.ts` so every specialist gets its own branch.
 5. Launch the specialists with the Task tool and stream progress.
 6. Finish with a summary plus a speed comparison (parallel vs sequential).
 
@@ -77,7 +77,7 @@ Call a specialist directly when the job is simple or sequential:
 
 ## What Happens During an Orchestrator Run?
 1. **Listen:** The orchestrator copies your prompt exactly into `full_user_prompt` so every specialist sees the same instructions.
-2. **Scout:** Reads project files (AGENTS.md, config.yml, README), checks `.factory/mcp.json`, and verifies `workspace.mode === "worktree"` in `orchestrator/config.json`.
+2. **Scout:** Reads project files (AGENTS.md, config.yml, README), checks `.factory/mcp.json`, and verifies `workspace.mode === "worktree"` in `.factory/orchestrator/config.json`.
 3. **Research (optional):** If you asked for it—or if Linear/Exa/Ref MCPs exist—it pulls ticket data, searches code examples, or reads docs.
 4. **Plan:** Writes a TodoWrite list with statuses (`pending → in_progress → completed`), grouping items into sequential and parallel phases.
 5. **Setup:** Calls `task-coordinator.ts`, which clones a fresh git worktree, creates the feature branch, and returns the workspace path plus guardrail hints (tests required, secret scan, etc.).
@@ -107,7 +107,7 @@ This flow follows Factory’s recommended multi-agent pattern: TodoWrite for pro
 ## Troubleshooting Cheat Sheet
 | Symptom | Likely Cause | Quick Fix |
 | --- | --- | --- |
-| Orchestrator says "worktree mode disabled" | `orchestrator/config.json` set to `clone` or `branch` | Edit the file (or rerun installer) so `workspace.mode` is `"worktree"` |
+| Orchestrator says "worktree mode disabled" | `.factory/orchestrator/config.json` set to `clone` or `branch` | Edit the file (or rerun installer) so `workspace.mode` is `"worktree"` |
 | Droids cannot see MCP tools | MCP server not configured or disabled | `/mcp list` → ensure `linear`, `exa`, `ref` show `enabled`; add them if missing |
 | Todo list looks duplicated | Multiple planning passes | Stick with orchestrator output; it updates the same TodoWrite list as tasks finish |
 | Tests fail in a worktree | Missing dependencies inside worktree | Inside `.runs/<ticket>` run `bun install` or follow error hints |

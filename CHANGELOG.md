@@ -195,9 +195,9 @@ All notable changes to Droidz will be documented in this file.
 - `.factory/droids/generalist.md` - Added all MCP tools and usage guidance
 
 #### Configuration & Validation (4 files)
-- `orchestrator/config.json` - Added explicit `mode: "worktree"` field
-- `orchestrator/validators.ts` - Added `validateWorkspaceMode()` function
-- `orchestrator/launch.ts` - Added workspace validation call
+- `.factory/orchestrator/config.json` - Added explicit `mode: "worktree"` field
+- `.factory/orchestrator/validators.ts` - Added `validateWorkspaceMode()` function
+- `.factory/orchestrator/launch.ts` - Added workspace validation call
 - `config.yml` - Enabled `use_exa_research` and `use_ref_docs`, added `mcp_tools_enabled` flag
 
 ### ✨ Impact

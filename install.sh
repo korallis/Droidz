@@ -46,7 +46,7 @@ if [ ! -d ".git" ]; then
 fi
 
 # Detect if this is an install or update
-if [ -d ".factory/droids" ] && [ -f "orchestrator/task-coordinator.ts" ]; then
+if [ -d ".factory/droids" ] && [ -f ".factory/orchestrator/task-coordinator.ts" ]; then
     MODE="update"
     log_info "Existing Droidz installation detected. Updating..."
 else
@@ -60,7 +60,7 @@ echo ""
 log_info "Creating directories..."
 mkdir -p .factory/droids
 mkdir -p .factory/commands
-mkdir -p orchestrator
+mkdir -p .factory/orchestrator
 log_success "Directories created"
 
 # Ensure package.json exists
@@ -143,29 +143,18 @@ done
 # Download orchestrator scripts
 log_info "Downloading orchestrator scripts..."
 
-SCRIPTS=(
+ORCHESTRATOR_FILES=(
     "worktree-setup.ts"
     "task-coordinator.ts"
     "types.ts"
     "config.json"
-)
-
-for script in "${SCRIPTS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/orchestrator/${script}${CACHE_BUST}" -o "orchestrator/${script}"
-    log_success "Downloaded ${script}"
-done
-
-# Download root-level configs
-log_info "Downloading TypeScript and ESLint configuration..."
-
-ROOT_CONFIGS=(
     "tsconfig.json"
-    "eslint.config.js"
 )
 
-for config_file in "${ROOT_CONFIGS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/${config_file}${CACHE_BUST}" -o "${config_file}"
-    log_success "Downloaded ${config_file}"
+for file in "${ORCHESTRATOR_FILES[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o ".factory/orchestrator/${file}"
+    log_success "Downloaded ${file}"
+done
 done
 
 # Download config.example.yml template

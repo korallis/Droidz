@@ -21,7 +21,7 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 - **Example**: Automatically update ticket to "In Progress" when starting test work
 
 ### Exa Search (Web & Code Research)
-- `WebSearch (or Execute: bun orchestrator/exa-search.ts)`: Search for testing patterns and best practices
+- `WebSearch (or Execute: bun .factory/orchestrator/exa-search.ts)`: Search for testing patterns and best practices
 - `exa___get_code_context_exa`: Find test examples for specific frameworks
 - **Example**: Research Jest mocking patterns or Vitest best practices
 

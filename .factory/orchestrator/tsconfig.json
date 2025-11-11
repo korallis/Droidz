@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "Preserve",
-    "moduleResolution": "bundler",
+    "module": "ES2020",
+    "moduleResolution": "node",
     "moduleDetection": "force",
     "lib": ["ESNext"],
     "types": ["bun", "node"],
-    "allowJs": true,
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": [
-    "orchestrator/**/*.ts"
-  ]
+  "include": ["./*.ts"]
 }

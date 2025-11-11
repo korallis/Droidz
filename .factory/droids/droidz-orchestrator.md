@@ -292,7 +292,7 @@ Once reconnaissance tasks complete, issue another `TodoWrite` call that promotes
 For each task, prepare an isolated git worktree:
 
 ```bash
-bun orchestrator/task-coordinator.ts '{"ticket": {...}, "specialist": "codegen-frontend", "config": {...}}'
+bun .factory/orchestrator/task-coordinator.ts '{"ticket": {...}, "specialist": "codegen-frontend", "config": {...}}'
 ```
 
 This returns:
