@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Droidz Claude Code Framework - One-Line Installer
+# Droidz Claude Code Framework - Smart Installer with Merge Support
 #
 # Install with:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
@@ -10,7 +10,7 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 1.0.0
+# Version: 2.0.0 - Smart merge support for updates
 # Updated: November 12, 2025
 #
 
@@ -27,6 +27,7 @@ if [[ -t 1 ]]; then
     YELLOW='\033[1;33m'
     BLUE='\033[0;34m'
     CYAN='\033[0;36m'
+    MAGENTA='\033[0;35m'
     BOLD='\033[1m'
     NC='\033[0m'
 else
@@ -35,6 +36,7 @@ else
     YELLOW=''
     BLUE=''
     CYAN=''
+    MAGENTA=''
     BOLD=''
     NC=''
 fi
@@ -62,6 +64,49 @@ log_error() {
 log_step() {
     echo -e "\n${CYAN}${BOLD}▸ $*${NC}"
 }
+
+log_custom() {
+    echo -e "${MAGENTA}★${NC} $*"
+}
+
+# ============================================================================
+# GLOBAL VARIABLES
+# ============================================================================
+
+CUSTOM_FILES=()
+UPDATED_FILES=()
+PRESERVED_FILES=()
+SKIPPED_FILES=()
+
+# Base framework files - these will be updated
+declare -a BASE_AGENTS=(
+    "codegen.md"
+    "test.md"
+    "refactor.md"
+    "infra.md"
+    "integration.md"
+    "droidz-orchestrator.md"
+    "generalist.md"
+)
+
+declare -a BASE_SKILLS=(
+    "spec-shaper/SKILL.md"
+    "auto-orchestrator/SKILL.md"
+    "memory-manager/SKILL.md"
+)
+
+declare -a BASE_COMMANDS=(
+    "droidz-init.md"
+    "create-spec.md"
+    "validate-spec.md"
+    "spec-to-tasks.md"
+    "orchestrate.md"
+    "check-standards.md"
+    "save-decision.md"
+    "load-memory.md"
+    "analyze-tech-stack.md"
+    "optimize-context.md"
+)
 
 # ============================================================================
 # ERROR HANDLING
@@ -207,20 +252,277 @@ check_prerequisites() {
 }
 
 # ============================================================================
-# BACKUP FUNCTIONS
+# CUSTOM FILE DETECTION
 # ============================================================================
 
-backup_existing() {
-    local target="$1"
+is_base_file() {
+    local file="$1"
+    local category="$2"
 
-    if [[ -e "$target" ]]; then
-        local backup_name="${target}.backup.$(date +%Y%m%d_%H%M%S)"
-        log_info "Backing up existing ${target} to ${backup_name}"
-        mv "$target" "$backup_name"
-        log_success "Backup created: ${backup_name}"
+    case "$category" in
+        agents)
+            for base in "${BASE_AGENTS[@]}"; do
+                if [[ "$file" == "$base" ]]; then
+                    return 0
+                fi
+            done
+            return 1
+            ;;
+        skills)
+            for base in "${BASE_SKILLS[@]}"; do
+                if [[ "$file" == "$base" ]]; then
+                    return 0
+                fi
+            done
+            return 1
+            ;;
+        commands)
+            for base in "${BASE_COMMANDS[@]}"; do
+                if [[ "$file" == "$base" ]]; then
+                    return 0
+                fi
+            done
+            return 1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+detect_custom_files() {
+    log_step "Detecting custom files..."
+
+    local custom_count=0
+
+    # Check for custom agents
+    if [[ -d ".claude/agents" ]]; then
+        while IFS= read -r -d '' file; do
+            local basename_file
+            basename_file=$(basename "$file")
+            if ! is_base_file "$basename_file" "agents"; then
+                CUSTOM_FILES+=("agents/$basename_file")
+                log_custom "Custom agent: $basename_file"
+                ((custom_count++))
+            fi
+        done < <(find .claude/agents -name "*.md" -type f -print0 2>/dev/null)
+    fi
+
+    # Check for custom skills
+    if [[ -d ".claude/skills" ]]; then
+        while IFS= read -r -d '' dir; do
+            local skill_name
+            skill_name=$(basename "$dir")
+            local skill_file="$skill_name/SKILL.md"
+            if ! is_base_file "$skill_file" "skills"; then
+                CUSTOM_FILES+=("skills/$skill_file")
+                log_custom "Custom skill: $skill_name"
+                ((custom_count++))
+            fi
+        done < <(find .claude/skills -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+    fi
+
+    # Check for custom commands
+    if [[ -d ".claude/commands" ]]; then
+        while IFS= read -r -d '' file; do
+            local basename_file
+            basename_file=$(basename "$file")
+            if ! is_base_file "$basename_file" "commands"; then
+                CUSTOM_FILES+=("commands/$basename_file")
+                log_custom "Custom command: $basename_file"
+                ((custom_count++))
+            fi
+        done < <(find .claude/commands -name "*.md" -type f -print0 2>/dev/null)
+    fi
+
+    # Check for custom hooks
+    if [[ -d ".claude/hooks" ]] && [[ -n "$(ls -A .claude/hooks 2>/dev/null)" ]]; then
+        while IFS= read -r -d '' file; do
+            local basename_file
+            basename_file=$(basename "$file")
+            CUSTOM_FILES+=("hooks/$basename_file")
+            log_custom "Custom hook: $basename_file"
+            ((custom_count++))
+        done < <(find .claude/hooks -type f -print0 2>/dev/null)
+    fi
+
+    # Check for custom standards
+    if [[ -d ".claude/standards" ]] && [[ -n "$(ls -A .claude/standards 2>/dev/null)" ]]; then
+        while IFS= read -r -d '' file; do
+            local basename_file
+            basename_file=$(basename "$file")
+            CUSTOM_FILES+=("standards/$basename_file")
+            log_custom "Custom standard: $basename_file"
+            ((custom_count++))
+        done < <(find .claude/standards -type f -print0 2>/dev/null)
+    fi
+
+    if [[ $custom_count -eq 0 ]]; then
+        log_info "No custom files detected"
+    else
+        log_success "Found $custom_count custom file(s)"
+    fi
+}
+
+# ============================================================================
+# SMART MERGE FUNCTIONS
+# ============================================================================
+
+backup_custom_files() {
+    if [[ ${#CUSTOM_FILES[@]} -eq 0 ]]; then
         return 0
     fi
-    return 1
+
+    log_step "Backing up custom files..."
+
+    local backup_dir=".claude-custom-backup.$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$backup_dir"
+
+    for file in "${CUSTOM_FILES[@]}"; do
+        if [[ -f ".claude/$file" ]]; then
+            local dir
+            dir=$(dirname "$file")
+            mkdir -p "$backup_dir/$dir"
+            cp ".claude/$file" "$backup_dir/$file"
+            log_success "Backed up: $file"
+        elif [[ -d ".claude/$file" ]]; then
+            local dir
+            dir=$(dirname "$file")
+            mkdir -p "$backup_dir/$dir"
+            cp -r ".claude/$file" "$backup_dir/$file"
+            log_success "Backed up: $file"
+        fi
+    done
+
+    echo "$backup_dir" > .claude-custom-backup-location
+    log_success "Custom files backed up to: $backup_dir"
+}
+
+restore_custom_files() {
+    if [[ ${#CUSTOM_FILES[@]} -eq 0 ]]; then
+        return 0
+    fi
+
+    log_step "Restoring custom files..."
+
+    if [[ ! -f .claude-custom-backup-location ]]; then
+        log_warning "No backup location found, skipping restore"
+        return 0
+    fi
+
+    local backup_dir
+    backup_dir=$(cat .claude-custom-backup-location)
+
+    if [[ ! -d "$backup_dir" ]]; then
+        log_warning "Backup directory not found: $backup_dir"
+        return 0
+    fi
+
+    for file in "${CUSTOM_FILES[@]}"; do
+        if [[ -f "$backup_dir/$file" ]]; then
+            local dir
+            dir=$(dirname "$file")
+            mkdir -p ".claude/$dir"
+            cp "$backup_dir/$file" ".claude/$file"
+            PRESERVED_FILES+=("$file")
+            log_success "Restored: $file"
+        elif [[ -d "$backup_dir/$file" ]]; then
+            local dir
+            dir=$(dirname "$file")
+            mkdir -p ".claude/$dir"
+            cp -r "$backup_dir/$file" ".claude/$file"
+            PRESERVED_FILES+=("$file")
+            log_success "Restored: $file"
+        fi
+    done
+
+    # Clean up backup location file
+    rm -f .claude-custom-backup-location
+}
+
+preserve_memory_files() {
+    log_step "Preserving memory files..."
+
+    local memory_backup=".claude-memory-backup.$(date +%Y%m%d_%H%M%S)"
+
+    if [[ -d ".claude/memory" ]]; then
+        cp -r ".claude/memory" "$memory_backup"
+        log_success "Memory files backed up to: $memory_backup"
+        echo "$memory_backup" > .claude-memory-backup-location
+    else
+        log_info "No existing memory files to preserve"
+    fi
+}
+
+restore_memory_files() {
+    log_step "Restoring memory files..."
+
+    if [[ ! -f .claude-memory-backup-location ]]; then
+        log_info "No memory backup found, will use fresh memory files"
+        return 0
+    fi
+
+    local memory_backup
+    memory_backup=$(cat .claude-memory-backup-location)
+
+    if [[ ! -d "$memory_backup" ]]; then
+        log_warning "Memory backup directory not found: $memory_backup"
+        return 0
+    fi
+
+    # Restore org memory (decisions, patterns, tech-stack)
+    if [[ -d "$memory_backup/org" ]]; then
+        cp -r "$memory_backup/org"/* ".claude/memory/org/" 2>/dev/null || true
+        log_success "Restored organization memory"
+    fi
+
+    # Restore user memory (preferences, context)
+    if [[ -d "$memory_backup/user" ]]; then
+        cp -r "$memory_backup/user"/* ".claude/memory/user/" 2>/dev/null || true
+        log_success "Restored user memory"
+    fi
+
+    # Clean up backup location file
+    rm -f .claude-memory-backup-location
+}
+
+preserve_active_specs() {
+    log_step "Preserving active specs..."
+
+    local specs_backup=".claude-specs-backup.$(date +%Y%m%d_%H%M%S)"
+
+    if [[ -d ".claude/specs/active" ]] && [[ -n "$(ls -A .claude/specs/active 2>/dev/null)" ]]; then
+        mkdir -p "$specs_backup"
+        cp -r ".claude/specs/active"/* "$specs_backup/" 2>/dev/null || true
+        log_success "Active specs backed up to: $specs_backup"
+        echo "$specs_backup" > .claude-specs-backup-location
+    else
+        log_info "No active specs to preserve"
+    fi
+}
+
+restore_active_specs() {
+    log_step "Restoring active specs..."
+
+    if [[ ! -f .claude-specs-backup-location ]]; then
+        log_info "No specs backup found"
+        return 0
+    fi
+
+    local specs_backup
+    specs_backup=$(cat .claude-specs-backup-location)
+
+    if [[ ! -d "$specs_backup" ]]; then
+        log_warning "Specs backup directory not found: $specs_backup"
+        return 0
+    fi
+
+    mkdir -p ".claude/specs/active"
+    cp -r "$specs_backup"/* ".claude/specs/active/" 2>/dev/null || true
+    log_success "Restored active specs"
+
+    # Clean up backup location file
+    rm -f .claude-specs-backup-location
 }
 
 # ============================================================================
@@ -248,21 +550,42 @@ install_framework() {
     fi
     log_success "Framework downloaded"
 
-    # Backup existing .claude directory if it exists
-    if [[ -d "$install_dir" ]]; then
-        log_warning "Existing $install_dir directory found"
-        backup_existing "$install_dir"
-    fi
-
-    # Copy framework files
-    log_info "Installing framework files..."
-
     if [[ ! -d "$TEMP_DIR/droidz/.claude" ]]; then
         error_exit "Framework files not found in downloaded package" 1
     fi
 
+    # Detect if this is an update
+    local is_update=false
+    if [[ -d "$install_dir" ]]; then
+        is_update=true
+        log_info "Existing installation detected - performing smart update"
+
+        # Detect custom files
+        detect_custom_files
+
+        # Backup custom files, memory, and active specs
+        backup_custom_files
+        preserve_memory_files
+        preserve_active_specs
+
+        # Remove old installation
+        log_info "Removing old framework files..."
+        rm -rf "$install_dir"
+    else
+        log_info "Fresh installation - no existing files to preserve"
+    fi
+
+    # Install new framework
+    log_info "Installing framework files..."
     cp -r "$TEMP_DIR/droidz/.claude" "$install_dir"
     log_success "Framework files installed to $install_dir/"
+
+    # Restore preserved files
+    if [[ "$is_update" == true ]]; then
+        restore_custom_files
+        restore_memory_files
+        restore_active_specs
+    fi
 
     # Copy documentation to root
     log_info "Installing documentation..."
@@ -273,22 +596,25 @@ install_framework() {
 
     for doc in "${docs[@]}"; do
         if [[ -f "$TEMP_DIR/droidz/$doc" ]]; then
-            if [[ -f "./$doc" ]]; then
-                backup_existing "./$doc"
+            if [[ -f "./$doc" ]] && [[ "$is_update" == true ]]; then
+                local backup_name="${doc}.backup.$(date +%Y%m%d_%H%M%S)"
+                mv "./$doc" "$backup_name"
+                log_info "Backed up existing $doc to $backup_name"
             fi
             cp "$TEMP_DIR/droidz/$doc" "./"
+            UPDATED_FILES+=("$doc")
             log_success "Installed: $doc"
         fi
     done
 
-    # Copy orchestrator script
-    if [[ -f "$TEMP_DIR/droidz/.claude/scripts/orchestrator.sh" ]]; then
+    # Make scripts executable
+    if [[ -f "$install_dir/scripts/orchestrator.sh" ]]; then
         chmod +x "$install_dir/scripts/orchestrator.sh"
         log_success "Made orchestrator.sh executable"
     fi
 
     # Clean up temp directory
-    log_info "Cleaning up..."
+    log_info "Cleaning up temporary files..."
     rm -rf "$TEMP_DIR"
     log_success "Temporary files cleaned up"
 }
@@ -382,15 +708,15 @@ verify_installation() {
     # Count components
     local agent_count
     agent_count=$(find .claude/agents -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-    log_success "Found $agent_count specialist agents"
+    log_success "Found $agent_count agent(s)"
 
     local skill_count
     skill_count=$(find .claude/skills -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
-    log_success "Found $skill_count auto-activating skills"
+    log_success "Found $skill_count skill(s)"
 
     local command_count
     command_count=$(find .claude/commands -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-    log_success "Found $command_count slash commands"
+    log_success "Found $command_count command(s)"
 }
 
 setup_gitignore() {
@@ -402,6 +728,7 @@ setup_gitignore() {
         ".runs/"
         "*.backup.*"
         "*-tasks.json"
+        ".claude-*-backup*"
     )
 
     if [[ -f .gitignore ]]; then
@@ -420,6 +747,7 @@ setup_gitignore() {
             echo ".runs/"
             echo "*.backup.*"
             echo "*-tasks.json"
+            echo ".claude-*-backup*"
         } >> .gitignore
         log_success ".gitignore updated"
     else
@@ -517,7 +845,54 @@ EOF
         log_success "Created context.json"
     fi
 
-    log_success "Memory system initialized (5/5 files)"
+    log_success "Memory system initialized"
+}
+
+display_update_summary() {
+    echo ""
+    echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz Update Complete!                        ║${NC}"
+    echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
+    echo ""
+
+    # Updated files
+    if [[ ${#UPDATED_FILES[@]} -gt 0 ]]; then
+        echo -e "${CYAN}Framework Files Updated:${NC}"
+        echo -e "  ${GREEN}✓${NC} 7 Base Agents"
+        echo -e "  ${GREEN}✓${NC} 3 Base Skills"
+        echo -e "  ${GREEN}✓${NC} Core Commands"
+        echo -e "  ${GREEN}✓${NC} Orchestration Engine"
+        echo -e "  ${GREEN}✓${NC} Documentation"
+        echo ""
+    fi
+
+    # Preserved custom files
+    if [[ ${#PRESERVED_FILES[@]} -gt 0 ]]; then
+        echo -e "${MAGENTA}Custom Files Preserved:${NC}"
+        for file in "${PRESERVED_FILES[@]}"; do
+            echo -e "  ${MAGENTA}★${NC} $file"
+        done
+        echo ""
+    fi
+
+    # Memory status
+    echo -e "${CYAN}Your Data Preserved:${NC}"
+    echo -e "  ${GREEN}✓${NC} Architectural decisions"
+    echo -e "  ${GREEN}✓${NC} Code patterns"
+    echo -e "  ${GREEN}✓${NC} Tech stack info"
+    echo -e "  ${GREEN}✓${NC} User preferences"
+    echo -e "  ${GREEN}✓${NC} Active specs"
+    echo ""
+
+    echo -e "${CYAN}What Changed:${NC}"
+    echo -e "  • Base framework updated to latest version"
+    echo -e "  • All custom files preserved automatically"
+    echo -e "  • Memory and specs carried forward"
+    echo -e "  • No manual merge needed!"
+    echo ""
+
+    echo -e "${GREEN}Your custom work is safe! Update complete. 🚀${NC}"
+    echo ""
 }
 
 display_summary() {
@@ -529,7 +904,7 @@ display_summary() {
     echo -e "${CYAN}Framework Components Installed:${NC}"
     echo -e "  ${GREEN}✓${NC} 7 Specialist Agents (codegen, test, refactor, etc.)"
     echo -e "  ${GREEN}✓${NC} 3 Auto-Activating Skills (spec-shaper, orchestrator, memory)"
-    echo -e "  ${GREEN}✓${NC} 5 Slash Commands (/create-spec, /orchestrate, etc.)"
+    echo -e "  ${GREEN}✓${NC} 10+ Slash Commands (/create-spec, /orchestrate, etc.)"
     echo -e "  ${GREEN}✓${NC} Orchestration Engine (750+ lines, tmux + worktrees)"
     echo -e "  ${GREEN}✓${NC} Persistent Memory System (5 JSON files)"
     echo -e "  ${GREEN}✓${NC} Spec Templates (feature, epic, refactor)"
@@ -568,17 +943,27 @@ display_summary() {
 main() {
     echo ""
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer            ║${NC}"
-    echo -e "${CYAN}${BOLD}║   Version 1.0.0                                      ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.0       ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Smart Update with Custom File Preservation        ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
+
+    local is_update=false
+    if [[ -d ".claude" ]]; then
+        is_update=true
+    fi
 
     check_prerequisites
     install_framework
     initialize_memory
     setup_gitignore
     verify_installation
-    display_summary
+
+    if [[ "$is_update" == true ]]; then
+        display_update_summary
+    else
+        display_summary
+    fi
 }
 
 main "$@"
