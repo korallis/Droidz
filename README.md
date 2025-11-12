@@ -27,38 +27,74 @@ Droidz is a Claude Code framework that enables **parallel task execution** throu
 
 ## Quick Start
 
-### Prerequisites
+### Windows Users: WSL2 Setup (First Time Only)
+
+If you're on Windows and don't have WSL2 installed yet:
+
+```powershell
+# Run in PowerShell as Administrator
+wsl --install
+
+# Reboot your computer
+
+# After reboot, set default to WSL2
+wsl --set-default-version 2
+
+# Install Ubuntu (or your preferred distro)
+wsl --install -d Ubuntu
+
+# Launch Ubuntu and create your user account when prompted
+```
+
+Then continue with the installation steps below from within your WSL2 terminal.
+
+### One-Line Installation
+
+**macOS Users**:
 ```bash
-# Required dependencies
+# Install dependencies first
 brew install git jq tmux
 
-# Verify Claude Code is installed
-claude --version
+# Then install Droidz (from your project directory)
+cd your-project && curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
 ```
 
-### Installation
+**Windows/WSL2 Users**:
+```bash
+# Install dependencies first
+sudo apt update && sudo apt install -y git jq tmux
+
+# Then install Droidz (from your project directory)
+cd your-project && curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+```
+
+The installer will:
+- ✅ Detect your OS automatically
+- ✅ Verify prerequisites (git, jq, tmux)
+- ✅ Install framework to `.claude/`
+- ✅ Copy documentation (README.md, QUICK_START.md)
+- ✅ Configure .gitignore
+- ✅ Verify all files present
+
+**Setup time**: 1-2 minutes
+
+### First Time Setup
+
+After installation, initialize Droidz:
 
 ```bash
-# Clone the Claude-Code branch
-git clone -b Claude-Code https://github.com/korallis/Droidz.git
-cd Droidz
-
 # Start Claude Code
 claude
-```
 
-Then in Claude Code:
-```
+# Run initialization wizard
 /droidz-init
 ```
 
 The initialization wizard will:
-- ✅ Check dependencies (git, jq, tmux)
+- ✅ Check dependencies
 - ✅ Create directory structure
 - ✅ Initialize memory system
 - ✅ Verify orchestration engine
-
-**Setup time**: 2-5 minutes
 
 ---
 

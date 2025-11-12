@@ -90,12 +90,53 @@ error_exit() {
 # PREREQUISITE CHECKS
 # ============================================================================
 
+detect_os() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        OS="macos"
+        PKG_MANAGER="brew"
+    elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
+        OS="wsl2"
+        PKG_MANAGER="apt"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        OS="linux"
+        PKG_MANAGER="apt"
+    else
+        OS="unknown"
+        PKG_MANAGER="unknown"
+    fi
+}
+
+get_install_cmd() {
+    local package="$1"
+
+    case "$PKG_MANAGER" in
+        brew)
+            echo "brew install $package"
+            ;;
+        apt)
+            echo "sudo apt update && sudo apt install -y $package"
+            ;;
+        *)
+            echo "Please install $package manually"
+            ;;
+    esac
+}
+
 check_prerequisites() {
     log_step "Checking prerequisites..."
 
+    # Initialize missing dependencies array
+    MISSING_DEPS=()
+
+    # Detect operating system
+    detect_os
+    log_info "Detected OS: $OS (Package manager: $PKG_MANAGER)"
+
     # Check for git
     if ! command -v git &> /dev/null; then
-        error_exit "Git is not installed. Please install git first." 1
+        log_error "Git is not installed."
+        log_info "Install with: $(get_install_cmd git)"
+        error_exit "Git is required." 1
     fi
     log_success "Git found: $(git --version | head -n1)"
 
@@ -119,7 +160,9 @@ check_prerequisites() {
 
     # Check for curl or wget
     if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then
-        error_exit "Neither curl nor wget found. Please install one of them." 1
+        log_error "Neither curl nor wget found."
+        log_info "Install with: $(get_install_cmd curl)"
+        error_exit "curl or wget is required." 1
     fi
 
     if command -v curl &> /dev/null; then
@@ -133,7 +176,8 @@ check_prerequisites() {
     # Check for jq (required for orchestration)
     if ! command -v jq &> /dev/null; then
         log_warning "jq not found. Required for orchestration features."
-        log_info "Install with: brew install jq"
+        log_info "Install with: $(get_install_cmd jq)"
+        MISSING_DEPS+=("jq")
     else
         log_success "jq found"
     fi
@@ -141,9 +185,24 @@ check_prerequisites() {
     # Check for tmux (required for parallel execution)
     if ! command -v tmux &> /dev/null; then
         log_warning "tmux not found. Required for parallel task monitoring."
-        log_info "Install with: brew install tmux"
+        log_info "Install with: $(get_install_cmd tmux)"
+        MISSING_DEPS+=("tmux")
     else
         log_success "tmux found"
+    fi
+
+    # Summary of missing dependencies
+    if [[ ${#MISSING_DEPS[@]} -gt 0 ]]; then
+        echo ""
+        log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
+        log_info "Droidz will install, but orchestration features require jq and tmux."
+
+        if [[ "$PKG_MANAGER" == "apt" ]]; then
+            log_info "Install all at once: sudo apt update && sudo apt install -y jq tmux"
+        elif [[ "$PKG_MANAGER" == "brew" ]]; then
+            log_info "Install all at once: brew install jq tmux"
+        fi
+        echo ""
     fi
 }
 
