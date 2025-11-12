@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Droidz Claude Code Framework - One-Line Installer
-# 
+#
 # Install with:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
 #
@@ -10,12 +10,12 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.1.0
-# Updated: November 11, 2025
+# Version: 1.0.0
+# Updated: November 12, 2025
 #
 
-set -euo pipefail  # Exit on error, undefined vars, pipe failures
-IFS=$'\n\t'        # Set safer IFS
+set -euo pipefail
+IFS=$'\n\t'
 
 # ============================================================================
 # COLORS AND FORMATTING
@@ -26,16 +26,14 @@ if [[ -t 1 ]]; then
     GREEN='\033[0;32m'
     YELLOW='\033[1;33m'
     BLUE='\033[0;34m'
-    MAGENTA='\033[0;35m'
     CYAN='\033[0;36m'
     BOLD='\033[1m'
-    NC='\033[0m' # No Color
+    NC='\033[0m'
 else
     RED=''
     GREEN=''
     YELLOW=''
     BLUE=''
-    MAGENTA=''
     CYAN=''
     BOLD=''
     NC=''
@@ -94,13 +92,13 @@ error_exit() {
 
 check_prerequisites() {
     log_step "Checking prerequisites..."
-    
+
     # Check for git
     if ! command -v git &> /dev/null; then
         error_exit "Git is not installed. Please install git first." 1
     fi
     log_success "Git found: $(git --version | head -n1)"
-    
+
     # Check git version (need 2.19+ for worktree improvements)
     local git_version
     git_version=$(git --version | awk '{print $3}')
@@ -108,28 +106,44 @@ check_prerequisites() {
     git_major=$(echo "$git_version" | cut -d. -f1)
     local git_minor
     git_minor=$(echo "$git_version" | cut -d. -f2)
-    
+
     if [[ $git_major -lt 2 ]] || [[ $git_major -eq 2 && $git_minor -lt 19 ]]; then
-        log_warning "Git version $git_version detected. Version 2.19+ recommended."
+        log_warning "Git version $git_version detected. Version 2.19+ recommended for worktree support."
     fi
-    
+
     # Check if we're in a git repository
     if ! git rev-parse --git-dir > /dev/null 2>&1; then
         error_exit "Not in a git repository. Please run this script from your project root." 1
     fi
     log_success "Git repository detected"
-    
+
     # Check for curl or wget
     if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then
         error_exit "Neither curl nor wget found. Please install one of them." 1
     fi
-    
+
     if command -v curl &> /dev/null; then
         DOWNLOAD_CMD="curl -fsSL"
         log_success "curl found"
     else
         DOWNLOAD_CMD="wget -qO-"
         log_success "wget found"
+    fi
+
+    # Check for jq (required for orchestration)
+    if ! command -v jq &> /dev/null; then
+        log_warning "jq not found. Required for orchestration features."
+        log_info "Install with: brew install jq"
+    else
+        log_success "jq found"
+    fi
+
+    # Check for tmux (required for parallel execution)
+    if ! command -v tmux &> /dev/null; then
+        log_warning "tmux not found. Required for parallel task monitoring."
+        log_info "Install with: brew install tmux"
+    else
+        log_success "tmux found"
     fi
 }
 
@@ -139,7 +153,7 @@ check_prerequisites() {
 
 backup_existing() {
     local target="$1"
-    
+
     if [[ -e "$target" ]]; then
         local backup_name="${target}.backup.$(date +%Y%m%d_%H%M%S)"
         log_info "Backing up existing ${target} to ${backup_name}"
@@ -155,16 +169,16 @@ backup_existing() {
 # ============================================================================
 
 install_framework() {
-    log_step "Installing Droidz Claude Code Framework..."
-    
+    log_step "Installing Droidz Framework..."
+
     local repo_url="https://github.com/korallis/Droidz.git"
     local branch="Claude-Code"
     local install_dir=".claude"
-    
+
     # Create temporary directory
     TEMP_DIR=$(mktemp -d)
     log_info "Created temporary directory: $TEMP_DIR"
-    
+
     # Clone the framework
     log_info "Downloading framework from GitHub..."
     local clone_output
@@ -174,47 +188,46 @@ install_framework() {
         error_exit "Failed to clone repository" 1
     fi
     log_success "Framework downloaded"
-    
+
     # Backup existing .claude directory if it exists
     if [[ -d "$install_dir" ]]; then
         log_warning "Existing $install_dir directory found"
         backup_existing "$install_dir"
     fi
-    
+
     # Copy framework files
     log_info "Installing framework files..."
-    
+
     if [[ ! -d "$TEMP_DIR/droidz/.claude" ]]; then
         error_exit "Framework files not found in downloaded package" 1
     fi
-    
+
     cp -r "$TEMP_DIR/droidz/.claude" "$install_dir"
     log_success "Framework files installed to $install_dir/"
-    
-    # Copy documentation
-    log_info "Installing documentation..."
-    local docs_dir="$install_dir/docs"
-    mkdir -p "$docs_dir"
 
+    # Copy documentation to root
+    log_info "Installing documentation..."
     local docs=(
-        "CLAUDE-CODE-FRAMEWORK.md"
-        "CLAUDE-CODE-MIGRATION.md"
-        "IMPLEMENTATION-SUMMARY.md"
-        "FEATURES.md"
-        "COMPLETE.md"
+        "README.md"
+        "QUICK_START.md"
     )
-    
+
     for doc in "${docs[@]}"; do
         if [[ -f "$TEMP_DIR/droidz/$doc" ]]; then
-            cp "$TEMP_DIR/droidz/$doc" "$docs_dir/"
-            log_success "Installed: $docs_dir/$doc"
             if [[ -f "./$doc" ]]; then
-                rm -f "./$doc"
-                log_info "Removed legacy copy: $doc"
+                backup_existing "./$doc"
             fi
+            cp "$TEMP_DIR/droidz/$doc" "./"
+            log_success "Installed: $doc"
         fi
     done
-    
+
+    # Copy orchestrator script
+    if [[ -f "$TEMP_DIR/droidz/.claude/scripts/orchestrator.sh" ]]; then
+        chmod +x "$install_dir/scripts/orchestrator.sh"
+        log_success "Made orchestrator.sh executable"
+    fi
+
     # Clean up temp directory
     log_info "Cleaning up..."
     rm -rf "$TEMP_DIR"
@@ -223,32 +236,51 @@ install_framework() {
 
 verify_installation() {
     log_step "Verifying installation..."
-    
+
     local required_dirs=(
         ".claude/agents"
         ".claude/skills"
         ".claude/commands"
-        ".claude/hooks"
-        ".claude/memory"
-        ".claude/docs"
-        ".claude/standards/templates"
+        ".claude/scripts"
+        ".claude/memory/org"
+        ".claude/memory/user"
+        ".claude/product"
+        ".claude/specs/templates"
+        ".claude/specs/active"
+        ".claude/specs/archive"
     )
-    
+
     local required_files=(
-        ".claude/skills/tech-stack-analyzer.md"
-        ".claude/skills/context-optimizer.md"
-        ".claude/skills/standards-enforcer.md"
-        ".claude/standards/templates/nextjs.md"
-        ".claude/standards/templates/typescript.md"
-        ".claude/standards/templates/react.md"
-        ".claude/standards/templates/convex.md"
-        ".claude/standards/templates/shadcn-ui.md"
-        ".claude/standards/templates/tailwind.md"
-        ".claude/docs/CLAUDE-CODE-FRAMEWORK.md"
+        ".claude/agents/codegen.md"
+        ".claude/agents/test.md"
+        ".claude/agents/refactor.md"
+        ".claude/agents/infra.md"
+        ".claude/agents/integration.md"
+        ".claude/agents/orchestrator.md"
+        ".claude/agents/generalist.md"
+        ".claude/skills/spec-shaper/SKILL.md"
+        ".claude/skills/auto-orchestrator/SKILL.md"
+        ".claude/skills/memory-manager/SKILL.md"
+        ".claude/commands/droidz-init.md"
+        ".claude/commands/create-spec.md"
+        ".claude/commands/validate-spec.md"
+        ".claude/commands/spec-to-tasks.md"
+        ".claude/commands/orchestrate.md"
+        ".claude/scripts/orchestrator.sh"
+        ".claude/memory/org/decisions.json"
+        ".claude/memory/org/patterns.json"
+        ".claude/memory/org/tech-stack.json"
+        ".claude/memory/user/preferences.json"
+        ".claude/memory/user/context.json"
+        ".claude/product/vision.md"
+        ".claude/product/roadmap.md"
+        ".claude/product/use-cases.md"
+        ".claude/specs/templates/feature-spec.md"
+        ".claude/specs/templates/epic-spec.md"
     )
-    
+
     local missing=0
-    
+
     # Check directories
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$dir" ]]; then
@@ -256,7 +288,7 @@ verify_installation() {
             ((missing++))
         fi
     done
-    
+
     # Check files
     for file in "${required_files[@]}"; do
         if [[ ! -f "$file" ]]; then
@@ -264,47 +296,54 @@ verify_installation() {
             ((missing++))
         fi
     done
-    
+
     if [[ $missing -gt 0 ]]; then
         error_exit "Installation verification failed: $missing items missing" 1
     fi
-    
+
     log_success "All required files and directories present"
-    
-    # Count framework templates
-    local template_count
-    template_count=$(find .claude/standards/templates -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-    log_success "Found $template_count framework templates"
-    
-    # Count total lines of standards
-    local total_lines
-    total_lines=$(find .claude/standards/templates -name "*.md" -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}')
-    log_success "Total standards documentation: $total_lines lines"
+
+    # Count components
+    local agent_count
+    agent_count=$(find .claude/agents -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    log_success "Found $agent_count specialist agents"
+
+    local skill_count
+    skill_count=$(find .claude/skills -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
+    log_success "Found $skill_count auto-activating skills"
+
+    local command_count
+    command_count=$(find .claude/commands -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    log_success "Found $command_count slash commands"
 }
 
 setup_gitignore() {
     log_step "Configuring .gitignore..."
-    
+
     local gitignore_entries=(
-        "# Droidz Claude Code Framework - User-specific files"
+        "# Droidz Framework - User-specific files"
         ".claude/memory/user/"
+        ".runs/"
         "*.backup.*"
+        "*-tasks.json"
     )
-    
+
     if [[ -f .gitignore ]]; then
         # Check if entries already exist
-        if grep -q "Droidz Claude Code Framework" .gitignore 2>/dev/null; then
+        if grep -q "Droidz Framework" .gitignore 2>/dev/null; then
             log_info ".gitignore already configured"
             return 0
         fi
-        
+
         # Add entries
         log_info "Updating .gitignore..."
         {
             echo ""
-            echo "# Droidz Claude Code Framework - User-specific files"
+            echo "# Droidz Framework - User-specific files"
             echo ".claude/memory/user/"
+            echo ".runs/"
             echo "*.backup.*"
+            echo "*-tasks.json"
         } >> .gitignore
         log_success ".gitignore updated"
     else
@@ -314,101 +353,67 @@ setup_gitignore() {
     fi
 }
 
+initialize_memory() {
+    log_step "Initializing memory system..."
+
+    # Memory files should already exist from repo, just verify
+    local memory_files=(
+        ".claude/memory/org/decisions.json"
+        ".claude/memory/org/patterns.json"
+        ".claude/memory/org/tech-stack.json"
+        ".claude/memory/user/preferences.json"
+        ".claude/memory/user/context.json"
+    )
+
+    local initialized=0
+    for file in "${memory_files[@]}"; do
+        if [[ -f "$file" ]]; then
+            ((initialized++))
+        fi
+    done
+
+    log_success "Memory system initialized ($initialized/5 files)"
+}
+
 display_summary() {
     echo ""
     echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}${BOLD}║   🎉 Installation Complete!                         ║${NC}"
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz Installation Complete!                  ║${NC}"
     echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${CYAN}Framework Features Installed:${NC}"
-    echo -e "  ${GREEN}✓${NC} Auto-Orchestrator (3-5x faster parallel execution)"
-    echo -e "  ${GREEN}✓${NC} 3 Auto-Activating Superpowers (Skills)"
-    echo -e "  ${GREEN}✓${NC} 7 Specialist Agents (codegen, test, infra, etc.)"
-    echo -e "  ${GREEN}✓${NC} 5 Magic Commands (/analyze-tech-stack, etc.)"
-    echo -e "  ${GREEN}✓${NC} 7 Automatic Helpers (Hooks)"
-    echo -e "  ${GREEN}✓${NC} 8 Framework Templates (3,079 lines of best practices)"
-    echo -e "  ${GREEN}✓${NC} Persistent Memory System"
+    echo -e "${CYAN}Framework Components Installed:${NC}"
+    echo -e "  ${GREEN}✓${NC} 7 Specialist Agents (codegen, test, refactor, etc.)"
+    echo -e "  ${GREEN}✓${NC} 3 Auto-Activating Skills (spec-shaper, orchestrator, memory)"
+    echo -e "  ${GREEN}✓${NC} 5 Slash Commands (/create-spec, /orchestrate, etc.)"
+    echo -e "  ${GREEN}✓${NC} Orchestration Engine (750+ lines, tmux + worktrees)"
+    echo -e "  ${GREEN}✓${NC} Persistent Memory System (5 JSON files)"
+    echo -e "  ${GREEN}✓${NC} Spec Templates (feature, epic, refactor)"
     echo -e "  ${GREEN}✓${NC} Complete Documentation"
     echo ""
     echo -e "${CYAN}Installed Files:${NC}"
-    echo -e "  📁 ${BOLD}.claude/${NC}              - Framework directory"
-    echo -e "  📁 ${BOLD}.claude/docs/${NC}         - Documentation"
-    echo -e "  📄 ${BOLD}.claude/docs/CLAUDE-CODE-FRAMEWORK.md${NC} - Complete guide (1,484 lines)"
+    echo -e "  📁 ${BOLD}.claude/${NC}                    - Framework directory"
+    echo -e "  📄 ${BOLD}README.md${NC}                   - Complete framework guide"
+    echo -e "  📄 ${BOLD}QUICK_START.md${NC}              - 5-minute quick start"
     echo ""
     echo -e "${CYAN}Next Steps:${NC}"
-    echo -e "  ${BOLD}1.${NC} Read the guide:  ${BLUE}cat .claude/docs/CLAUDE-CODE-FRAMEWORK.md${NC}"
-    echo -e "  ${BOLD}2.${NC} Start coding - the framework auto-activates!"
-    echo -e "  ${BOLD}3.${NC} Use commands:  ${BLUE}/analyze-tech-stack${NC}"
+    echo -e "  ${BOLD}1.${NC} Initialize:  ${BLUE}claude${NC} then ${BLUE}/droidz-init${NC}"
+    echo -e "  ${BOLD}2.${NC} Read guide:  ${BLUE}cat README.md${NC}"
+    echo -e "  ${BOLD}3.${NC} Quick start: ${BLUE}cat QUICK_START.md${NC}"
     echo ""
-    echo -e "${YELLOW}💡 Tip:${NC} The framework automatically detects your tech stack"
-    echo -e "   and loads perfect standards with ${BOLD}zero configuration${NC}!"
+    echo -e "${YELLOW}💡 First Time Setup:${NC}"
+    echo -e "   1. Start Claude Code: ${BLUE}claude${NC}"
+    echo -e "   2. Run initialization: ${BLUE}/droidz-init${NC}"
+    echo -e "   3. Create your first spec: ${BLUE}/create-spec feature my-feature${NC}"
     echo ""
-    echo -e "${CYAN}Performance Improvements:${NC}"
-    echo -e "  ⚡ Setup: 2 hours → 5 seconds (${BOLD}24x faster${NC})"
-    echo -e "  🚀 Complex tasks: Sequential → Parallel (${BOLD}3-5x faster${NC})"
-    echo -e "  📈 Code quality: 60% → 90% (${BOLD}+30% better${NC})"
-    echo -e "  🛡️ Security: Manual → Automatic (${BOLD}100% coverage${NC})"
-    echo -e "  🧠 Context: 100% → 40% usage (${BOLD}60% more space${NC})"
+    echo -e "${CYAN}What Droidz Does:${NC}"
+    echo -e "  ✅ Structures complex projects with specifications"
+    echo -e "  ✅ Enables parallel development via git worktrees"
+    echo -e "  ✅ Routes tasks to specialist agents"
+    echo -e "  ✅ Maintains persistent memory across sessions"
+    echo -e "  ✅ Realistic 1.5-2.5x speedup for parallelizable work"
     echo ""
-    echo -e "${GREEN}Happy coding! ✨${NC}"
+    echo -e "${GREEN}Happy building with Droidz! 🚀${NC}"
     echo ""
-}
-
-display_help() {
-    cat << EOF
-Droidz Claude Code Framework - One-Line Installer
-
-USAGE:
-    # One-line install (recommended):
-    curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
-
-    # Download and run:
-    wget https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh
-    chmod +x install-claude-code.sh
-    ./install-claude-code.sh
-
-    # With options:
-    ./install-claude-code.sh [OPTIONS]
-
-OPTIONS:
-    -h, --help              Show this help message
-    -v, --version           Show version information
-    -f, --force             Force installation (skip confirmations)
-    --no-backup             Skip backing up existing files
-    --dry-run               Show what would be installed without installing
-
-DESCRIPTION:
-    Installs the Droidz Claude Code Framework - an intelligent coding
-    assistant framework for Claude Code with:
-    
-    • Auto-detection of your tech stack
-    • Auto-generation of coding standards
-    • Auto-enforcement of security & best practices
-    • Auto-optimization of context (60-80% more efficient)
-    • Persistent memory across sessions
-    • Zero configuration required
-
-    The framework includes 3 superpowers, 5 commands, 7 hooks, and
-    8 framework templates with 3,079 lines of best practices.
-
-EXAMPLES:
-    # Basic installation
-    ./install-claude-code.sh
-
-    # Force install without prompts
-    ./install-claude-code.sh --force
-
-    # Preview what will be installed
-    ./install-claude-code.sh --dry-run
-
-MORE INFO:
-    GitHub: https://github.com/korallis/Droidz/tree/Claude-Code
-    Docs:   https://github.com/korallis/Droidz/blob/Claude-Code/CLAUDE-CODE-FRAMEWORK.md
-
-VERSION:
-    2.1.0 (November 11, 2025)
-
-EOF
 }
 
 # ============================================================================
@@ -416,96 +421,19 @@ EOF
 # ============================================================================
 
 main() {
-    # Parse arguments
-    local force=false
-    local dry_run=false
-    local no_backup=false
-    
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            -h|--help)
-                display_help
-                exit 0
-                ;;
-            -v|--version)
-                echo "Droidz Claude Code Framework Installer v2.1.0"
-                exit 0
-                ;;
-            -f|--force)
-                force=true
-                shift
-                ;;
-            --no-backup)
-                no_backup=true
-                shift
-                ;;
-            --dry-run)
-                dry_run=true
-                shift
-                ;;
-            *)
-                log_error "Unknown option: $1"
-                echo "Use --help for usage information"
-                exit 1
-                ;;
-        esac
-    done
-    
-    # Display header
     echo ""
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.1       ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer            ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Version 1.0.0                                      ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
-    
-    if [[ "$dry_run" == true ]]; then
-        log_info "DRY RUN MODE - No changes will be made"
-        echo ""
-    fi
-    
-    # Run installation steps
-    check_prerequisites
-    
-    if [[ "$dry_run" == true ]]; then
-        log_info "Would install framework to: .claude/"
-        log_info "Would install documentation files"
-        log_info "Would configure .gitignore"
-        echo ""
-        log_success "Dry run complete. Run without --dry-run to install."
-        exit 0
-    fi
-    
-    # Confirm installation
-    if [[ "$force" != true ]]; then
-        echo ""
-        echo -e "${YELLOW}This will install the Droidz Claude Code Framework.${NC}"
-        echo -e "Install location: ${BOLD}$(pwd)/.claude${NC}"
-        echo ""
 
-        # Check if running in a terminal (interactive) or piped (curl | bash)
-        if [[ -t 0 ]]; then
-            # Interactive mode - prompt for confirmation
-            read -p "Continue with installation? (y/N) " -n 1 -r
-            echo ""
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                log_info "Installation cancelled by user"
-                exit 0
-            fi
-        else
-            # Non-interactive mode (piped from curl) - auto-proceed
-            log_info "Running in non-interactive mode, proceeding with installation..."
-            echo ""
-        fi
-    fi
-    
-    # Install
+    check_prerequisites
     install_framework
     verify_installation
     setup_gitignore
-    
-    # Success!
+    initialize_memory
     display_summary
 }
 
-# Run main function
 main "$@"
