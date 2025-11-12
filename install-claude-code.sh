@@ -315,7 +315,7 @@ verify_installation() {
         ".claude/agents/refactor.md"
         ".claude/agents/infra.md"
         ".claude/agents/integration.md"
-        ".claude/agents/orchestrator.md"
+        ".claude/agents/droidz-orchestrator.md"
         ".claude/agents/generalist.md"
         ".claude/skills/spec-shaper/SKILL.md"
         ".claude/skills/auto-orchestrator/SKILL.md"
@@ -326,11 +326,6 @@ verify_installation() {
         ".claude/commands/spec-to-tasks.md"
         ".claude/commands/orchestrate.md"
         ".claude/scripts/orchestrator.sh"
-        ".claude/memory/org/decisions.json"
-        ".claude/memory/org/patterns.json"
-        ".claude/memory/org/tech-stack.json"
-        ".claude/memory/user/preferences.json"
-        ".claude/memory/user/context.json"
         ".claude/product/vision.md"
         ".claude/product/roadmap.md"
         ".claude/product/use-cases.md"
@@ -361,6 +356,28 @@ verify_installation() {
     fi
 
     log_success "All required files and directories present"
+
+    # Verify memory files were created
+    local memory_files=(
+        ".claude/memory/org/decisions.json"
+        ".claude/memory/org/patterns.json"
+        ".claude/memory/org/tech-stack.json"
+        ".claude/memory/user/preferences.json"
+        ".claude/memory/user/context.json"
+    )
+
+    local memory_count=0
+    for file in "${memory_files[@]}"; do
+        if [[ -f "$file" ]]; then
+            ((memory_count++))
+        fi
+    done
+
+    if [[ $memory_count -eq 5 ]]; then
+        log_success "Memory system verified (5/5 files)"
+    else
+        log_warning "Memory system incomplete ($memory_count/5 files)"
+    fi
 
     # Count components
     local agent_count
@@ -415,23 +432,92 @@ setup_gitignore() {
 initialize_memory() {
     log_step "Initializing memory system..."
 
-    # Memory files should already exist from repo, just verify
-    local memory_files=(
-        ".claude/memory/org/decisions.json"
-        ".claude/memory/org/patterns.json"
-        ".claude/memory/org/tech-stack.json"
-        ".claude/memory/user/preferences.json"
-        ".claude/memory/user/context.json"
-    )
+    # Create org memory files if they don't exist
+    if [[ ! -f ".claude/memory/org/decisions.json" ]]; then
+        cat > .claude/memory/org/decisions.json << 'EOF'
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": null,
+  "decisions": [],
+  "metadata": {
+    "description": "Architectural and technical decisions for this project"
+  }
+}
+EOF
+        log_success "Created decisions.json"
+    fi
 
-    local initialized=0
-    for file in "${memory_files[@]}"; do
-        if [[ -f "$file" ]]; then
-            ((initialized++))
-        fi
-    done
+    if [[ ! -f ".claude/memory/org/patterns.json" ]]; then
+        cat > .claude/memory/org/patterns.json << 'EOF'
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": null,
+  "patterns": [],
+  "metadata": {
+    "description": "Code patterns and conventions for this project"
+  }
+}
+EOF
+        log_success "Created patterns.json"
+    fi
 
-    log_success "Memory system initialized ($initialized/5 files)"
+    if [[ ! -f ".claude/memory/org/tech-stack.json" ]]; then
+        cat > .claude/memory/org/tech-stack.json << 'EOF'
+{
+  "version": "1.0.0",
+  "lastUpdated": null,
+  "detected": false,
+  "framework": null,
+  "stack": {
+    "runtime": null,
+    "packageManager": null,
+    "frameworks": [],
+    "libraries": [],
+    "buildTools": [],
+    "testFrameworks": []
+  }
+}
+EOF
+        log_success "Created tech-stack.json"
+    fi
+
+    # Create user memory files if they don't exist
+    if [[ ! -f ".claude/memory/user/preferences.json" ]]; then
+        cat > .claude/memory/user/preferences.json << 'EOF'
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": null,
+  "preferences": {},
+  "metadata": {
+    "description": "User-specific preferences for Droidz framework"
+  }
+}
+EOF
+        log_success "Created preferences.json"
+    fi
+
+    if [[ ! -f ".claude/memory/user/context.json" ]]; then
+        cat > .claude/memory/user/context.json << 'EOF'
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": null,
+  "context": {},
+  "metadata": {
+    "description": "Session context and state for Droidz framework"
+  },
+  "activeOrchestrations": [],
+  "recentSessions": [],
+  "workInProgress": []
+}
+EOF
+        log_success "Created context.json"
+    fi
+
+    log_success "Memory system initialized (5/5 files)"
 }
 
 display_summary() {
@@ -489,9 +575,9 @@ main() {
 
     check_prerequisites
     install_framework
-    verify_installation
-    setup_gitignore
     initialize_memory
+    setup_gitignore
+    verify_installation
     display_summary
 }
 
