@@ -10,6 +10,38 @@ Transform complex projects into coordinated, parallel workflows using git worktr
 
 ---
 
+## 💬 Join Our Discord Community
+
+This framework was **built specifically for Ray Fernando's Discord members!** 🎯
+
+Join our exclusive community to:
+- 🚀 Get early access to new features
+- 💡 Share tips and best practices with other developers
+- 🤝 Connect with the framework creator and contributors
+- 🆘 Get priority help and support
+- 📢 Influence future development
+- 🎓 Access exclusive tutorials and workflows
+
+[![Join Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+
+**[Sign up here →](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+*This framework was created to supercharge coding workflows for our Discord community!*
+
+---
+
+## 💝 Support This Project
+
+If this framework saves you time and makes your coding better, consider buying me a coffee! ☕
+
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.com/paypalme/leebarry84)
+
+**PayPal:** leebarry84@icloud.com
+
+Your support helps maintain and improve this framework for everyone! 🙏
+
+---
+
 ## 📋 Table of Contents
 
 - [What Is Droidz?](#what-is-droidz)
