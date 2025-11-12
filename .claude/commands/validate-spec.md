@@ -116,11 +116,11 @@ SPEC_FILE=$(echo "$SPEC_FILE" | sed 's/ --strict$//' | sed 's/ --quick$//')
 STRICT_MODE=false
 QUICK_MODE=false
 
-if echo "$ARGUMENTS" | grep -q "\-\-strict"; then
+if echo "$ARGUMENTS" | grep -q -- "--strict"; then
   STRICT_MODE=true
 fi
 
-if echo "$ARGUMENTS" | grep -q "\-\-quick"; then
+if echo "$ARGUMENTS" | grep -q -- "--quick"; then
   QUICK_MODE=true
 fi
 

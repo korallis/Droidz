@@ -217,7 +217,9 @@ echo ""
 
 # Determine output file
 if [ -z "$OUTPUT_FILE" ]; then
-  OUTPUT_FILE="${SPEC_NAME}-tasks.json"
+  # Create tasks directory if it doesn't exist
+  mkdir -p ".claude/specs/active/tasks"
+  OUTPUT_FILE=".claude/specs/active/tasks/${SPEC_NAME}-tasks.json"
 fi
 
 # Generate tasks JSON

@@ -845,6 +845,12 @@ EOF
         log_success "Created context.json"
     fi
 
+    # Create tasks directory for spec-to-tasks output
+    if [[ ! -d ".claude/specs/active/tasks" ]]; then
+        mkdir -p ".claude/specs/active/tasks"
+        log_success "Created tasks directory"
+    fi
+
     log_success "Memory system initialized"
 }
 

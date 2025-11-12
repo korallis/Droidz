@@ -20,6 +20,10 @@ config.yml
 !.claude/memory/org/README.md
 !.claude/memory/user/README.md
 
+# Keep tasks JSON files - these are spec outputs, not user-specific
+!.claude/specs/active/tasks/
+!.claude/specs/active/tasks/*.json
+
 # Dependencies are resolved via bun and should not be committed
 node_modules/
 bun.lockb
