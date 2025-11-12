@@ -34,9 +34,9 @@ Join our exclusive community to:
 
 If this framework saves you time and makes your coding better, consider buying me a coffee! ☕
 
-[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.com/paypalme/leebarry84)
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.com/paypalme/gideonapp)
 
-**PayPal:** leebarry84@icloud.com
+**PayPal:** @gideonapp
 
 Your support helps maintain and improve this framework for everyone! 🙏
 
