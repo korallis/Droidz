@@ -104,144 +104,25 @@ Fix these issues before proceeding.
 
 ---
 
-## Implementation Instructions
+You are helping the user validate a specification file for completeness and quality. Parse the arguments ($ARGUMENTS):
 
-When this command is executed, perform the following based on $ARGUMENTS:
+**If no spec file provided:** Show usage help with examples.
 
-### Parse Arguments
+**If spec file provided:**
+Determine the validation mode based on flags (--strict for comprehensive validation, --quick for rapid checks, or standard for default validation).
 
-Extract from `$ARGUMENTS`:
-- Spec file path (first argument)
-- Optional: `--strict` for strict validation (all sections required)
-- Optional: `--quick` for quick validation (required sections only)
+**Perform validation by:**
+1. Checking for all required sections (Overview, Purpose, Requirements, Architecture, Implementation Plan, Acceptance Criteria)
+2. Running quality checks for placeholders, unresolved TODOs, proper acceptance criteria formatting, specialist assignments, documented dependencies, risks, and timeline/estimates
+3. Categorizing findings as ERRORS (critical issues blocking orchestration) or WARNINGS (recommended improvements)
+4. Counting the total issues found
 
-If no spec file provided:
-```
-❌ Error: No spec file specified
+**Display results:**
+- Show a clean header with the file path and validation mode
+- List each section with ✅ or ❌
+- Show quality check results
+- Calculate and display the summary (PASSED or FAILED)
+- If passed, show next steps for converting to tasks and orchestrating
+- If failed, list specific errors that must be fixed
 
-Usage: /validate-spec [spec-file] [--strict|--quick]
-Example: /validate-spec .claude/specs/active/auth-system.md
-```
-
-### Validation
-
-If spec file not found:
-```
-❌ Error: Spec file not found: [path]
-```
-
-### Validation Process
-
-Display header:
-```
-🔍 Validating Spec
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-File: .claude/specs/active/auth-system.md
-Mode: Standard
-```
-
-**Step 1: Check Required Sections**
-
-Required sections:
-- Overview
-- Purpose
-- Requirements
-- Architecture
-- Implementation Plan
-- Acceptance Criteria
-
-For each section:
-- ✅ if present
-- ❌ if missing (counts as ERROR)
-
-**Step 2: Quality Checks**
-
-Check for:
-1. **Placeholders** - `[Text in brackets]`
-   - ⚠️ if found (WARNING)
-   - ✅ if none
-
-2. **TODOs** - Unresolved TODO comments
-   - ⚠️ if found (WARNING)
-   - ✅ if none
-
-3. **Acceptance Criteria** - Checkbox format `- [ ]`
-   - ✅ if found
-   - ❌ if missing (ERROR)
-
-4. **Specialist Assignments** - Tasks mention specialists
-   - ✅ if present
-   - ⚠️ if missing (WARNING)
-
-5. **Dependencies** - Dependencies documented
-   - ✅ if present
-   - ⚠️ if missing (WARNING)
-
-6. **Risks** - Risks section exists
-   - ✅ if present
-   - ❌ if missing in `--strict` mode (ERROR)
-   - ⚠️ if missing in normal mode (WARNING)
-
-7. **Timeline/Estimates** - Duration or timeline mentioned
-   - ✅ if present
-   - ⚠️ if missing (WARNING)
-
-**Step 3: Calculate Results**
-
-Count:
-- ERRORS: Critical issues that must be fixed
-- WARNINGS: Recommended improvements
-
-**Step 4: Display Summary**
-
-If no errors:
-```
-✅ Spec Validation: PASSED (Perfect)
-
-Status: Ready for orchestration
-
-Next steps:
-  1. /spec-to-tasks .claude/specs/active/auth-system.md
-  2. /orchestrate file:auth-system-tasks.json
-```
-
-If warnings only:
-```
-✅ Spec Validation: PASSED (3 warnings)
-
-Status: Ready for orchestration
-
-Note: Address warnings to improve spec quality
-
-Next steps:
-  1. /spec-to-tasks .claude/specs/active/auth-system.md
-  2. /orchestrate file:auth-system-tasks.json
-```
-
-If errors:
-```
-❌ Spec Validation: FAILED
-
-Issues found:
-  Errors: 2
-  Warnings: 3
-
-Fix errors before proceeding:
-  - Missing required section: Architecture
-  - No acceptance criteria found
-```
-
-### Validation Modes
-
-**Standard** (default):
-- All required sections must be present
-- Warnings for missing optional content
-
-**Quick** (`--quick`):
-- Only check critical sections (Overview, Requirements, Implementation)
-- Skip quality checks
-
-**Strict** (`--strict`):
-- All sections required (including Risks, Dependencies)
-- More stringent quality checks
-- No warnings allowed for production specs
+In strict mode, be more stringent (require Risks section, no warnings allowed). In quick mode, only check critical sections and skip detailed quality checks. Use the clean formatting style shown in the examples above with appropriate box-drawing characters and emoji.

@@ -159,141 +159,19 @@ cat auth-system-tasks.json
 
 ---
 
-## Implementation Instructions
+You are helping the user convert a specification into an orchestrable task list. Parse the arguments ($ARGUMENTS):
 
-When this command is executed, perform the following based on $ARGUMENTS:
+**If no spec file provided:** Show usage help with example.
 
-### Parse Arguments
+**If spec file provided:**
+1. Validate the file exists
+2. Extract metadata from the spec (Spec ID, name, type)
+3. Parse the Implementation Plan section to identify all tasks
+4. For each task, intelligently determine the appropriate specialist based on the task type (codegen for APIs/UI, test for testing, refactor for cleanup, infra for CI/CD, integration for third-party services)
+5. Assign priorities based on dependencies (tasks with no dependencies get priority 1 and can run in parallel)
+6. Generate a JSON file with the complete task structure including keys, titles, descriptions, specialists, priorities, estimated hours, dependencies, and acceptance criteria
+7. Calculate and include metrics like total estimated hours and parallelization factor
 
-Extract from `$ARGUMENTS`:
-- Spec file path (first argument)
-- Optional: `--output [path]` for custom output location
-- Optional: `--preview` for dry-run mode
+Display a clean summary showing the output file path, total tasks, estimated time, parallelization factor, task breakdown by priority, and specialist assignments. Then show next steps for running the orchestration.
 
-If no spec file provided:
-```
-❌ Error: No spec file specified
-
-Usage: /spec-to-tasks [spec-file] [--output path] [--preview]
-Example: /spec-to-tasks .claude/specs/active/auth-system.md
-```
-
-### Validation
-
-**Check file exists:**
-If spec file not found:
-```
-❌ Error: Spec file not found: [path]
-```
-
-### Parse Specification
-
-**Step 1: Extract Metadata**
-From the spec file, extract:
-- **Spec ID**: Look for "Spec ID:" line
-- **Spec Name**: Derive from filename
-- **Spec Type**: Detect from header (Feature/Epic/Refactor/Integration)
-- **Creation Date**: Current timestamp
-
-Display:
-```
-📝 Parsing Specification
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Spec: .claude/specs/active/auth-system.md
-
-📋 Spec Details:
-  Name: auth-system
-  ID: FEATURE-20250113
-  Type: feature
-```
-
-**Step 2: Parse Implementation Plan**
-Read the "## Implementation Plan" section and extract:
-1. Each task/subtask listed
-2. Task descriptions
-3. Dependencies mentioned
-4. Acceptance criteria
-
-Intelligently determine for each task:
-- **Specialist**: Based on task type
-  - API/backend/database → `droidz-codegen`
-  - UI/components/frontend → `droidz-codegen`
-  - Tests/coverage → `droidz-test`
-  - Refactoring/cleanup → `droidz-refactor`
-  - CI/CD/deployment → `droidz-infra`
-  - Third-party integration → `droidz-integration`
-  - Other → `droidz-generalist`
-
-- **Priority**: Based on dependencies
-  - No dependencies → Priority 1 (can start immediately)
-  - Has dependencies → Priority 2+ (sequential)
-
-- **Parallelization**: Tasks with same priority can run in parallel
-
-**Step 3: Generate Tasks JSON**
-
-Create output file at `.claude/specs/active/tasks/[spec-name]-tasks.json` (or custom path if specified):
-
-```json
-{
-  "source": "spec:.claude/specs/active/auth-system.md",
-  "specId": "FEATURE-20250113",
-  "specName": "auth-system",
-  "specType": "feature",
-  "createdAt": "2025-01-13T12:00:00Z",
-  "estimatedTotalHours": 24,
-  "parallelizationFactor": "3x",
-  "tasks": [
-    {
-      "key": "AUTH-001",
-      "title": "Backend Authentication API",
-      "description": "Implement REST API endpoints for user authentication",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedHours": 8,
-      "dependencies": [],
-      "parallel": true,
-      "acceptanceCriteria": [
-        "All endpoints return < 200ms",
-        "JWT validation works",
-        "Rate limiting implemented"
-      ]
-    }
-  ]
-}
-```
-
-**Step 4: Calculate Metrics**
-- `estimatedTotalHours`: Sum of all task hours
-- `parallelizationFactor`: `[count of priority-1 tasks]x` (e.g., "3x" means 3 tasks can run simultaneously)
-
-**Step 5: Display Summary**
-
-```
-✅ Task Extraction Complete
-
-Output: .claude/specs/active/tasks/auth-system-tasks.json
-
-📊 Summary:
-  Total Tasks: 5
-  Estimated Hours: 24
-  Parallelization: 3x (3 tasks can run simultaneously)
-
-Task Breakdown:
-  Priority 1: 3 tasks (can run in parallel)
-  Priority 2: 2 tasks (depend on priority 1)
-
-Specialists:
-  droidz-codegen: 3 tasks
-  droidz-test: 1 task
-  droidz-infra: 1 task
-
-🎯 Next Steps:
-  1. Review the generated tasks
-  2. Run: /orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
-```
-
-### Preview Mode
-
-If `--preview` flag is present, don't write file. Instead, display tasks in formatted output for user review.
+If the `--preview` flag is present, display the tasks in a formatted table instead of writing to a file. Use the clean formatting style shown in the examples above with appropriate emoji and box-drawing characters.

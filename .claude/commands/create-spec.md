@@ -91,82 +91,24 @@ Pre-filled with:
 
 ---
 
-## Implementation Instructions
+You are helping the user create a new specification file. Parse the arguments ($ARGUMENTS) to extract the spec type and name:
 
-When this command is executed, perform the following based on $ARGUMENTS:
+**If no arguments:** Display a helpful menu showing the available spec types (feature, epic, refactor, integration) with descriptions and usage examples.
 
-### Parse Arguments
+**If arguments provided:** Extract the first word as the spec type and the second word as the spec name.
 
-Extract type and name from `$ARGUMENTS`:
-- First word: `SPEC_TYPE` (feature, epic, refactor, integration)
-- Second word: `SPEC_NAME` (e.g., auth-system)
+Validate that:
+- The spec type is one of: feature, epic, refactor, or integration
+- A spec name was provided
+- The spec doesn't already exist at `.claude/specs/active/[name].md`
 
-If arguments missing, display usage:
-```
-🎯 Create New Specification
+If validation fails, show a clear error message explaining the issue.
 
-What type of spec do you want to create?
+**To create the spec:**
+1. Ensure the necessary directories exist (`.claude/specs/active/` and `.claude/specs/templates/`)
+2. Read the appropriate template from `.claude/specs/templates/[type]-spec.md`
+3. Customize the template by replacing placeholders like `YYYY-MM-DD` with today's date, `[Feature Name]` with the provided name, and generating an appropriate spec ID
+4. Write the customized spec to `.claude/specs/active/[name].md`
+5. Display a success message showing the created file path, template used, date, and next steps (validate, convert to tasks, orchestrate)
 
-  1. feature    - Single feature or enhancement (1-2 weeks)
-  2. epic       - Large initiative with multiple features (1-3 months)
-  3. refactor   - Code improvement without behavior change (1-4 weeks)
-  4. integration - Third-party service integration (3-7 days)
-
-Usage: /create-spec [type] [name]
-Example: /create-spec feature auth-system
-```
-
-### Validation
-
-**Validate spec type:**
-- Must be one of: `feature`, `epic`, `refactor`, `integration`
-- If invalid, show error and valid types
-
-**Check for duplicates:**
-- Check if `.claude/specs/active/[name].md` already exists
-- If exists, offer options:
-  1. Edit existing spec
-  2. Choose different name
-  3. Archive existing and create new
-
-### Create Spec
-
-**Step 1: Ensure Directories**
-Create if not exist:
-- `.claude/specs/active/`
-- `.claude/specs/templates/`
-
-**Step 2: Load Template**
-Read template file: `.claude/specs/templates/[type]-spec.md`
-
-If template doesn't exist, show error:
-```
-❌ Error: Template not found: .claude/specs/templates/[type]-spec.md
-
-Please ensure Droidz is properly initialized.
-Run: /droidz-init
-```
-
-**Step 3: Customize Template**
-Replace placeholders:
-- `YYYY-MM-DD` → Current date
-- `[Feature Name]` → Provided name
-- `FEAT-XXX` → `[TYPE]-[YYYYMMDD]` (e.g., FEATURE-20250113)
-
-**Step 4: Write Spec File**
-Write to: `.claude/specs/active/[name].md`
-
-**Step 5: Display Success**
-```
-✅ Created: .claude/specs/active/auth-system.md
-📝 Template: feature-spec
-📅 Date: 2025-01-13
-
-🎯 Next steps:
-   1. Edit the spec file and fill in all sections
-   2. Run: /validate-spec .claude/specs/active/auth-system.md
-   3. Run: /spec-to-tasks .claude/specs/active/auth-system.md
-   4. Run: /orchestrate file:auth-system-tasks.json
-```
-
-Then open the created file for the user to review and edit.
+Then open the created file so the user can review and edit it. Use clean formatting with checkmarks and appropriate emoji as shown in the examples above.

@@ -238,93 +238,27 @@ Happy building with Droidz! 🚀
 
 ---
 
-## Implementation Instructions
+You are helping the user initialize Droidz in their project. Based on the arguments provided ($ARGUMENTS), perform the appropriate setup:
 
-When this command is executed, perform the following steps based on $ARGUMENTS:
+**If `--status` flag is present:**
+Check if `.claude/memory/org/tech-stack.json` exists and display the current Droidz configuration status, including detected framework and any active orchestrations in `.runs/.coordination/`. Format the output cleanly as shown in the examples above.
 
-### Parse Mode
-- If `$ARGUMENTS` contains `--quick`: Use quick mode (minimal setup)
-- If `$ARGUMENTS` contains `--full`: Use full mode (comprehensive setup)
-- If `$ARGUMENTS` contains `--status`: Show status only
-- Otherwise: Use interactive mode
+**If no arguments or other flags:**
+Perform Droidz setup by:
 
-### Status Mode (--status)
-Display current Droidz configuration:
-1. Check if `.claude/memory/org/tech-stack.json` exists
-2. Show detected framework and tech stack
-3. List active orchestrations from `.runs/.coordination/`
-4. Display initialization status
+1. **Verify environment**: Check that we're in a git repository and that required tools (git, jq, tmux) are available. Display the results clearly with checkmarks.
 
-Output format:
-```
-📊 Droidz Status
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. **Create directory structure**: Create these directories if they don't exist:
+   - `.claude/memory/org/`
+   - `.claude/memory/user/`
+   - `.claude/specs/active/`
+   - `.claude/specs/archive/`
+   - `.claude/specs/examples/`
+   - `.claude/scripts/`
+   - `.runs/.coordination/`
 
-✅ Droidz initialized
-  Framework: [detected framework]
+3. **Initialize memory files**: If `.claude/memory/org/tech-stack.json` doesn't exist, create it as an empty tech stack template with fields for version, framework, runtime, packageManager, frameworks, libraries, buildTools, and testFrameworks.
 
-Active Orchestrations:
-  - session-id (status)
-```
+4. **Display completion**: Show a nicely formatted success message with next steps, referencing the other slash commands the user can run next (`/create-spec`, `/validate-spec`, `/spec-to-tasks`, `/orchestrate`).
 
-### Setup Mode (default, --quick, --full)
-
-**Step 1: Environment Check**
-1. Verify git repository exists (`git rev-parse --git-dir`)
-2. Check required commands: git, jq, tmux
-3. If any missing, show installation instructions
-4. Display results with ✅ or ⚠️
-
-**Step 2: Create Directories**
-Create if not exist:
-- `.claude/memory/org/`
-- `.claude/memory/user/`
-- `.claude/specs/active/`
-- `.claude/specs/archive/`
-- `.claude/specs/examples/`
-- `.claude/scripts/`
-- `.runs/.coordination/`
-
-**Step 3: Initialize Memory**
-If `.claude/memory/org/tech-stack.json` doesn't exist, create it with:
-```json
-{
-  "version": "1.0.0",
-  "lastUpdated": null,
-  "detected": false,
-  "framework": null,
-  "stack": {
-    "runtime": null,
-    "packageManager": null,
-    "frameworks": [],
-    "libraries": [],
-    "buildTools": [],
-    "testFrameworks": []
-  }
-}
-```
-
-**Step 4: Display Summary**
-Show completion message with next steps:
-
-```
-╔═══════════════════════════════════════════════════╗
-║                                                   ║
-║   ✅ Droidz Setup Complete!                       ║
-║                                                   ║
-╚═══════════════════════════════════════════════════╝
-
-Next Steps:
-  1. Create your first spec: /create-spec feature my-feature
-  2. Validate the spec: /validate-spec .claude/specs/active/my-feature.md
-  3. Convert to tasks: /spec-to-tasks .claude/specs/active/my-feature.md
-  4. Start orchestration: /orchestrate file:my-feature-tasks.json
-
-Quick Reference:
-  /create-spec [type] [name]  - Create specification
-  /validate-spec [file]       - Validate specification
-  /spec-to-tasks [file]       - Convert to tasks
-  /orchestrate [source]       - Parallel execution
-
-Happy building with Droidz! 🚀
-```
+Use the formatting style shown in the examples above with box-drawing characters, checkmarks, and color-coded sections to make the output clean and professional.

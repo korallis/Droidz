@@ -224,129 +224,26 @@ tmux kill-session -t droidz-TASK-KEY
 
 ---
 
-## Implementation Instructions
+You are helping the user orchestrate parallel task execution. Parse the arguments ($ARGUMENTS) and perform the appropriate action:
 
-When this command is executed, perform the following based on $ARGUMENTS:
+**If no arguments:** Display an interactive menu asking the user what they'd like to orchestrate (Linear query, spec file, JSON file, or list active orchestrations).
 
-### Parse Arguments
+**If arguments start with `linear:`** - Fetch tasks from Linear using the MCP integration, extract the query after the colon, convert the Linear issues to task JSON format, then proceed with orchestration.
 
-If `$ARGUMENTS` is empty:
-- Display interactive mode menu asking user to specify: linear query, spec file, JSON file, or list
-- Wait for user response
+**If arguments start with `spec:`** - Read the specified markdown spec file, parse the Implementation Plan section to extract tasks, convert them to task JSON format, then orchestrate.
 
-If `$ARGUMENTS` starts with prefix, handle accordingly:
+**If arguments start with `file:`** - Load and parse the specified JSON task file, validate the format, then orchestrate.
 
-**`linear:QUERY`** - Fetch from Linear
-1. Extract query after `linear:`
-2. Use MCP Linear integration to fetch issues matching query
-3. Convert Linear issues to task JSON format
-4. Proceed to orchestration
+**If argument is `list`** - Check the `.runs/.coordination/` directory for active orchestration state files and display a clean table showing Session ID, Status, Task count, and Start time for each.
 
-**`spec:FILE`** - Parse spec file
-1. Extract file path after `spec:`
-2. Read the markdown spec file
-3. Parse "Implementation Plan" section for tasks
-4. Convert to task JSON format
-5. Proceed to orchestration
+**If arguments start with `cleanup:`** - Clean up the specified orchestration session by removing git worktrees, killing tmux sessions, and deleting coordination state files. Display a summary of what was cleaned up.
 
-**`file:FILE`** - Load JSON file
-1. Extract file path after `file:`
-2. Read and parse JSON file
-3. Validate task format
-4. Proceed to orchestration
+**For orchestration execution:**
+Once you have tasks loaded from any source:
+1. Display a clean summary of the orchestration plan showing task count, task details, estimated time, and parallelization factor
+2. Create git worktrees in `.runs/[TASK-KEY]/` for each task
+3. Spawn tmux sessions named `droidz-[TASK-KEY]` for each task
+4. Initialize each task workspace with `.claude-context.md` and `.droidz-meta.json` files
+5. Display next steps with session ID, tmux attach commands, and monitoring instructions
 
-**`list`** - List active orchestrations
-1. Check `.runs/.coordination/` directory
-2. Read all `orchestration-*.json` files
-3. Display table with:
-   - Session ID
-   - Status (running/paused/completed)
-   - Task count
-   - Start time
-
-**`cleanup:SESSION_ID`** - Cleanup orchestration
-1. Extract session ID after `cleanup:`
-2. Remove git worktrees in `.runs/[TASK-KEY]/`
-3. Kill tmux sessions `droidz-[TASK-KEY]`
-4. Delete coordination state files
-5. Display cleanup summary
-
-### Orchestration Process
-
-Once tasks are loaded:
-
-**Step 1: Display Task Summary**
-```
-📋 Orchestration Plan
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Tasks: 3
-├─ DROIDZ-001: Implement authentication API (droidz-codegen)
-├─ DROIDZ-002: Create login UI (droidz-codegen)
-└─ DROIDZ-003: Write integration tests (droidz-test)
-
-Estimated time: 15-20 minutes
-Parallelization: 3 concurrent tasks
-```
-
-**Step 2: Create Worktrees**
-For each task:
-1. Create git worktree: `.runs/[TASK-KEY]/`
-2. Display: `✓ Created worktree: .runs/DROIDZ-001`
-
-**Step 3: Spawn Tmux Sessions**
-For each task:
-1. Create tmux session: `droidz-[TASK-KEY]`
-2. Set working directory to worktree
-3. Display: `✓ Created tmux session: droidz-DROIDZ-001`
-
-**Step 4: Initialize Tasks**
-In each worktree:
-1. Create `.claude-context.md` with task details
-2. Create `.droidz-meta.json` with task metadata
-3. Load specialist agent configuration
-
-**Step 5: Display Next Steps**
-```
-✅ Orchestration Started
-
-Session ID: 20250113-143022-12345
-
-Active Tasks:
-  1. DROIDZ-001 in tmux session: droidz-DROIDZ-001
-  2. DROIDZ-002 in tmux session: droidz-DROIDZ-002
-  3. DROIDZ-003 in tmux session: droidz-DROIDZ-003
-
-Attach to sessions:
-  tmux attach -t droidz-DROIDZ-001
-  tmux attach -t droidz-DROIDZ-002
-  tmux attach -t droidz-DROIDZ-003
-
-Monitor progress:
-  /orchestrate list
-
-Cleanup when done:
-  /orchestrate cleanup:20250113-143022-12345
-```
-
-### Error Handling
-
-If orchestrator script missing:
-```
-❌ Orchestrator script not found: .claude/scripts/orchestrator.sh
-
-Please ensure Droidz is properly initialized.
-Run: /droidz-init
-```
-
-If unknown argument format:
-```
-❌ Unknown orchestration source: [argument]
-
-Valid formats:
-  linear:QUERY       - Fetch from Linear
-  spec:FILE          - Parse spec markdown
-  file:FILE          - Load JSON tasks
-  list               - Show active orchestrations
-  cleanup:SESSION_ID - Clean up orchestration
-```
+Use the clean formatting style shown in the examples above. If the orchestrator script is missing or arguments are invalid, show helpful error messages with instructions on how to fix the issue.
