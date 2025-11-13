@@ -55,19 +55,19 @@
     ]
   },
   "components": {
-    "agents": ".claude/agents/*.md",
-    "skills": ".claude/skills/*.md",
-    "commands": ".claude/commands/*.md",
+    "agents": ".factory/agents/*.md",
+    "skills": ".factory/skills/*.md",
+    "commands": ".factory/commands/*.md",
     "hooks": {
-      "config": ".claude/settings.json",
-      "scripts": ".claude/hooks/*.sh"
+      "config": ".factory/settings.json",
+      "scripts": ".factory/hooks/*.sh"
     },
     "standards": {
-      "templates": ".claude/standards/templates/*.md"
+      "templates": ".factory/standards/templates/*.md"
     },
     "memory": {
-      "org": ".claude/memory/org/",
-      "user": ".claude/memory/user/"
+      "org": ".factory/memory/org/",
+      "user": ".factory/memory/user/"
     }
   },
   "features": {
@@ -168,6 +168,6 @@
   "links": {
     "documentation": "https://github.com/korallis/Droidz/blob/Claude-Code/CLAUDE-CODE-MIGRATION.md",
     "issues": "https://github.com/korallis/Droidz/issues",
-    "examples": "https://github.com/korallis/Droidz/tree/Claude-Code/.claude"
+    "examples": "https://github.com/korallis/Droidz/tree/Claude-Code/.factory"
   }
 }

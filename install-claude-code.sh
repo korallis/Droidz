@@ -368,11 +368,11 @@ check_prerequisites() {
                 if [[ ! -f .gitignore ]]; then
                     cat > .gitignore << 'EOF'
 # Droidz Framework - User-specific files
-.claude/memory/user/
+.factory/memory/user/
 .runs/
 *.backup.*
 *-tasks.json
-.claude-*-backup*
+.factory-*-backup*
 
 # Common ignores
 node_modules/
@@ -563,7 +563,7 @@ detect_custom_files() {
     local custom_count=0
 
     # Check for custom agents
-    if [[ -d ".claude/agents" ]]; then
+    if [[ -d ".factory/agents" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
             basename_file=$(basename "$file")
@@ -572,11 +572,11 @@ detect_custom_files() {
                 log_custom "Custom agent: $basename_file"
                 ((custom_count++))
             fi
-        done < <(find .claude/agents -name "*.md" -type f -print0 2>/dev/null)
+        done < <(find .factory/agents -name "*.md" -type f -print0 2>/dev/null)
     fi
 
     # Check for custom skills
-    if [[ -d ".claude/skills" ]]; then
+    if [[ -d ".factory/skills" ]]; then
         while IFS= read -r -d '' dir; do
             local skill_name
             skill_name=$(basename "$dir")
@@ -586,11 +586,11 @@ detect_custom_files() {
                 log_custom "Custom skill: $skill_name"
                 ((custom_count++))
             fi
-        done < <(find .claude/skills -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+        done < <(find .factory/skills -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
     fi
 
     # Check for custom commands
-    if [[ -d ".claude/commands" ]]; then
+    if [[ -d ".factory/commands" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
             basename_file=$(basename "$file")
@@ -599,29 +599,29 @@ detect_custom_files() {
                 log_custom "Custom command: $basename_file"
                 ((custom_count++))
             fi
-        done < <(find .claude/commands -name "*.md" -type f -print0 2>/dev/null)
+        done < <(find .factory/commands -name "*.md" -type f -print0 2>/dev/null)
     fi
 
     # Check for custom hooks
-    if [[ -d ".claude/hooks" ]] && [[ -n "$(ls -A .claude/hooks 2>/dev/null)" ]]; then
+    if [[ -d ".factory/hooks" ]] && [[ -n "$(ls -A .factory/hooks 2>/dev/null)" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
             basename_file=$(basename "$file")
             CUSTOM_FILES+=("hooks/$basename_file")
             log_custom "Custom hook: $basename_file"
             ((custom_count++))
-        done < <(find .claude/hooks -type f -print0 2>/dev/null)
+        done < <(find .factory/hooks -type f -print0 2>/dev/null)
     fi
 
     # Check for custom standards
-    if [[ -d ".claude/standards" ]] && [[ -n "$(ls -A .claude/standards 2>/dev/null)" ]]; then
+    if [[ -d ".factory/standards" ]] && [[ -n "$(ls -A .factory/standards 2>/dev/null)" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
             basename_file=$(basename "$file")
             CUSTOM_FILES+=("standards/$basename_file")
             log_custom "Custom standard: $basename_file"
             ((custom_count++))
-        done < <(find .claude/standards -type f -print0 2>/dev/null)
+        done < <(find .factory/standards -type f -print0 2>/dev/null)
     fi
 
     if [[ $custom_count -eq 0 ]]; then
@@ -642,26 +642,26 @@ backup_custom_files() {
 
     log_step "Backing up custom files..."
 
-    local backup_dir=".claude-custom-backup.$(date +%Y%m%d_%H%M%S)"
+    local backup_dir=".factory-custom-backup.$(date +%Y%m%d_%H%M%S)"
     mkdir -p "$backup_dir"
 
     for file in "${CUSTOM_FILES[@]}"; do
-        if [[ -f ".claude/$file" ]]; then
+        if [[ -f ".factory/$file" ]]; then
             local dir
             dir=$(dirname "$file")
             mkdir -p "$backup_dir/$dir"
-            cp ".claude/$file" "$backup_dir/$file"
+            cp ".factory/$file" "$backup_dir/$file"
             log_success "Backed up: $file"
-        elif [[ -d ".claude/$file" ]]; then
+        elif [[ -d ".factory/$file" ]]; then
             local dir
             dir=$(dirname "$file")
             mkdir -p "$backup_dir/$dir"
-            cp -r ".claude/$file" "$backup_dir/$file"
+            cp -r ".factory/$file" "$backup_dir/$file"
             log_success "Backed up: $file"
         fi
     done
 
-    echo "$backup_dir" > .claude-custom-backup-location
+    echo "$backup_dir" > .factory-custom-backup-location
     log_success "Custom files backed up to: $backup_dir"
 }
 
@@ -672,13 +672,13 @@ restore_custom_files() {
 
     log_step "Restoring custom files..."
 
-    if [[ ! -f .claude-custom-backup-location ]]; then
+    if [[ ! -f .factory-custom-backup-location ]]; then
         log_warning "No backup location found, skipping restore"
         return 0
     fi
 
     local backup_dir
-    backup_dir=$(cat .claude-custom-backup-location)
+    backup_dir=$(cat .factory-custom-backup-location)
 
     if [[ ! -d "$backup_dir" ]]; then
         log_warning "Backup directory not found: $backup_dir"
@@ -689,33 +689,33 @@ restore_custom_files() {
         if [[ -f "$backup_dir/$file" ]]; then
             local dir
             dir=$(dirname "$file")
-            mkdir -p ".claude/$dir"
-            cp "$backup_dir/$file" ".claude/$file"
+            mkdir -p ".factory/$dir"
+            cp "$backup_dir/$file" ".factory/$file"
             PRESERVED_FILES+=("$file")
             log_success "Restored: $file"
         elif [[ -d "$backup_dir/$file" ]]; then
             local dir
             dir=$(dirname "$file")
-            mkdir -p ".claude/$dir"
-            cp -r "$backup_dir/$file" ".claude/$file"
+            mkdir -p ".factory/$dir"
+            cp -r "$backup_dir/$file" ".factory/$file"
             PRESERVED_FILES+=("$file")
             log_success "Restored: $file"
         fi
     done
 
     # Clean up backup location file
-    rm -f .claude-custom-backup-location
+    rm -f .factory-custom-backup-location
 }
 
 preserve_memory_files() {
     log_step "Preserving memory files..."
 
-    local memory_backup=".claude-memory-backup.$(date +%Y%m%d_%H%M%S)"
+    local memory_backup=".factory-memory-backup.$(date +%Y%m%d_%H%M%S)"
 
-    if [[ -d ".claude/memory" ]]; then
-        cp -r ".claude/memory" "$memory_backup"
+    if [[ -d ".factory/memory" ]]; then
+        cp -r ".factory/memory" "$memory_backup"
         log_success "Memory files backed up to: $memory_backup"
-        echo "$memory_backup" > .claude-memory-backup-location
+        echo "$memory_backup" > .factory-memory-backup-location
     else
         log_info "No existing memory files to preserve"
     fi
@@ -724,13 +724,13 @@ preserve_memory_files() {
 restore_memory_files() {
     log_step "Restoring memory files..."
 
-    if [[ ! -f .claude-memory-backup-location ]]; then
+    if [[ ! -f .factory-memory-backup-location ]]; then
         log_info "No memory backup found, will use fresh memory files"
         return 0
     fi
 
     local memory_backup
-    memory_backup=$(cat .claude-memory-backup-location)
+    memory_backup=$(cat .factory-memory-backup-location)
 
     if [[ ! -d "$memory_backup" ]]; then
         log_warning "Memory backup directory not found: $memory_backup"
@@ -739,30 +739,30 @@ restore_memory_files() {
 
     # Restore org memory (decisions, patterns, tech-stack)
     if [[ -d "$memory_backup/org" ]]; then
-        cp -r "$memory_backup/org"/* ".claude/memory/org/" 2>/dev/null || true
+        cp -r "$memory_backup/org"/* ".factory/memory/org/" 2>/dev/null || true
         log_success "Restored organization memory"
     fi
 
     # Restore user memory (preferences, context)
     if [[ -d "$memory_backup/user" ]]; then
-        cp -r "$memory_backup/user"/* ".claude/memory/user/" 2>/dev/null || true
+        cp -r "$memory_backup/user"/* ".factory/memory/user/" 2>/dev/null || true
         log_success "Restored user memory"
     fi
 
     # Clean up backup location file
-    rm -f .claude-memory-backup-location
+    rm -f .factory-memory-backup-location
 }
 
 preserve_active_specs() {
     log_step "Preserving active specs..."
 
-    local specs_backup=".claude-specs-backup.$(date +%Y%m%d_%H%M%S)"
+    local specs_backup=".factory-specs-backup.$(date +%Y%m%d_%H%M%S)"
 
-    if [[ -d ".claude/specs/active" ]] && [[ -n "$(ls -A .claude/specs/active 2>/dev/null)" ]]; then
+    if [[ -d ".factory/specs/active" ]] && [[ -n "$(ls -A .factory/specs/active 2>/dev/null)" ]]; then
         mkdir -p "$specs_backup"
-        cp -r ".claude/specs/active"/* "$specs_backup/" 2>/dev/null || true
+        cp -r ".factory/specs/active"/* "$specs_backup/" 2>/dev/null || true
         log_success "Active specs backed up to: $specs_backup"
-        echo "$specs_backup" > .claude-specs-backup-location
+        echo "$specs_backup" > .factory-specs-backup-location
     else
         log_info "No active specs to preserve"
     fi
@@ -771,25 +771,25 @@ preserve_active_specs() {
 restore_active_specs() {
     log_step "Restoring active specs..."
 
-    if [[ ! -f .claude-specs-backup-location ]]; then
+    if [[ ! -f .factory-specs-backup-location ]]; then
         log_info "No specs backup found"
         return 0
     fi
 
     local specs_backup
-    specs_backup=$(cat .claude-specs-backup-location)
+    specs_backup=$(cat .factory-specs-backup-location)
 
     if [[ ! -d "$specs_backup" ]]; then
         log_warning "Specs backup directory not found: $specs_backup"
         return 0
     fi
 
-    mkdir -p ".claude/specs/active"
-    cp -r "$specs_backup"/* ".claude/specs/active/" 2>/dev/null || true
+    mkdir -p ".factory/specs/active"
+    cp -r "$specs_backup"/* ".factory/specs/active/" 2>/dev/null || true
     log_success "Restored active specs"
 
     # Clean up backup location file
-    rm -f .claude-specs-backup-location
+    rm -f .factory-specs-backup-location
 }
 
 # ============================================================================
@@ -801,7 +801,7 @@ install_framework() {
 
     local repo_url="https://github.com/korallis/Droidz.git"
     local branch="Claude-Code"
-    local install_dir=".claude"
+    local install_dir=".factory"
 
     # Create temporary directory
     TEMP_DIR=$(mktemp -d)
@@ -817,7 +817,7 @@ install_framework() {
     fi
     log_success "Framework downloaded"
 
-    if [[ ! -d "$TEMP_DIR/droidz/.claude" ]]; then
+    if [[ ! -d "$TEMP_DIR/droidz/.factory" ]]; then
         error_exit "Framework files not found in downloaded package" 1
     fi
 
@@ -844,7 +844,7 @@ install_framework() {
 
     # Install new framework
     log_info "Installing framework files..."
-    cp -r "$TEMP_DIR/droidz/.claude" "$install_dir"
+    cp -r "$TEMP_DIR/droidz/.factory" "$install_dir"
     log_success "Framework files installed to $install_dir/"
 
     # Restore preserved files
@@ -890,40 +890,40 @@ verify_installation() {
     log_step "Verifying installation..."
 
     local required_dirs=(
-        ".claude/agents"
-        ".claude/skills"
-        ".claude/commands"
-        ".claude/scripts"
-        ".claude/memory/org"
-        ".claude/memory/user"
-        ".claude/product"
-        ".claude/specs/templates"
-        ".claude/specs/active"
-        ".claude/specs/archive"
+        ".factory/agents"
+        ".factory/skills"
+        ".factory/commands"
+        ".factory/scripts"
+        ".factory/memory/org"
+        ".factory/memory/user"
+        ".factory/product"
+        ".factory/specs/templates"
+        ".factory/specs/active"
+        ".factory/specs/archive"
     )
 
     local required_files=(
-        ".claude/agents/codegen.md"
-        ".claude/agents/test.md"
-        ".claude/agents/refactor.md"
-        ".claude/agents/infra.md"
-        ".claude/agents/integration.md"
-        ".claude/agents/droidz-orchestrator.md"
-        ".claude/agents/generalist.md"
-        ".claude/skills/spec-shaper/SKILL.md"
-        ".claude/skills/auto-orchestrator/SKILL.md"
-        ".claude/skills/memory-manager/SKILL.md"
-        ".claude/commands/droidz-init.md"
-        ".claude/commands/create-spec.md"
-        ".claude/commands/validate-spec.md"
-        ".claude/commands/spec-to-tasks.md"
-        ".claude/commands/orchestrate.md"
-        ".claude/scripts/orchestrator.sh"
-        ".claude/product/vision.md"
-        ".claude/product/roadmap.md"
-        ".claude/product/use-cases.md"
-        ".claude/specs/templates/feature-spec.md"
-        ".claude/specs/templates/epic-spec.md"
+        ".factory/agents/codegen.md"
+        ".factory/agents/test.md"
+        ".factory/agents/refactor.md"
+        ".factory/agents/infra.md"
+        ".factory/agents/integration.md"
+        ".factory/agents/droidz-orchestrator.md"
+        ".factory/agents/generalist.md"
+        ".factory/skills/spec-shaper/SKILL.md"
+        ".factory/skills/auto-orchestrator/SKILL.md"
+        ".factory/skills/memory-manager/SKILL.md"
+        ".factory/commands/droidz-init.md"
+        ".factory/commands/create-spec.md"
+        ".factory/commands/validate-spec.md"
+        ".factory/commands/spec-to-tasks.md"
+        ".factory/commands/orchestrate.md"
+        ".factory/scripts/orchestrator.sh"
+        ".factory/product/vision.md"
+        ".factory/product/roadmap.md"
+        ".factory/product/use-cases.md"
+        ".factory/specs/templates/feature-spec.md"
+        ".factory/specs/templates/epic-spec.md"
     )
 
     local missing=0
@@ -952,11 +952,11 @@ verify_installation() {
 
     # Verify memory files were created
     local memory_files=(
-        ".claude/memory/org/decisions.json"
-        ".claude/memory/org/patterns.json"
-        ".claude/memory/org/tech-stack.json"
-        ".claude/memory/user/preferences.json"
-        ".claude/memory/user/context.json"
+        ".factory/memory/org/decisions.json"
+        ".factory/memory/org/patterns.json"
+        ".factory/memory/org/tech-stack.json"
+        ".factory/memory/user/preferences.json"
+        ".factory/memory/user/context.json"
     )
 
     local memory_count=0
@@ -974,15 +974,15 @@ verify_installation() {
 
     # Count components
     local agent_count
-    agent_count=$(find .claude/agents -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    agent_count=$(find .factory/agents -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
     log_success "Found $agent_count agent(s)"
 
     local skill_count
-    skill_count=$(find .claude/skills -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
+    skill_count=$(find .factory/skills -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
     log_success "Found $skill_count skill(s)"
 
     local command_count
-    command_count=$(find .claude/commands -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    command_count=$(find .factory/commands -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
     log_success "Found $command_count command(s)"
 }
 
@@ -991,11 +991,11 @@ setup_gitignore() {
 
     local gitignore_entries=(
         "# Droidz Framework - User-specific files"
-        ".claude/memory/user/"
+        ".factory/memory/user/"
         ".runs/"
         "*.backup.*"
         "*-tasks.json"
-        ".claude-*-backup*"
+        ".factory-*-backup*"
     )
 
     if [[ -f .gitignore ]]; then
@@ -1010,11 +1010,11 @@ setup_gitignore() {
         {
             echo ""
             echo "# Droidz Framework - User-specific files"
-            echo ".claude/memory/user/"
+            echo ".factory/memory/user/"
             echo ".runs/"
             echo "*.backup.*"
             echo "*-tasks.json"
-            echo ".claude-*-backup*"
+            echo ".factory-*-backup*"
         } >> .gitignore
         log_success ".gitignore updated"
     else
@@ -1028,8 +1028,8 @@ initialize_memory() {
     log_step "Initializing memory system..."
 
     # Create org memory files if they don't exist
-    if [[ ! -f ".claude/memory/org/decisions.json" ]]; then
-        cat > .claude/memory/org/decisions.json << 'EOF'
+    if [[ ! -f ".factory/memory/org/decisions.json" ]]; then
+        cat > .factory/memory/org/decisions.json << 'EOF'
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
@@ -1043,8 +1043,8 @@ EOF
         log_success "Created decisions.json"
     fi
 
-    if [[ ! -f ".claude/memory/org/patterns.json" ]]; then
-        cat > .claude/memory/org/patterns.json << 'EOF'
+    if [[ ! -f ".factory/memory/org/patterns.json" ]]; then
+        cat > .factory/memory/org/patterns.json << 'EOF'
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
@@ -1058,8 +1058,8 @@ EOF
         log_success "Created patterns.json"
     fi
 
-    if [[ ! -f ".claude/memory/org/tech-stack.json" ]]; then
-        cat > .claude/memory/org/tech-stack.json << 'EOF'
+    if [[ ! -f ".factory/memory/org/tech-stack.json" ]]; then
+        cat > .factory/memory/org/tech-stack.json << 'EOF'
 {
   "version": "1.0.0",
   "lastUpdated": null,
@@ -1079,8 +1079,8 @@ EOF
     fi
 
     # Create user memory files if they don't exist
-    if [[ ! -f ".claude/memory/user/preferences.json" ]]; then
-        cat > .claude/memory/user/preferences.json << 'EOF'
+    if [[ ! -f ".factory/memory/user/preferences.json" ]]; then
+        cat > .factory/memory/user/preferences.json << 'EOF'
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
@@ -1094,8 +1094,8 @@ EOF
         log_success "Created preferences.json"
     fi
 
-    if [[ ! -f ".claude/memory/user/context.json" ]]; then
-        cat > .claude/memory/user/context.json << 'EOF'
+    if [[ ! -f ".factory/memory/user/context.json" ]]; then
+        cat > .factory/memory/user/context.json << 'EOF'
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
@@ -1113,8 +1113,8 @@ EOF
     fi
 
     # Create tasks directory for spec-to-tasks output
-    if [[ ! -d ".claude/specs/active/tasks" ]]; then
-        mkdir -p ".claude/specs/active/tasks"
+    if [[ ! -d ".factory/specs/active/tasks" ]]; then
+        mkdir -p ".factory/specs/active/tasks"
         log_success "Created tasks directory"
     fi
 
@@ -1184,7 +1184,7 @@ display_summary() {
     echo -e "  ${GREEN}✓${NC} Complete Documentation"
     echo ""
     echo -e "${CYAN}Installed Files:${NC}"
-    echo -e "  📁 ${BOLD}.claude/${NC}                    - Framework directory"
+    echo -e "  📁 ${BOLD}.factory/${NC}                    - Framework directory"
     echo -e "  📄 ${BOLD}README.md${NC}                   - Complete framework guide"
     echo -e "  📄 ${BOLD}QUICK_START.md${NC}              - 5-minute quick start"
     echo ""
@@ -1222,7 +1222,7 @@ main() {
     echo ""
 
     local is_update=false
-    if [[ -d ".claude" ]]; then
+    if [[ -d ".factory" ]]; then
         is_update=true
     fi
 

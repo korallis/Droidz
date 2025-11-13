@@ -1,5 +1,5 @@
 {
-  "source": "spec:.claude/specs/active/todo-app-test.md",
+  "source": "spec:.factory/specs/active/todo-app-test.md",
   "specId": "FEAT-TEST-001",
   "specName": "todo-app-test",
   "specType": "feature",
