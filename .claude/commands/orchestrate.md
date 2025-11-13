@@ -224,74 +224,129 @@ tmux kill-session -t droidz-TASK-KEY
 
 ---
 
-## Implementation
+## Implementation Instructions
 
-<execute>
-ORCHESTRATOR_SCRIPT="$CLAUDE_PROJECT_DIR/.claude/scripts/orchestrator.sh"
+When this command is executed, perform the following based on $ARGUMENTS:
 
-if [ ! -f "$ORCHESTRATOR_SCRIPT" ]; then
-  echo "❌ Orchestrator script not found: $ORCHESTRATOR_SCRIPT"
-  echo ""
-  echo "Please ensure the orchestrator script exists."
-  exit 1
-fi
+### Parse Arguments
 
-# Make executable
-chmod +x "$ORCHESTRATOR_SCRIPT"
+If `$ARGUMENTS` is empty:
+- Display interactive mode menu asking user to specify: linear query, spec file, JSON file, or list
+- Wait for user response
 
-# Parse arguments
-if [ -z "$ARGUMENTS" ]; then
-  # Interactive mode
-  echo "🎯 Interactive Orchestration Mode"
-  echo ""
-  echo "What would you like to orchestrate?"
-  echo ""
-  echo "Options:"
-  echo "  1. Linear query (e.g., 'sprint:current')"
-  echo "  2. Spec file (e.g., '.claude/specs/active/auth.md')"
-  echo "  3. JSON file (e.g., 'tasks.json')"
-  echo "  4. List active orchestrations"
-  echo ""
-  echo "Please specify your choice above, and I'll orchestrate it."
-  exit 0
-fi
+If `$ARGUMENTS` starts with prefix, handle accordingly:
 
-# Handle different argument formats
-case "$ARGUMENTS" in
-  linear:*)
-    QUERY="${ARGUMENTS#linear:}"
-    echo "📋 Orchestrating from Linear query: $QUERY"
-    exec "$ORCHESTRATOR_SCRIPT" --linear-query "$QUERY"
-    ;;
-  spec:*)
-    SPEC_FILE="${ARGUMENTS#spec:}"
-    echo "📋 Orchestrating from spec: $SPEC_FILE"
-    exec "$ORCHESTRATOR_SCRIPT" --spec "$SPEC_FILE"
-    ;;
-  file:*)
-    TASKS_FILE="${ARGUMENTS#file:}"
-    echo "📋 Orchestrating from file: $TASKS_FILE"
-    exec "$ORCHESTRATOR_SCRIPT" --tasks "$TASKS_FILE"
-    ;;
-  list)
-    echo "📋 Listing active orchestrations"
-    exec "$ORCHESTRATOR_SCRIPT" --list
-    ;;
-  cleanup:*)
-    SESSION_ID="${ARGUMENTS#cleanup:}"
-    echo "🧹 Cleaning up orchestration: $SESSION_ID"
-    exec "$ORCHESTRATOR_SCRIPT" --cleanup "$SESSION_ID"
-    ;;
-  *)
-    echo "❌ Unknown orchestration source: $ARGUMENTS"
-    echo ""
-    echo "Valid formats:"
-    echo "  linear:QUERY"
-    echo "  spec:FILE"
-    echo "  file:FILE"
-    echo "  list"
-    echo "  cleanup:SESSION_ID"
-    exit 1
-    ;;
-esac
-</execute>
+**`linear:QUERY`** - Fetch from Linear
+1. Extract query after `linear:`
+2. Use MCP Linear integration to fetch issues matching query
+3. Convert Linear issues to task JSON format
+4. Proceed to orchestration
+
+**`spec:FILE`** - Parse spec file
+1. Extract file path after `spec:`
+2. Read the markdown spec file
+3. Parse "Implementation Plan" section for tasks
+4. Convert to task JSON format
+5. Proceed to orchestration
+
+**`file:FILE`** - Load JSON file
+1. Extract file path after `file:`
+2. Read and parse JSON file
+3. Validate task format
+4. Proceed to orchestration
+
+**`list`** - List active orchestrations
+1. Check `.runs/.coordination/` directory
+2. Read all `orchestration-*.json` files
+3. Display table with:
+   - Session ID
+   - Status (running/paused/completed)
+   - Task count
+   - Start time
+
+**`cleanup:SESSION_ID`** - Cleanup orchestration
+1. Extract session ID after `cleanup:`
+2. Remove git worktrees in `.runs/[TASK-KEY]/`
+3. Kill tmux sessions `droidz-[TASK-KEY]`
+4. Delete coordination state files
+5. Display cleanup summary
+
+### Orchestration Process
+
+Once tasks are loaded:
+
+**Step 1: Display Task Summary**
+```
+📋 Orchestration Plan
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tasks: 3
+├─ DROIDZ-001: Implement authentication API (droidz-codegen)
+├─ DROIDZ-002: Create login UI (droidz-codegen)
+└─ DROIDZ-003: Write integration tests (droidz-test)
+
+Estimated time: 15-20 minutes
+Parallelization: 3 concurrent tasks
+```
+
+**Step 2: Create Worktrees**
+For each task:
+1. Create git worktree: `.runs/[TASK-KEY]/`
+2. Display: `✓ Created worktree: .runs/DROIDZ-001`
+
+**Step 3: Spawn Tmux Sessions**
+For each task:
+1. Create tmux session: `droidz-[TASK-KEY]`
+2. Set working directory to worktree
+3. Display: `✓ Created tmux session: droidz-DROIDZ-001`
+
+**Step 4: Initialize Tasks**
+In each worktree:
+1. Create `.claude-context.md` with task details
+2. Create `.droidz-meta.json` with task metadata
+3. Load specialist agent configuration
+
+**Step 5: Display Next Steps**
+```
+✅ Orchestration Started
+
+Session ID: 20250113-143022-12345
+
+Active Tasks:
+  1. DROIDZ-001 in tmux session: droidz-DROIDZ-001
+  2. DROIDZ-002 in tmux session: droidz-DROIDZ-002
+  3. DROIDZ-003 in tmux session: droidz-DROIDZ-003
+
+Attach to sessions:
+  tmux attach -t droidz-DROIDZ-001
+  tmux attach -t droidz-DROIDZ-002
+  tmux attach -t droidz-DROIDZ-003
+
+Monitor progress:
+  /orchestrate list
+
+Cleanup when done:
+  /orchestrate cleanup:20250113-143022-12345
+```
+
+### Error Handling
+
+If orchestrator script missing:
+```
+❌ Orchestrator script not found: .claude/scripts/orchestrator.sh
+
+Please ensure Droidz is properly initialized.
+Run: /droidz-init
+```
+
+If unknown argument format:
+```
+❌ Unknown orchestration source: [argument]
+
+Valid formats:
+  linear:QUERY       - Fetch from Linear
+  spec:FILE          - Parse spec markdown
+  file:FILE          - Load JSON tasks
+  list               - Show active orchestrations
+  cleanup:SESSION_ID - Clean up orchestration
+```

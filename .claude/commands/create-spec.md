@@ -91,99 +91,82 @@ Pre-filled with:
 
 ---
 
-## Implementation
+## Implementation Instructions
 
-<execute>
-SPECS_DIR="$CLAUDE_PROJECT_DIR/.claude/specs"
-TEMPLATES_DIR="$SPECS_DIR/templates"
-ACTIVE_DIR="$SPECS_DIR/active"
+When this command is executed, perform the following based on $ARGUMENTS:
 
-# Ensure directories exist
-mkdir -p "$ACTIVE_DIR"
+### Parse Arguments
 
-# Parse arguments
-if [ -z "$ARGUMENTS" ]; then
-  echo "🎯 Create New Specification"
-  echo ""
-  echo "What type of spec do you want to create?"
-  echo ""
-  echo "  1. feature    - Single feature or enhancement (1-2 weeks)"
-  echo "  2. epic       - Large initiative with multiple features (1-3 months)"
-  echo "  3. refactor   - Code improvement without behavior change (1-4 weeks)"
-  echo "  4. integration - Third-party service integration (3-7 days)"
-  echo ""
-  echo "Usage: /create-spec [type] [name]"
-  echo "Example: /create-spec feature auth-system"
-  exit 0
-fi
+Extract type and name from `$ARGUMENTS`:
+- First word: `SPEC_TYPE` (feature, epic, refactor, integration)
+- Second word: `SPEC_NAME` (e.g., auth-system)
 
-# Split arguments
-SPEC_TYPE=$(echo "$ARGUMENTS" | awk '{print $1}')
-SPEC_NAME=$(echo "$ARGUMENTS" | awk '{print $2}')
+If arguments missing, display usage:
+```
+🎯 Create New Specification
 
-if [ -z "$SPEC_NAME" ]; then
-  echo "❌ Error: Missing spec name"
-  echo ""
-  echo "Usage: /create-spec [type] [name]"
-  echo "Example: /create-spec feature auth-system"
-  exit 1
-fi
+What type of spec do you want to create?
 
-# Validate spec type
-case "$SPEC_TYPE" in
-  feature|epic|refactor|integration)
-    TEMPLATE_FILE="$TEMPLATES_DIR/${SPEC_TYPE}-spec.md"
-    ;;
-  *)
-    echo "❌ Error: Invalid spec type: $SPEC_TYPE"
-    echo ""
-    echo "Valid types: feature, epic, refactor, integration"
-    exit 1
-    ;;
-esac
+  1. feature    - Single feature or enhancement (1-2 weeks)
+  2. epic       - Large initiative with multiple features (1-3 months)
+  3. refactor   - Code improvement without behavior change (1-4 weeks)
+  4. integration - Third-party service integration (3-7 days)
 
-# Check if template exists
-if [ ! -f "$TEMPLATE_FILE" ]; then
-  echo "❌ Error: Template not found: $TEMPLATE_FILE"
-  exit 1
-fi
+Usage: /create-spec [type] [name]
+Example: /create-spec feature auth-system
+```
 
-# Create spec file path
-SPEC_FILE="$ACTIVE_DIR/${SPEC_NAME}.md"
+### Validation
 
-# Check if spec already exists
-if [ -f "$SPEC_FILE" ]; then
-  echo "⚠️  Spec already exists: $SPEC_FILE"
-  echo ""
-  echo "Options:"
-  echo "  1. Edit existing spec"
-  echo "  2. Choose different name"
-  echo "  3. Archive existing and create new"
-  exit 1
-fi
+**Validate spec type:**
+- Must be one of: `feature`, `epic`, `refactor`, `integration`
+- If invalid, show error and valid types
 
-# Copy template to active directory
-cp "$TEMPLATE_FILE" "$SPEC_FILE"
+**Check for duplicates:**
+- Check if `.claude/specs/active/[name].md` already exists
+- If exists, offer options:
+  1. Edit existing spec
+  2. Choose different name
+  3. Archive existing and create new
 
-# Update metadata in the spec
-TODAY=$(date +%Y-%m-%d)
-sed -i.bak "s/YYYY-MM-DD/$TODAY/g" "$SPEC_FILE"
-sed -i.bak "s/\\[Feature Name\\]/${SPEC_NAME}/g" "$SPEC_FILE"
-sed -i.bak "s/FEAT-XXX/${SPEC_TYPE^^}-$(date +%Y%m%d)/g" "$SPEC_FILE"
-rm -f "${SPEC_FILE}.bak"
+### Create Spec
 
-# Display success message
-echo "✅ Created: $SPEC_FILE"
-echo "📝 Template: ${SPEC_TYPE}-spec"
-echo "📅 Date: $TODAY"
-echo ""
-echo "🎯 Next steps:"
-echo "   1. Edit the spec file and fill in all sections"
-echo "   2. Run: /validate-spec $SPEC_FILE"
-echo "   3. Run: /spec-to-tasks $SPEC_FILE"
-echo "   4. Run: /orchestrate file:${SPEC_NAME}-tasks.json"
-echo ""
-echo "Opening spec file for editing..."
-echo ""
-echo "File: $SPEC_FILE"
-</execute>
+**Step 1: Ensure Directories**
+Create if not exist:
+- `.claude/specs/active/`
+- `.claude/specs/templates/`
+
+**Step 2: Load Template**
+Read template file: `.claude/specs/templates/[type]-spec.md`
+
+If template doesn't exist, show error:
+```
+❌ Error: Template not found: .claude/specs/templates/[type]-spec.md
+
+Please ensure Droidz is properly initialized.
+Run: /droidz-init
+```
+
+**Step 3: Customize Template**
+Replace placeholders:
+- `YYYY-MM-DD` → Current date
+- `[Feature Name]` → Provided name
+- `FEAT-XXX` → `[TYPE]-[YYYYMMDD]` (e.g., FEATURE-20250113)
+
+**Step 4: Write Spec File**
+Write to: `.claude/specs/active/[name].md`
+
+**Step 5: Display Success**
+```
+✅ Created: .claude/specs/active/auth-system.md
+📝 Template: feature-spec
+📅 Date: 2025-01-13
+
+🎯 Next steps:
+   1. Edit the spec file and fill in all sections
+   2. Run: /validate-spec .claude/specs/active/auth-system.md
+   3. Run: /spec-to-tasks .claude/specs/active/auth-system.md
+   4. Run: /orchestrate file:auth-system-tasks.json
+```
+
+Then open the created file for the user to review and edit.

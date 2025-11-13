@@ -104,184 +104,144 @@ Fix these issues before proceeding.
 
 ---
 
-## Implementation
+## Implementation Instructions
 
-<execute>
-SPEC_FILE="$ARGUMENTS"
+When this command is executed, perform the following based on $ARGUMENTS:
 
-# Remove flags from file path
-SPEC_FILE=$(echo "$SPEC_FILE" | sed 's/ --strict$//' | sed 's/ --quick$//')
+### Parse Arguments
 
-# Check validation mode
-STRICT_MODE=false
-QUICK_MODE=false
+Extract from `$ARGUMENTS`:
+- Spec file path (first argument)
+- Optional: `--strict` for strict validation (all sections required)
+- Optional: `--quick` for quick validation (required sections only)
 
-if echo "$ARGUMENTS" | grep -q -- "--strict"; then
-  STRICT_MODE=true
-fi
+If no spec file provided:
+```
+❌ Error: No spec file specified
 
-if echo "$ARGUMENTS" | grep -q -- "--quick"; then
-  QUICK_MODE=true
-fi
+Usage: /validate-spec [spec-file] [--strict|--quick]
+Example: /validate-spec .claude/specs/active/auth-system.md
+```
 
-if [ -z "$SPEC_FILE" ]; then
-  echo "❌ Error: No spec file specified"
-  echo ""
-  echo "Usage: /validate-spec [spec-file]"
-  echo "Example: /validate-spec .claude/specs/active/auth-system.md"
-  exit 1
-fi
+### Validation
 
-if [ ! -f "$SPEC_FILE" ]; then
-  echo "❌ Error: Spec file not found: $SPEC_FILE"
-  exit 1
-fi
+If spec file not found:
+```
+❌ Error: Spec file not found: [path]
+```
 
-echo "🔍 Validating Spec"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "File: $SPEC_FILE"
+### Validation Process
 
-if [ "$STRICT_MODE" = true ]; then
-  echo "Mode: Strict (all sections required)"
-elif [ "$QUICK_MODE" = true ]; then
-  echo "Mode: Quick (required sections only)"
-else
-  echo "Mode: Standard"
-fi
+Display header:
+```
+🔍 Validating Spec
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+File: .claude/specs/active/auth-system.md
+Mode: Standard
+```
 
-echo ""
+**Step 1: Check Required Sections**
 
-# Read the spec file
-SPEC_CONTENT=$(cat "$SPEC_FILE")
+Required sections:
+- Overview
+- Purpose
+- Requirements
+- Architecture
+- Implementation Plan
+- Acceptance Criteria
 
-# Initialize counters
-ERRORS=0
-WARNINGS=0
+For each section:
+- ✅ if present
+- ❌ if missing (counts as ERROR)
 
-# Required sections to check
-REQUIRED_SECTIONS=(
-  "Overview"
-  "Purpose"
-  "Requirements"
-  "Architecture"
-  "Implementation"
-  "Acceptance Criteria"
-)
+**Step 2: Quality Checks**
 
-echo "📋 Checking Required Sections..."
-echo ""
+Check for:
+1. **Placeholders** - `[Text in brackets]`
+   - ⚠️ if found (WARNING)
+   - ✅ if none
 
-for section in "${REQUIRED_SECTIONS[@]}"; do
-  if echo "$SPEC_CONTENT" | grep -qi "##.*$section"; then
-    echo "  ✅ $section"
-  else
-    echo "  ❌ Missing: $section"
-    ((ERRORS++))
-  fi
-done
+2. **TODOs** - Unresolved TODO comments
+   - ⚠️ if found (WARNING)
+   - ✅ if none
 
-echo ""
-echo "📊 Quality Checks..."
-echo ""
+3. **Acceptance Criteria** - Checkbox format `- [ ]`
+   - ✅ if found
+   - ❌ if missing (ERROR)
 
-# Check for placeholders
-if echo "$SPEC_CONTENT" | grep -q "\[.*\]"; then
-  PLACEHOLDER_COUNT=$(echo "$SPEC_CONTENT" | grep -o "\[.*\]" | wc -l)
-  echo "  ⚠️  Found $PLACEHOLDER_COUNT placeholder(s) - fill these in"
-  ((WARNINGS++))
-else
-  echo "  ✅ No placeholders found"
-fi
+4. **Specialist Assignments** - Tasks mention specialists
+   - ✅ if present
+   - ⚠️ if missing (WARNING)
 
-# Check for TODOs
-if echo "$SPEC_CONTENT" | grep -qi "TODO"; then
-  TODO_COUNT=$(echo "$SPEC_CONTENT" | grep -oi "TODO" | wc -l)
-  echo "  ⚠️  Found $TODO_COUNT TODO(s) - resolve these"
-  ((WARNINGS++))
-else
-  echo "  ✅ No TODOs found"
-fi
+5. **Dependencies** - Dependencies documented
+   - ✅ if present
+   - ⚠️ if missing (WARNING)
 
-# Check for acceptance criteria
-if echo "$SPEC_CONTENT" | grep -q "- \[ \]"; then
-  CRITERIA_COUNT=$(echo "$SPEC_CONTENT" | grep -o "- \[ \]" | wc -l)
-  echo "  ✅ Found $CRITERIA_COUNT acceptance criteria"
-else
-  echo "  ❌ No checkbox-style acceptance criteria found"
-  ((ERRORS++))
-fi
+6. **Risks** - Risks section exists
+   - ✅ if present
+   - ❌ if missing in `--strict` mode (ERROR)
+   - ⚠️ if missing in normal mode (WARNING)
 
-# Check for task breakdown
-if echo "$SPEC_CONTENT" | grep -qi "specialist"; then
-  echo "  ✅ Task breakdown includes specialist assignments"
-else
-  echo "  ⚠️  No specialist assignments found in tasks"
-  ((WARNINGS++))
-fi
+7. **Timeline/Estimates** - Duration or timeline mentioned
+   - ✅ if present
+   - ⚠️ if missing (WARNING)
 
-# Check for dependencies
-if echo "$SPEC_CONTENT" | grep -qi "dependenc"; then
-  echo "  ✅ Dependencies section present"
-else
-  echo "  ⚠️  No dependencies documented"
-  ((WARNINGS++))
-fi
+**Step 3: Calculate Results**
 
-# Check for risks
-if echo "$SPEC_CONTENT" | grep -qi "risk"; then
-  echo "  ✅ Risks documented"
-else
-  if [ "$STRICT_MODE" = true ]; then
-    echo "  ❌ No risks documented (required in strict mode)"
-    ((ERRORS++))
-  else
-    echo "  ⚠️  No risks documented"
-    ((WARNINGS++))
-  fi
-fi
+Count:
+- ERRORS: Critical issues that must be fixed
+- WARNINGS: Recommended improvements
 
-# Check for timeline
-if echo "$SPEC_CONTENT" | grep -Eqi "timeline|duration|estimate"; then
-  echo "  ✅ Timeline/estimates present"
-else
-  echo "  ⚠️  No timeline or estimates found"
-  ((WARNINGS++))
-fi
+**Step 4: Display Summary**
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+If no errors:
+```
+✅ Spec Validation: PASSED (Perfect)
 
-# Summary
-if [ $ERRORS -eq 0 ]; then
-  if [ $WARNINGS -eq 0 ]; then
-    echo "✅ Spec Validation: PASSED (Perfect)"
-  elif [ $WARNINGS -le 2 ]; then
-    echo "✅ Spec Validation: PASSED (Minor warnings)"
-  else
-    echo "✅ Spec Validation: PASSED ($WARNINGS warnings)"
-  fi
-  echo ""
-  echo "Status: Ready for orchestration"
-  echo ""
-  echo "Next steps:"
-  echo "  1. /spec-to-tasks $SPEC_FILE"
-  echo "  2. /orchestrate file:[spec-name]-tasks.json"
-else
-  echo "❌ Spec Validation: FAILED"
-  echo ""
-  echo "Issues found:"
-  echo "  Errors: $ERRORS"
-  echo "  Warnings: $WARNINGS"
-  echo ""
-  echo "Fix errors before proceeding."
-  exit 1
-fi
+Status: Ready for orchestration
 
-# Show warnings if any
-if [ $WARNINGS -gt 0 ]; then
-  echo ""
-  echo "Note: Address warnings to improve spec quality."
-fi
+Next steps:
+  1. /spec-to-tasks .claude/specs/active/auth-system.md
+  2. /orchestrate file:auth-system-tasks.json
+```
 
-</execute>
+If warnings only:
+```
+✅ Spec Validation: PASSED (3 warnings)
+
+Status: Ready for orchestration
+
+Note: Address warnings to improve spec quality
+
+Next steps:
+  1. /spec-to-tasks .claude/specs/active/auth-system.md
+  2. /orchestrate file:auth-system-tasks.json
+```
+
+If errors:
+```
+❌ Spec Validation: FAILED
+
+Issues found:
+  Errors: 2
+  Warnings: 3
+
+Fix errors before proceeding:
+  - Missing required section: Architecture
+  - No acceptance criteria found
+```
+
+### Validation Modes
+
+**Standard** (default):
+- All required sections must be present
+- Warnings for missing optional content
+
+**Quick** (`--quick`):
+- Only check critical sections (Overview, Requirements, Implementation)
+- Skip quality checks
+
+**Strict** (`--strict`):
+- All sections required (including Risks, Dependencies)
+- More stringent quality checks
+- No warnings allowed for production specs

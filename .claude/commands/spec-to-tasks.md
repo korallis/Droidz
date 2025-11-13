@@ -159,123 +159,141 @@ cat auth-system-tasks.json
 
 ---
 
-## Implementation
+## Implementation Instructions
 
-<execute>
-SPEC_FILE=$(echo "$ARGUMENTS" | awk '{print $1}')
-OUTPUT_FILE=""
-PREVIEW_MODE=false
+When this command is executed, perform the following based on $ARGUMENTS:
 
-# Check for flags
-if echo "$ARGUMENTS" | grep -q "\-\-output"; then
-  OUTPUT_FILE=$(echo "$ARGUMENTS" | sed 's/.*--output //' | awk '{print $1}')
-fi
+### Parse Arguments
 
-if echo "$ARGUMENTS" | grep -q "\-\-preview"; then
-  PREVIEW_MODE=true
-fi
+Extract from `$ARGUMENTS`:
+- Spec file path (first argument)
+- Optional: `--output [path]` for custom output location
+- Optional: `--preview` for dry-run mode
 
-if [ -z "$SPEC_FILE" ]; then
-  echo "❌ Error: No spec file specified"
-  echo ""
-  echo "Usage: /spec-to-tasks [spec-file]"
-  echo "Example: /spec-to-tasks .claude/specs/active/auth-system.md"
-  exit 1
-fi
+If no spec file provided:
+```
+❌ Error: No spec file specified
 
-if [ ! -f "$SPEC_FILE" ]; then
-  echo "❌ Error: Spec file not found: $SPEC_FILE"
-  exit 1
-fi
+Usage: /spec-to-tasks [spec-file] [--output path] [--preview]
+Example: /spec-to-tasks .claude/specs/active/auth-system.md
+```
 
-echo "📝 Parsing Specification"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Spec: $SPEC_FILE"
-echo ""
+### Validation
 
-# Extract spec metadata
-SPEC_NAME=$(basename "$SPEC_FILE" .md)
-SPEC_ID=$(grep -m1 "Spec ID:" "$SPEC_FILE" | sed 's/.*: //' || echo "SPEC-$(date +%Y%m%d)")
-SPEC_TYPE=$(grep -m1 "# Feature Spec:\|# Epic Spec:\|# Refactor Spec:\|# Integration Spec:" "$SPEC_FILE" | sed 's/# \(.*\) Spec:.*/\L\1/')
+**Check file exists:**
+If spec file not found:
+```
+❌ Error: Spec file not found: [path]
+```
 
-if [ -z "$SPEC_TYPE" ]; then
-  SPEC_TYPE="feature"
-fi
+### Parse Specification
 
-echo "📋 Spec Details:"
-echo "  Name: $SPEC_NAME"
-echo "  ID: $SPEC_ID"
-echo "  Type: $SPEC_TYPE"
-echo ""
+**Step 1: Extract Metadata**
+From the spec file, extract:
+- **Spec ID**: Look for "Spec ID:" line
+- **Spec Name**: Derive from filename
+- **Spec Type**: Detect from header (Feature/Epic/Refactor/Integration)
+- **Creation Date**: Current timestamp
 
-# Read implementation plan section
-echo "🔍 Extracting tasks from implementation plan..."
-echo ""
+Display:
+```
+📝 Parsing Specification
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# This is a simplified parser - in production, you'd want more sophisticated parsing
-# For now, we'll create a template task structure
+Spec: .claude/specs/active/auth-system.md
 
-# Determine output file
-if [ -z "$OUTPUT_FILE" ]; then
-  # Create tasks directory if it doesn't exist
-  mkdir -p ".claude/specs/active/tasks"
-  OUTPUT_FILE=".claude/specs/active/tasks/${SPEC_NAME}-tasks.json"
-fi
+📋 Spec Details:
+  Name: auth-system
+  ID: FEATURE-20250113
+  Type: feature
+```
 
-# Generate tasks JSON
-# In a real implementation, this would parse the spec more intelligently
-# For now, we'll create a structure that prompts Claude to fill in details
+**Step 2: Parse Implementation Plan**
+Read the "## Implementation Plan" section and extract:
+1. Each task/subtask listed
+2. Task descriptions
+3. Dependencies mentioned
+4. Acceptance criteria
 
-cat > "$OUTPUT_FILE" << EOF
+Intelligently determine for each task:
+- **Specialist**: Based on task type
+  - API/backend/database → `droidz-codegen`
+  - UI/components/frontend → `droidz-codegen`
+  - Tests/coverage → `droidz-test`
+  - Refactoring/cleanup → `droidz-refactor`
+  - CI/CD/deployment → `droidz-infra`
+  - Third-party integration → `droidz-integration`
+  - Other → `droidz-generalist`
+
+- **Priority**: Based on dependencies
+  - No dependencies → Priority 1 (can start immediately)
+  - Has dependencies → Priority 2+ (sequential)
+
+- **Parallelization**: Tasks with same priority can run in parallel
+
+**Step 3: Generate Tasks JSON**
+
+Create output file at `.claude/specs/active/tasks/[spec-name]-tasks.json` (or custom path if specified):
+
+```json
 {
-  "source": "spec:$SPEC_FILE",
-  "specId": "$SPEC_ID",
-  "specName": "$SPEC_NAME",
-  "specType": "$SPEC_TYPE",
-  "createdAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "estimatedTotalHours": 0,
-  "parallelizationFactor": "0x",
-  "tasks": []
-}
-EOF
-
-echo "✅ Generated task file: $OUTPUT_FILE"
-echo ""
-echo "⚠️  IMPORTANT: Task extraction requires intelligent parsing."
-echo ""
-echo "Please review the spec's Implementation Plan section and populate the tasks array with:"
-echo ""
-echo "  - key: Unique task identifier (e.g., \"AUTH-API\")"
-echo "  - title: Descriptive task title"
-echo "  - description: Detailed task description"
-echo "  - specialist: droidz-codegen|droidz-test|droidz-refactor|droidz-infra|droidz-integration|droidz-generalist"
-echo "  - priority: 1-4 (1=highest)"
-echo "  - estimatedHours: Numeric estimate"
-echo "  - dependencies: Array of task keys this depends on"
-echo "  - parallel: true if can run in parallel"
-echo "  - acceptanceCriteria: Array of acceptance criteria"
-echo ""
-echo "Example task structure:"
-echo ""
-cat << 'EXAMPLE'
-{
-  "key": "AUTH-API",
-  "title": "Backend Authentication API",
-  "description": "Implement REST API endpoints...",
-  "specialist": "droidz-codegen",
-  "priority": 1,
-  "estimatedHours": 6,
-  "dependencies": [],
-  "parallel": true,
-  "acceptanceCriteria": [
-    "All endpoints return < 200ms",
-    "JWT validation works",
-    "Rate limiting implemented"
+  "source": "spec:.claude/specs/active/auth-system.md",
+  "specId": "FEATURE-20250113",
+  "specName": "auth-system",
+  "specType": "feature",
+  "createdAt": "2025-01-13T12:00:00Z",
+  "estimatedTotalHours": 24,
+  "parallelizationFactor": "3x",
+  "tasks": [
+    {
+      "key": "AUTH-001",
+      "title": "Backend Authentication API",
+      "description": "Implement REST API endpoints for user authentication",
+      "specialist": "droidz-codegen",
+      "priority": 1,
+      "estimatedHours": 8,
+      "dependencies": [],
+      "parallel": true,
+      "acceptanceCriteria": [
+        "All endpoints return < 200ms",
+        "JWT validation works",
+        "Rate limiting implemented"
+      ]
+    }
   ]
 }
-EXAMPLE
+```
 
-echo ""
-echo "After populating tasks, run:"
-echo "  /orchestrate file:$OUTPUT_FILE"
-</execute>
+**Step 4: Calculate Metrics**
+- `estimatedTotalHours`: Sum of all task hours
+- `parallelizationFactor`: `[count of priority-1 tasks]x` (e.g., "3x" means 3 tasks can run simultaneously)
+
+**Step 5: Display Summary**
+
+```
+✅ Task Extraction Complete
+
+Output: .claude/specs/active/tasks/auth-system-tasks.json
+
+📊 Summary:
+  Total Tasks: 5
+  Estimated Hours: 24
+  Parallelization: 3x (3 tasks can run simultaneously)
+
+Task Breakdown:
+  Priority 1: 3 tasks (can run in parallel)
+  Priority 2: 2 tasks (depend on priority 1)
+
+Specialists:
+  droidz-codegen: 3 tasks
+  droidz-test: 1 task
+  droidz-infra: 1 task
+
+🎯 Next Steps:
+  1. Review the generated tasks
+  2. Run: /orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
+```
+
+### Preview Mode
+
+If `--preview` flag is present, don't write file. Instead, display tasks in formatted output for user review.
