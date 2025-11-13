@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Droidz Claude Code Framework - Smart Installer with Merge Support
+# Droidz Claude Code Framework - Smart Installer with Auto-Dependency Installation
 #
 # Install with:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
@@ -10,7 +10,12 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.0.0 - Smart merge support for updates
+# Version: 2.1.1 - Auto-installs dependencies + git init support
+# Features:
+#   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
+#   - Auto-installs missing dependencies (git, jq, tmux) with user permission
+#   - Offers to initialize git repository if not already in one
+#   - Smart merge support for updates
 # Updated: November 12, 2025
 #
 
@@ -141,12 +146,31 @@ detect_os() {
         PKG_MANAGER="brew"
     elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
         OS="wsl2"
-        PKG_MANAGER="apt"
+        detect_package_manager
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         OS="linux"
-        PKG_MANAGER="apt"
+        detect_package_manager
     else
         OS="unknown"
+        PKG_MANAGER="unknown"
+    fi
+}
+
+detect_package_manager() {
+    # Try to detect the package manager on Linux systems
+    if command -v apt-get &> /dev/null; then
+        PKG_MANAGER="apt"
+    elif command -v dnf &> /dev/null; then
+        PKG_MANAGER="dnf"
+    elif command -v yum &> /dev/null; then
+        PKG_MANAGER="yum"
+    elif command -v pacman &> /dev/null; then
+        PKG_MANAGER="pacman"
+    elif command -v zypper &> /dev/null; then
+        PKG_MANAGER="zypper"
+    elif command -v apk &> /dev/null; then
+        PKG_MANAGER="apk"
+    else
         PKG_MANAGER="unknown"
     fi
 }
@@ -161,10 +185,112 @@ get_install_cmd() {
         apt)
             echo "sudo apt update && sudo apt install -y $package"
             ;;
+        dnf)
+            echo "sudo dnf install -y $package"
+            ;;
+        yum)
+            echo "sudo yum install -y $package"
+            ;;
+        pacman)
+            echo "sudo pacman -S --noconfirm $package"
+            ;;
+        zypper)
+            echo "sudo zypper install -y $package"
+            ;;
+        apk)
+            echo "sudo apk add --update $package"
+            ;;
         *)
             echo "Please install $package manually"
             ;;
     esac
+}
+
+install_package() {
+    local command_name="$1"
+    local package_name="${2:-$1}"
+
+    log_info "Installing $package_name..."
+
+    # Check if already installed
+    if command -v "$command_name" &> /dev/null; then
+        log_success "$command_name is already installed"
+        return 0
+    fi
+
+    # Install based on package manager
+    local install_result=1
+    case "$PKG_MANAGER" in
+        brew)
+            if brew install "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        apt)
+            if sudo apt-get update -y &> /dev/null && sudo apt-get install -y "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        dnf)
+            if sudo dnf install -y "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        yum)
+            if sudo yum install -y "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        pacman)
+            if sudo pacman -S --noconfirm "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        zypper)
+            if sudo zypper install -y "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        apk)
+            if sudo apk add --update "$package_name" &> /dev/null; then
+                install_result=0
+            fi
+            ;;
+        *)
+            log_error "No supported package manager found"
+            return 1
+            ;;
+    esac
+
+    # Verify installation
+    if [[ $install_result -eq 0 ]] && command -v "$command_name" &> /dev/null; then
+        log_success "$command_name installed successfully"
+        return 0
+    else
+        log_error "Failed to install $command_name"
+        log_info "Please install manually: $(get_install_cmd "$package_name")"
+        return 1
+    fi
+}
+
+prompt_auto_install() {
+    local packages=("$@")
+
+    echo ""
+    log_warning "Missing dependencies: ${packages[*]}"
+    echo ""
+    echo -e "${YELLOW}Would you like to automatically install these dependencies?${NC}"
+    echo -e "  ${CYAN}[Y]${NC} Yes, install automatically (recommended)"
+    echo -e "  ${CYAN}[N]${NC} No, I'll install manually"
+    echo ""
+    read -p "Choice [Y/n]: " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 check_prerequisites() {
@@ -177,13 +303,38 @@ check_prerequisites() {
     detect_os
     log_info "Detected OS: $OS (Package manager: $PKG_MANAGER)"
 
-    # Check for git
+    # Check for git (CRITICAL - cannot proceed without it)
     if ! command -v git &> /dev/null; then
         log_error "Git is not installed."
-        log_info "Install with: $(get_install_cmd git)"
-        error_exit "Git is required." 1
+
+        if [[ "$PKG_MANAGER" != "unknown" ]]; then
+            echo ""
+            echo -e "${YELLOW}Git is required to proceed. Would you like to install it now?${NC}"
+            echo -e "  ${CYAN}[Y]${NC} Yes, install git automatically (recommended)"
+            echo -e "  ${CYAN}[N]${NC} No, I'll install manually"
+            echo ""
+            read -p "Choice [Y/n]: " -n 1 -r
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+                if install_package git; then
+                    log_success "Git installed successfully"
+                else
+                    log_error "Failed to install git"
+                    log_info "Install manually with: $(get_install_cmd git)"
+                    error_exit "Git is required to continue." 1
+                fi
+            else
+                log_info "Please install git manually: $(get_install_cmd git)"
+                error_exit "Git is required to continue." 1
+            fi
+        else
+            log_info "Install git manually: $(get_install_cmd git)"
+            error_exit "Git is required to continue." 1
+        fi
+    else
+        log_success "Git found: $(git --version | head -n1)"
     fi
-    log_success "Git found: $(git --version | head -n1)"
 
     # Check git version (need 2.19+ for worktree improvements)
     local git_version
@@ -199,15 +350,81 @@ check_prerequisites() {
 
     # Check if we're in a git repository
     if ! git rev-parse --git-dir > /dev/null 2>&1; then
-        error_exit "Not in a git repository. Please run this script from your project root." 1
+        log_warning "Not in a git repository."
+        echo ""
+        echo -e "${YELLOW}Would you like to initialize this directory as a git repository?${NC}"
+        echo -e "  ${CYAN}[Y]${NC} Yes, initialize git repository (recommended)"
+        echo -e "  ${CYAN}[N]${NC} No, I'll do it manually"
+        echo ""
+        read -p "Choice [Y/n]: " -n 1 -r
+        echo ""
+
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+            log_info "Initializing git repository..."
+            if git init > /dev/null 2>&1; then
+                log_success "Git repository initialized"
+
+                # Create initial .gitignore if it doesn't exist
+                if [[ ! -f .gitignore ]]; then
+                    cat > .gitignore << 'EOF'
+# Droidz Framework - User-specific files
+.claude/memory/user/
+.runs/
+*.backup.*
+*-tasks.json
+.claude-*-backup*
+
+# Common ignores
+node_modules/
+.DS_Store
+*.log
+EOF
+                    log_success "Created .gitignore"
+                fi
+
+                # Create initial commit
+                git add .gitignore > /dev/null 2>&1
+                if git commit -m "chore: initialize repository with Droidz framework" > /dev/null 2>&1; then
+                    log_success "Created initial commit"
+                else
+                    log_info "Repository initialized (no initial commit created)"
+                fi
+            else
+                error_exit "Failed to initialize git repository. Please run 'git init' manually." 1
+            fi
+        else
+            log_info "Please initialize git manually with: git init"
+            error_exit "Git repository required to continue." 1
+        fi
+    else
+        log_success "Git repository detected"
     fi
-    log_success "Git repository detected"
 
     # Check for curl or wget
     if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then
         log_error "Neither curl nor wget found."
-        log_info "Install with: $(get_install_cmd curl)"
-        error_exit "curl or wget is required." 1
+
+        if [[ "$PKG_MANAGER" != "unknown" ]]; then
+            echo ""
+            echo -e "${YELLOW}curl or wget is required to download files. Install curl?${NC}"
+            read -p "Install curl? [Y/n]: " -n 1 -r
+            echo ""
+
+            if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+                if install_package curl; then
+                    DOWNLOAD_CMD="curl -fsSL"
+                else
+                    log_info "Install manually with: $(get_install_cmd curl)"
+                    error_exit "curl or wget is required." 1
+                fi
+            else
+                log_info "Install manually with: $(get_install_cmd curl)"
+                error_exit "curl or wget is required." 1
+            fi
+        else
+            log_info "Install curl manually: $(get_install_cmd curl)"
+            error_exit "curl or wget is required." 1
+        fi
     fi
 
     if command -v curl &> /dev/null; then
@@ -221,7 +438,6 @@ check_prerequisites() {
     # Check for jq (required for orchestration)
     if ! command -v jq &> /dev/null; then
         log_warning "jq not found. Required for orchestration features."
-        log_info "Install with: $(get_install_cmd jq)"
         MISSING_DEPS+=("jq")
     else
         log_success "jq found"
@@ -230,24 +446,75 @@ check_prerequisites() {
     # Check for tmux (required for parallel execution)
     if ! command -v tmux &> /dev/null; then
         log_warning "tmux not found. Required for parallel task monitoring."
-        log_info "Install with: $(get_install_cmd tmux)"
         MISSING_DEPS+=("tmux")
     else
         log_success "tmux found"
     fi
 
-    # Summary of missing dependencies
+    # Handle missing optional dependencies (jq and tmux)
     if [[ ${#MISSING_DEPS[@]} -gt 0 ]]; then
         echo ""
         log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
-        log_info "Droidz will install, but orchestration features require jq and tmux."
+        log_info "Droidz will install, but orchestration features require these."
 
-        if [[ "$PKG_MANAGER" == "apt" ]]; then
-            log_info "Install all at once: sudo apt update && sudo apt install -y jq tmux"
-        elif [[ "$PKG_MANAGER" == "brew" ]]; then
-            log_info "Install all at once: brew install jq tmux"
+        if [[ "$PKG_MANAGER" != "unknown" ]]; then
+            if prompt_auto_install "${MISSING_DEPS[@]}"; then
+                log_step "Installing dependencies..."
+                local install_failed=()
+
+                for dep in "${MISSING_DEPS[@]}"; do
+                    if ! install_package "$dep"; then
+                        install_failed+=("$dep")
+                    fi
+                done
+
+                if [[ ${#install_failed[@]} -gt 0 ]]; then
+                    echo ""
+                    log_warning "Some dependencies could not be installed: ${install_failed[*]}"
+                    log_info "You can install them later for full orchestration support."
+                    echo ""
+                else
+                    echo ""
+                    log_success "All dependencies installed successfully!"
+                    echo ""
+                fi
+            else
+                echo ""
+                log_info "You chose to install manually. Commands:"
+                for dep in "${MISSING_DEPS[@]}"; do
+                    log_info "  $dep: $(get_install_cmd "$dep")"
+                done
+                echo ""
+                log_info "Or install all at once:"
+                case "$PKG_MANAGER" in
+                    apt)
+                        log_info "  sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
+                        ;;
+                    brew)
+                        log_info "  brew install ${MISSING_DEPS[*]}"
+                        ;;
+                    dnf)
+                        log_info "  sudo dnf install -y ${MISSING_DEPS[*]}"
+                        ;;
+                    yum)
+                        log_info "  sudo yum install -y ${MISSING_DEPS[*]}"
+                        ;;
+                    pacman)
+                        log_info "  sudo pacman -S --noconfirm ${MISSING_DEPS[*]}"
+                        ;;
+                    *)
+                        ;;
+                esac
+                echo ""
+            fi
+        else
+            echo ""
+            log_info "Install manually with your package manager:"
+            for dep in "${MISSING_DEPS[@]}"; do
+                log_info "  $dep"
+            done
+            echo ""
         fi
-        echo ""
     fi
 }
 

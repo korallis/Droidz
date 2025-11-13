@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-# Droidz Installer
+# Droidz Installer - Auto-Dependency Installation + Git Init
 # Installs or updates Droidz in your project
-# Updated: 2025-11-11 - Align linting/toolchain defaults
+# Updated: 2025-11-12 - Auto-installs dependencies + git repo initialization
 
-DROIDZ_VERSION="2.1.1"
+DROIDZ_VERSION="2.2.1"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}"
 
@@ -14,6 +14,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Helper functions
@@ -33,16 +34,272 @@ log_error() {
     echo -e "${RED}✗${NC} $1"
 }
 
-# Ensure Bun runtime is available (required for dependencies and scripts)
-if ! command -v bun >/dev/null 2>&1; then
-    log_error "Bun runtime not found. Install Bun from https://bun.sh before running the installer."
-    exit 1
+# ============================================================================
+# OS AND PACKAGE MANAGER DETECTION
+# ============================================================================
+
+detect_os() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        OS="macos"
+        PKG_MANAGER="brew"
+    elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
+        OS="wsl2"
+        detect_package_manager
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        OS="linux"
+        detect_package_manager
+    else
+        OS="unknown"
+        PKG_MANAGER="unknown"
+    fi
+}
+
+detect_package_manager() {
+    if command -v apt-get &> /dev/null; then
+        PKG_MANAGER="apt"
+    elif command -v dnf &> /dev/null; then
+        PKG_MANAGER="dnf"
+    elif command -v yum &> /dev/null; then
+        PKG_MANAGER="yum"
+    elif command -v pacman &> /dev/null; then
+        PKG_MANAGER="pacman"
+    elif command -v zypper &> /dev/null; then
+        PKG_MANAGER="zypper"
+    elif command -v apk &> /dev/null; then
+        PKG_MANAGER="apk"
+    else
+        PKG_MANAGER="unknown"
+    fi
+}
+
+get_install_cmd() {
+    local package="$1"
+    case "$PKG_MANAGER" in
+        brew)
+            echo "brew install $package"
+            ;;
+        apt)
+            echo "sudo apt update && sudo apt install -y $package"
+            ;;
+        dnf)
+            echo "sudo dnf install -y $package"
+            ;;
+        yum)
+            echo "sudo yum install -y $package"
+            ;;
+        pacman)
+            echo "sudo pacman -S --noconfirm $package"
+            ;;
+        zypper)
+            echo "sudo zypper install -y $package"
+            ;;
+        apk)
+            echo "sudo apk add --update $package"
+            ;;
+        *)
+            echo "Please install $package manually"
+            ;;
+    esac
+}
+
+install_package() {
+    local command_name="$1"
+    local package_name="${2:-$1}"
+
+    log_info "Installing $package_name..."
+
+    if command -v "$command_name" &> /dev/null; then
+        log_success "$command_name is already installed"
+        return 0
+    fi
+
+    local install_result=1
+    case "$PKG_MANAGER" in
+        brew)
+            brew install "$package_name" &> /dev/null && install_result=0
+            ;;
+        apt)
+            sudo apt-get update -y &> /dev/null && sudo apt-get install -y "$package_name" &> /dev/null && install_result=0
+            ;;
+        dnf)
+            sudo dnf install -y "$package_name" &> /dev/null && install_result=0
+            ;;
+        yum)
+            sudo yum install -y "$package_name" &> /dev/null && install_result=0
+            ;;
+        pacman)
+            sudo pacman -S --noconfirm "$package_name" &> /dev/null && install_result=0
+            ;;
+        zypper)
+            sudo zypper install -y "$package_name" &> /dev/null && install_result=0
+            ;;
+        apk)
+            sudo apk add --update "$package_name" &> /dev/null && install_result=0
+            ;;
+        *)
+            log_error "No supported package manager found"
+            return 1
+            ;;
+    esac
+
+    if [[ $install_result -eq 0 ]] && command -v "$command_name" &> /dev/null; then
+        log_success "$command_name installed successfully"
+        return 0
+    else
+        log_error "Failed to install $command_name"
+        log_info "Please install manually: $(get_install_cmd "$package_name")"
+        return 1
+    fi
+}
+
+# ============================================================================
+# DEPENDENCY CHECKS
+# ============================================================================
+
+detect_os
+log_info "Detected OS: $OS (Package manager: $PKG_MANAGER)"
+
+# Check for git (CRITICAL)
+if ! command -v git &> /dev/null; then
+    log_error "Git is not installed."
+
+    if [[ "$PKG_MANAGER" != "unknown" ]]; then
+        echo ""
+        echo -e "${YELLOW}Git is required. Install now?${NC}"
+        read -p "Choice [Y/n]: " -n 1 -r
+        echo ""
+
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+            if ! install_package git; then
+                log_error "Failed to install git. Please install manually: $(get_install_cmd git)"
+                exit 1
+            fi
+        else
+            log_info "Install manually: $(get_install_cmd git)"
+            exit 1
+        fi
+    else
+        log_error "Please install git manually"
+        exit 1
+    fi
+else
+    log_success "Git found"
 fi
 
 # Check if we're in a git repo
 if [ ! -d ".git" ]; then
-    log_error "Not in a git repository. Please run this from your project root."
-    exit 1
+    log_warning "Not in a git repository."
+    echo ""
+    echo -e "${YELLOW}Would you like to initialize this directory as a git repository?${NC}"
+    echo -e "  ${CYAN}[Y]${NC} Yes, initialize git repository (recommended)"
+    echo -e "  ${CYAN}[N]${NC} No, I'll do it manually"
+    echo ""
+    read -p "Choice [Y/n]: " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        log_info "Initializing git repository..."
+        if git init > /dev/null 2>&1; then
+            log_success "Git repository initialized"
+
+            # Create initial .gitignore if it doesn't exist
+            if [ ! -f ".gitignore" ]; then
+                cat > .gitignore << 'EOF'
+# Droidz worktrees
+.runs/
+
+# Configuration file with API keys (NEVER commit this!)
+config.yml
+
+# Keep the example template
+!config.example.yml
+
+# Dependency artifacts
+node_modules/
+bun.lockb
+
+# Common ignores
+.DS_Store
+*.log
+EOF
+                log_success "Created .gitignore"
+            fi
+
+            # Create initial commit
+            git add .gitignore > /dev/null 2>&1
+            if git commit -m "chore: initialize repository with Droidz framework" > /dev/null 2>&1; then
+                log_success "Created initial commit"
+            else
+                log_info "Repository initialized (no initial commit created)"
+            fi
+        else
+            log_error "Failed to initialize git repository. Please run 'git init' manually."
+            exit 1
+        fi
+    else
+        log_info "Please initialize git manually with: git init"
+        exit 1
+    fi
+else
+    log_success "Git repository detected"
+fi
+
+# Check for Bun runtime
+if ! command -v bun >/dev/null 2>&1; then
+    log_warning "Bun runtime not found. Required for running Droidz orchestration."
+    log_info "Install from: https://bun.sh (or use: curl -fsSL https://bun.sh/install | bash)"
+    echo ""
+    log_warning "Continuing installation, but you'll need Bun to run orchestration."
+    echo ""
+fi
+
+# Check for optional dependencies (jq and tmux)
+MISSING_DEPS=()
+
+if ! command -v jq &> /dev/null; then
+    log_warning "jq not found. Required for orchestration features."
+    MISSING_DEPS+=("jq")
+else
+    log_success "jq found"
+fi
+
+if ! command -v tmux &> /dev/null; then
+    log_warning "tmux not found. Required for parallel task monitoring."
+    MISSING_DEPS+=("tmux")
+else
+    log_success "tmux found"
+fi
+
+# Offer to install missing optional dependencies
+if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
+    echo ""
+    log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
+    echo -e "${YELLOW}Install these now for full orchestration support?${NC}"
+    read -p "Choice [Y/n]: " -n 1 -r
+    echo ""
+
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        for dep in "${MISSING_DEPS[@]}"; do
+            install_package "$dep"
+        done
+        echo ""
+    else
+        log_info "You can install later with:"
+        case "$PKG_MANAGER" in
+            apt)
+                log_info "  sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
+                ;;
+            brew)
+                log_info "  brew install ${MISSING_DEPS[*]}"
+                ;;
+            *)
+                for dep in "${MISSING_DEPS[@]}"; do
+                    log_info "  $(get_install_cmd "$dep")"
+                done
+                ;;
+        esac
+        echo ""
+    fi
 fi
 
 # Detect if this is an install or update
