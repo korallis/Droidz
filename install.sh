@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-# Droidz Installer - Auto-Dependency Installation + Git Init
+# Droidz Installer (Factory.ai Droid CLI Edition) - Auto-Dependency Installation + Git Init
 # Installs or updates Droidz in your project
 # Updated: 2025-11-12 - Auto-installs dependencies + git repo initialization
 
-DROIDZ_VERSION="2.2.1"
-GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
+DROIDZ_VERSION="2.2.1-droid"
+GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 CACHE_BUST="?v=${DROIDZ_VERSION}"
 
 # Colors for output

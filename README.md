@@ -175,13 +175,23 @@ brew install factory-ai/tap/droid
 droid --version
 ```
 
-**System Dependencies** (auto-installed by framework):
+**System Dependencies** (auto-installed by one-line installer):
 - Git (for worktrees)
 - jq (for JSON processing)
 - tmux (for session management)
 - Node.js/Bun (for TypeScript coordinator)
 
-### 30-Second Setup
+### 10-Second Setup ⚡
+
+**One-line install (auto-installs all dependencies):**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+```
+
+Done! The installer handles everything automatically.
+
+### Manual Setup (Alternative)
 
 ```bash
 # Clone the repository
@@ -204,7 +214,26 @@ That's it! The framework is ready to use.
 
 ## Installation
 
-### Option 1: Quick Install (Recommended)
+### Option 1: One-Line Install (Recommended) ⚡
+
+**Smart installer that auto-installs all dependencies + git init if needed:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+```
+
+**What it does:**
+- ✅ Auto-detects your OS and package manager
+- ✅ Auto-installs dependencies (git, jq, tmux, bun)
+- ✅ Initializes git repo if not in one
+- ✅ Downloads Droidz Factory.ai edition
+- ✅ Sets up .factory/ structure
+- ✅ Creates initial .gitignore
+- ✅ Ready to use immediately!
+
+**Note:** The installer will ask for confirmation before installing any packages.
+
+### Option 2: Quick Manual Install
 
 ```bash
 # Clone and setup in one go
@@ -214,7 +243,7 @@ git checkout factory-ai
 droid /droidz-init
 ```
 
-### Option 2: Manual Setup
+### Option 3: Full Manual Setup
 
 ```bash
 # 1. Clone repository
