@@ -444,7 +444,7 @@ prompt_auto_install() {
     echo -e "  ${CYAN}[Y]${NC} Yes, install automatically (recommended)"
     echo -e "  ${CYAN}[N]${NC} No, I'll install manually"
     echo ""
-    read -p "Choice [Y/n]: " -n 1 -r
+    read -p "Choice [Y/n]: " -n 1 -r </dev/tty
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
@@ -474,7 +474,7 @@ check_prerequisites() {
             echo -e "  ${CYAN}[Y]${NC} Yes, install git automatically (recommended)"
             echo -e "  ${CYAN}[N]${NC} No, I'll install manually"
             echo ""
-            read -p "Choice [Y/n]: " -n 1 -r
+            read -p "Choice [Y/n]: " -n 1 -r </dev/tty
             echo ""
 
             if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
@@ -517,7 +517,7 @@ check_prerequisites() {
         echo -e "  ${CYAN}[Y]${NC} Yes, initialize git repository (recommended)"
         echo -e "  ${CYAN}[N]${NC} No, I'll do it manually"
         echo ""
-        read -p "Choice [Y/n]: " -n 1 -r
+        read -p "Choice [Y/n]: " -n 1 -r </dev/tty
         echo ""
 
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
@@ -568,7 +568,7 @@ EOF
         if [[ "$PKG_MANAGER" != "unknown" ]]; then
             echo ""
             echo -e "${YELLOW}curl or wget is required to download files. Install curl?${NC}"
-            read -p "Install curl? [Y/n]: " -n 1 -r
+            read -p "Install curl? [Y/n]: " -n 1 -r </dev/tty
             echo ""
 
             if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then

@@ -325,7 +325,7 @@ if ! command -v git &> /dev/null; then
     if [[ "$PKG_MANAGER" != "unknown" ]]; then
         echo ""
         echo -e "${YELLOW}Git is required. Install now?${NC}"
-        read -p "Choice [Y/n]: " -n 1 -r
+        read -p "Choice [Y/n]: " -n 1 -r </dev/tty
         echo ""
 
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
@@ -353,7 +353,7 @@ if [ ! -d ".git" ]; then
     echo -e "  ${CYAN}[Y]${NC} Yes, initialize git repository (recommended)"
     echo -e "  ${CYAN}[N]${NC} No, I'll do it manually"
     echo ""
-    read -p "Choice [Y/n]: " -n 1 -r
+    read -p "Choice [Y/n]: " -n 1 -r </dev/tty
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
@@ -444,7 +444,7 @@ if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
     echo ""
     log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
     echo -e "${YELLOW}Install these now for full orchestration support?${NC}"
-    read -p "Choice [Y/n]: " -n 1 -r
+    read -p "Choice [Y/n]: " -n 1 -r </dev/tty
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
