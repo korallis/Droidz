@@ -5,7 +5,7 @@
 Transform complex projects into coordinated, parallel workflows using git worktrees, specialist agents, auto-activating skills, and persistent memory across sessions.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://github.com/korallis/Droidz)
 [![Status](https://img.shields.io/badge/status-production%20ready-green.svg)](https://github.com/korallis/Droidz)
 
 ---
@@ -96,6 +96,11 @@ Droidz is a **production-ready Claude Code framework** that provides:
 
 ### Prerequisites
 
+**No manual installation required!** The installer automatically detects your OS and offers to install missing dependencies.
+
+<details>
+<summary>🔧 <strong>Optional: Manual Installation</strong> (if you prefer to install dependencies yourself)</summary>
+
 **macOS**:
 ```bash
 brew install git jq tmux
@@ -106,25 +111,58 @@ brew install git jq tmux
 sudo apt update && sudo apt install -y git jq tmux
 ```
 
-**Linux**:
+**Linux (Debian/Ubuntu)**:
 ```bash
 sudo apt update && sudo apt install -y git jq tmux
 ```
 
-### One-Line Installation
-
+**Linux (Fedora/RHEL)**:
 ```bash
-cd your-project && curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+sudo dnf install -y git jq tmux
 ```
 
-The installer:
-- ✅ Detects your OS automatically
-- ✅ Installs framework to `.claude/`
-- ✅ Initializes memory system (5 JSON files)
-- ✅ Configures .gitignore
-- ✅ Preserves custom files on updates
+**Linux (Arch)**:
+```bash
+sudo pacman -S git jq tmux
+```
 
-**Setup time**: 1-2 minutes
+**Supported Package Managers**: apt, dnf, yum, pacman, zypper, apk, brew
+
+</details>
+
+### One-Line Installation
+
+**Start from anywhere** - even an empty directory!
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/Claude-Code/install-claude-code.sh | bash
+```
+
+**What happens automatically**:
+- 🔍 Detects your OS and package manager
+- 📦 Offers to install missing dependencies (git, jq, tmux)
+- 📁 Offers to initialize git repository if needed
+- ✅ Installs framework to `.claude/`
+- 💾 Initializes memory system (5 JSON files)
+- 🔒 Creates secure .gitignore
+- 🎯 Preserves custom files on updates
+
+**Interactive prompts for**:
+- Git installation (if missing)
+- Git repository initialization (if not a repo)
+- Optional dependencies (jq, tmux for orchestration)
+
+**Setup time**: 1-2 minutes (fully automated with your permission)
+
+**Supported Platforms**:
+- ✅ macOS (Homebrew)
+- ✅ Ubuntu/Debian (apt)
+- ✅ Fedora (dnf)
+- ✅ CentOS/RHEL (yum)
+- ✅ Arch Linux (pacman)
+- ✅ openSUSE (zypper)
+- ✅ Alpine Linux (apk)
+- ✅ WSL2
 
 ### First Time Setup
 
@@ -141,6 +179,64 @@ The wizard will:
 - ✅ Create directory structure
 - ✅ Initialize memory system
 - ✅ Validate orchestration engine
+
+### Example Installation Flow
+
+**Starting from an empty directory:**
+
+```bash
+$ mkdir my-awesome-app && cd my-awesome-app
+$ curl -fsSL https://raw.githubusercontent.com/.../install-claude-code.sh | bash
+
+ℹ Detected OS: macos (Package manager: brew)
+✓ Git found
+
+⚠ Not in a git repository.
+Would you like to initialize this directory as a git repository?
+  [Y] Yes, initialize git repository (recommended)
+  [N] No, I'll do it manually
+
+Choice [Y/n]: Y
+ℹ Initializing git repository...
+✓ Git repository initialized
+✓ Created .gitignore
+✓ Created initial commit
+
+✓ curl found
+
+⚠ Missing optional dependencies: jq tmux
+Would you like to automatically install these dependencies?
+  [Y] Yes, install automatically (recommended)
+  [N] No, I'll install manually
+
+Choice [Y/n]: Y
+✓ jq installed successfully
+✓ tmux installed successfully
+
+ℹ Installing Droidz Framework...
+✓ Framework downloaded
+✓ Framework files installed to .claude/
+✓ Memory system initialized
+✓ All required files present
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 Droidz Installation Complete!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next Steps:
+  1. Initialize:  claude then /droidz-init
+  2. Read guide:  cat README.md
+  3. Quick start: cat QUICK_START.md
+
+Happy building with Droidz! 🚀
+```
+
+**What just happened?**
+1. ✅ Installer detected your OS and package manager
+2. ✅ Created a new git repository automatically
+3. ✅ Installed missing dependencies (jq, tmux)
+4. ✅ Set up the complete Droidz framework
+5. ✅ Ready to start coding in under 2 minutes!
 
 ---
 
