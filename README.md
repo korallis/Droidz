@@ -191,15 +191,13 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.
 
 Done! The installer handles everything automatically.
 
-### Manual Setup (Alternative)
+### Alternative Setup (If you already have the framework)
+
+If you've obtained the framework files through other means:
 
 ```bash
-# Clone the repository
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-
-# Checkout the Factory.ai Droid CLI branch
-git checkout factory-ai
+# Navigate to your project directory with .factory/ folder
+cd your-project
 
 # Run initialization
 droid /droidz-init
@@ -214,7 +212,7 @@ That's it! The framework is ready to use.
 
 ## Installation
 
-### Option 1: One-Line Install (Recommended) ⚡
+### One-Line Install ⚡
 
 **Smart installer that auto-installs all dependencies + git init if needed:**
 
@@ -233,36 +231,24 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.
 
 **Note:** The installer will ask for confirmation before installing any packages.
 
-### Option 2: Quick Manual Install
+### Manual Dependency Installation (Optional)
+
+If you prefer to install dependencies yourself before running the installer:
 
 ```bash
-# Clone and setup in one go
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-git checkout factory-ai
-droid /droidz-init
-```
-
-### Option 3: Full Manual Setup
-
-```bash
-# 1. Clone repository
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-
-# 2. Checkout Factory.ai branch
-git checkout factory-ai
-
-# 3. Verify directory structure
-ls -la .factory/
-# Should see: droids/, commands/, scripts/, orchestrator/, etc.
-
-# 4. Install system dependencies (if needed)
+# macOS
 brew install git jq tmux bun
 
-# 5. Initialize framework
-droid /droidz-init --full
+# Ubuntu/Debian
+sudo apt update && sudo apt install -y git jq tmux
+curl -fsSL https://bun.sh/install | bash
+
+# Fedora/RHEL
+sudo dnf install -y git jq tmux
+curl -fsSL https://bun.sh/install | bash
 ```
+
+Then run the one-line installer above.
 
 ### Verification
 
@@ -2169,9 +2155,10 @@ We welcome contributions! Here's how:
 
 ### Development Setup
 
+If you have access to the framework files for development:
+
 ```bash
-# Clone repository
-git clone https://github.com/korallis/Droidz.git
+# Navigate to framework directory
 cd Droidz
 
 # Checkout factory-ai branch
