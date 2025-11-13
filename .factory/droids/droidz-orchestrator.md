@@ -15,7 +15,7 @@ description: |
   and spawns specialist agents automatically for 3-5x faster execution.
 
   Auto-activates when Claude Code detects complex/parallel work patterns.
-tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "Task", "TodoWrite", "WebSearch", "FetchUrl"]
+tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 model: sonnet
 ---
 
