@@ -318,6 +318,19 @@ log_info "Creating directories..."
 mkdir -p .factory/droids
 mkdir -p .factory/commands
 mkdir -p .factory/orchestrator
+mkdir -p .factory/hooks
+mkdir -p .factory/memory/user
+mkdir -p .factory/memory/org
+mkdir -p .factory/skills/auto-orchestrator
+mkdir -p .factory/skills/memory-manager
+mkdir -p .factory/skills/graphite-stacked-diffs
+mkdir -p .factory/skills/spec-shaper
+mkdir -p .factory/specs/active
+mkdir -p .factory/specs/archive
+mkdir -p .factory/specs/templates
+mkdir -p .factory/product
+mkdir -p .factory/scripts
+mkdir -p .factory/standards/templates
 log_success "Directories created"
 
 # Ensure package.json exists
@@ -390,6 +403,19 @@ COMMANDS=(
     "droidz-refactor.md"
     "droidz-test.md"
     "setup-linear-project.md"
+    "droidz-init.md"
+    "graphite.md"
+    "orchestrate.md"
+    "spec-shaper.md"
+    "validate-spec.md"
+    "create-spec.md"
+    "analyze-tech-stack.md"
+    "save-decision.md"
+    "spec-to-tasks.md"
+    "auto-orchestrate.md"
+    "optimize-context.md"
+    "check-standards.md"
+    "load-memory.md"
 )
 
 for command in "${COMMANDS[@]}"; do
@@ -469,6 +495,121 @@ else
     cp config.example.yml config.yml
     log_success "Created config.yml from template"
     log_info "Simple config - just set your Linear project name (optional)"
+fi
+
+# Download hooks
+log_info "Downloading hooks..."
+
+HOOKS=(
+    "auto-lint.sh"
+    "monitor-context.sh"
+)
+
+for hook in "${HOOKS[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/hooks/${hook}${CACHE_BUST}" -o ".factory/hooks/${hook}"
+    chmod +x ".factory/hooks/${hook}"
+    log_success "Downloaded ${hook}"
+done
+
+# Download memory templates
+log_info "Downloading memory templates..."
+curl -fsSL "${GITHUB_RAW}/.factory/memory/user/README.md${CACHE_BUST}" -o ".factory/memory/user/README.md"
+log_success "Downloaded user memory template"
+
+curl -fsSL "${GITHUB_RAW}/.factory/memory/org/README.md${CACHE_BUST}" -o ".factory/memory/org/README.md"
+log_success "Downloaded org memory template"
+
+# Download skills
+log_info "Downloading skills..."
+
+SKILLS=(
+    "standards-enforcer.md"
+    "context-optimizer.md"
+    "tech-stack-analyzer.md"
+)
+
+for skill in "${SKILLS[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/skills/${skill}${CACHE_BUST}" -o ".factory/skills/${skill}"
+    log_success "Downloaded ${skill}"
+done
+
+# Download nested skills (with subdirectories)
+log_info "Downloading nested skills..."
+
+curl -fsSL "${GITHUB_RAW}/.factory/skills/auto-orchestrator/SKILL.md${CACHE_BUST}" -o ".factory/skills/auto-orchestrator/SKILL.md"
+log_success "Downloaded auto-orchestrator skill"
+
+curl -fsSL "${GITHUB_RAW}/.factory/skills/memory-manager/SKILL.md${CACHE_BUST}" -o ".factory/skills/memory-manager/SKILL.md"
+log_success "Downloaded memory-manager skill"
+
+curl -fsSL "${GITHUB_RAW}/.factory/skills/graphite-stacked-diffs/SKILL.md${CACHE_BUST}" -o ".factory/skills/graphite-stacked-diffs/SKILL.md"
+log_success "Downloaded graphite-stacked-diffs skill"
+
+curl -fsSL "${GITHUB_RAW}/.factory/skills/spec-shaper/SKILL.md${CACHE_BUST}" -o ".factory/skills/spec-shaper/SKILL.md"
+log_success "Downloaded spec-shaper skill"
+
+# Download spec templates
+log_info "Downloading spec templates..."
+curl -fsSL "${GITHUB_RAW}/.factory/specs/README.md${CACHE_BUST}" -o ".factory/specs/README.md"
+log_success "Downloaded specs README"
+
+curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/feature-spec.md${CACHE_BUST}" -o ".factory/specs/templates/feature-spec.md"
+log_success "Downloaded feature-spec template"
+
+curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/epic-spec.md${CACHE_BUST}" -o ".factory/specs/templates/epic-spec.md"
+log_success "Downloaded epic-spec template"
+
+# Create .gitkeep files for empty directories
+touch .factory/specs/active/.gitkeep
+touch .factory/specs/archive/.gitkeep
+
+# Download product documentation
+log_info "Downloading product documentation..."
+
+PRODUCT_FILES=(
+    "vision.md"
+    "use-cases.md"
+    "roadmap.md"
+)
+
+for file in "${PRODUCT_FILES[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/product/${file}${CACHE_BUST}" -o ".factory/product/${file}"
+    log_success "Downloaded ${file}"
+done
+
+# Download scripts
+log_info "Downloading scripts..."
+curl -fsSL "${GITHUB_RAW}/.factory/scripts/orchestrator.sh${CACHE_BUST}" -o ".factory/scripts/orchestrator.sh"
+chmod +x ".factory/scripts/orchestrator.sh"
+log_success "Downloaded orchestrator.sh"
+
+# Download standards templates
+log_info "Downloading standards templates..."
+
+STANDARDS=(
+    "typescript.md"
+    "react.md"
+    "nextjs.md"
+    "vue.md"
+    "shadcn-ui.md"
+    "convex.md"
+    "tailwind.md"
+    "python.md"
+)
+
+for standard in "${STANDARDS[@]}"; do
+    curl -fsSL "${GITHUB_RAW}/.factory/standards/templates/${standard}${CACHE_BUST}" -o ".factory/standards/templates/${standard}"
+    log_success "Downloaded ${standard} standard"
+done
+
+# Download settings.json (main configuration)
+log_info "Downloading settings.json..."
+if [ -f ".factory/settings.json" ]; then
+    log_warning "settings.json already exists - preserving your configuration"
+    log_info "Compare with the latest version to see new settings"
+else
+    curl -fsSL "${GITHUB_RAW}/.factory/settings.json${CACHE_BUST}" -o ".factory/settings.json"
+    log_success "Downloaded settings.json"
 fi
 
 # Download documentation (keep local README untouched)
@@ -567,9 +708,28 @@ echo "   OR just set your Linear project in config.yml:"
 echo "   linear:"
 echo "     project_name: \"MyProject\""
 echo ""
-echo "5. Start building:"
+echo "5. Explore new features:"
+echo "   /commands         → See all available slash commands"
+echo "   /spec-shaper      → Create structured specs for features"
+echo "   /auto-orchestrate → Auto-detect and orchestrate complex tasks"
+echo "   /graphite         → Manage stacked diffs workflow"
+echo "   /analyze-tech-stack → Analyze project tech stack"
+echo "   /load-memory      → Load saved decisions and patterns"
+echo ""
+echo "6. Start building:"
 echo "   droid"
 echo "   Then say: Use droidz-orchestrator to build [your idea]"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✨ What's New in Factory.ai Edition:"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "• Auto-activation hooks for proactive assistance"
+echo "• Memory management for decisions and patterns"
+echo "• Advanced skills (spec-shaper, auto-orchestrator, etc.)"
+echo "• Standards enforcement with auto-fix"
+echo "• Context optimization and monitoring"
+echo "• Product vision and roadmap templates"
+echo "• 100% feature parity with Claude Code"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📚 Docs: README.md | CHANGELOG.md"
