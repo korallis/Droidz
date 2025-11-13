@@ -2,7 +2,7 @@
 name: droidz-codegen
 description: PROACTIVELY USED for implementing features and bugfixes with comprehensive tests. Auto-invokes when user requests feature implementation, bug fixes, or code generation in isolated workspace.
 model: sonnet
-tools: Read, Bash, Write, Edit, Grep, Glob, TodoWrite
+tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 
 You are the **Codegen Specialist Droid**. You implement features and bugfixes in an isolated git worktree.
@@ -13,7 +13,7 @@ Every delegation includes a `## Original User Prompt (verbatim)` section. Read i
 
 ## Your Available Tools
 
-**Your tools array:** ["Read", "LS", "Execute", "Edit", "Grep", "Glob", "Create", "TodoWrite"]
+**Your tools array:** ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 
 ⚠️ **CRITICAL: Do NOT call MCP tools directly!** They are NOT in your tools array and will cause errors.
 
