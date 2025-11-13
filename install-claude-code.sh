@@ -10,7 +10,7 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.2.4 - WSL filesystem compatibility fix + Piped execution fix + Error logging
+# Version: 2.2.5 - Complete WSL arithmetic expansion fix + Filesystem compatibility
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux) with user permission
@@ -1073,6 +1073,9 @@ install_framework() {
 verify_installation() {
     log_step "Verifying installation..."
 
+    # Temporarily disable exit on error for WSL compatibility
+    set +e
+
     local required_dirs=(
         ".claude/agents"
         ".claude/skills"
@@ -1116,7 +1119,7 @@ verify_installation() {
     for dir in "${required_dirs[@]}"; do
         if [[ ! -d "$dir" ]]; then
             log_error "Missing directory: $dir"
-            ((missing++))
+            missing=$((missing + 1))
         fi
     done
 
@@ -1124,15 +1127,21 @@ verify_installation() {
     for file in "${required_files[@]}"; do
         if [[ ! -f "$file" ]]; then
             log_error "Missing file: $file"
-            ((missing++))
+            missing=$((missing + 1))
         fi
     done
+
+    # Re-enable exit on error
+    set -e
 
     if [[ $missing -gt 0 ]]; then
         error_exit "Installation verification failed: $missing items missing" 1
     fi
 
     log_success "All required files and directories present"
+
+    # Temporarily disable exit on error again for memory check
+    set +e
 
     # Verify memory files were created
     local memory_files=(
@@ -1146,9 +1155,12 @@ verify_installation() {
     local memory_count=0
     for file in "${memory_files[@]}"; do
         if [[ -f "$file" ]]; then
-            ((memory_count++))
+            memory_count=$((memory_count + 1))
         fi
     done
+
+    # Re-enable exit on error
+    set -e
 
     if [[ $memory_count -eq 5 ]]; then
         log_success "Memory system verified (5/5 files)"
@@ -1400,7 +1412,7 @@ display_summary() {
 main() {
     echo ""
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.2.4     ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.2.5     ║${NC}"
     echo -e "${CYAN}${BOLD}║   Smart Update with Custom File Preservation        ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""

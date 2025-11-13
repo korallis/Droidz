@@ -5,7 +5,7 @@
 Transform complex projects into coordinated, parallel workflows using git worktrees, specialist agents, auto-activating skills, and persistent memory across sessions.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.4-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.2.5-blue.svg)](https://github.com/korallis/Droidz)
 [![Status](https://img.shields.io/badge/status-production%20ready-green.svg)](https://github.com/korallis/Droidz)
 
 ---
