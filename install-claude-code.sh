@@ -10,7 +10,7 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.2.3 - Piped execution fix + WSL support + Error logging
+# Version: 2.2.4 - WSL filesystem compatibility fix + Piped execution fix + Error logging
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux) with user permission
@@ -734,75 +734,85 @@ is_base_file() {
 detect_custom_files() {
     log_step "Detecting custom files..."
 
+    # Temporarily disable exit on error for WSL compatibility
+    # WSL on Windows mount points can have filesystem quirks
+    set +e
+
     local custom_count=0
 
     # Check for custom agents
     if [[ -d ".claude/agents" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
-            basename_file=$(basename "$file")
+            basename_file=$(basename "$file" 2>/dev/null) || continue
             if ! is_base_file "$basename_file" "agents"; then
                 CUSTOM_FILES+=("agents/$basename_file")
                 log_custom "Custom agent: $basename_file"
-                ((custom_count++))
+                custom_count=$((custom_count + 1))
             fi
-        done < <(find .claude/agents -name "*.md" -type f -print0 2>/dev/null)
+        done < <(find .claude/agents -name "*.md" -type f -print0 2>/dev/null || true)
     fi
 
     # Check for custom skills
     if [[ -d ".claude/skills" ]]; then
         while IFS= read -r -d '' dir; do
             local skill_name
-            skill_name=$(basename "$dir")
+            skill_name=$(basename "$dir" 2>/dev/null) || continue
             local skill_file="$skill_name/SKILL.md"
             if ! is_base_file "$skill_file" "skills"; then
                 CUSTOM_FILES+=("skills/$skill_file")
                 log_custom "Custom skill: $skill_name"
-                ((custom_count++))
+                custom_count=$((custom_count + 1))
             fi
-        done < <(find .claude/skills -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+        done < <(find .claude/skills -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null || true)
     fi
 
     # Check for custom commands
     if [[ -d ".claude/commands" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
-            basename_file=$(basename "$file")
+            basename_file=$(basename "$file" 2>/dev/null) || continue
             if ! is_base_file "$basename_file" "commands"; then
                 CUSTOM_FILES+=("commands/$basename_file")
                 log_custom "Custom command: $basename_file"
-                ((custom_count++))
+                custom_count=$((custom_count + 1))
             fi
-        done < <(find .claude/commands -name "*.md" -type f -print0 2>/dev/null)
+        done < <(find .claude/commands -name "*.md" -type f -print0 2>/dev/null || true)
     fi
 
     # Check for custom hooks
-    if [[ -d ".claude/hooks" ]] && [[ -n "$(ls -A .claude/hooks 2>/dev/null)" ]]; then
+    if [[ -d ".claude/hooks" ]] && [[ -n "$(ls -A .claude/hooks 2>/dev/null || true)" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
-            basename_file=$(basename "$file")
+            basename_file=$(basename "$file" 2>/dev/null) || continue
             CUSTOM_FILES+=("hooks/$basename_file")
             log_custom "Custom hook: $basename_file"
-            ((custom_count++))
-        done < <(find .claude/hooks -type f -print0 2>/dev/null)
+            custom_count=$((custom_count + 1))
+        done < <(find .claude/hooks -type f -print0 2>/dev/null || true)
     fi
 
     # Check for custom standards
-    if [[ -d ".claude/standards" ]] && [[ -n "$(ls -A .claude/standards 2>/dev/null)" ]]; then
+    if [[ -d ".claude/standards" ]] && [[ -n "$(ls -A .claude/standards 2>/dev/null || true)" ]]; then
         while IFS= read -r -d '' file; do
             local basename_file
-            basename_file=$(basename "$file")
+            basename_file=$(basename "$file" 2>/dev/null) || continue
             CUSTOM_FILES+=("standards/$basename_file")
             log_custom "Custom standard: $basename_file"
-            ((custom_count++))
-        done < <(find .claude/standards -type f -print0 2>/dev/null)
+            custom_count=$((custom_count + 1))
+        done < <(find .claude/standards -type f -print0 2>/dev/null || true)
     fi
+
+    # Re-enable exit on error
+    set -e
 
     if [[ $custom_count -eq 0 ]]; then
         log_info "No custom files detected"
     else
         log_success "Found $custom_count custom file(s)"
     fi
+
+    # Always return success
+    return 0
 }
 
 # ============================================================================
@@ -1390,7 +1400,7 @@ display_summary() {
 main() {
     echo ""
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.2.3     ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.2.4     ║${NC}"
     echo -e "${CYAN}${BOLD}║   Smart Update with Custom File Preservation        ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
