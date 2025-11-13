@@ -9,6 +9,10 @@ DROIDZ_VERSION="2.2.1-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
+# Error logging
+ERROR_LOG_FILE=".droidz-install-$(date +%Y%m%d_%H%M%S).log"
+INSTALL_START_TIME=$(date +%s)
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -19,7 +23,8 @@ NC='\033[0m' # No Color
 
 # Helper functions
 log_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
+    local msg="$1"
+    echo -e "${BLUE}ℹ${NC} $msg"
 }
 
 log_success() {
@@ -27,11 +32,17 @@ log_success() {
 }
 
 log_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
+    local msg="$1"
+    echo -e "${YELLOW}⚠${NC} $msg"
+    # Also log to file with timestamp
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: $msg" >> "$ERROR_LOG_FILE"
 }
 
 log_error() {
-    echo -e "${RED}✗${NC} $1"
+    local msg="$1"
+    echo -e "${RED}✗${NC} $msg"
+    # Also log to file with timestamp
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: $msg" >> "$ERROR_LOG_FILE"
 }
 
 # ============================================================================
@@ -45,6 +56,7 @@ detect_os() {
     elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
         OS="wsl2"
         detect_package_manager
+        configure_wsl_for_claude_code
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         OS="linux"
         detect_package_manager
@@ -70,6 +82,62 @@ detect_package_manager() {
     else
         PKG_MANAGER="unknown"
     fi
+}
+
+configure_wsl_for_claude_code() {
+    echo ""
+    log_info "Configuring WSL2 for Claude Code compatibility..."
+
+    # Check if npm is available
+    if ! command -v npm &> /dev/null; then
+        log_warning "npm not found. Node.js installation required for Claude Code."
+        echo ""
+        return 0
+    fi
+
+    # Check if npm is pointing to Windows installation
+    local npm_path
+    npm_path=$(which npm 2>/dev/null || echo "")
+
+    if [[ "$npm_path" == /mnt/c/* ]]; then
+        log_warning "Detected Windows npm in WSL. Claude Code requires Linux Node.js."
+        log_info "Please install Node.js via nvm for WSL:"
+        echo ""
+        echo -e "${CYAN}curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash${NC}"
+        echo -e "${CYAN}source ~/.bashrc${NC}"
+        echo -e "${CYAN}nvm install --lts${NC}"
+        echo ""
+        log_warning "Continuing installation, but Claude Code may not work until Node.js is installed in WSL."
+        echo ""
+        return 0
+    fi
+
+    # Configure npm for Linux platform
+    log_info "Setting npm platform to 'linux' for WSL2 compatibility..."
+    if npm config set os linux 2>/dev/null; then
+        log_success "npm configured to treat environment as Linux"
+    else
+        log_warning "Could not configure npm platform (may require manual configuration)"
+    fi
+
+    # Verify nvm is properly loaded
+    if command -v nvm &> /dev/null || [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+        log_success "nvm detected - Node.js environment ready"
+
+        # Source nvm if not already loaded
+        if ! command -v nvm &> /dev/null && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+            log_info "Loading nvm for current session..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            log_success "nvm loaded"
+        fi
+    else
+        log_info "nvm not detected (optional but recommended for WSL2)"
+    fi
+
+    log_success "WSL2 configuration complete"
+    log_info "When installing Claude Code, use: npm install -g @anthropic-ai/claude-code --force --no-os-check"
+    echo ""
 }
 
 get_install_cmd() {
@@ -151,6 +219,97 @@ install_package() {
         return 1
     fi
 }
+
+generate_error_report() {
+    local exit_code="${1:-1}"
+    local install_end_time=$(date +%s)
+    local duration=$((install_end_time - INSTALL_START_TIME))
+
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    log_error "Installation Failed - Error Report Generated"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+
+    # Append system info to log
+    {
+        echo ""
+        echo "=========================================="
+        echo "SYSTEM INFORMATION"
+        echo "=========================================="
+        echo "Date: $(date)"
+        echo "Exit Code: $exit_code"
+        echo "Duration: ${duration}s"
+        echo "OS Type: $OSTYPE"
+        echo "Detected OS: ${OS:-unknown}"
+        echo "Package Manager: ${PKG_MANAGER:-unknown}"
+        echo "Shell: $SHELL"
+        echo "User: $USER"
+        echo ""
+        echo "=========================================="
+        echo "ENVIRONMENT"
+        echo "=========================================="
+        echo "Working Directory: $(pwd)"
+        echo "Git Available: $(command -v git &>/dev/null && echo "yes" || echo "no")"
+        if command -v git &>/dev/null; then
+            echo "Git Version: $(git --version 2>/dev/null || echo "unknown")"
+            echo "In Git Repo: $(git rev-parse --git-dir &>/dev/null && echo "yes" || echo "no")"
+        fi
+        echo "Bun Available: $(command -v bun &>/dev/null && echo "yes" || echo "no")"
+        if command -v bun &>/dev/null; then
+            echo "Bun Version: $(bun --version 2>/dev/null || echo "unknown")"
+        fi
+        echo "npm Available: $(command -v npm &>/dev/null && echo "yes" || echo "no")"
+        if command -v npm &>/dev/null; then
+            echo "npm Version: $(npm --version 2>/dev/null || echo "unknown")"
+            echo "npm Path: $(which npm 2>/dev/null || echo "unknown")"
+        fi
+        echo "node Available: $(command -v node &>/dev/null && echo "yes" || echo "no")"
+        if command -v node &>/dev/null; then
+            echo "node Version: $(node --version 2>/dev/null || echo "unknown")"
+            echo "node Path: $(which node 2>/dev/null || echo "unknown")"
+        fi
+        echo "nvm Available: $(command -v nvm &>/dev/null && echo "yes" || [[ -s "$HOME/.nvm/nvm.sh" ]] && echo "installed but not loaded" || echo "no")"
+        echo ""
+        echo "=========================================="
+        echo "INSTALLED DEPENDENCIES"
+        echo "=========================================="
+        echo "jq: $(command -v jq &>/dev/null && jq --version 2>/dev/null || echo "not installed")"
+        echo "tmux: $(command -v tmux &>/dev/null && tmux -V 2>/dev/null || echo "not installed")"
+        if [[ "$OS" == "macos" ]]; then
+            echo "caffeinate: $(command -v caffeinate &>/dev/null && echo "available" || echo "not available")"
+        fi
+        echo ""
+        if [[ "$OS" == "wsl2" ]]; then
+            echo "=========================================="
+            echo "WSL SPECIFIC INFO"
+            echo "=========================================="
+            echo "WSL Version Info:"
+            cat /proc/version 2>/dev/null || echo "Could not read /proc/version"
+            echo ""
+            echo "Windows PATH in use: $([[ "$PATH" == */mnt/c/* ]] && echo "yes" || echo "no")"
+        fi
+    } >> "$ERROR_LOG_FILE"
+
+    echo -e "${CYAN}Error log saved to: ${NC}$ERROR_LOG_FILE"
+    echo ""
+    echo -e "${YELLOW}Please share this file when reporting the issue:${NC}"
+    echo -e "  ${BLUE}1.${NC} Open an issue at: ${CYAN}https://github.com/korallis/Droidz/issues${NC}"
+    echo -e "  ${BLUE}2.${NC} Copy and paste the contents of: $ERROR_LOG_FILE"
+    echo ""
+    echo -e "${CYAN}Quick copy command:${NC}"
+    if command -v pbcopy &>/dev/null; then
+        echo -e "  cat $ERROR_LOG_FILE | pbcopy  # Then paste with Cmd+V"
+    elif command -v xclip &>/dev/null; then
+        echo -e "  cat $ERROR_LOG_FILE | xclip -selection clipboard"
+    else
+        echo -e "  cat $ERROR_LOG_FILE  # Then copy manually"
+    fi
+    echo ""
+}
+
+# Trap errors
+trap 'EXIT_CODE=$?; if [ $EXIT_CODE -ne 0 ]; then generate_error_report $EXIT_CODE; fi' EXIT
 
 # ============================================================================
 # DEPENDENCY CHECKS
@@ -268,6 +427,16 @@ if ! command -v tmux &> /dev/null; then
     MISSING_DEPS+=("tmux")
 else
     log_success "tmux found"
+fi
+
+# Check for caffeinate on macOS (prevents sleep during long operations)
+if [[ "$OS" == "macos" ]]; then
+    if ! command -v caffeinate &> /dev/null; then
+        log_warning "caffeinate not found. Prevents Mac from sleeping during operations."
+        log_info "caffeinate is a macOS system utility (usually pre-installed)"
+    else
+        log_success "caffeinate found"
+    fi
 fi
 
 # Offer to install missing optional dependencies
@@ -668,6 +837,11 @@ node_modules/
 bun.lockb
 EOF
     log_success "Created .gitignore with security settings"
+fi
+
+# Clean up log file on success
+if [[ -f "$ERROR_LOG_FILE" ]]; then
+    rm -f "$ERROR_LOG_FILE"
 fi
 
 # Summary
