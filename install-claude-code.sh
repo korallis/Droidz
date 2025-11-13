@@ -10,13 +10,16 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.1.1 - Auto-installs dependencies + git init support
+# Version: 2.1.2 - Piped execution fix + WSL support + Error logging
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux) with user permission
 #   - Offers to initialize git repository if not already in one
 #   - Smart merge support for updates
-# Updated: November 12, 2025
+#   - WSL auto-configuration for Claude Code compatibility
+#   - Comprehensive error logging with system diagnostics
+#   - Fixed interactive prompts for piped execution (curl | bash)
+# Updated: November 13, 2025
 #
 
 set -euo pipefail

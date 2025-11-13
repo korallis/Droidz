@@ -3,9 +3,9 @@ set -e
 
 # Droidz Installer - Auto-Dependency Installation + Git Init
 # Installs or updates Droidz in your project
-# Updated: 2025-11-12 - Auto-installs dependencies + git repo initialization
+# Updated: 2025-11-13 - Piped execution fix + WSL support + Error logging
 
-DROIDZ_VERSION="2.2.1"
+DROIDZ_VERSION="2.2.2"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}"
 
