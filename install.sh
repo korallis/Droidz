@@ -7,7 +7,7 @@ set -e
 
 DROIDZ_VERSION="2.2.1-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
-CACHE_BUST="?v=${DROIDZ_VERSION}"
+CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
 # Colors for output
 RED='\033[0;31m'
