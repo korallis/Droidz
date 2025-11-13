@@ -264,7 +264,103 @@ cat .factory/memory/org/decisions.json
     └── context.json         # Session context
 ```
 
-### 📝 3. Spec-Driven Development
+### ⚡ 3. Auto-Activation Skills
+
+**100% Feature Parity with Claude Code** - Skills automatically activate when needed using Factory.ai's hooks system:
+
+```bash
+# No explicit activation needed - skills activate automatically!
+```
+
+**Auto-Activating Skills:**
+
+1. **🎯 Spec Shaper** - Auto-activates when detecting:
+   - Fuzzy ideas or incomplete requirements
+   - User mentions "build", "create", "add feature" without details
+   - Requests lacking specific requirements
+   - Ideas needing clarification before implementation
+
+   ```bash
+   # User: "I want to build a user dashboard"
+   # → /spec-shaper AUTOMATICALLY activates
+   # → Guides through specification creation
+   # → Asks clarifying questions
+   # → Creates structured spec file
+   ```
+
+2. **🔄 Auto Orchestrator** - Auto-activates when detecting:
+   - Complex multi-task requests (3+ components)
+   - Multiple independent areas (frontend + backend + tests + infra)
+   - Requests mentioning parallel work
+   - Tasks estimated >2 hours with parallelizable components
+
+   ```bash
+   # User: "Build auth system with OAuth, JWT, and user management"
+   # → /auto-orchestrate AUTOMATICALLY activates
+   # → Analyzes task complexity
+   # → Recommends orchestration approach
+   # → Generates tasks.json for parallel execution
+   ```
+
+3. **🥞 Graphite Workflow** - Auto-activates when detecting:
+   - Mentions of "stacked diffs", "stacked PRs", "Graphite", or "gt"
+   - Questions about managing dependent pull requests
+   - Requests to break large work into reviewable chunks
+
+   ```bash
+   # User: "How do I create stacked PRs?"
+   # → /graphite AUTOMATICALLY activates
+   # → Provides Graphite workflow guidance
+   # → Shows relevant gt commands
+   # → Guides through stack management
+   ```
+
+4. **🧠 Memory Manager** - Auto-activates after subagent completion:
+   - Saves architectural decisions to org memory
+   - Captures code patterns to pattern library
+   - Records user preferences to user memory
+   - Automatically runs `/save-decision` when appropriate
+
+   ```bash
+   # After droid completes task:
+   # → Memory Manager AUTOMATICALLY activates
+   # → Detects: "Chose PostgreSQL for better JSON support"
+   # → Saves to: .factory/memory/org/decisions.json
+   ```
+
+**How It Works:**
+
+Auto-activation is powered by Factory.ai's **hooks system** (`.factory/settings.json`):
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "name": "auto-activate-spec-shaper",
+        "type": "prompt",
+        "prompt": "PROACTIVELY detect if user has fuzzy ideas..."
+      }
+    ],
+    "SubagentStop": [
+      {
+        "name": "auto-activate-memory-manager",
+        "type": "prompt",
+        "prompt": "PROACTIVELY detect and save important context..."
+      }
+    ]
+  }
+}
+```
+
+**Key Benefits:**
+
+- ✅ **Zero Manual Work** - Skills activate automatically like Claude Code
+- ✅ **Intelligent Detection** - Context-aware activation based on user intent
+- ✅ **Seamless UX** - Works in the background without interruption
+- ✅ **100% Feature Parity** - Exact same auto-activation as Claude Code version
+
+### 📝 4. Spec-Driven Development
 
 Transform fuzzy ideas into structured specifications:
 
@@ -288,7 +384,7 @@ droid /orchestrate spec:.factory/specs/active/auth-system.md
 - 🔧 **Refactor Spec** - Code improvements
 - 🔌 **Integration Spec** - Third-party services
 
-### 🔍 4. Orchestration Intelligence
+### 🔍 5. Orchestration Intelligence
 
 Automatically analyze if work should be parallelized:
 
@@ -303,7 +399,7 @@ droid /auto-orchestrate "build dashboard with analytics, notifications, and sett
 # ✅ Specialists: 2x codegen, 1x test, 1x infra
 ```
 
-### 🥞 5. Graphite Stacked Diffs
+### 🥞 6. Graphite Stacked Diffs
 
 Complete Graphite CLI workflow integration:
 
@@ -322,7 +418,7 @@ droid /graphite sync
 droid /graphite help
 ```
 
-### 🎨 6. Framework-Specific Standards
+### 🎨 7. Framework-Specific Standards
 
 Auto-generated standards for your tech stack:
 
@@ -1891,9 +1987,10 @@ If you're coming from the Claude Code version of Droidz:
 | **Directory** | `.claude/` | `.factory/` |
 | **Agents** | `.claude/agents/` | `.factory/droids/` |
 | **Execution** | Direct tool calls | `droid exec` commands |
-| **Auto-Skills** | 4 auto-activating | Manual slash commands |
+| **Auto-Skills** | 4 auto-activating | ✅ **4 auto-activating via hooks** |
 | **Commands** | 10 slash commands | 13 slash commands |
 | **Autonomy** | Always available | `--auto` flags required |
+| **Feature Parity** | N/A | ✅ **100% feature parity achieved** |
 
 ### Migration Steps
 
@@ -1908,11 +2005,12 @@ git diff claude-code...factory-ai
 droid /droidz-init --status
 droid /orchestrate list
 
-# 4. Update workflows
-# Replace auto-skills with manual commands:
-# - spec-shaper skill → /spec-shaper command
-# - auto-orchestrator skill → /auto-orchestrate command
-# - graphite skill → /graphite command
+# 4. Enjoy auto-activation via hooks!
+# Skills now auto-activate automatically (100% feature parity):
+# - spec-shaper → Auto-activates on fuzzy ideas
+# - auto-orchestrator → Auto-activates on complex requests
+# - graphite → Auto-activates on stacked diffs mentions
+# - memory-manager → Auto-activates after subagent completion
 
 # 5. Verify orchestration
 droid /orchestrate file:tasks.json
