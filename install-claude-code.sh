@@ -10,7 +10,7 @@
 #   chmod +x install-claude-code.sh
 #   ./install-claude-code.sh
 #
-# Version: 2.1.2 - Piped execution fix + WSL support + Error logging
+# Version: 2.2.3 - Piped execution fix + WSL support + Error logging
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux) with user permission
