@@ -1390,7 +1390,7 @@ display_summary() {
 main() {
     echo ""
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.0       ║${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Claude Code Framework Installer v2.2.3     ║${NC}"
     echo -e "${CYAN}${BOLD}║   Smart Update with Custom File Preservation        ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
