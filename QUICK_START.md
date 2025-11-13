@@ -46,11 +46,11 @@ Modes: `--quick`, `--standard` (default), `--strict`
 /spec-to-tasks .claude/specs/active/my-feature.md
 ```
 
-Creates: `my-feature-tasks.json` with orchestration metadata
+Creates: `.claude/specs/active/tasks/my-feature-tasks.json` with orchestration metadata
 
 ### 5. Execute in Parallel
 ```bash
-/orchestrate file:my-feature-tasks.json
+/orchestrate file:.claude/specs/active/tasks/my-feature-tasks.json
 ```
 
 This will:
@@ -91,7 +91,7 @@ View active orchestrations and their status.
 ### Existing Spec to Orchestration
 ```bash
 /spec-to-tasks .claude/specs/active/auth-system.md
-/orchestrate file:auth-system-tasks.json
+/orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
 ```
 
 ### Linear Integration (Future)

@@ -32,7 +32,7 @@ Parses a specification file and generates a JSON task list for orchestration.
 
 ## Output Format
 
-Creates `[spec-name]-tasks.json`:
+Creates `.claude/specs/active/tasks/[spec-name]-tasks.json`:
 
 ```json
 {
@@ -132,10 +132,10 @@ After generating tasks:
 
 ```bash
 # Review the generated tasks
-cat auth-system-tasks.json
+cat .claude/specs/active/tasks/auth-system-tasks.json
 
 # Orchestrate the tasks
-/orchestrate file:auth-system-tasks.json
+/orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
 ```
 
 ## Example Workflow
@@ -154,7 +154,7 @@ cat auth-system-tasks.json
 /spec-to-tasks .claude/specs/active/payment-integration.md
 
 # 5. Orchestrate
-/orchestrate file:payment-integration-tasks.json
+/orchestrate file:.claude/specs/active/tasks/payment-integration-tasks.json
 ```
 
 ---
@@ -169,8 +169,9 @@ You are helping the user convert a specification into an orchestrable task list.
 3. Parse the Implementation Plan section to identify all tasks
 4. For each task, intelligently determine the appropriate specialist based on the task type (codegen for APIs/UI, test for testing, refactor for cleanup, infra for CI/CD, integration for third-party services)
 5. Assign priorities based on dependencies (tasks with no dependencies get priority 1 and can run in parallel)
-6. Generate a JSON file with the complete task structure including keys, titles, descriptions, specialists, priorities, estimated hours, dependencies, and acceptance criteria
-7. Calculate and include metrics like total estimated hours and parallelization factor
+6. Ensure the output directory `.claude/specs/active/tasks/` exists (create if needed)
+7. Generate a JSON file in `.claude/specs/active/tasks/[spec-name]-tasks.json` with the complete task structure including keys, titles, descriptions, specialists, priorities, estimated hours, dependencies, and acceptance criteria (unless --output flag specifies a custom path)
+8. Calculate and include metrics like total estimated hours and parallelization factor
 
 Display a clean summary showing the output file path, total tasks, estimated time, parallelization factor, task breakdown by priority, and specialist assignments. Then show next steps for running the orchestration.
 

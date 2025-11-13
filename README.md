@@ -348,7 +348,7 @@ Located in `.claude/specs/templates/`:
 /spec-to-tasks .claude/specs/active/user-dashboard.md
 
 # 5. Execute
-/orchestrate file:user-dashboard-tasks.json
+/orchestrate file:.claude/specs/active/tasks/user-dashboard-tasks.json
 ```
 
 ---
@@ -450,7 +450,7 @@ Located in `.claude/specs/templates/`:
 2. Identifies independent vs dependent tasks
 3. Assigns specialist agents
 4. Creates phased execution plan
-5. Generates `<name>-tasks.json`
+5. Generates `.claude/specs/active/tasks/<name>-tasks.json`
 
 **Output**: Structured tasks JSON ready for `/orchestrate`
 
@@ -472,7 +472,7 @@ Located in `.claude/specs/templates/`:
 **Examples**:
 ```bash
 # Execute from tasks file
-/orchestrate file:auth-tasks.json
+/orchestrate file:.claude/specs/active/tasks/auth-tasks.json
 
 # Execute from spec directly
 /orchestrate spec:.claude/specs/active/auth-system.md

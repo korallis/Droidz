@@ -224,7 +224,7 @@ After creating spec, guide user to orchestration:
 /spec-to-tasks .claude/specs/active/[spec-name].md
 
 # Start parallel execution
-/orchestrate file:[spec-name]-tasks.json
+/orchestrate file:.claude/specs/active/tasks/[spec-name]-tasks.json
 ```
 
 ## Handling Edge Cases
@@ -280,7 +280,7 @@ I've helped you shape this into a [Feature/Epic/Refactor/Integration] spec:
 1. Review the spec file
 2. Run `/validate-spec .claude/specs/active/[name].md`
 3. Run `/spec-to-tasks .claude/specs/active/[name].md`
-4. Run `/orchestrate file:[name]-tasks.json`
+4. Run `/orchestrate file:.claude/specs/active/tasks/[name]-tasks.json`
 
 Ready to proceed?
 ```

@@ -89,7 +89,7 @@ Real-world scenarios where Droidz delivers exceptional value.
 /spec-to-tasks .claude/specs/active/legacy-to-modern.md
 
 # Orchestrate
-/orchestrate file:refactor-tasks.json
+/orchestrate file:.claude/specs/active/tasks/refactor-tasks.json
 ```
 
 **Tasks** (8 parallel):
@@ -299,7 +299,7 @@ Each task in isolated worktree, merged when quality gates pass.
 
 ```bash
 # Create hotfix orchestration
-/orchestrate file:hotfix-tasks.json
+/orchestrate file:.claude/specs/active/tasks/hotfix-tasks.json
 ```
 
 ```json

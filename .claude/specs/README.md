@@ -78,7 +78,7 @@ Checks for:
 /spec-to-tasks .claude/specs/active/auth-system.md
 ```
 
-Generates `auth-system-tasks.json` with:
+Generates `.claude/specs/active/tasks/auth-system-tasks.json` with:
 - Task breakdown
 - Specialist assignments
 - Priority ordering
@@ -86,7 +86,7 @@ Generates `auth-system-tasks.json` with:
 
 ### 5. Orchestrate
 ```bash
-/orchestrate file:auth-system-tasks.json
+/orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
 ```
 
 Creates parallel worktrees and executes.
@@ -182,7 +182,7 @@ The orchestrator reads specs to:
 5. Integration tests
 ```
 
-### Output: auth-system-tasks.json
+### Output: .claude/specs/active/tasks/auth-system-tasks.json
 ```json
 {
   "spec": "auth-system",

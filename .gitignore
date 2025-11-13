@@ -20,9 +20,9 @@ config.yml
 !.claude/memory/org/README.md
 !.claude/memory/user/README.md
 
-# Keep tasks JSON files - these are spec outputs, not user-specific
-!.claude/specs/active/tasks/
-!.claude/specs/active/tasks/*.json
+# Tasks directory - spec outputs should be in .claude/specs/active/tasks/
+# Exclude the tasks directory itself, but keep the files within it
+.claude/specs/active/tasks/
 
 # Dependencies are resolved via bun and should not be committed
 node_modules/
@@ -38,6 +38,5 @@ V2.0.2_MIGRATION_GUIDE.md
 .claude/memory/user/
 .runs/
 *.backup.*
-*-tasks.json
 .claude-*-backup*
 .droidz-install-*.log

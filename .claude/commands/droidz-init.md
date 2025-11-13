@@ -182,11 +182,11 @@ Would you like an example to demonstrate Droidz? (yes/no)
 
 Creating example "todo-app":
   ✅ Created spec: .claude/specs/examples/todo-app.md
-  ✅ Generated tasks: todo-app-tasks.json
+  ✅ Generated tasks: .claude/specs/active/tasks/todo-app-tasks.json
   ✅ Example orchestration ready
 
 You can review the example and run:
-  /orchestrate file:todo-app-tasks.json
+  /orchestrate file:.claude/specs/active/tasks/todo-app-tasks.json
 ```
 
 ### Step 7: Validation
@@ -221,7 +221,7 @@ Configuration Summary:
 Next Steps:
   1. Review example: .claude/specs/examples/todo-app.md
   2. Create your first spec: /create-spec feature [name]
-  3. Try orchestration: /orchestrate file:todo-app-tasks.json
+  3. Try orchestration: /orchestrate file:.claude/specs/active/tasks/todo-app-tasks.json
   4. Read docs: .claude/product/roadmap.md
 
 Quick Reference:

@@ -80,7 +80,7 @@ Status: Ready for orchestration
 
 Next steps:
   /spec-to-tasks .claude/specs/active/auth-system.md
-  /orchestrate file:auth-system-tasks.json
+  /orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json
 ```
 
 ### Failure

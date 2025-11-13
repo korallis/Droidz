@@ -72,7 +72,7 @@ Pre-filled with:
 2. **Fill in details**: Edit the created file
 3. **Validate**: `/validate-spec .claude/specs/active/auth-system.md`
 4. **Convert to tasks**: `/spec-to-tasks .claude/specs/active/auth-system.md`
-5. **Orchestrate**: `/orchestrate file:auth-system-tasks.json`
+5. **Orchestrate**: `/orchestrate file:.claude/specs/active/tasks/auth-system-tasks.json`
 
 ## Example
 
