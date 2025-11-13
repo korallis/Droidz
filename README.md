@@ -46,6 +46,7 @@ Your support helps maintain and improve this framework for everyone! 🙏
 ## 📋 Table of Contents
 
 - [What Is Droidz for Factory.ai?](#what-is-droidz-for-factoryai)
+- [Droid CLI vs Claude Code Version](#-droid-cli-vs-claude-code-version)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Core Features](#core-features)
@@ -60,6 +61,7 @@ Your support helps maintain and improve this framework for everyone! 🙏
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
 - [Migration from Claude Code](#migration-from-claude-code)
+- [Frequently Asked Questions](#frequently-asked-questions)
 
 ---
 
@@ -96,23 +98,65 @@ Droidz is a **production-ready Factory.ai Droid CLI framework** that provides:
 
 ### 🆚 Droid CLI vs Claude Code Version
 
-This is the **Factory.ai Droid CLI edition**. Key differences:
+This repository contains **TWO editions** of Droidz:
+
+1. **`claude-code` branch** - For Claude Code CLI users
+2. **`factory-ai` branch** - For Factory.ai Droid CLI users ⭐ **(You are here)**
+
+Both editions now have **100% feature parity** with auto-activation!
+
+#### Technical Differences
 
 | Feature | Claude Code | Factory.ai Droid CLI |
 |---------|-------------|---------------------|
+| **CLI Command** | `claude` | `droid` |
 | **Execution** | Direct tool calls | `droid exec` commands |
-| **Auto-Skills** | 4 auto-activating | Manual commands |
+| **Auto-Skills** | ✅ 4 auto-activating | ✅ 4 auto-activating (via hooks) |
 | **Autonomy** | Always available | `--auto` flags required |
 | **Delegation** | Task tool | Direct `droid exec` |
 | **Directory** | `.claude/` | `.factory/` |
 | **Agents/Droids** | `.claude/agents/` | `.factory/droids/` |
 | **Commands** | 10 slash commands | 13 slash commands |
 
-**Why Droid CLI Edition?**
-- 🔒 Better security with autonomy levels
-- 🎯 Explicit control over what droids can do
-- 🏢 Enterprise-ready with permission gates
-- 🔄 Cleaner isolation between orchestrator and specialists
+#### User Experience Comparison
+
+**✅ What's THE SAME:**
+- Auto-activation of skills (spec-shaper, auto-orchestrator, graphite, memory-manager)
+- Parallel orchestration with git worktrees
+- Specialist agents/droids capabilities
+- Memory system (org/user memory)
+- Spec-driven development workflow
+- All slash commands
+- Context optimization
+
+**🔄 What's DIFFERENT:**
+- **CLI tool**: Use `claude` vs `droid` command
+- **Implementation**: Native skills vs hooks-based auto-activation
+- **Directory names**: `.claude/` vs `.factory/`
+
+#### Which Edition Should You Use?
+
+**Use Claude Code Edition** (`claude-code` branch) if:
+- ✅ You're using Claude Code CLI in your workflow
+- ✅ You prefer native skill system
+- ✅ You want Claude's built-in tooling
+
+**Use Factory.ai Edition** (`factory-ai` branch) if:
+- ✅ You're using Factory.ai Droid CLI
+- ✅ You want autonomy level controls (`--auto low/medium/high`)
+- ✅ You need enterprise permission gates
+- ✅ You prefer explicit control over droid capabilities
+
+**Both editions provide identical user experience with 100% feature parity!**
+
+**Switch Between Editions:**
+```bash
+# Use Factory.ai edition
+git checkout factory-ai
+
+# Use Claude Code edition
+git checkout claude-code
+```
 
 ---
 
@@ -2020,19 +2064,24 @@ tmux ls | grep droidz
 
 ### What Stays the Same
 
+- ✅ **Auto-activation of all 4 skills** (100% feature parity!)
 - ✅ All specialist capabilities
 - ✅ Parallel execution architecture
-- ✅ Memory system
-- ✅ Spec-driven development
+- ✅ Memory system (org/user memory)
+- ✅ Spec-driven development workflow
 - ✅ Worktree management
 - ✅ Tmux coordination
+- ✅ All slash commands functionality
 
 ### What Changed
 
-- ✅ Skills are now manual commands (must invoke explicitly)
-- ✅ Orchestrator uses `droid exec` instead of Task tool
-- ✅ Autonomy levels required (`--auto medium`)
-- ✅ Path references use `.factory/` instead of `.claude/`
+- 🔄 **CLI tool**: Use `droid` instead of `claude` command
+- 🔄 **Implementation**: Auto-activation via hooks instead of native skills
+- 🔄 Orchestrator uses `droid exec` instead of Task tool
+- 🔄 Autonomy levels required (`--auto medium`)
+- 🔄 Path references use `.factory/` instead of `.claude/`
+
+**User Experience Impact**: Minimal - same features, just different CLI tool!
 
 ### Compatibility
 
@@ -2044,6 +2093,29 @@ claude /orchestrate spec:.claude/specs/active/feature.md
 # Factory.ai version:
 droid /orchestrate spec:.factory/specs/active/feature.md
 ```
+
+### Frequently Asked Questions
+
+**Q: Do both editions work the same from a user perspective?**
+A: Yes! With auto-activation implemented, both editions provide identical user experience. The only difference is which CLI tool you use (`claude` vs `droid`).
+
+**Q: Is there any feature missing in Factory.ai edition?**
+A: No! We've achieved 100% feature parity. All 4 skills auto-activate just like Claude Code edition.
+
+**Q: Can I switch between editions?**
+A: Yes! Just switch git branches:
+```bash
+git checkout factory-ai   # For Factory.ai Droid CLI
+git checkout claude-code  # For Claude Code CLI
+```
+
+**Q: Which edition is better?**
+A: Both are identical in functionality. Choose based on which CLI platform you're using:
+- Using Claude Code CLI? → `claude-code` branch
+- Using Factory.ai Droid CLI? → `factory-ai` branch
+
+**Q: How does auto-activation work in Factory.ai edition?**
+A: It uses Factory.ai's hooks system (`.factory/settings.json`) to detect conditions and automatically invoke commands, providing the same seamless experience as Claude Code's native skills.
 
 ---
 
