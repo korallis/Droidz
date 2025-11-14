@@ -5,9 +5,35 @@
 Transform complex projects into coordinated, parallel workflows using git worktrees, specialist droids, and automated task orchestration - now fully optimized for Factory.ai's Droid CLI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.0--droid-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.2.5--droid-blue.svg)](https://github.com/korallis/Droidz)
 [![Status](https://img.shields.io/badge/status-production%20ready-green.svg)](https://github.com/korallis/Droidz)
 [![Platform](https://img.shields.io/badge/platform-Factory.ai%20Droid%20CLI-orange.svg)](https://factory.ai)
+
+---
+
+## 🎉 What's New in v2.2.5-droid
+
+**Latest Improvements (November 14, 2025):**
+
+### ✨ Enhanced Installer
+- **Version tracking** - Installer now displays version number (v2.2.5-droid) on execution
+- **WSL compatibility** - Stricter bash safety settings (`set -euo pipefail`) for WSL environments
+- **Professional UX** - Unicode box banners for welcome and completion messages
+- **Better error handling** - Comprehensive cleanup on success/failure with proper signal handling
+- **Fixed downloads** - Removed non-existent files from download list (fixes exit code 56 errors)
+- **Visual progress** - New `log_step` indicators for major installation milestones
+
+### 🔒 Safety & Robustness
+- **Stricter error detection** - Catches undefined variables and pipeline failures
+- **Proper stderr logging** - Errors now go to stderr for better scriptability
+- **Consistent syntax** - All conditionals use safer `[[ ]]` bash syntax
+- **Smart cleanup** - Auto-removes log files on successful installation
+
+### 📊 Better Visibility
+- **Clear version display** - Know exactly which version you're running
+- **Professional banners** - Welcome and completion messages with Unicode box-drawing
+- **16 visual steps** - Major installation phases clearly marked with cyan arrows (▸)
+- **TTY detection** - Colors only appear in terminal, clean output in logs
 
 ---
 
@@ -45,6 +71,7 @@ Your support helps maintain and improve this framework for everyone! 🙏
 
 ## 📋 Table of Contents
 
+- [What's New in v2.2.5-droid](#-whats-new-in-v225-droid)
 - [What Is Droidz for Factory.ai?](#what-is-droidz-for-factoryai)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
@@ -150,22 +177,25 @@ That's it! The framework is ready to use.
 
 ### One-Line Install ⚡
 
-**Smart installer that auto-installs all dependencies + git init if needed:**
+**Smart installer v2.2.5-droid with auto-dependency installation:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 ```
 
 **What it does:**
-- ✅ Auto-detects your OS and package manager
-- ✅ Auto-installs dependencies (git, jq, tmux, bun)
-- ✅ Initializes git repo if not in one
-- ✅ Downloads and sets up Droidz framework
-- ✅ Sets up .factory/ structure
-- ✅ Creates initial .gitignore
-- ✅ Ready to use immediately!
+- ✅ **Displays version** - Shows v2.2.5-droid on execution so you know you have the latest
+- ✅ **Auto-detects your OS** - Supports macOS, Linux, WSL2 with multiple package managers
+- ✅ **Auto-installs dependencies** - git, jq, tmux, Bun (with your permission)
+- ✅ **Initializes git repo** - Creates repository if you're not in one
+- ✅ **Downloads framework** - Fetches all droids, commands, and orchestration tools
+- ✅ **Sets up structure** - Creates .factory/ directory with all components
+- ✅ **Creates .gitignore** - Protects config.yml (API keys) from being committed
+- ✅ **WSL compatible** - Enhanced error handling for WSL environments
+- ✅ **Professional UX** - Visual progress indicators and clear success/error messages
+- ✅ **Ready immediately** - No additional setup required!
 
-**Note:** The installer will ask for confirmation before installing any packages.
+**Note:** The installer asks for confirmation before installing any packages. Version display helps you verify you have the latest improvements.
 
 ### Manual Dependency Installation (Optional)
 
