@@ -217,11 +217,17 @@ main() {
     # Download framework files
     log_step "Downloading Droidz framework"
     
-    # Commands (only the 5 core commands)
+    # Commands (only the 4 core commands)
     log_info "Downloading commands..."
-    for cmd in parallel status summary attach orchestrate; do
+    
+    # Markdown commands (prompts)
+    for cmd in parallel summary attach; do
         download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
     done
+    
+    # Executable commands (bash scripts)
+    download_file "$REPO_URL/.factory/commands/status.sh" ".factory/commands/status.sh" "status command"
+    chmod +x ".factory/commands/status.sh"
     
     # Droids
     log_info "Downloading helper droids..."
