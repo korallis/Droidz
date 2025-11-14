@@ -140,17 +140,24 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.
 # 1. Start droid:
 droid
 
-# 2. In droid chat:
+# 2. In droid chat - Enable custom features:
 /settings
-# Toggle "Custom Droids" ON
+# Toggle "Custom Commands" ON (for /parallel, /status, etc.)
+# Toggle "Custom Droids" ON (for droidz-parallel, etc.)
 # Exit and restart droid
 
-# 3. Test it:
+# 3. Verify commands loaded:
+/commands
+# Should see: parallel, status, summary, attach
+
+# 4. Verify droids loaded:
 /droids
 # Should see: droidz-parallel, droidz-codegen, etc.
 ```
 
 **Done!** You're ready to use Droidz. 🎉
+
+**Important:** Factory.ai requires "Custom Commands" to be enabled in `/settings` for slash commands to work!
 
 ---
 
@@ -502,16 +509,7 @@ Opens a live view where you can see the helper droid working.
 
 ### Advanced Command (For Manual Control)
 
-#### `/orchestrate file:tasks.json`
-
-Only use this if you created a `tasks.json` file manually and want exact control.
-
-```
-# In droid chat:
-/orchestrate file:my-tasks.json
-```
-
-**Most people never need this.** Use `/parallel` instead!
+**Note:** There is no `/orchestrate` command anymore. The `/parallel` command handles orchestration automatically by spawning the droidz-parallel specialist droid, which generates tasks and runs the orchestrator script for you.
 
 ---
 
@@ -843,16 +841,26 @@ You save: 120 minutes (44%)!
 
 ### Problem: `/parallel` command not found
 
-**Cause:** Droidz not installed in your project.
+**Cause:** Either Droidz not installed, or custom commands not enabled.
 
 **Fix:**
-```bash
-# In terminal (not droid chat):
-cd your-project
-git clone https://github.com/korallis/Droidz.git temp
-cp -r temp/.factory .
-rm -rf temp
-```
+
+1. **Install Droidz:**
+   ```bash
+   # In terminal (not droid chat):
+   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+   ```
+
+2. **Enable custom commands in droid:**
+   - Type `/settings` in droid chat
+   - Enable "Custom Commands"
+   - **Restart droid** (important!)
+
+3. **Verify commands loaded:**
+   - Type `/commands` in droid
+   - Should see: parallel, status, summary, attach
+
+**Note:** Commands are in Factory.ai format (`.md` for prompts, `.sh` for executables)
 
 ---
 
@@ -941,7 +949,7 @@ The rest is automatic. You don't need to understand how it works to use it!
 
 ### Week 3: Advanced
 - Try creating custom tasks.json
-- Use `/orchestrate` directly
+- Use manual orchestration (removed - use `/parallel` instead)
 - Explore different helper droids
 
 ### Week 4: Expert
@@ -1024,10 +1032,11 @@ When you install Droidz, here's what you get:
 ```
 your-project/
 ├── .factory/
-│   ├── commands/          # Slash commands (shortcuts)
-│   │   ├── parallel.md    # The /parallel command
-│   │   ├── status.md      # The /status command
-│   │   └── ... (17 total)
+│   ├── commands/          # Slash commands (Factory.ai format)
+│   │   ├── parallel.md    # The /parallel command (markdown prompt)
+│   │   ├── status.sh      # The /status command (bash executable)
+│   │   ├── summary.md     # The /summary command (markdown prompt)
+│   │   └── attach.md      # The /attach command (markdown prompt)
 │   │
 │   ├── droids/            # Helper droids (specialists)
 │   │   ├── droidz-parallel.md
