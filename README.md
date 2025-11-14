@@ -137,25 +137,33 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.
 **After installation:**
 
 ```bash
-# 1. Start droid:
+# 1. Check installation status:
+./status
+
+# 2. Start droid:
 droid
 
-# 2. In droid chat - Enable custom features:
+# 3. In droid chat - Enable custom features:
 /settings
 # Toggle "Custom Commands" ON (for /parallel, /status, etc.)
 # Toggle "Custom Droids" ON (for droidz-parallel, etc.)
 # Exit and restart droid
 
-# 3. Verify commands loaded:
+# 4. Verify commands loaded:
 /commands
-# Should see: parallel, status, summary, attach
+# Should see: auto-parallel, parallel, watch, gh-helper, status, summary, attach
 
-# 4. Verify droids loaded:
+# 5. Verify droids loaded:
 /droids
 # Should see: droidz-parallel, droidz-codegen, etc.
 ```
 
 **Done!** You're ready to use Droidz. 🎉
+
+**Quick Status Check:**
+```bash
+./status  # See installation status anytime
+```
 
 **Important:** Factory.ai requires "Custom Commands" to be enabled in `/settings` for slash commands to work!
 
@@ -164,6 +172,26 @@ droid
 ## 🎈 Your First Task
 
 Let's try using Droidz for a simple task.
+
+### Quick Status Check
+
+First, verify everything is installed:
+
+```bash
+./status
+```
+
+You should see:
+```
+╔══════════════════════════════════════════════════════════════╗
+║  ✅ DROIDZ v0.0.7 - INSTALLATION STATUS                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+📦 INSTALLATION COMPLETE
+  • All v0.0.7 features deployed
+  • All documentation updated
+  • All commands available
+```
 
 ### Example: Add a new API endpoint
 
@@ -936,26 +964,32 @@ You save: 120 minutes (44%)!
 
 ## 🔍 Troubleshooting
 
-### Problem: `/parallel` command not found
+### Problem: `/auto-parallel` or `/parallel` command not found
 
 **Cause:** Either Droidz not installed, or custom commands not enabled.
 
 **Fix:**
 
-1. **Install Droidz:**
+1. **Check if installed:**
    ```bash
    # In terminal (not droid chat):
+   ./status
+   ```
+
+2. **Install Droidz (if needed):**
+   ```bash
    curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
    ```
 
-2. **Enable custom commands in droid:**
+3. **Enable custom commands in droid:**
    - Type `/settings` in droid chat
    - Enable "Custom Commands"
+   - Enable "Custom Droids"
    - **Restart droid** (important!)
 
-3. **Verify commands loaded:**
+4. **Verify commands loaded:**
    - Type `/commands` in droid
-   - Should see: parallel, status, summary, attach
+   - Should see: auto-parallel, parallel, watch, gh-helper, status, summary, attach
 
 **Note:** Commands are in Factory.ai format (`.md` for prompts, `.sh` for executables)
 
@@ -1128,28 +1162,40 @@ When you install Droidz, here's what you get:
 
 ```
 your-project/
+├── status                 # Quick installation status (NEW! v0.0.7)
 ├── .factory/
 │   ├── commands/          # Slash commands (Factory.ai format)
-│   │   ├── parallel.md    # The /parallel command (markdown prompt)
-│   │   ├── status.sh      # The /status command (bash executable)
-│   │   ├── summary.md     # The /summary command (markdown prompt)
-│   │   └── attach.md      # The /attach command (markdown prompt)
+│   │   ├── auto-parallel.md    # The /auto-parallel command (NEW! ⭐)
+│   │   ├── parallel.md         # The /parallel command (markdown prompt)
+│   │   ├── watch.sh            # The /watch command (NEW! live monitoring)
+│   │   ├── gh-helper.sh        # The /gh-helper command (NEW! GitHub)
+│   │   ├── status.sh           # The /status command (bash executable)
+│   │   ├── summary.md          # The /summary command (markdown prompt)
+│   │   ├── attach.md           # The /attach command (markdown prompt)
+│   │   └── parallel-watch.sh   # Helper script (NEW!)
 │   │
 │   ├── droids/            # Helper droids (specialists)
-│   │   ├── droidz-parallel.md
+│   │   ├── droidz-parallel.md      # Enhanced with auto-guidance! ⭐
+│   │   ├── droidz-orchestrator.md
 │   │   ├── droidz-codegen.md
 │   │   ├── droidz-test.md
-│   │   └── ... (8 total)
+│   │   ├── droidz-refactor.md
+│   │   ├── droidz-integration.md
+│   │   ├── droidz-infra.md
+│   │   └── droidz-generalist.md
 │   │
 │   └── scripts/           # Behind-the-scenes tools
 │       ├── orchestrator.sh
 │       ├── dependency-resolver.sh
 │       └── parallel-executor.sh
 │
-└── config.yml             # Your settings (optional)
+├── config.yml             # Your settings (optional)
+└── README.md              # This guide!
 ```
 
 **You don't need to touch these files!** Droidz uses them automatically.
+
+**Quick Status:** Run `./status` anytime to see what's installed!
 
 ---
 
@@ -1177,6 +1223,8 @@ Your support helps keep Droidz free and constantly improving!
 - ✅ **Real-time monitoring** - New `/watch` command shows live progress with color-coded status
 - ✅ **Better visibility** - Enhanced `/status` reads actual task progress from worktrees
 - ✅ **GitHub PR helpers** - New `/gh-helper` command with correct JSON fields
+- ✅ **Auto-guidance** - New `/auto-parallel` command with automatic monitoring instructions
+- ✅ **Clean status display** - New `./status` script for tidy installation summary
 
 **What Changed:**
 - `droidz-parallel` now spawns Task() calls for each specialist droid
