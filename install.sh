@@ -1,12 +1,30 @@
 #!/bin/bash
+#
+# Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
+#
+# Install with:
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+#
+# Or download and run:
+#   wget https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh
+#   chmod +x install.sh
+#   ./install.sh
+#
+# Version: 2.2.5-droid - WSL compatibility + UX improvements + Installer fixes
+# Features:
+#   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
+#   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
+#   - Offers to initialize git repository if not already in one
+#   - WSL auto-configuration for Factory.ai Droid CLI compatibility
+#   - Comprehensive error logging with system diagnostics
+#   - Fixed installer to only download existing files (no 404 errors)
+# Updated: November 14, 2025
+#
+
 set -euo pipefail
 IFS=$'\n\t'
 
-# Droidz Installer (Factory.ai Droid CLI Edition) - Auto-Dependency Installation + Git Init
-# Installs or updates Droidz in your project
-# Updated: 2025-11-12 - Auto-installs dependencies + git repo initialization
-
-DROIDZ_VERSION="2.2.1-droid"
+DROIDZ_VERSION="2.2.5-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -348,6 +366,14 @@ error_exit() {
 # ============================================================================
 # INSTALLATION PROCESS
 # ============================================================================
+
+# Display welcome banner
+echo ""
+echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}${BOLD}║   Droidz Factory.ai Installer v${DROIDZ_VERSION}            ║${NC}"
+echo -e "${CYAN}${BOLD}║   Smart Update with Auto-Dependency Installation    ║${NC}"
+echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
+echo ""
 
 # ============================================================================
 # DEPENDENCY CHECKS
