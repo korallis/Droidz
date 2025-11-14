@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.0.4
+# Version: 0.0.6
 # Updated: 2025-11-14
 #
 
 set -euo pipefail
 
-VERSION="0.0.4"
+VERSION="0.0.6"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -209,9 +209,9 @@ main() {
         fi
     fi
     
-    # Create directory structure
+    # Create directory structure (only what we need)
     log_step "Creating directories"
-    mkdir -p .factory/{commands,droids,scripts,hooks,memory/user,memory/org,specs/templates,product,standards}
+    mkdir -p .factory/{commands,droids,scripts}
     log_success "Directories created"
     
     # Download framework files
@@ -257,7 +257,6 @@ main() {
     # Documentation
     log_info "Downloading documentation..."
     download_file "$REPO_URL/README.md" "README.md" "README"
-    download_file "$REPO_URL/CHANGELOG.md" "CHANGELOG.md" "CHANGELOG"
     
     # Create .gitignore
     if [[ ! -f ".gitignore" ]]; then

@@ -1046,7 +1046,7 @@ your-project/
 
 ---
 
-**Version:** 0.0.4  
+**Version:** 0.0.6  
 **Updated:** 2025-11-14  
 **Difficulty:** Beginner-Friendly ⭐⭐⭐⭐⭐
 
