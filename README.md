@@ -1,1786 +1,1097 @@
-# 🤖 Droidz - AI Development Framework for Factory.ai
+# 🤖 Droidz - Simple Task Automation for Factory.ai
 
-**Droidz** is a powerful orchestration framework for Factory.ai that enables intelligent, parallel task execution with specialized AI agents. Break down complex development work into coordinated workflows with automatic dependency resolution and real-time progress tracking.
+**Droidz helps Factory.ai break big coding tasks into smaller pieces and work on them in parallel.**
 
-[![Version](https://img.shields.io/badge/version-2.0.3-blue.svg)](https://github.com/korallis/Droidz)
-[![Factory.ai](https://img.shields.io/badge/platform-Factory.ai-purple.svg)](https://factory.ai)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+Think of it like having a team of specialized helpers instead of doing everything yourself one step at a time.
 
 ---
 
-## 📋 Table of Contents
+## 📚 Table of Contents
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [How It Works](#how-it-works)
+- [First - What is Factory.ai?](#first---what-is-factoryai)
+- [What Does Droidz Add?](#what-does-droidz-add)
+- [Key Concepts Explained](#key-concepts-explained)
 - [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Framework Components](#framework-components)
-- [Simple Workflow Examples](#simple-workflow-examples)
-- [Complex Workflow Examples](#complex-workflow-examples)
-- [Commands Reference](#commands-reference)
-- [Specialist Droids](#specialist-droids)
-- [Configuration](#configuration)
-- [Best Practices](#best-practices)
+- [Your First Task](#your-first-task)
+- [Simple Examples (Start Here!)](#simple-examples-start-here)
+- [How It Works Behind the Scenes](#how-it-works-behind-the-scenes)
+- [All the Commands Explained](#all-the-commands-explained)
+- [All the Helper Droids Explained](#all-the-helper-droids-explained)
+- [Advanced Examples](#advanced-examples)
 - [Troubleshooting](#troubleshooting)
 
 ---
 
-## 🎯 Overview
+## 🎯 First - What is Factory.ai?
 
-Droidz transforms how you work with AI assistants by orchestrating complex development tasks into parallelized workflows. Instead of manually managing multiple tasks, Droidz automatically:
+**Factory.ai** is a service where you chat with an AI assistant called **"droid"** (like ChatGPT, but for coding).
 
-- **Analyzes** your request and breaks it into discrete tasks
-- **Resolves** dependencies using topological sort algorithms
-- **Executes** tasks in parallel when possible (40-80% time savings)
-- **Tracks** progress in real-time with tmux sessions and state management
-- **Coordinates** specialized AI agents (droids) for different types of work
+You type `droid` in your terminal, and it opens a chat where you can ask it to help with code.
 
-### Why Droidz?
+```bash
+# In your regular terminal, type this:
+droid
 
-**Without Droidz:**
+# Now you're INSIDE the droid chat! It looks like this:
+> _
+```
+
+Everything we talk about in this guide happens **INSIDE** that `droid` chat session.
+
+---
+
+## 🚀 What Does Droidz Add?
+
+**Droidz** is a framework (a set of tools) that teaches the main droid how to:
+
+1. **Break big tasks into smaller tasks** automatically
+2. **Work on multiple tasks at the same time** (in parallel)
+3. **Use specialized helper droids** for different types of work
+4. **Track progress** so you can see what's happening
+
+### Without Droidz:
 ```
 You: "Build an authentication system"
-AI: *Creates one large implementation*
-Time: 3-4 hours of sequential work
-Visibility: Limited progress tracking
+Droid: *tries to do everything at once, takes 3 hours*
 ```
 
-**With Droidz:**
+### With Droidz:
+```
+You: "Build an authentication system"
+Droidz: *breaks it into 7 tasks, works on 3 at once, finishes in 2 hours*
+        
+        ✓ Task 1: Create user database (done)
+        ⏳ Task 2: Login endpoint (working...)
+        ⏳ Task 3: Registration endpoint (working...)
+        ⏳ Task 4: Password reset (working...)
+        ⏸ Task 5: Tests (waiting for tasks 2,3,4)
+```
+
+**You save time** and **see what's happening** as it works!
+
+---
+
+## 📖 Key Concepts Explained
+
+Let's explain the confusing words:
+
+### "droid" (lowercase)
+The **main AI assistant** from Factory.ai. You chat with it.
+- You start it by typing `droid` in terminal
+- It opens a chat interface
+- You type messages or commands
+
+### "droids" (plural, lowercase)
+**Helper AI assistants** that the main droid can call for help.
+- Like specialists on a team
+- Each one is good at specific things
+- They're just files ending in `.md` in the `.factory/droids/` folder
+
+### "Droidz" (capital D, with a Z)
+**This framework** - the system we built that teaches droid how to use helper droids and work in parallel.
+
+### Slash Commands (like `/status`)
+**Shortcuts** you type in the droid chat to do specific things.
+- They always start with `/` (slash)
+- Like `/status` shows what's happening
+- You type them WHERE you chat with droid
+
+### Example to clarify:
+
 ```bash
-$ droid spawn droidz-parallel "build authentication system"
+# IN YOUR REGULAR TERMINAL:
+cd my-project
+droid                    # ← This starts the Factory.ai chat
 
-✅ Orchestration started!
-   
-Phase 1: AUTH-001 (user model)                    [30 min]
-Phase 2: AUTH-002, AUTH-003, AUTH-004 in PARALLEL [30 min]
-Phase 3: AUTH-005 (integration tests)             [30 min]
+# NOW YOU'RE IN THE DROID CHAT - you'll see:
+> _                      # ← The cursor waiting for you
 
-Total: 90 minutes (40% faster!)
-Monitor: /status, /summary, /attach
+# TYPE THESE IN THE DROID CHAT:
+/status                  # ← Slash command (shows orchestrations)
+Build user login         # ← Regular message to droid
+droid-parallel "add API" # ← This is WRONG! Don't type "droid" here!
+
+# THE RIGHT WAY:
+/parallel "add API"      # ← Slash command that uses the helper droid
 ```
 
----
-
-## ✨ Key Features
-
-### 🚀 Intelligent Orchestration
-
-- **Automatic Task Breakdown**: AI analyzes your request and generates 3-7 optimal tasks
-- **Smart Dependencies**: Topological sort ensures correct execution order
-- **Parallel Execution**: Run independent tasks simultaneously (40-80% time savings)
-- **Phase-Based Planning**: Groups tasks into execution phases for maximum efficiency
-
-### 🔧 Specialized Droids
-
-8 specialist droids handle different types of work:
-
-| Droid | Purpose | Use Cases |
-|-------|---------|-----------|
-| **droidz-codegen** | Feature implementation & bug fixes | New features, endpoints, components |
-| **droidz-test** | Testing & coverage | Unit tests, integration tests, E2E tests |
-| **droidz-refactor** | Code restructuring | Clean up, patterns, maintainability |
-| **droidz-integration** | External APIs & services | Third-party APIs, webhooks, integrations |
-| **droidz-infra** | CI/CD & deployment | Pipelines, Docker, infrastructure |
-| **droidz-orchestrator** | Complex multi-step tasks | Large features, system changes |
-| **droidz-parallel** | One-command orchestration | Automatic task generation & execution |
-| **droidz-generalist** | Miscellaneous work | Unclear tasks, multi-domain work |
-
-### 📊 Real-Time Monitoring
-
-- **Live Progress**: TodoWrite streaming shows real-time task status
-- **Session Management**: Each orchestration runs in isolated git worktrees
-- **Tmux Integration**: Attach to any task's execution session
-- **State Tracking**: JSON state files track all orchestrations
-
-### 🛠️ Developer Tools
-
-17 powerful commands for productivity:
-
-- **Orchestration**: `/parallel`, `/orchestrate`, `/auto-orchestrate`
-- **Monitoring**: `/status`, `/summary`, `/attach`
-- **Specification**: `/create-spec`, `/validate-spec`, `/spec-to-tasks`
-- **Context**: `/load-memory`, `/save-decision`, `/optimize-context`
-- **Analysis**: `/analyze-tech-stack`, `/check-standards`
-- **Initialization**: `/droidz-init`, `/graphite`
-
----
-
-## 🔄 How It Works
-
-### Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  USER REQUEST: "Build authentication system"               │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-            ┌─────────────────────────┐
-            │  droidz-parallel droid  │
-            │  (Analyzes & Generates) │
-            └─────────┬───────────────┘
-                      │
-                      ▼
-          ┌───────────────────────┐
-          │  tasks.json created   │
-          │  • AUTH-001: Model    │
-          │  • AUTH-002: Register │
-          │  • AUTH-003: Login    │
-          │  • AUTH-004: JWT      │
-          │  • AUTH-005: Tests    │
-          └───────┬───────────────┘
-                  │
-                  ▼
-    ┌─────────────────────────────┐
-    │  dependency-resolver.sh     │
-    │  (Topological Sort)         │
-    └─────────┬───────────────────┘
-              │
-              ▼
-    ┌─────────────────────────┐
-    │  Execution Plan:        │
-    │  Phase 1: AUTH-001      │
-    │  Phase 2: AUTH-002,003,004 (PARALLEL!)
-    │  Phase 3: AUTH-005      │
-    └─────────┬───────────────┘
-              │
-              ▼
-    ┌──────────────────────────┐
-    │  parallel-executor.sh    │
-    │  (Spawn & Wait)          │
-    └─────────┬────────────────┘
-              │
-              ▼
-    ┌──────────────────────────────────────┐
-    │  orchestrator.sh                     │
-    │  • Creates git worktrees             │
-    │  • Spawns tmux sessions              │
-    │  • Launches specialist droids        │
-    └─────────┬────────────────────────────┘
-              │
-              ▼
-    ┌─────────────────────────────────────────┐
-    │  Specialist Droids Execute in Parallel  │
-    │  ├─ droidz-codegen (AUTH-002)          │
-    │  ├─ droidz-codegen (AUTH-003)          │
-    │  └─ droidz-codegen (AUTH-004)          │
-    └─────────┬───────────────────────────────┘
-              │
-              ▼
-    ┌──────────────────────────┐
-    │  Monitor with:           │
-    │  • /status               │
-    │  • /summary [session-id] │
-    │  • /attach [task-key]    │
-    └──────────────────────────┘
-```
-
-### Execution Flow
-
-1. **Request Analysis**: Droidz-parallel droid analyzes your request
-2. **Task Generation**: Creates tasks.json with 3-7 discrete tasks
-3. **Dependency Resolution**: Topological sort identifies optimal phases
-4. **Parallel Execution**: Independent tasks run simultaneously
-5. **Progress Tracking**: Real-time updates via TodoWrite and state files
-6. **Session Management**: Isolated git worktrees and tmux sessions
-7. **Completion**: All tasks merge back to main branch
+**Important**: When you're inside the droid chat, you don't type `droid` again. You just type your message or slash commands.
 
 ---
 
 ## 📦 Installation
 
-### Prerequisites
+### Step 1: Install Factory.ai CLI
 
-- Factory.ai account
-- Git repository
-- jq (JSON processor)
-- tmux (terminal multiplexer)
-
-### Quick Install
+First, get the Factory.ai droid tool:
 
 ```bash
-# Clone the repository
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
-
-# Run the installer
-chmod +x install.sh
-./install.sh
-
-# Configure (copy and edit)
-cp config.example.yml config.yml
+# In your terminal (not in droid chat yet):
+curl -fsSL https://app.factory.ai/cli | sh
 ```
 
-### Manual Installation
+### Step 2: Get an API Key
 
-1. Copy `.factory/` directory to your project
-2. Copy `config.example.yml` to `config.yml`
-3. Edit `config.yml` with your settings
-4. Ensure dependencies are installed:
+1. Go to https://app.factory.ai/settings/api-keys
+2. Click "Create API Key"
+3. Copy it (looks like `fk-...`)
+4. Save it as an environment variable:
 
 ```bash
-# macOS
-brew install jq tmux
+# In your terminal:
+export FACTORY_API_KEY="fk-your-key-here"
 
-# Ubuntu/Debian
-sudo apt-get install jq tmux
+# To make it permanent, add it to your shell profile:
+echo 'export FACTORY_API_KEY="fk-your-key-here"' >> ~/.zshrc  # or ~/.bashrc
 ```
+
+### Step 3: Install Droidz Framework
+
+```bash
+# In your terminal:
+cd your-project
+git clone https://github.com/korallis/Droidz.git temp-droidz
+cp -r temp-droidz/.factory .
+rm -rf temp-droidz
+
+# Copy the example config:
+cp .factory/config.example.yml config.yml
+```
+
+### Step 4: Test It
+
+```bash
+# Start droid chat:
+droid
+
+# Inside droid chat, type:
+/status
+```
+
+If you see "No active orchestrations" - it works! 🎉
 
 ---
 
-## 🚀 Quick Start
+## 🎈 Your First Task
 
-### Your First Orchestration
+Let's try using Droidz for a simple task.
+
+### Example: Add a new API endpoint
+
+**Step 1:** Start droid in your project:
 
 ```bash
-# One-command orchestration
-droid spawn droidz-parallel "create REST API for todo items"
+# Terminal:
+cd my-project
+droid
 ```
 
-That's it! Droidz will:
-1. Analyze the request
-2. Generate tasks (model, endpoints, tests)
-3. Resolve dependencies
-4. Execute in parallel
-5. Track progress
+**Step 2:** Ask Droidz to help (inside droid chat):
 
-### Monitor Progress
+```
+# In droid chat, type this:
+/parallel "add a GET /api/users/:id endpoint with validation"
+```
 
-```bash
-# View all active orchestrations
+**What happens:**
+
+1. Droidz analyzes what you asked for
+2. It breaks it into small tasks (usually 3-5)
+3. Shows you the plan
+4. Starts working on tasks
+5. You can watch progress!
+
+**Step 3:** Watch it work:
+
+```
+# In droid chat, type:
 /status
 
-# See detailed progress
-/summary 20251114-160000-12345
-
-# Attach to a specific task
-/attach TODO-002
+# You'll see something like:
+✅ Phase 1: Create user model (done)
+⏳ Phase 2: Build endpoint (working...)
+⏸ Phase 3: Write tests (waiting)
 ```
 
-### Manual Orchestration
+**Step 4:** Check detailed progress:
 
-For more control, create tasks manually:
+```
+# In droid chat:
+/summary
+
+# Shows:
+Progress: 67% complete (2 of 3 tasks done)
+✅ USER-001: User model created
+⏳ USER-002: Endpoint implementation (in progress)
+⏸ USER-003: Tests (pending)
+```
+
+That's it! You just used Droidz. 🎉
+
+---
+
+## 🌟 Simple Examples (Start Here!)
+
+### Example 1: Fix a Bug
+
+**What you want:** Fix a bug where users get logged out too quickly.
 
 ```bash
-# Create specification
-/create-spec "Build user authentication system"
+# Terminal: Start droid
+droid
 
-# Convert spec to tasks
-/spec-to-tasks auth-spec.md
+# Droid chat: Ask for help
+/parallel "fix JWT token expiration - should be 7 days not 1 hour"
+```
 
-# Execute orchestration
-/orchestrate tasks.json
+**What Droidz does:**
+```
+Analyzing... Done! I'll do 3 tasks:
+
+Task 1: Update JWT config from 1h to 7d
+Task 2: Add token refresh endpoint  
+Task 3: Update tests
+
+Starting Phase 1...
+✅ Task 1 complete (config updated)
+
+Starting Phase 2 (parallel)...
+⏳ Task 2: Adding refresh endpoint
+⏳ Task 3: Updating tests
+
+All done! 🎉
+```
+
+**Time saved:** Would take 55 minutes doing one at a time. Droidz does it in 35 minutes!
+
+---
+
+### Example 2: Add Test Coverage
+
+**What you want:** Your user module only has 40% test coverage. Need 80%.
+
+```bash
+# Terminal:
+droid
+
+# Droid chat:
+/parallel "add unit tests for user module to reach 80% coverage"
+```
+
+**What Droidz does:**
+```
+I'll create 4 tasks:
+
+Task 1: Run coverage analysis (10 min)
+  └─ Find what's not tested
+
+Task 2: Test user creation (20 min)
+Task 3: Test user validation (20 min)  
+Task 4: Test user updates (20 min)
+
+Phase 1: Task 1 (10 min)
+Phase 2: Tasks 2, 3, 4 in PARALLEL (20 min)
+
+Total time: 30 minutes vs 70 minutes sequential!
 ```
 
 ---
 
-## 🧩 Framework Components
+### Example 3: Add a Simple Feature
 
-### Core Scripts
+**What you want:** Add user profile page with avatar upload.
 
-Located in `.factory/scripts/`:
-
-#### `orchestrator.sh`
-Main orchestration engine. Creates git worktrees, spawns tmux sessions, manages task execution.
-
-**Key Functions:**
-- `create_worktree()` - Isolated git worktrees per task
-- `create_tmux_session()` - Dedicated tmux session per task
-- `orchestrate_tasks()` - Main coordination loop
-- `spawn_task()` - Launch specialist droid for task
-- `wait_for_task()` - Monitor task completion
-
-**Usage:**
 ```bash
-.factory/scripts/orchestrator.sh --tasks tasks.json
+# Terminal:
+droid
+
+# Droid chat:
+/parallel "create user profile page with avatar upload"
 ```
 
-#### `dependency-resolver.sh`
-Topological sort algorithm for dependency resolution.
+**What Droidz does:**
+```
+Breaking into 5 tasks...
 
-**Key Functions:**
-- `resolve_dependencies()` - Build execution plan
-- `validate_dependencies()` - Check for circular dependencies
-- `get_phase_tasks()` - Get tasks for specific phase
-- `print_execution_plan()` - Display plan
+1. Create profile page component
+2. Add avatar upload widget
+3. Create API endpoint for avatar
+4. Connect frontend to backend
+5. Add tests
 
-**Usage:**
-```bash
-.factory/scripts/dependency-resolver.sh tasks.json
+Estimated: 90 minutes
+(Sequential would be 150 minutes - saving 60 minutes!)
+
+Starting work...
 ```
 
-**Output:**
-```json
-{
-  "phases": [
-    {"phase": 1, "tasks": ["TASK-001"]},
-    {"phase": 2, "tasks": ["TASK-002", "TASK-003"]},
-    {"phase": 3, "tasks": ["TASK-004"]}
-  ],
-  "executionPlan": {
-    "TASK-001": {"phase": 1, "dependencies": []},
-    "TASK-002": {"phase": 2, "dependencies": ["TASK-001"]},
-    "TASK-003": {"phase": 2, "dependencies": ["TASK-001"]},
-    "TASK-004": {"phase": 3, "dependencies": ["TASK-002", "TASK-003"]}
-  }
-}
+**Watch progress:**
 ```
+# Type in droid chat:
+/status
 
-#### `parallel-executor.sh`
-Phase-based parallel execution engine.
-
-**Key Functions:**
-- `execute_plan()` - Execute all phases sequentially
-- `execute_phase()` - Spawn all tasks in phase, then wait
-- Phase transition management
-
-**Usage:**
-```bash
-echo "$execution_plan" | .factory/scripts/parallel-executor.sh spawn_callback wait_callback
+Active: profile-feature-20251114
+Status: 60% complete
+  ✅ Profile page
+  ✅ Upload widget
+  ⏳ API endpoint (in progress)
+  ⏸ Integration (waiting)
+  ⏸ Tests (waiting)
 ```
-
-#### `monitor-orchestration.sh`
-Real-time monitoring of orchestration progress.
-
-**Features:**
-- Live task status updates
-- Progress percentage calculation
-- Time estimation
-- Session information
-
-#### `validate-orchestration.sh`
-Pre-flight checks for orchestrations.
-
-**Validates:**
-- Git repository state
-- Dependency resolution
-- File existence
-- Configuration validity
 
 ---
 
-## 📝 Simple Workflow Examples
+## 🔧 How It Works Behind the Scenes
 
-### Example 1: Add New API Endpoint
+Here's what happens when you use `/parallel`:
 
-**Scenario**: Add a GET /api/users/:id endpoint to existing REST API
-
-```bash
-# Using droidz-parallel (automatic)
-droid spawn droidz-parallel "add GET /api/users/:id endpoint with validation and tests"
+### Step 1: You Ask for Help
+```
+You (in droid chat): /parallel "build authentication"
 ```
 
-**What Droidz Does:**
+### Step 2: Droidz Analyzes Your Request
 
-```
-✅ Analysis complete: 3 tasks identified
+A special helper droid called `droidz-parallel` reads your request and thinks:
+- "What smaller tasks make up authentication?"
+- "Which tasks can happen at the same time?"
+- "Which tasks need others to finish first?"
 
-Execution Plan:
-├─ Phase 1: API-001 - Create user model schema
-├─ Phase 2: API-002 - Implement GET endpoint
-└─ Phase 3: API-003 - Write integration tests
+### Step 3: Creates a Task List
 
-Estimated time: 45 minutes
-Monitor: /status
-```
+It makes a file called `tasks.json`:
 
-**Generated Tasks:**
-```json
-{
-  "tasks": [
-    {
-      "key": "API-001",
-      "title": "Create user data model",
-      "description": "Define user schema with id, name, email, createdAt",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 15,
-      "dependencies": []
-    },
-    {
-      "key": "API-002",
-      "title": "Implement GET /api/users/:id endpoint",
-      "description": "Create endpoint with validation, error handling, 404 responses",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 20,
-      "dependencies": ["API-001"]
-    },
-    {
-      "key": "API-003",
-      "title": "Write integration tests",
-      "description": "Test successful retrieval, 404 handling, invalid ID format",
-      "specialist": "droidz-test",
-      "priority": 2,
-      "estimatedMinutes": 15,
-      "dependencies": ["API-002"]
-    }
-  ]
-}
-```
-
-**Result**: Endpoint implemented and tested in 50 minutes (vs 75 minutes sequential)
-
----
-
-### Example 2: Fix Authentication Bug
-
-**Scenario**: JWT tokens expiring too quickly, users getting logged out
-
-```bash
-# Using droidz-parallel
-droid spawn droidz-parallel "fix JWT token expiration - should be 7 days not 1 hour"
-```
-
-**What Droidz Does:**
-
-```
-✅ Analysis complete: 3 tasks identified
-
-Execution Plan:
-├─ Phase 1: BUG-001 - Update JWT configuration
-├─ Phase 2: BUG-002 - Add token refresh logic (parallel)
-│           BUG-003 - Update tests for new expiration (parallel)
-└─ No Phase 3 needed
-
-Estimated time: 35 minutes
-Time saved: 20 minutes (36%)
-```
-
-**Generated Tasks:**
-```json
-{
-  "tasks": [
-    {
-      "key": "BUG-001",
-      "title": "Update JWT expiration config",
-      "description": "Change JWT_EXPIRATION from 1h to 7d in config and environment",
-      "specialist": "droidz-codegen",
-      "estimatedMinutes": 10,
-      "dependencies": []
-    },
-    {
-      "key": "BUG-002",
-      "title": "Add token refresh endpoint",
-      "description": "Implement /auth/refresh for extending sessions",
-      "specialist": "droidz-codegen",
-      "estimatedMinutes": 25,
-      "dependencies": ["BUG-001"]
-    },
-    {
-      "key": "BUG-003",
-      "title": "Update authentication tests",
-      "description": "Test new expiration time and refresh mechanism",
-      "specialist": "droidz-test",
-      "estimatedMinutes": 15,
-      "dependencies": ["BUG-001"]
-    }
-  ]
-}
-```
-
-**Result**: Bug fixed with refresh mechanism in 35 minutes with parallel test updates
-
----
-
-### Example 3: Add Test Coverage
-
-**Scenario**: User module has only 40% test coverage, need to reach 80%
-
-```bash
-# Using droidz-test specialist
-droid spawn droidz-test "add unit tests for user module to reach 80% coverage"
-```
-
-**What Droidz Does:**
-
-```
-✅ Analysis complete: 4 tasks identified
-
-Execution Plan:
-├─ Phase 1: TEST-001 - Analyze current coverage
-└─ Phase 2: TEST-002 - Test user creation (parallel)
-            TEST-003 - Test user validation (parallel)
-            TEST-004 - Test user updates (parallel)
-
-Estimated time: 40 minutes
-Sequential would take: 70 minutes
-Time saved: 30 minutes (43%)
-```
-
-**Generated Tasks:**
-```json
-{
-  "tasks": [
-    {
-      "key": "TEST-001",
-      "title": "Run coverage analysis",
-      "description": "Identify uncovered code paths in user module",
-      "specialist": "droidz-test",
-      "estimatedMinutes": 10,
-      "dependencies": []
-    },
-    {
-      "key": "TEST-002",
-      "title": "Test user creation flows",
-      "description": "Unit tests for createUser, validation, duplicates",
-      "specialist": "droidz-test",
-      "estimatedMinutes": 20,
-      "dependencies": ["TEST-001"]
-    },
-    {
-      "key": "TEST-003",
-      "title": "Test user validation logic",
-      "description": "Test email validation, password strength, required fields",
-      "specialist": "droidz-test",
-      "estimatedMinutes": 20,
-      "dependencies": ["TEST-001"]
-    },
-    {
-      "key": "TEST-004",
-      "title": "Test user update operations",
-      "description": "Test updateUser, partial updates, concurrent modifications",
-      "specialist": "droidz-test",
-      "estimatedMinutes": 20,
-      "dependencies": ["TEST-001"]
-    }
-  ]
-}
-```
-
-**Result**: Coverage increased to 85% in 40 minutes with parallel test writing
-
----
-
-## 🏗️ Complex Workflow Examples
-
-### Example 1: Build Complete Authentication System
-
-**Scenario**: New project needs full authentication with registration, login, JWT, password reset
-
-```bash
-# Using droidz-parallel for automatic orchestration
-droid spawn droidz-parallel "build complete authentication system with registration, login, JWT tokens, password reset, and email verification"
-```
-
-**What Droidz Does:**
-
-```
-✅ Analysis complete: 7 tasks identified
-
-Execution Plan:
-├─ Phase 1: AUTH-001 - User model and database schema
-│
-├─ Phase 2: AUTH-002 - Registration endpoint (parallel)
-│           AUTH-003 - Login endpoint (parallel)
-│           AUTH-004 - JWT middleware (parallel)
-│
-├─ Phase 3: AUTH-005 - Password reset flow (parallel)
-│           AUTH-006 - Email verification (parallel)
-│
-└─ Phase 4: AUTH-007 - Integration tests
-
-Estimated time: 120 minutes
-Sequential would take: 210 minutes
-Time saved: 90 minutes (43%)
-
-Monitor with:
-  /status
-  /summary 20251114-103045-78234
-  /attach AUTH-002
-```
-
-**Generated Tasks:**
 ```json
 {
   "tasks": [
     {
       "key": "AUTH-001",
-      "title": "Create user model and database schema",
-      "description": "User model with fields: id, email, password (hashed), emailVerified, resetToken, resetTokenExpiry, createdAt, updatedAt. Include migrations.",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 30,
+      "title": "Create user model",
       "dependencies": []
     },
     {
-      "key": "AUTH-002",
-      "title": "Implement user registration endpoint",
-      "description": "POST /auth/register - validate email/password, hash password, create user, send verification email",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 30,
+      "key": "AUTH-002", 
+      "title": "Login endpoint",
       "dependencies": ["AUTH-001"]
     },
     {
       "key": "AUTH-003",
-      "title": "Implement login endpoint",
-      "description": "POST /auth/login - validate credentials, check email verification, generate JWT token",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 30,
+      "title": "Register endpoint",
       "dependencies": ["AUTH-001"]
-    },
-    {
-      "key": "AUTH-004",
-      "title": "Create JWT authentication middleware",
-      "description": "Middleware to verify JWT tokens, attach user to request, handle expired tokens",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 25,
-      "dependencies": ["AUTH-001"]
-    },
-    {
-      "key": "AUTH-005",
-      "title": "Implement password reset flow",
-      "description": "POST /auth/forgot-password and POST /auth/reset-password - generate reset tokens, send emails, update passwords",
-      "specialist": "droidz-codegen",
-      "priority": 2,
-      "estimatedMinutes": 35,
-      "dependencies": ["AUTH-002", "AUTH-003"]
-    },
-    {
-      "key": "AUTH-006",
-      "title": "Implement email verification",
-      "description": "GET /auth/verify/:token - verify email addresses, handle expired tokens, update user status",
-      "specialist": "droidz-integration",
-      "priority": 2,
-      "estimatedMinutes": 30,
-      "dependencies": ["AUTH-002"]
-    },
-    {
-      "key": "AUTH-007",
-      "title": "Write comprehensive integration tests",
-      "description": "Test full flows: registration→verification→login, password reset, JWT validation, error cases",
-      "specialist": "droidz-test",
-      "priority": 2,
-      "estimatedMinutes": 40,
-      "dependencies": ["AUTH-005", "AUTH-006"]
     }
   ]
 }
 ```
 
-**Real-Time Progress:**
+### Step 4: Figures Out the Order
+
+The `dependency-resolver` script looks at dependencies:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│ Orchestration: 20251114-103045-78234                │
-│ Status: In Progress (35% complete)                  │
-└─────────────────────────────────────────────────────┘
-
-✅ Phase 1: Complete (30 min)
-   └─ AUTH-001: User model created
-
-⏳ Phase 2: In Progress (30 min remaining)
-   ├─ AUTH-002: Registration endpoint ✅ Complete
-   ├─ AUTH-003: Login endpoint ⏳ In Progress
-   └─ AUTH-004: JWT middleware ⏳ In Progress
-
-⏸️ Phase 3: Pending
-   ├─ AUTH-005: Password reset
-   └─ AUTH-006: Email verification
-
-⏸️ Phase 4: Pending
-   └─ AUTH-007: Integration tests
-
-Estimated completion: 90 minutes remaining
+AUTH-001 has no dependencies → Phase 1
+AUTH-002 depends on AUTH-001 → Phase 2
+AUTH-003 depends on AUTH-001 → Phase 2 (can run with AUTH-002!)
 ```
 
-**Result**: Complete authentication system in 2 hours vs 3.5 hours sequential
+### Step 5: Works on Tasks in Phases
 
----
+**Phase 1:** Do AUTH-001 (30 minutes)
+```
+✅ User model created
+```
 
-### Example 2: Migrate Database from MySQL to PostgreSQL
+**Phase 2:** Do AUTH-002 AND AUTH-003 at the same time! (30 minutes)
+```
+⏳ Working on login endpoint...
+⏳ Working on register endpoint...
+(Both happening in parallel!)
+```
 
-**Scenario**: Legacy app on MySQL needs migration to PostgreSQL with zero downtime
+**Result:** 60 minutes instead of 90 minutes sequential!
+
+### Step 6: You Can Watch It All
 
 ```bash
-# Using droidz-orchestrator for complex multi-step work
-droid spawn droidz-orchestrator "migrate application from MySQL to PostgreSQL with zero downtime - dual-write strategy"
-```
-
-**What Droidz Does:**
-
-```
-✅ Analysis complete: 8 tasks identified
-
-Execution Plan:
-├─ Phase 1: DB-001 - Analyze current MySQL schema
-│
-├─ Phase 2: DB-002 - Set up PostgreSQL instance (parallel)
-│           DB-003 - Create migration scripts (parallel)
-│
-├─ Phase 3: DB-004 - Implement dual-write layer
-│
-├─ Phase 4: DB-005 - Initial data migration (parallel)
-│           DB-006 - Set up replication sync (parallel)
-│
-├─ Phase 5: DB-007 - Update application queries
-│
-└─ Phase 6: DB-008 - Validation and cutover tests
-
-Estimated time: 180 minutes
-Sequential would take: 360 minutes
-Time saved: 180 minutes (50%)
-
-CRITICAL: Zero-downtime strategy
-```
-
-**Generated Tasks:**
-```json
-{
-  "tasks": [
-    {
-      "key": "DB-001",
-      "title": "Analyze MySQL schema and data",
-      "description": "Document all tables, indexes, constraints, triggers, stored procedures. Identify PostgreSQL compatibility issues.",
-      "specialist": "droidz-generalist",
-      "priority": 1,
-      "estimatedMinutes": 30,
-      "dependencies": []
-    },
-    {
-      "key": "DB-002",
-      "title": "Provision PostgreSQL instance",
-      "description": "Set up PostgreSQL with equivalent resources, configure connection pooling, enable logical replication",
-      "specialist": "droidz-infra",
-      "priority": 1,
-      "estimatedMinutes": 45,
-      "dependencies": ["DB-001"]
-    },
-    {
-      "key": "DB-003",
-      "title": "Create schema migration scripts",
-      "description": "Generate PostgreSQL DDL from MySQL schema, adapt data types, recreate indexes and constraints",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 60,
-      "dependencies": ["DB-001"]
-    },
-    {
-      "key": "DB-004",
-      "title": "Implement dual-write layer",
-      "description": "Database abstraction layer that writes to both MySQL and PostgreSQL simultaneously",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 50,
-      "dependencies": ["DB-002", "DB-003"]
-    },
-    {
-      "key": "DB-005",
-      "title": "Migrate historical data",
-      "description": "Bulk copy existing data from MySQL to PostgreSQL with checksums for verification",
-      "specialist": "droidz-codegen",
-      "priority": 2,
-      "estimatedMinutes": 45,
-      "dependencies": ["DB-004"]
-    },
-    {
-      "key": "DB-006",
-      "title": "Set up continuous sync",
-      "description": "Monitor dual-write consistency, implement reconciliation for any discrepancies",
-      "specialist": "droidz-infra",
-      "priority": 2,
-      "estimatedMinutes": 40,
-      "dependencies": ["DB-004"]
-    },
-    {
-      "key": "DB-007",
-      "title": "Update application queries",
-      "description": "Refactor MySQL-specific queries to PostgreSQL syntax, update ORM configurations",
-      "specialist": "droidz-refactor",
-      "priority": 2,
-      "estimatedMinutes": 55,
-      "dependencies": ["DB-005", "DB-006"]
-    },
-    {
-      "key": "DB-008",
-      "title": "Validation and cutover tests",
-      "description": "Verify data integrity, test failover procedures, prepare rollback plan, document cutover steps",
-      "specialist": "droidz-test",
-      "priority": 1,
-      "estimatedMinutes": 35,
-      "dependencies": ["DB-007"]
-    }
-  ]
-}
-```
-
-**Key Benefits:**
-- ✅ Zero downtime with dual-write strategy
-- ✅ 50% time savings through parallelization
-- ✅ Isolated worktrees prevent conflicts
-- ✅ Each specialist handles their domain
-- ✅ Automatic rollback capability
-
-**Result**: Database migrated in 3 hours vs 6 hours sequential, zero downtime
-
----
-
-### Example 3: Add Real-Time Notifications System
-
-**Scenario**: Add WebSocket-based real-time notifications to existing app (full-stack feature)
-
-```bash
-# Using droidz-parallel for comprehensive orchestration
-droid spawn droidz-parallel "add real-time notification system with WebSockets - includes backend events, WebSocket server, frontend components, and Redis pub/sub"
-```
-
-**What Droidz Does:**
-
-```
-✅ Analysis complete: 9 tasks identified
-
-Execution Plan:
-├─ Phase 1: NOTIF-001 - Design notification data model
-│
-├─ Phase 2: NOTIF-002 - Set up Redis pub/sub (parallel)
-│           NOTIF-003 - Create notification service (parallel)
-│
-├─ Phase 3: NOTIF-004 - WebSocket server implementation
-│
-├─ Phase 4: NOTIF-005 - Backend event emitters (parallel)
-│           NOTIF-006 - Frontend WebSocket client (parallel)
-│           NOTIF-007 - Notification UI components (parallel)
-│
-├─ Phase 5: NOTIF-008 - Integration with existing features
-│
-└─ Phase 6: NOTIF-009 - E2E tests and load testing
-
-Estimated time: 150 minutes
-Sequential would take: 270 minutes
-Time saved: 120 minutes (44%)
-
-Multi-specialist coordination:
-  • droidz-infra: Redis setup
-  • droidz-codegen: Backend services
-  • droidz-codegen: Frontend components
-  • droidz-integration: WebSocket integration
-  • droidz-test: E2E testing
-```
-
-**Generated Tasks:**
-```json
-{
-  "tasks": [
-    {
-      "key": "NOTIF-001",
-      "title": "Design notification data model",
-      "description": "Define notification schema: id, userId, type, title, message, metadata, read, createdAt. Plan notification types: mention, like, comment, system",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 20,
-      "dependencies": []
-    },
-    {
-      "key": "NOTIF-002",
-      "title": "Set up Redis pub/sub infrastructure",
-      "description": "Configure Redis for pub/sub, set up channels for notifications, configure persistence and clustering",
-      "specialist": "droidz-infra",
-      "priority": 1,
-      "estimatedMinutes": 30,
-      "dependencies": ["NOTIF-001"]
-    },
-    {
-      "key": "NOTIF-003",
-      "title": "Create notification service",
-      "description": "Service to create, store, and publish notifications. Include batching, rate limiting, user preferences",
-      "specialist": "droidz-codegen",
-      "priority": 1,
-      "estimatedMinutes": 40,
-      "dependencies": ["NOTIF-001"]
-    },
-    {
-      "key": "NOTIF-004",
-      "title": "Implement WebSocket server",
-      "description": "WebSocket server with authentication, room management, connection pooling, heartbeat",
-      "specialist": "droidz-integration",
-      "priority": 1,
-      "estimatedMinutes": 45,
-      "dependencies": ["NOTIF-002", "NOTIF-003"]
-    },
-    {
-      "key": "NOTIF-005",
-      "title": "Add event emitters to backend",
-      "description": "Emit notification events on user actions: posts, comments, likes, mentions, follows",
-      "specialist": "droidz-codegen",
-      "priority": 2,
-      "estimatedMinutes": 35,
-      "dependencies": ["NOTIF-004"]
-    },
-    {
-      "key": "NOTIF-006",
-      "title": "Create WebSocket client library",
-      "description": "Frontend WebSocket client with auto-reconnect, message queueing, connection state management",
-      "specialist": "droidz-codegen",
-      "priority": 2,
-      "estimatedMinutes": 30,
-      "dependencies": ["NOTIF-004"]
-    },
-    {
-      "key": "NOTIF-007",
-      "title": "Build notification UI components",
-      "description": "Notification bell icon, dropdown panel, toast notifications, mark as read, notification settings",
-      "specialist": "droidz-codegen",
-      "priority": 2,
-      "estimatedMinutes": 40,
-      "dependencies": ["NOTIF-004"]
-    },
-    {
-      "key": "NOTIF-008",
-      "title": "Integrate with existing features",
-      "description": "Connect notification system to posts, comments, user profiles. Add notification triggers",
-      "specialist": "droidz-integration",
-      "priority": 2,
-      "estimatedMinutes": 25,
-      "dependencies": ["NOTIF-005", "NOTIF-006", "NOTIF-007"]
-    },
-    {
-      "key": "NOTIF-009",
-      "title": "E2E tests and load testing",
-      "description": "Test notification delivery, WebSocket scaling (1000+ concurrent), message ordering, offline handling",
-      "specialist": "droidz-test",
-      "priority": 1,
-      "estimatedMinutes": 35,
-      "dependencies": ["NOTIF-008"]
-    }
-  ]
-}
-```
-
-**Progress Monitoring:**
-
-```bash
-# Watch overall progress
-/summary 20251114-140530-91827
-
-# See what's happening in WebSocket server task
-/attach NOTIF-004
-
-# View all active sessions
-/status
-```
-
-**Live Progress Dashboard:**
-
-```
-═══════════════════════════════════════════════════════════
- Orchestration Summary: Real-Time Notifications
- Session: 20251114-140530-91827
- Status: Phase 4 in progress
-═══════════════════════════════════════════════════════════
-
-Progress: ████████████░░░░░░░░ 67% (6/9 tasks complete)
-
-✅ Completed (6 tasks):
-   ├─ NOTIF-001: Data model designed
-   ├─ NOTIF-002: Redis configured
-   ├─ NOTIF-003: Notification service ready
-   ├─ NOTIF-004: WebSocket server running
-   ├─ NOTIF-005: Backend events wired
-   └─ NOTIF-006: Frontend client ready
-
-⏳ In Progress (2 tasks):
-   ├─ NOTIF-007: UI components (80% done)
-   └─ NOTIF-008: Feature integration (starting)
-
-⏸️ Pending (1 task):
-   └─ NOTIF-009: E2E tests
-
-Estimated completion: 25 minutes
-Time saved so far: 85 minutes vs sequential
-═══════════════════════════════════════════════════════════
-```
-
-**Result**: Full real-time notification system in 2.5 hours vs 4.5 hours sequential
-
----
-
-## 📚 Commands Reference
-
-### Orchestration Commands
-
-#### `/parallel`
-One-command orchestration - simplest way to use Droidz.
-
-```bash
-/parallel "your task description"
-```
-
-Spawns `droidz-parallel` droid which:
-1. Analyzes request
-2. Generates tasks
-3. Resolves dependencies
-4. Executes orchestration
-
-**Example:**
-```bash
-/parallel "add user profile page with avatar upload"
+# In droid chat, type:
+/status          # See what's running
+/summary         # See detailed progress
+/attach AUTH-002 # Watch AUTH-002's work live
 ```
 
 ---
 
-#### `/orchestrate`
-Execute pre-defined tasks from a JSON file.
+## 📋 All the Commands Explained
 
-```bash
-/orchestrate [tasks-file.json]
+These are **slash commands** you type in the droid chat (after you type `droid` in terminal).
+
+### Commands to Start Work
+
+#### `/parallel "what you want"`
+**The easiest way to use Droidz!**
+
+```
+# In droid chat:
+/parallel "add user login feature"
 ```
 
-**When to use:** You've manually created tasks and want to execute them.
+What it does:
+- Breaks your request into tasks automatically
+- Figures out what can run in parallel
+- Starts working
+- Shows progress
 
-**Example:**
-```bash
-# Create tasks.json first
-/orchestrate .runs/my-tasks.json
-```
+When to use: Most of the time! This is the main command.
 
 ---
 
-#### `/auto-orchestrate`
-Automatically analyze request and orchestrate without confirmation.
+#### `/orchestrate tasks.json`
+**Run pre-made tasks from a file**
 
-```bash
-/auto-orchestrate "task description"
+```
+# In droid chat:
+/orchestrate my-tasks.json
 ```
 
-**When to use:** You trust Droidz to handle everything automatically.
+What it does:
+- You already created a `tasks.json` file
+- This runs those exact tasks
+
+When to use: When you want to manually control exactly what tasks run.
 
 ---
 
-### Monitoring Commands
+### Commands to Check Progress
 
 #### `/status`
-View all active orchestrations.
+**See all running work**
 
-```bash
+```
+# In droid chat:
 /status
 ```
 
-**Output:**
+Shows:
 ```
 Active Orchestrations:
 
-Session: 20251114-103045-78234
-  Status: running
-  Tasks: 7 (3 completed, 2 in progress, 2 pending)
-  Started: 2h ago
-  
-Quick actions:
-  /summary 20251114-103045-78234
-  /attach AUTH-003
+📍 Session: auth-system-20251114
+   Status: running
+   Tasks: 7 total (3 done, 2 working, 2 waiting)
+   Started: 1 hour ago
 ```
+
+When to use: To see the big picture of what's happening.
 
 ---
 
 #### `/summary [session-id]`
-Detailed progress for specific orchestration.
+**See detailed progress for one orchestration**
 
-```bash
-/summary 20251114-103045-78234
+```
+# In droid chat:
+/summary auth-system-20251114
 ```
 
-**Output:**
+Shows:
 ```
-═══════════════════════════════════════════════════
- Orchestration Summary
- Session: 20251114-103045-78234
-═══════════════════════════════════════════════════
+Progress: ████████░░░░ 67% (4/6 tasks)
 
-Progress: ████████░░░░░░░░░░░░ 43% (3/7 tasks)
-
-✅ Completed:
-   • AUTH-001: User model created
-   • AUTH-002: Registration endpoint
-   • AUTH-003: Login endpoint
-
-⏳ In Progress:
-   • AUTH-004: JWT middleware
-
-⏸️ Pending:
-   • AUTH-005: Password reset
-   • AUTH-006: Email verification
-   • AUTH-007: Integration tests
-
-Estimated completion: 60 minutes
-```
-
----
-
-#### `/attach [task-key]`
-Attach to task's tmux session to see what's happening.
-
-```bash
-/attach AUTH-004
-```
-
-**Output:**
-```
-Available sessions:
-  • droidz-AUTH-001 (completed)
-  • droidz-AUTH-004 (active)
+✅ Done:
+  - AUTH-001: User model
+  - AUTH-002: Login endpoint
   
-Attaching to droidz-AUTH-004...
-(Opens tmux session showing droid working on task)
-
-Detach: Ctrl+B then D
+⏳ Working:
+  - AUTH-003: Register endpoint
+  
+⏸ Waiting:
+  - AUTH-004: Tests
+  - AUTH-005: Integration
 ```
+
+When to use: To see exactly what's done and what's next.
 
 ---
 
-### Specification Commands
+#### `/attach TASK-001`
+**Watch a specific task work in real-time**
 
-#### `/create-spec`
-Create a detailed specification from a description.
-
-```bash
-/create-spec "build user authentication system"
+```
+# In droid chat:
+/attach AUTH-003
 ```
 
-Creates a comprehensive spec with:
-- Requirements
-- Technical approach
-- API contracts
-- Data models
-- Test scenarios
+What it does:
+- Opens a live view of that task
+- You can see the helper droid working
+- Press Ctrl+B then D to exit
+
+When to use: To debug or watch how a task is being done.
 
 ---
 
-#### `/validate-spec`
-Validate a specification for completeness.
+### Other Useful Commands
 
-```bash
-/validate-spec auth-spec.md
+#### `/commands`
+**See all your custom commands**
+
+```
+# In droid chat:
+/commands
 ```
 
-Checks for:
-- Clear requirements
-- Technical feasibility
-- Missing details
-- Potential issues
+Shows all the shortcuts you've created.
 
 ---
 
-#### `/spec-to-tasks`
-Convert specification to executable tasks.
+#### `/droids`
+**See all your helper droids**
 
-```bash
-/spec-to-tasks auth-spec.md
+```
+# In droid chat:
+/droids
 ```
 
-Generates tasks.json from specification.
+Shows:
+- droidz-parallel (automatic task breakdown)
+- droidz-codegen (writes code)
+- droidz-test (writes tests)
+- etc.
 
 ---
 
-### Context Commands
+## 🤖 All the Helper Droids Explained
 
-#### `/load-memory`
-Load project context and decisions.
+Helper droids are **specialists** that are good at specific things. The main droid calls them when needed.
 
-```bash
-/load-memory [topic]
-```
+### droidz-parallel
+**The task breaker-upper**
 
-Retrieves stored project knowledge:
-- Architecture decisions
-- Design patterns
-- API conventions
-- Team agreements
+What it does:
+- Takes your big request
+- Breaks it into small tasks
+- Figures out what can run in parallel
+- Starts the work
 
----
+When the main droid uses it:
+- When you type `/parallel "something"`
+- When you ask for complex features
 
-#### `/save-decision`
-Save an important decision or pattern.
-
-```bash
-/save-decision
-```
-
-Documents:
-- What was decided
-- Why it was decided
-- Alternatives considered
-- Implementation details
+Think of it as: The project manager
 
 ---
-
-#### `/optimize-context`
-Analyze and optimize loaded context.
-
-```bash
-/optimize-context
-```
-
-Identifies:
-- Redundant information
-- Missing context
-- Outdated decisions
-- Suggestions for improvement
-
----
-
-### Analysis Commands
-
-#### `/analyze-tech-stack`
-Analyze project's technology stack.
-
-```bash
-/analyze-tech-stack
-```
-
-Reports on:
-- Languages and frameworks
-- Dependencies and versions
-- Build tools
-- Testing frameworks
-- Infrastructure
-
----
-
-#### `/check-standards`
-Verify code adheres to project standards.
-
-```bash
-/check-standards [file-or-directory]
-```
-
-Checks for:
-- Code style compliance
-- Naming conventions
-- Documentation
-- Test coverage
-- Best practices
-
----
-
-### Utility Commands
-
-#### `/droidz-init`
-Initialize Droidz in a new project.
-
-```bash
-/droidz-init
-```
-
-Sets up:
-- .factory directory structure
-- Configuration files
-- Default droids
-- Git hooks
-
----
-
-#### `/graphite`
-Create dependency graph visualization.
-
-```bash
-/graphite [tasks-file.json]
-```
-
-Generates visual dependency graph showing task relationships.
-
----
-
-## 🤖 Specialist Droids
 
 ### droidz-codegen
-**Purpose:** Feature implementation and bug fixes
+**The code writer**
 
-**Best for:**
-- New features
-- API endpoints
-- Components
-- Bug fixes
-- General coding
+What it does:
+- Writes new code
+- Fixes bugs
+- Adds features
+- Creates endpoints
 
-**Proactive triggers:**
-- User mentions "implement", "create", "build"
-- Feature requests
-- Bug fix requests
+When the main droid uses it:
+- Most coding tasks
+- "Implement X"
+- "Create Y"
+- "Fix Z"
 
-**Example:**
-```bash
-droid spawn droidz-codegen "implement user profile update endpoint"
-```
+Think of it as: The programmer
 
 ---
 
 ### droidz-test
-**Purpose:** Testing and coverage
+**The test writer**
 
-**Best for:**
-- Unit tests
-- Integration tests
-- E2E tests
-- Coverage improvement
-- Test fixes
+What it does:
+- Writes unit tests
+- Writes integration tests
+- Improves test coverage
+- Fixes failing tests
 
-**Proactive triggers:**
-- User mentions "test", "coverage"
-- Test failures
-- Coverage gaps
+When the main droid uses it:
+- When tests are needed
+- "Add tests for X"
+- "Improve coverage"
 
-**Example:**
-```bash
-droid spawn droidz-test "add unit tests for authentication module"
-```
+Think of it as: The QA engineer
 
 ---
 
 ### droidz-refactor
-**Purpose:** Code restructuring and cleanup
+**The code cleaner**
 
-**Best for:**
-- Refactoring
-- Code cleanup
-- Design patterns
-- Performance optimization
-- Technical debt
+What it does:
+- Cleans up messy code
+- Improves code structure
+- Applies design patterns
+- Removes duplication
 
-**Proactive triggers:**
-- User mentions "refactor", "cleanup", "improve"
-- Code smell detection
-- Maintainability issues
+When the main droid uses it:
+- "Refactor X"
+- "Clean up Y"
+- "Improve Z"
 
-**Example:**
-```bash
-droid spawn droidz-refactor "refactor user service to use repository pattern"
-```
+Think of it as: The code janitor (in a good way!)
 
 ---
 
 ### droidz-integration
-**Purpose:** External APIs and services
+**The API connector**
 
-**Best for:**
-- Third-party APIs
-- Webhooks
-- Service integrations
-- External data sources
-- OAuth/SSO
+What it does:
+- Connects to external APIs
+- Sets up webhooks
+- Integrates third-party services
+- Handles OAuth
 
-**Proactive triggers:**
-- User mentions API names, services
-- "integrate", "connect", "webhook"
-- External service mentions
+When the main droid uses it:
+- "Integrate Stripe"
+- "Add Slack notifications"
+- "Connect to X API"
 
-**Example:**
-```bash
-droid spawn droidz-integration "integrate Stripe payment processing"
-```
+Think of it as: The integration specialist
 
 ---
 
 ### droidz-infra
-**Purpose:** CI/CD and infrastructure
+**The DevOps helper**
 
-**Best for:**
-- CI/CD pipelines
-- Docker configuration
-- Deployment scripts
-- Infrastructure as code
-- Build optimization
+What it does:
+- Sets up CI/CD
+- Writes Docker configs
+- Creates deployment scripts
+- Manages infrastructure
 
-**Proactive triggers:**
-- User mentions CI, deployment, Docker
-- Pipeline issues
-- Build problems
+When the main droid uses it:
+- "Set up GitHub Actions"
+- "Create Dockerfile"
+- "Add deployment"
 
-**Example:**
-```bash
-droid spawn droidz-infra "set up GitHub Actions for automated testing"
-```
+Think of it as: The DevOps engineer
 
 ---
 
 ### droidz-orchestrator
-**Purpose:** Complex multi-step tasks
+**The big project coordinator**
 
-**Best for:**
-- Large features (5+ files)
-- System-wide changes
+What it does:
+- Handles really complex projects
+- Coordinates multiple systems
+- Manages big migrations
+- Oversees multi-phase work
+
+When the main droid uses it:
+- Very large features
+- System migrations
 - Multi-component updates
-- Complex workflows
 
-**Proactive triggers:**
-- Complex requests (3+ distinct components)
-- "build [system]", "implement [feature]"
-- Multi-domain tasks
-
-**Example:**
-```bash
-droid spawn droidz-orchestrator "migrate from REST to GraphQL"
-```
-
----
-
-### droidz-parallel
-**Purpose:** One-command orchestration
-
-**Best for:**
-- Automatic task breakdown
-- Optimal parallelization
-- Quick orchestrations
-- Standard workflows
-
-**Proactive triggers:**
-- Complex requests
-- Multi-step tasks
-- "build", "create", "implement"
-
-**Example:**
-```bash
-droid spawn droidz-parallel "create admin dashboard with analytics"
-```
+Think of it as: The senior architect
 
 ---
 
 ### droidz-generalist
-**Purpose:** Miscellaneous tasks
+**The flexible helper**
 
-**Best for:**
-- Unclear task scope
-- Multi-domain work
-- Exploratory work
+What it does:
+- Handles tasks that don't fit others
+- Research and analysis
 - Documentation
-- Research
+- Miscellaneous work
 
-**When to use:** Task doesn't clearly fit other specialists
+When the main droid uses it:
+- When task is unclear
+- Documentation needs
+- Research tasks
 
-**Example:**
+Think of it as: The jack-of-all-trades
+
+---
+
+## 🏗️ Advanced Examples
+
+Now that you understand the basics, here are more complex examples.
+
+### Example 1: Complete Authentication System
+
+**What you want:** Full auth system with registration, login, JWT, password reset, and email verification.
+
 ```bash
-droid spawn droidz-generalist "analyze codebase and suggest improvements"
+# Terminal:
+droid
+
+# Droid chat:
+/parallel "build complete authentication system with registration, login, JWT, password reset, and email verification"
+```
+
+**What Droidz creates:**
+
+```
+7 tasks in 4 phases:
+
+Phase 1: (30 min)
+  └─ AUTH-001: User database model
+
+Phase 2: (30 min - all parallel!)
+  ├─ AUTH-002: Registration endpoint
+  ├─ AUTH-003: Login endpoint
+  └─ AUTH-004: JWT middleware
+
+Phase 3: (30 min - parallel!)
+  ├─ AUTH-005: Password reset
+  └─ AUTH-006: Email verification
+
+Phase 4: (30 min)
+  └─ AUTH-007: Integration tests
+
+Total: 120 minutes
+Sequential: 210 minutes
+You save: 90 minutes (43%)!
+```
+
+**Watching it work:**
+
+```
+# In droid chat:
+
+# Every few minutes, check:
+/status
+
+# You'll see progress:
+✅ Phase 1 complete (30 min)
+✅ Phase 2 complete (60 min total)
+⏳ Phase 3: 50% done (AUTH-005 done, AUTH-006 working)
+⏸ Phase 4: Waiting
+```
+
+**When it's done:**
+
+```
+All tasks complete! ✅
+
+✅ AUTH-001: User model with password hashing
+✅ AUTH-002: POST /auth/register endpoint
+✅ AUTH-003: POST /auth/login endpoint
+✅ AUTH-004: JWT token middleware
+✅ AUTH-005: Password reset flow
+✅ AUTH-006: Email verification
+✅ AUTH-007: Full integration tests
+
+Ready to test! 🎉
 ```
 
 ---
 
-## ⚙️ Configuration
+### Example 2: Database Migration (Zero Downtime)
 
-### config.yml Structure
-
-```yaml
-# Project settings
-project:
-  name: "My Project"
-  description: "Project description"
-  repository: "https://github.com/user/repo"
-  
-# Default orchestration settings
-orchestration:
-  defaultBranch: "main"
-  workspacePrefix: ".runs/workspace"
-  coordinationDir: ".runs/.coordination"
-  maxConcurrentTasks: 5
-  tmuxSocketName: "droidz"
-  
-# Task defaults
-tasks:
-  defaultPriority: 1
-  defaultEstimateMinutes: 30
-  
-# Specialist preferences
-specialists:
-  defaultCodegen: "droidz-codegen"
-  defaultTest: "droidz-test"
-  defaultRefactor: "droidz-refactor"
-  defaultInfra: "droidz-infra"
-  defaultIntegration: "droidz-integration"
-  
-# Monitoring
-monitoring:
-  enableTodoWrite: true
-  enableProgressTracking: true
-  logLevel: "info"
-  
-# Git settings
-git:
-  createWorktrees: true
-  autoCleanup: true
-  requireCleanWorkingDir: false
-```
-
-### Environment Variables
+**What you want:** Migrate from MySQL to PostgreSQL without downtime.
 
 ```bash
-# Override config file location
-export DROIDZ_CONFIG=/path/to/config.yml
+# Terminal:
+droid
 
-# Override coordination directory
-export DROIDZ_COORDINATION_DIR=/path/to/.coordination
-
-# Override tmux socket name
-export DROIDZ_TMUX_SOCKET=my-socket
-
-# Debug mode
-export DROIDZ_DEBUG=1
+# Droid chat:
+/parallel "migrate database from MySQL to PostgreSQL with zero downtime using dual-write strategy"
 ```
+
+**What Droidz creates:**
+
+```
+8 tasks in 6 phases:
+
+Phase 1: Analysis
+  └─ DB-001: Analyze MySQL schema (30 min)
+
+Phase 2: Setup (parallel!)
+  ├─ DB-002: Provision PostgreSQL (45 min)
+  └─ DB-003: Create migration scripts (60 min)
+
+Phase 3: Dual-Write Layer
+  └─ DB-004: Implement dual-write (50 min)
+
+Phase 4: Migration (parallel!)
+  ├─ DB-005: Migrate historical data (45 min)
+  └─ DB-006: Set up sync monitoring (40 min)
+
+Phase 5: Queries
+  └─ DB-007: Update app queries (55 min)
+
+Phase 6: Testing
+  └─ DB-008: Validation and cutover tests (35 min)
+
+Total: 180 minutes
+Sequential: 360 minutes
+You save: 180 minutes (50%)!
+```
+
+**Key feature:** Zero downtime because dual-write happens before switching!
 
 ---
 
-## 💡 Best Practices
+### Example 3: Real-Time Notifications
 
-### Task Design
+**What you want:** Add WebSocket notifications to your app.
 
-✅ **DO:**
-- Keep tasks 30-60 minutes each
-- Make tasks independently testable
-- Use clear, actionable titles
-- Specify acceptance criteria
-- Minimize dependencies
+```bash
+# Terminal:
+droid
 
-❌ **DON'T:**
-- Create tasks > 90 minutes (split them)
-- Create tasks < 15 minutes (too granular)
-- Add unnecessary dependencies
-- Make vague task descriptions
+# Droid chat:
+/parallel "add real-time notification system with WebSockets including backend events, WebSocket server, frontend components, and Redis pub/sub"
+```
 
-### Dependency Management
+**What Droidz creates:**
 
-✅ **DO:**
-- Only add dependencies when truly required
-- Think "can this run in parallel?"
-- Prefer loose coupling
-- Document why dependencies exist
+```
+9 tasks using multiple specialist droids:
 
-❌ **DON'T:**
-- Add "nice to have" dependencies
-- Create circular dependencies
-- Over-specify dependencies
+Phase 1: Design
+  └─ NOTIF-001: Design data model (20 min)
+      [droidz-codegen]
 
-### Specialist Selection
+Phase 2: Infrastructure (parallel!)
+  ├─ NOTIF-002: Set up Redis pub/sub (30 min)
+  │   [droidz-infra]
+  └─ NOTIF-003: Create notification service (40 min)
+      [droidz-codegen]
 
-✅ **DO:**
-- Use most specific specialist available
-- droidz-codegen for most implementation work
-- droidz-test for all testing
-- droidz-integration for external services
-- droidz-infra for deployment/CI
+Phase 3: WebSocket
+  └─ NOTIF-004: WebSocket server (45 min)
+      [droidz-integration]
 
-❌ **DON'T:**
-- Use droidz-generalist if specific specialist fits
-- Mix unrelated work in one task
-- Use orchestrator for simple tasks
+Phase 4: Integration (all parallel!)
+  ├─ NOTIF-005: Backend event emitters (35 min)
+  │   [droidz-codegen]
+  ├─ NOTIF-006: Frontend WebSocket client (30 min)
+  │   [droidz-codegen]
+  └─ NOTIF-007: UI notification components (40 min)
+      [droidz-codegen]
 
-### Monitoring
+Phase 5: Connect
+  └─ NOTIF-008: Wire everything together (25 min)
+      [droidz-integration]
 
-✅ **DO:**
-- Use /status to check overall progress
-- Use /summary for detailed view
-- Use /attach to debug issues
-- Check logs in .runs/.coordination/
+Phase 6: Testing
+  └─ NOTIF-009: E2E and load tests (35 min)
+      [droidz-test]
 
-❌ **DON'T:**
-- Manually interfere with worktrees
-- Kill tmux sessions directly
-- Modify state files manually
+Total: 150 minutes
+Sequential: 270 minutes
+You save: 120 minutes (44%)!
+```
+
+**Notice:** Different specialist droids handle different parts!
 
 ---
 
-## 🔧 Troubleshooting
+## 🔍 Troubleshooting
 
-### Common Issues
+### Problem: `/parallel` command not found
 
-#### Issue: "Failed to create worktree"
+**Cause:** Droidz not installed in your project.
 
-**Cause:** Git working directory not clean or worktree already exists
-
-**Solution:**
+**Fix:**
 ```bash
-# Check git status
-git status
-
-# Clean up old worktrees
-git worktree prune
-
-# Remove specific worktree
-git worktree remove .runs/workspace-TASK-001
+# In terminal (not droid chat):
+cd your-project
+git clone https://github.com/korallis/Droidz.git temp
+cp -r temp/.factory .
+rm -rf temp
 ```
 
 ---
 
-#### Issue: "Circular dependency detected"
+### Problem: "No such file or directory: .factory/droids"
 
-**Cause:** Task dependencies form a cycle
+**Cause:** You're in the wrong directory.
 
-**Solution:**
+**Fix:**
 ```bash
-# Validate tasks before orchestration
-.factory/scripts/validate-orchestration.sh tasks.json
-
-# Review dependencies
-.factory/scripts/dependency-resolver.sh tasks.json
+# In terminal:
+pwd  # Check where you are
+cd /path/to/your/project  # Go to right place
+ls -la .factory  # Should see the .factory folder
+droid  # Now start droid
 ```
 
 ---
 
-#### Issue: "Tmux session already exists"
+### Problem: Task seems stuck
 
-**Cause:** Previous orchestration didn't cleanup
-
-**Solution:**
-```bash
-# List tmux sessions
-tmux ls
-
-# Kill specific session
-tmux kill-session -t droidz-TASK-001
-
-# Kill all droidz sessions
-tmux ls | grep droidz | awk '{print $1}' | sed 's/://' | xargs -I {} tmux kill-session -t {}
-```
-
----
-
-#### Issue: "Task stuck in in_progress"
-
-**Cause:** Droid crashed or session lost
-
-**Solution:**
-```bash
-# Check tmux session
-tmux attach -t droidz-TASK-001
-
-# Check orchestration logs
-tail -f .runs/.coordination/orchestration.log
-
-# Manually update state if needed
-# Edit .runs/.coordination/orchestration-[session-id].json
-```
-
----
-
-#### Issue: "Cannot find tasks.json"
-
-**Cause:** Wrong path or file not created
-
-**Solution:**
-```bash
-# List orchestration files
-ls -la .runs/orchestration-tasks-*.json
-
-# Use absolute path
-/orchestrate /full/path/to/tasks.json
-```
-
----
-
-### Debug Mode
-
-Enable debug logging:
+**What to do:**
 
 ```bash
-# Set environment variable
-export DROIDZ_DEBUG=1
+# In droid chat:
 
-# Run orchestration
-/parallel "your task"
+# 1. Check status
+/status
 
-# Check detailed logs
+# 2. See details
+/summary session-id-here
+
+# 3. Watch the stuck task
+/attach TASK-003
+
+# 4. Check logs
+# In regular terminal (new window):
 cat .runs/.coordination/orchestration.log
 ```
 
 ---
 
-### Getting Help
+### Problem: "Session already exists"
+
+**Cause:** Previous orchestration didn't clean up.
+
+**Fix:**
+```bash
+# In regular terminal (not droid chat):
+tmux ls  # See sessions
+
+# Kill old sessions:
+tmux kill-session -t droidz-TASK-001
+
+# Or kill all:
+tmux ls | grep droidz | cut -d: -f1 | xargs -I {} tmux kill-session -t {}
+```
+
+---
+
+### Problem: I don't understand what's happening
+
+**That's okay!** Here's the simple version:
+
+1. **Install Droidz** (follow Installation section)
+2. **Start droid**: Type `droid` in terminal
+3. **Ask for help**: Type `/parallel "what you want"` in droid chat
+4. **Watch progress**: Type `/status` in droid chat
+5. **That's it!**
+
+The rest is automatic. You don't need to understand how it works to use it!
+
+---
+
+## 🎓 Learning Path
+
+### Week 1: Basics
+- Install Droidz
+- Try `/parallel` with a small task
+- Use `/status` to watch progress
+- That's enough to be productive!
+
+### Week 2: Monitoring
+- Learn `/summary` for details
+- Try `/attach` to watch tasks
+- Understand phases and dependencies
+
+### Week 3: Advanced
+- Try creating custom tasks.json
+- Use `/orchestrate` directly
+- Explore different helper droids
+
+### Week 4: Expert
+- Create your own helper droids
+- Optimize task breakdowns
+- Help others learn!
+
+---
+
+## 🆘 Need Help?
+
+### Quick Help
+
+```bash
+# In droid chat:
+/help           # See all commands
+/droids         # See all helper droids
+/commands       # See all shortcuts
+```
+
+### Get Support
 
 1. **Check logs**: `.runs/.coordination/orchestration.log`
-2. **Validate setup**: Run `/droidz-init` again
-3. **Check dependencies**: Ensure jq and tmux installed
-4. **Review config**: Verify `config.yml` is valid
-5. **GitHub Issues**: Report bugs at https://github.com/korallis/Droidz/issues
+2. **GitHub Issues**: https://github.com/korallis/Droidz/issues
+3. **Read this guide** again - the answer is probably here!
+
+### Common Questions
+
+**Q: Do I need to understand how it works?**
+A: No! Just use `/parallel "what you want"` and it works.
+
+**Q: How much faster is it really?**
+A: Usually 40-50% faster for tasks with some parallel work.
+
+**Q: Can I use it for any project?**
+A: Yes! Works with any programming language or framework.
+
+**Q: Is it safe?**
+A: Yes, but always review changes before committing them.
+
+**Q: What if something breaks?**
+A: Droidz works in separate git worktrees, so your main code is safe.
 
 ---
 
-## 📈 Performance Metrics
+## 🎉 You're Ready!
 
-### Expected Time Savings
+**Remember the basics:**
 
-| Task Complexity | Tasks | Dependencies | Sequential Time | Parallel Time | Savings |
-|----------------|-------|--------------|-----------------|---------------|---------|
-| **Simple** | 3 | Linear | 90 min | 60 min | **33%** |
-| **Medium** | 5 | Some parallel | 150 min | 90 min | **40%** |
-| **Complex** | 7-9 | Multi-phase | 270 min | 150 min | **44%** |
-| **Enterprise** | 10+ | Complex graph | 400 min | 180 min | **55%** |
+1. Type `droid` in terminal to start Factory.ai chat
+2. Type `/parallel "what you want"` in the droid chat
+3. Type `/status` to watch progress
+4. That's it!
 
-### Real-World Results
+Everything else is optional. Start simple, learn as you go.
 
-Based on actual usage:
+**Your first task:**
 
-- **Authentication system** (7 tasks): 210 min → 120 min (43% faster)
-- **Database migration** (8 tasks): 360 min → 180 min (50% faster)
-- **Real-time notifications** (9 tasks): 270 min → 150 min (44% faster)
-- **API endpoint** (3 tasks): 75 min → 50 min (33% faster)
+```bash
+# Terminal:
+cd your-project
+droid
 
-### Optimization Tips
+# Droid chat:
+/parallel "add a simple hello world endpoint"
 
-1. **Minimize dependencies** - More parallel execution
-2. **Balance task sizes** - Aim for 30-60 min each
-3. **Use specific specialists** - Faster, better results
-4. **Monitor actively** - Catch issues early
-5. **Iterate on task design** - Learn what works
+# Watch it work:
+/status
+```
 
----
-
-## 🎯 What's Next?
-
-### Upcoming Features
-
-- **Auto-recovery**: Automatic retry on task failures
-- **Web UI**: Visual orchestration dashboard
-- **Task templates**: Pre-built workflows for common patterns
-- **Performance analytics**: Track time savings over time
-- **Team collaboration**: Multi-user orchestrations
-
-### Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Community
-
-- **GitHub Discussions**: Ask questions, share workflows
-- **Issues**: Report bugs, request features
-- **Discord**: Real-time community chat (coming soon)
+Have fun! 🚀
 
 ---
 
-## 📄 License
+## 📚 Appendix: File Structure
 
-MIT License - see [LICENSE](LICENSE) file for details.
+When you install Droidz, here's what you get:
 
----
+```
+your-project/
+├── .factory/
+│   ├── commands/          # Slash commands (shortcuts)
+│   │   ├── parallel.md    # The /parallel command
+│   │   ├── status.md      # The /status command
+│   │   └── ... (17 total)
+│   │
+│   ├── droids/            # Helper droids (specialists)
+│   │   ├── droidz-parallel.md
+│   │   ├── droidz-codegen.md
+│   │   ├── droidz-test.md
+│   │   └── ... (8 total)
+│   │
+│   └── scripts/           # Behind-the-scenes tools
+│       ├── orchestrator.sh
+│       ├── dependency-resolver.sh
+│       └── parallel-executor.sh
+│
+└── config.yml             # Your settings (optional)
+```
 
-## 🙏 Acknowledgments
-
-Built with ❤️ for the Factory.ai community.
-
-Special thanks to:
-- Factory.ai team for the amazing platform
-- Claude (Anthropic) for powering the droids
-- Community contributors and early adopters
-
----
-
-**Made with Droidz** 🤖
-
-*Turn hours into minutes. Turn complexity into clarity.*
-
----
-
-## Quick Links
-
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Simple Examples](#simple-workflow-examples)
-- [Complex Examples](#complex-workflow-examples)
-- [Commands Reference](#commands-reference)
-- [Troubleshooting](#troubleshooting)
-- [GitHub Repository](https://github.com/korallis/Droidz)
-- [Report Issue](https://github.com/korallis/Droidz/issues)
+**You don't need to touch these files!** Droidz uses them automatically.
 
 ---
 
 **Version:** 2.0.3  
-**Last Updated:** 2025-11-14  
-**Platform:** Factory.ai
+**Updated:** 2025-11-14  
+**Difficulty:** Beginner-Friendly ⭐⭐⭐⭐⭐
+
+Made with ❤️ for developers who want to move faster
