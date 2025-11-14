@@ -36,6 +36,9 @@ if [ ! -f "${STATE_FILES[0]}" ]; then
     exit 0
 fi
 
+# Check for tmux sessions
+TMUX_SESSIONS=$(tmux list-sessions 2>/dev/null | grep "^droidz-" | wc -l || echo "0")
+
 # Display each orchestration
 for state_file in "${STATE_FILES[@]}"; do
     if [ ! -f "$state_file" ]; then
@@ -54,16 +57,43 @@ for state_file in "${STATE_FILES[@]}"; do
     STATUS=$(jq -r '.status // "unknown"' "$state_file" 2>/dev/null)
     STARTED_AT=$(jq -r '.startTime // .startedAt // "unknown"' "$state_file" 2>/dev/null)
     
-    # Count tasks by status
-    COMPLETED=$(jq '[.tasks[]? | select(.status == "completed")] | length' "$state_file" 2>/dev/null || echo "0")
-    IN_PROGRESS=$(jq '[.tasks[]? | select(.status == "in_progress")] | length' "$state_file" 2>/dev/null || echo "0")
-    PENDING=$(jq '[.tasks[]? | select(.status == "pending")] | length' "$state_file" 2>/dev/null || echo "0")
+    # Count tasks by checking worktree meta files
+    COMPLETED=0
+    IN_PROGRESS=0
+    PENDING=0
+    FAILED=0
+    
+    # Read tasks from orchestration file
+    TASK_KEYS=$(jq -r '.tasks[]?.key // empty' "$state_file" 2>/dev/null)
+    
+    for task_key in $TASK_KEYS; do
+        META_FILE="$PROJECT_ROOT/.runs/$task_key/.droidz-meta.json"
+        if [ -f "$META_FILE" ]; then
+            TASK_STATUS=$(jq -r '.status // "unknown"' "$META_FILE" 2>/dev/null)
+            case "$TASK_STATUS" in
+                completed) ((COMPLETED++)) || true ;;
+                in_progress) ((IN_PROGRESS++)) || true ;;
+                failed) ((FAILED++)) || true ;;
+                *) ((PENDING++)) || true ;;
+            esac
+        else
+            ((PENDING++)) || true
+        fi
+    done
     
     # Display orchestration
     echo -e "  ${CYAN}●${NC} ${BOLD}$SESSION_ID${NC}"
     echo "    Status: $STATUS"
-    echo "    Tasks: $NUM_TASKS total ($COMPLETED done, $IN_PROGRESS working, $PENDING waiting)"
+    echo "    Tasks: $NUM_TASKS total ($COMPLETED done, $IN_PROGRESS working, $PENDING waiting"
+    [ "$FAILED" -gt 0 ] && echo -n ", ${RED}$FAILED failed${NC}"
+    echo ")"
     echo "    Started: $STARTED_AT"
+    
+    # Show active tmux sessions for this orchestration
+    ACTIVE_SESSIONS=$(tmux list-sessions 2>/dev/null | grep "^droidz-" | wc -l || echo "0")
+    if [ "$ACTIVE_SESSIONS" -gt 0 ]; then
+        echo -e "    ${GREEN}Active sessions:${NC} $ACTIVE_SESSIONS tmux sessions running"
+    fi
     echo ""
 done
 

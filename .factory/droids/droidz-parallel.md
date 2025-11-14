@@ -84,7 +84,7 @@ Use the Create tool.
 
 ### Step 4: Execute Orchestrator
 
-Run the orchestrator script:
+Run the orchestrator script to set up worktrees:
 
 ```bash
 .factory/scripts/orchestrator.sh --tasks [path-to-tasks.json]
@@ -93,13 +93,50 @@ Run the orchestrator script:
 This will:
 - Create git worktrees for each task
 - Spawn tmux sessions
-- Use dependency resolution (automatic!)
-- Execute tasks in parallel phases
-- Monitor progress
+- Create .factory-context.md files with instructions
+- Set up coordination infrastructure
 
-### Step 5: Report Results
+### Step 5: Spawn Specialist Droids
 
-After orchestrator completes (or while running), tell the user:
+**CRITICAL:** After the orchestrator completes, you MUST spawn Task() calls for each specialist droid!
+
+For each task in the tasks.json file, spawn the specialist using the Task tool:
+
+```
+Task({
+  subagent_type: "droidz-codegen",  // or appropriate specialist
+  description: "Fix PR #5 conflicts",
+  prompt: `You are working in an isolated worktree for this task.
+
+**Working Directory:** .runs/TASK-KEY
+**Context File:** .runs/TASK-KEY/.factory-context.md
+**Progress File:** .runs/TASK-KEY/.droidz-meta.json
+
+Please:
+1. Change to the worktree directory: cd .runs/TASK-KEY
+2. Read .factory-context.md for your task instructions
+3. Implement the task as described
+4. Update .droidz-meta.json status to "completed" when done
+
+Task Description:
+[task description from tasks.json]
+
+When complete:
+1. Update .droidz-meta.json: {"status": "completed", "completedAt": "[timestamp]"}
+2. Commit your changes
+3. Report completion`
+})
+```
+
+**Important:**
+- Spawn ALL tasks for Phase 1 IMMEDIATELY (they have no dependencies)
+- For Phase 2+, wait for dependencies to complete before spawning
+- Monitor .droidz-meta.json files to detect completion
+- Spawn dependent tasks as soon as their dependencies finish
+
+### Step 6: Report Results
+
+After spawning all Phase 1 tasks, tell the user:
 
 ```
 ✅ Orchestration started!
@@ -108,9 +145,14 @@ Session ID: [session-id]
 Tasks: [N] tasks in [M] phases
 
 Phase breakdown:
-- Phase 1: [task-key] (no dependencies)
-- Phase 2: [task-key], [task-key] (parallel!)
-- Phase 3: [task-key]
+- Phase 1: [task-keys] (spawned now!)
+- Phase 2: [task-keys] (will spawn after Phase 1)
+- Phase 3: [task-keys] (will spawn after Phase 2)
+
+Specialist droids spawned:
+- TASK-001: droidz-codegen (in progress)
+- TASK-002: droidz-codegen (in progress)
+- TASK-003: droidz-test (in progress)
 
 Monitor progress:
   /status
@@ -118,6 +160,8 @@ Monitor progress:
   /attach [task-key]
 
 Logs: .runs/.coordination/orchestration.log
+
+I'll monitor completion and spawn Phase 2 tasks automatically.
 ```
 
 ## Example Flow

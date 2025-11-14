@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-VERSION="0.0.6"
+VERSION="0.0.7"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -227,7 +227,11 @@ main() {
     
     # Executable commands (bash scripts)
     download_file "$REPO_URL/.factory/commands/status.sh" ".factory/commands/status.sh" "status command"
+    download_file "$REPO_URL/.factory/commands/watch.sh" ".factory/commands/watch.sh" "watch command"
+    download_file "$REPO_URL/.factory/commands/gh-helper.sh" ".factory/commands/gh-helper.sh" "gh-helper command"
     chmod +x ".factory/commands/status.sh"
+    chmod +x ".factory/commands/watch.sh"
+    chmod +x ".factory/commands/gh-helper.sh"
     
     # Droids
     log_info "Downloading helper droids..."

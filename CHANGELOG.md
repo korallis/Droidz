@@ -2,6 +2,48 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.7] - 2025-11-14
+
+### 🎉 Major Fixes - Parallel Orchestration Now Actually Works!
+
+#### Fixed
+- **Parallel execution not working** - `droidz-parallel` now spawns Task() calls for each specialist droid after orchestrator creates worktrees
+- **No visibility into task progress** - Status commands now read actual task status from `.droidz-meta.json` files in worktrees
+- **GitHub PR command errors** - Fixed JSON field name issues (`bucket` vs `status`)
+
+#### Added
+- **`/watch` command** - Live monitoring with real-time updates every 2 seconds
+  - Progress bar visualization
+  - Color-coded task status (✓ done, ⏳ working, ⏸ pending, ✗ failed)
+  - Shows recent activity from logs
+  - Displays active tmux sessions
+- **`/gh-helper` command** - GitHub CLI helper with correct JSON field usage
+  - `pr-checks <number>` - Show PR check status
+  - `pr-status <number>` - Comprehensive PR info
+  - `pr-list` - List all PRs
+
+#### Changed
+- **Enhanced `/status` command** - Now reads actual task progress from worktree meta files
+  - Shows active tmux sessions count
+  - Displays failed tasks
+  - More accurate real-time progress tracking
+- **Updated `droidz-parallel.md`** - Added Step 5: Spawn Specialist Droids with Task() call template
+- **Installer updated** - Now downloads watch.sh and gh-helper.sh commands
+- **README.md** - Added documentation for new commands and v0.0.7 features
+
+#### Technical Details
+- Previously, orchestrator.sh created git worktrees and tmux sessions but droids were never spawned
+- Worktrees showed "Waiting for agent invocation..." indefinitely
+- Fixed by instructing droidz-parallel to spawn Task() calls after orchestrator completes
+- Each specialist droid now receives worktree context and works in isolated environment
+
+### Migration Guide
+See `UPDATE_INSTALLATION.md` for detailed upgrade instructions.
+
+**Breaking Changes:** None (fully backward compatible)
+
+---
+
 ## [2.0.2] - 2025-11-10
 
 ### Fixed

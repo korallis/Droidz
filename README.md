@@ -411,7 +411,7 @@ AUTH-003 depends on AUTH-001 → Phase 2 (can run with AUTH-002!)
 
 ## 📋 All the Commands Explained
 
-Droidz has only **5 simple commands**. That's it!
+Droidz has **7 simple commands**. Here they are!
 
 ### The Main Command (Use This 95% of the Time)
 
@@ -504,6 +504,77 @@ Watch a specific task work in real-time.
 Opens a live view where you can see the helper droid working.
 
 **Exit:** Press `Ctrl+B` then `D`
+
+---
+
+#### `/watch [session-id]`
+
+**Live monitoring** with real-time updates and progress visualization.
+
+```
+# In droid chat:
+/watch
+```
+
+Shows:
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  Droidz Live Monitoring  16:45:23                                ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Session: 20251114-164500-12345
+Tasks Progress:
+────────────────────────────────────────────────────────────────
+  ✓ AUTH-001: DONE - User model created
+  ⏳ AUTH-002: WORKING (droidz-codegen) - Login endpoint
+  ⏳ AUTH-003: WORKING (droidz-codegen) - Register endpoint
+  ⏸ AUTH-004: PENDING - Tests
+
+Progress: [███████░░░░░] 25%
+
+  ✓ Completed: 1
+  ⏳ Working: 2
+  ⏸ Pending: 1
+
+Active Sessions: 4 tmux sessions running
+
+Press Ctrl+C to exit | Updating every 2s...
+```
+
+**Features:**
+- Updates every 2 seconds automatically
+- Color-coded status (✓ done, ⏳ working, ⏸ pending, ✗ failed)
+- Progress bar visualization
+- Shows recent activity from logs
+- Displays active tmux sessions
+
+**Exit:** Press `Ctrl+C`
+
+---
+
+#### `/gh-helper <command>`
+
+**GitHub CLI helper** with correct JSON field usage.
+
+```
+# In droid chat:
+
+# Check PR status
+/gh-helper pr-checks 10
+
+# Comprehensive PR info
+/gh-helper pr-status 10
+
+# List all PRs
+/gh-helper pr-list
+```
+
+**Why this exists:** The regular `gh pr checks` command uses different JSON field names (`bucket` instead of `status`). This helper uses the correct fields so you don't get errors.
+
+**Available commands:**
+- `pr-checks <number>` - Show CI/CD check status
+- `pr-status <number>` - Full PR details and checks
+- `pr-list` - List all open PRs
 
 ---
 
@@ -1067,8 +1138,44 @@ Your support helps keep Droidz free and constantly improving!
 
 ---
 
-**Version:** 0.0.6  
+**Version:** 0.0.7  
 **Updated:** 2025-11-14  
 **Difficulty:** Beginner-Friendly ⭐⭐⭐⭐⭐
+
+## 🆕 What's New in v0.0.7
+
+### Parallel Orchestration Actually Works Now! 🎉
+
+**Major Fixes:**
+- ✅ **Parallel tasks actually execute** - Previously, orchestration created worktrees but never spawned droids
+- ✅ **Real-time monitoring** - New `/watch` command shows live progress with color-coded status
+- ✅ **Better visibility** - Enhanced `/status` reads actual task progress from worktrees
+- ✅ **GitHub PR helpers** - New `/gh-helper` command with correct JSON fields
+
+**What Changed:**
+- `droidz-parallel` now spawns Task() calls for each specialist droid
+- Status commands read from `.droidz-meta.json` files in worktrees
+- Live monitoring with progress bars and updates every 2s
+- Fixed GitHub CLI field name errors (`bucket` vs `status`)
+
+**Before v0.0.7:**
+```
+/parallel "build auth"
+✅ Created worktrees
+❌ Nothing happens (tasks sit idle)
+```
+
+**After v0.0.7:**
+```
+/parallel "build auth"
+✅ Created worktrees
+✅ Spawned specialist droids
+⏳ Tasks actually working!
+📊 /watch shows real-time progress
+```
+
+See `UPDATE_INSTALLATION.md` for detailed upgrade guide.
+
+---
 
 Made with ❤️ for developers who want to move faster

@@ -1,4 +1,7 @@
 {
+  "name": "droidz",
+  "version": "0.0.7",
+  "description": "Parallel task orchestration framework for Factory.ai",
   "type": "module",
   "dependencies": {
     "yaml": "^2.8.1"
