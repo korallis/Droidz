@@ -1383,7 +1383,7 @@ Your support helps keep Droidz free and constantly improving!
 
 ---
 
-**Version:** 0.0.7  
+**Version:** 0.0.9  
 **Updated:** 2025-11-14  
 **Difficulty:** Beginner-Friendly ⭐⭐⭐⭐⭐
 

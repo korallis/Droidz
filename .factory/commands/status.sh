@@ -12,6 +12,7 @@ COORDINATION_DIR="$PROJECT_ROOT/.runs/.coordination"
 CYAN='\033[0;36m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -84,9 +85,15 @@ for state_file in "${STATE_FILES[@]}"; do
     # Display orchestration
     echo -e "  ${CYAN}●${NC} ${BOLD}$SESSION_ID${NC}"
     echo "    Status: $STATUS"
-    echo "    Tasks: $NUM_TASKS total ($COMPLETED done, $IN_PROGRESS working, $PENDING waiting"
-    [ "$FAILED" -gt 0 ] && echo -n ", ${RED}$FAILED failed${NC}"
-    echo ")"
+    
+    # Build task summary line
+    TASK_SUMMARY="$NUM_TASKS total ($COMPLETED done, $IN_PROGRESS working, $PENDING waiting"
+    if [ "$FAILED" -gt 0 ]; then
+        TASK_SUMMARY="$TASK_SUMMARY, ${RED}$FAILED failed${NC}"
+    fi
+    TASK_SUMMARY="$TASK_SUMMARY)"
+    
+    echo -e "    Tasks: $TASK_SUMMARY"
     echo "    Started: $STARTED_AT"
     
     # Show active tmux sessions for this orchestration

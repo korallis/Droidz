@@ -2,6 +2,18 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.9] - 2025-11-14
+
+### Fixed
+- **Status Command Formatting** - Fixed broken multi-line echo in `/status` command
+  - Added missing RED color variable definition
+  - Fixed task summary line that was causing closing parenthesis to appear on separate line
+  - Status output now displays cleanly with proper alignment
+  - Failed tasks now show in red color within same line
+
+### Changed
+- Version bumped to 0.0.9 across all files (package.json, install.sh, README.md, status script)
+
 ## [0.0.8] - 2025-11-14
 
 ### 🎓 Skills Injection System - Auto-Enforce Coding Standards!
