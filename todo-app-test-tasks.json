@@ -1,0 +1,79 @@
+{
+  "source": "spec:.factory/specs/active/todo-app-test.md",
+  "specId": "FEAT-TEST-001",
+  "specName": "todo-app-test",
+  "specType": "feature",
+  "createdAt": "2025-01-12T14:30:00Z",
+  "estimatedTotalHours": 6.5,
+  "parallelizationFactor": "1.8x",
+  "tasks": [
+    {
+      "key": "TODO-COMPONENTS",
+      "title": "Core Todo Components",
+      "description": "Build TodoList, TodoItem, and AddTodo React components with basic functionality. Use TypeScript for type safety and Tailwind CSS for styling foundation.",
+      "specialist": "droidz-codegen",
+      "priority": 1,
+      "estimatedHours": 2,
+      "dependencies": [],
+      "parallel": true,
+      "acceptanceCriteria": [
+        "TodoList component renders list of todos",
+        "TodoItem component shows todo with toggle and delete",
+        "AddTodo component has input field and submit",
+        "All components use TypeScript",
+        "Basic Tailwind classes applied"
+      ]
+    },
+    {
+      "key": "TODO-STATE",
+      "title": "State Management & Persistence",
+      "description": "Create useTodos custom hook with state management and LocalStorage persistence. Handle add, toggle, delete operations and sync with localStorage.",
+      "specialist": "droidz-codegen",
+      "priority": 1,
+      "estimatedHours": 1.5,
+      "dependencies": [],
+      "parallel": true,
+      "acceptanceCriteria": [
+        "useTodos hook manages todo state",
+        "Add, toggle, delete functions work",
+        "State persists to localStorage",
+        "State loads from localStorage on mount",
+        "TypeScript types defined"
+      ]
+    },
+    {
+      "key": "TODO-STYLING",
+      "title": "Styling & Polish",
+      "description": "Apply comprehensive Tailwind styling, add smooth animations, ensure responsive design works on mobile and desktop. Polish the user experience.",
+      "specialist": "droidz-codegen",
+      "priority": 2,
+      "estimatedHours": 1,
+      "dependencies": ["TODO-COMPONENTS"],
+      "parallel": false,
+      "acceptanceCriteria": [
+        "Clean, modern design with Tailwind",
+        "Smooth animations on add/delete/toggle",
+        "Responsive on mobile (320px+) and desktop",
+        "Empty state with helpful message",
+        "Hover states and visual feedback"
+      ]
+    },
+    {
+      "key": "TODO-TESTS",
+      "title": "Testing Suite",
+      "description": "Write comprehensive unit and integration tests. Test all components, the custom hook, and the complete user workflow. Ensure 80%+ coverage.",
+      "specialist": "droidz-test",
+      "priority": 2,
+      "estimatedHours": 2,
+      "dependencies": ["TODO-COMPONENTS", "TODO-STATE"],
+      "parallel": false,
+      "acceptanceCriteria": [
+        "Unit tests for all components",
+        "Tests for useTodos hook",
+        "Integration test: full user workflow",
+        "Persistence tests (add → refresh → verify)",
+        "Code coverage >= 80%"
+      ]
+    }
+  ]
+}

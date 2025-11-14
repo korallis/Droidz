@@ -7,8 +7,22 @@ config.yml
 # Keep the example template
 !config.example.yml
 
-# Claude Code agents folder (personal, not for repo)
-.claude/
+# Claude Code - User-specific files only (but keep framework files)
+.claude/memory/user/*.json
+.claude/memory/org/*.json
+.claude/.checkpoints/
+.claude/commands/*.local.md
+
+# Keep framework files in git
+!.claude/agents/
+!.claude/skills/
+!.claude/standards/
+!.claude/memory/org/README.md
+!.claude/memory/user/README.md
+
+# Keep tasks JSON files - these are spec outputs, not user-specific
+!.claude/specs/active/tasks/
+!.claude/specs/active/tasks/*.json
 
 # Dependencies are resolved via bun and should not be committed
 node_modules/
@@ -19,3 +33,11 @@ HOW_TO_USE_DROIDZ.md
 TOOL_COMPATIBILITY.md
 SOLUTION_SUMMARY.md
 V2.0.2_MIGRATION_GUIDE.md
+
+# Droidz Framework - User-specific files
+.claude/memory/user/
+.runs/
+*.backup.*
+*-tasks.json
+.claude-*-backup*
+.droidz-install-*.log
