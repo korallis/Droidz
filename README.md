@@ -121,104 +121,36 @@ droid-parallel "add API" # ← This is WRONG! Don't type "droid" here!
 
 ## 📦 Installation
 
-### Quick Install (One Command!)
+### One Command - Installs Everything!
 
 ```bash
-# In your terminal - this installs everything:
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 ```
 
-**What it does:**
-- ✅ Checks for dependencies (git, jq, tmux)
-- ✅ Asks permission before installing anything
-- ✅ Downloads all Droidz files
-- ✅ Sets up the framework
-- ✅ Creates configuration files
+**That's it!** The installer will:
+- ✅ Check for dependencies (git, jq, tmux)
+- ✅ Ask permission before installing anything
+- ✅ Download all Droidz files
+- ✅ Set up the framework
+- ✅ Create configuration files
 
----
-
-### Manual Installation (If You Prefer)
-
-#### Step 1: Install Factory.ai CLI
+**After installation:**
 
 ```bash
-# In your terminal:
-curl -fsSL https://app.factory.ai/cli | sh
-```
-
-#### Step 2: Get an API Key
-
-1. Go to https://app.factory.ai/settings/api-keys
-2. Click "Create API Key"
-3. Copy it (looks like `fk-...`)
-4. Save it:
-
-```bash
-# In your terminal:
-export FACTORY_API_KEY="fk-your-key-here"
-
-# Make it permanent:
-echo 'export FACTORY_API_KEY="fk-your-key-here"' >> ~/.zshrc
-```
-
-#### Step 3: Install Dependencies
-
-The installer will ask to install these if missing:
-
-**Required:**
-- `git` - Version control
-- `jq` - JSON processor
-- `tmux` - Session manager
-
-**Install them yourself:**
-
-```bash
-# macOS:
-brew install git jq tmux
-
-# Ubuntu/Debian:
-sudo apt install git jq tmux
-
-# Fedora:
-sudo dnf install git jq tmux
-```
-
-#### Step 4: Run Installer
-
-```bash
-cd your-project
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
-```
-
-#### Step 5: Enable Custom Droids
-
-```bash
-# Start droid:
+# 1. Start droid:
 droid
 
-# In droid chat:
+# 2. In droid chat:
 /settings
 # Toggle "Custom Droids" ON
 # Exit and restart droid
-```
 
-#### Step 6: Test It
-
-```bash
-# Start droid:
-droid
-
-# In droid chat:
+# 3. Test it:
 /droids
-
-# Should see:
-# - droidz-parallel
-# - droidz-codegen
-# - droidz-test
-# etc.
+# Should see: droidz-parallel, droidz-codegen, etc.
 ```
 
-If you see the droids - it works! 🎉
+**Done!** You're ready to use Droidz. 🎉
 
 ---
 
