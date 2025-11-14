@@ -219,6 +219,10 @@ install_package() {
     local install_result=1
     case "$PKG_MANAGER" in
         brew)
+            if ! command -v brew &> /dev/null; then
+                log_error "Homebrew is required to install $package_name automatically. Install it from https://brew.sh and re-run."
+                return 1
+            fi
             brew install "$package_name" &> /dev/null && install_result=0
             ;;
         apt)
@@ -253,6 +257,241 @@ install_package() {
         log_info "Please install manually: $(get_install_cmd "$package_name")"
         return 1
     fi
+}
+
+SHELL_PROFILE=""
+
+determine_shell_profile() {
+    if [[ -n "$SHELL_PROFILE" ]]; then
+        return
+    fi
+
+    local current_shell
+    current_shell=$(basename "${SHELL:-}")
+    local candidates=()
+
+    case "$current_shell" in
+        zsh)
+            candidates=("$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.profile")
+            ;;
+        bash)
+            candidates=("$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile")
+            ;;
+        *)
+            candidates=("$HOME/.profile")
+            ;;
+    esac
+
+    for candidate in "${candidates[@]}"; do
+        if [[ -f "$candidate" ]]; then
+            SHELL_PROFILE="$candidate"
+            return
+        fi
+    done
+
+    SHELL_PROFILE="${candidates[0]}"
+    touch "$SHELL_PROFILE"
+}
+
+append_profile_block() {
+    local identifier="$1"
+    local content="$2"
+
+    determine_shell_profile
+
+    if [[ -z "$SHELL_PROFILE" ]]; then
+        return
+    fi
+
+    if grep -q "$identifier" "$SHELL_PROFILE" 2>/dev/null; then
+        return
+    fi
+
+    {
+        echo ""
+        echo "# Added by Droidz installer ($identifier) on $(date '+%Y-%m-%d %H:%M:%S')"
+        printf "%b\n" "$content"
+    } >> "$SHELL_PROFILE"
+
+    log_success "Updated $(basename "$SHELL_PROFILE") with $identifier settings"
+}
+
+reload_shell_profile() {
+    determine_shell_profile
+
+    if [[ -n "$SHELL_PROFILE" && -f "$SHELL_PROFILE" ]]; then
+        set +u
+        # shellcheck disable=SC1090
+        . "$SHELL_PROFILE"
+        set -u
+    fi
+}
+
+ensure_nvm_loaded() {
+    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+    if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+        set +u
+        # shellcheck disable=SC1090
+        . "$NVM_DIR/nvm.sh"
+        set -u
+        return 0
+    fi
+
+    return 1
+}
+
+ensure_bun_path() {
+    local bun_dir="$HOME/.bun/bin"
+
+    if [[ -d "$bun_dir" ]]; then
+        if [[ ":$PATH:" != *":$bun_dir:"* ]]; then
+            export PATH="$bun_dir:$PATH"
+        fi
+        append_profile_block "DROIDZ_BUN_PATH" 'export PATH="$HOME/.bun/bin:$PATH"'
+        reload_shell_profile
+    fi
+}
+
+install_nvm_dependency() {
+    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+    if [[ -d "$NVM_DIR" ]]; then
+        ensure_nvm_loaded
+        return 0
+    fi
+
+    log_info "Installing nvm (Node Version Manager)..."
+    if curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash; then
+        append_profile_block "DROIDZ_NVM" $'export NVM_DIR="$HOME/.nvm"\n[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"\n[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"\ncommand -v nvm >/dev/null 2>&1 && nvm use default >/dev/null 2>&1 || true'
+        reload_shell_profile
+        ensure_nvm_loaded
+        return 0
+    fi
+
+    return 1
+}
+
+install_bun_dependency() {
+    log_info "Installing Bun runtime..."
+
+    if command -v brew &> /dev/null; then
+        if brew install oven-sh/bun/bun; then
+            ensure_bun_path
+            return 0
+        fi
+    else
+        if curl -fsSL https://bun.sh/install | bash; then
+            ensure_bun_path
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+install_git_dependency() {
+    install_package git
+}
+
+install_jq_dependency() {
+    install_package jq
+}
+
+install_tmux_dependency() {
+    install_package tmux
+}
+
+install_node_lts() {
+    if command -v node &> /dev/null && command -v npm &> /dev/null; then
+        return 0
+    fi
+
+    if ! ensure_nvm_loaded; then
+        if ! install_nvm_dependency; then
+            return 1
+        fi
+    fi
+
+    if command -v nvm &> /dev/null; then
+        log_info "Installing Node.js LTS via nvm..."
+        if nvm install --lts; then
+            nvm alias default 'lts/*' >/dev/null 2>&1 || true
+            nvm use default >/dev/null 2>&1 || true
+            reload_shell_profile
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+prepare_command_check() {
+    local cmd="$1"
+
+    case "$cmd" in
+        nvm)
+            ensure_nvm_loaded >/dev/null 2>&1 || true
+            ;;
+        node|npm)
+            ensure_nvm_loaded >/dev/null 2>&1 || true
+            if command -v nvm >/dev/null 2>&1; then
+                nvm use default >/dev/null 2>&1 || true
+            fi
+            ;;
+        *)
+            ;;
+    esac
+}
+
+ensure_dependency() {
+    local command="$1"
+    local friendly="$2"
+    local installer_fn="$3"
+    local manual_hint="$4"
+    local mandatory="${5:-true}"
+    local prompt_message="${6:-}"
+
+    prepare_command_check "$command"
+
+    if command -v "$command" >/dev/null 2>&1; then
+        log_success "$friendly found"
+        return 0
+    fi
+
+    log_warning "$friendly not found."
+
+    if [[ -n "$installer_fn" ]]; then
+        if [[ -n "$prompt_message" ]]; then
+            echo -e "$prompt_message"
+        else
+            echo -e "${YELLOW}Install $friendly now?${NC}"
+        fi
+        read -p "Choice [Y/n]: " -n 1 -r
+        echo ""
+
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+            if "$installer_fn"; then
+                prepare_command_check "$command"
+                if command -v "$command" >/dev/null 2>&1; then
+                    log_success "$friendly installed"
+                    return 0
+                fi
+            else
+                log_error "Automatic installation of $friendly failed."
+            fi
+        fi
+    fi
+
+    if [[ -n "$manual_hint" ]]; then
+        log_info "Manual install instructions: $manual_hint"
+    fi
+
+    if [[ "$mandatory" == "true" ]]; then
+        error_exit "$friendly is required. Please install it and rerun the installer." 1
+    fi
+
+    return 1
 }
 
 generate_error_report() {
@@ -383,29 +622,17 @@ echo ""
 detect_os
 log_step "Detected OS: $OS (Package manager: $PKG_MANAGER)"
 
-# Check for git (CRITICAL)
-if ! command -v git &> /dev/null; then
-    log_error "Git is not installed."
+ensure_dependency "git" "Git" install_git_dependency "$(get_install_cmd git)"
 
-    if [[ "$PKG_MANAGER" != "unknown" ]]; then
-        echo ""
-        echo -e "${YELLOW}Git is required. Install now?${NC}"
-        read -p "Choice [Y/n]: " -n 1 -r
-        echo ""
+ensure_dependency "bun" "Bun runtime" install_bun_dependency "Install via: curl -fsSL https://bun.sh/install | bash" true "${YELLOW}Bun runtime is missing and required. Install automatically now?${NC}"
 
-        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-            if ! install_package git; then
-                error_exit "Failed to install git. Please install manually: $(get_install_cmd git)" 1
-            fi
-        else
-            error_exit "Install manually: $(get_install_cmd git)" 1
-        fi
-    else
-        error_exit "Please install git manually" 1
-    fi
-else
-    log_success "Git found"
-fi
+# Ensure Node/npm via nvm or existing installation
+ensure_dependency "node" "Node.js (LTS)" install_node_lts "Install Node.js LTS via https://nodejs.org or use nvm install --lts" true "${YELLOW}Node.js is missing. Install Node LTS via nvm now?${NC}"
+
+ensure_dependency "npm" "npm" install_node_lts "Install Node.js LTS (includes npm) via nvm install --lts" true "${YELLOW}npm is missing. Install Node LTS via nvm now?${NC}"
+
+# Ensure nvm is available (optional but recommended)
+ensure_dependency "nvm" "nvm (Node Version Manager)" install_nvm_dependency "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash" false "${YELLOW}nvm not detected. Install nvm (recommended for managing Node)?${NC}"
 
 # Check if we're in a git repo
 if [[ ! -d ".git" ]]; then
@@ -463,31 +690,9 @@ else
     log_success "Git repository detected"
 fi
 
-# Check for Bun runtime
-if ! command -v bun >/dev/null 2>&1; then
-    log_warning "Bun runtime not found. Required for running Droidz orchestration."
-    log_info "Install from: https://bun.sh (or use: curl -fsSL https://bun.sh/install | bash)"
-    echo ""
-    log_warning "Continuing installation, but you'll need Bun to run orchestration."
-    echo ""
-fi
+ensure_dependency "jq" "jq" install_jq_dependency "$(get_install_cmd jq)" false "${YELLOW}jq not found. Install automatically now?${NC}"
 
-# Check for optional dependencies (jq and tmux)
-MISSING_DEPS=()
-
-if ! command -v jq &> /dev/null; then
-    log_warning "jq not found. Required for orchestration features."
-    MISSING_DEPS+=("jq")
-else
-    log_success "jq found"
-fi
-
-if ! command -v tmux &> /dev/null; then
-    log_warning "tmux not found. Required for parallel task monitoring."
-    MISSING_DEPS+=("tmux")
-else
-    log_success "tmux found"
-fi
+ensure_dependency "tmux" "tmux" install_tmux_dependency "$(get_install_cmd tmux)" false "${YELLOW}tmux not found. Install automatically now?${NC}"
 
 # Check for caffeinate on macOS (prevents sleep during long operations)
 if [[ "$OS" == "macos" ]]; then
@@ -496,38 +701,6 @@ if [[ "$OS" == "macos" ]]; then
         log_info "caffeinate is a macOS system utility (usually pre-installed)"
     else
         log_success "caffeinate found"
-    fi
-fi
-
-# Offer to install missing optional dependencies
-if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
-    echo ""
-    log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
-    echo -e "${YELLOW}Install these now for full orchestration support?${NC}"
-    read -p "Choice [Y/n]: " -n 1 -r
-    echo ""
-
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-        for dep in "${MISSING_DEPS[@]}"; do
-            install_package "$dep"
-        done
-        echo ""
-    else
-        log_info "You can install later with:"
-        case "$PKG_MANAGER" in
-            apt)
-                log_info "  sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
-                ;;
-            brew)
-                log_info "  brew install ${MISSING_DEPS[*]}"
-                ;;
-            *)
-                for dep in "${MISSING_DEPS[@]}"; do
-                    log_info "  $(get_install_cmd "$dep")"
-                done
-                ;;
-        esac
-        echo ""
     fi
 fi
 
