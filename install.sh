@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.2.5-droid - WSL compatibility + UX improvements + Installer fixes
+# Version: 2.2.6-droid - WSL compatibility + UX improvements + Orchestrator fixes
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -18,13 +18,14 @@
 #   - WSL auto-configuration for Factory.ai Droid CLI compatibility
 #   - Comprehensive error logging with system diagnostics
 #   - Fixed installer to only download existing files (no 404 errors)
+#   - Improved orchestrator UX (clean output instead of verbose Execute commands)
 # Updated: November 14, 2025
 #
 
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.5-droid"
+DROIDZ_VERSION="2.2.6-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
