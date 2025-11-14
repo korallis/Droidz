@@ -149,8 +149,18 @@ main() {
     echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}${BOLD}║   Droidz Framework Installer v${VERSION}           ║${NC}"
     echo -e "${CYAN}${BOLD}║   For Factory.ai Droid CLI                      ║${NC}"
+    echo -e "${CYAN}${BOLD}║   🆕 Auto-Parallel + Live Monitoring            ║${NC}"
     echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
     echo ""
+    
+    # Detect if this is an upgrade
+    UPGRADING=false
+    if [[ -d ".factory/droids" ]] && [[ -f ".factory/droids/droidz-parallel.md" ]]; then
+        UPGRADING=true
+        echo -e "${YELLOW}📦 Existing Droidz installation detected${NC}"
+        echo -e "${YELLOW}   Upgrading to v${VERSION}...${NC}"
+        echo ""
+    fi
     
     # Detect OS
     detect_os
@@ -270,6 +280,11 @@ main() {
     log_info "Downloading documentation..."
     download_file "$REPO_URL/README.md" "README.md" "README"
     
+    # Quick start guide (optional, don't fail if missing)
+    if download_file "$REPO_URL/QUICK_START.md" "QUICK_START.md" "Quick Start guide" 2>/dev/null; then
+        log_success "Quick Start guide downloaded"
+    fi
+    
     # Status script
     download_file "$REPO_URL/status" "status" "status script"
     chmod +x "status"
@@ -304,28 +319,61 @@ EOF
     
     # Success message
     echo ""
-    echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
-    echo -e "${GREEN}${BOLD}║   🎉 Installation Complete!                     ║${NC}"
-    echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
-    echo ""
-    echo -e "${CYAN}Next Steps:${NC}"
-    echo ""
-    echo "1. Start droid:"
-    echo -e "   ${GREEN}droid${NC}"
-    echo ""
-    echo "2. Enable custom droids:"
-    echo -e "   ${GREEN}/settings${NC} → Toggle 'Custom Droids' ON"
-    echo ""
-    echo "3. Restart droid:"
-    echo -e "   Exit (Ctrl+C) then run ${GREEN}droid${NC} again"
-    echo ""
-    echo "4. Verify installation:"
-    echo -e "   ${GREEN}/droids${NC} → Should see droidz-parallel, etc."
-    echo ""
-    echo "5. Start using it:"
-    echo -e "   ${GREEN}/parallel \"your task description\"${NC}"
-    echo ""
-    echo -e "${BLUE}Read README.md for complete beginner-friendly guide!${NC}"
+    if [[ "$UPGRADING" = true ]]; then
+        echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
+        echo -e "${GREEN}${BOLD}║   ✅ Upgrade to v${VERSION} Complete!               ║${NC}"
+        echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${CYAN}🆕 What's New in v${VERSION}:${NC}"
+        echo ""
+        echo "  ✅ /auto-parallel - Orchestration with automatic monitoring guidance"
+        echo "  ✅ /watch - Real-time progress with color-coded status (✓ ⏳ ⏸)"
+        echo "  ✅ /gh-helper - GitHub PR operations with correct fields"
+        echo "  ✅ ./status - Clean installation status display"
+        echo "  ✅ Enhanced droidz-parallel - Now actually spawns droids!"
+        echo ""
+        echo -e "${CYAN}Quick Check:${NC}"
+        echo -e "   ${GREEN}./status${NC} - See what's installed"
+        echo ""
+        echo -e "${CYAN}Try It Now:${NC}"
+        echo -e "   ${GREEN}droid${NC}"
+        echo -e "   ${GREEN}/auto-parallel \"your task\"${NC}"
+        echo -e "   ${GREEN}/watch${NC} - Live monitoring!"
+        echo ""
+    else
+        echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
+        echo -e "${GREEN}${BOLD}║   🎉 Installation Complete!                     ║${NC}"
+        echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${CYAN}What You Got (v${VERSION}):${NC}"
+        echo ""
+        echo "  ✅ Parallel orchestration that actually works"
+        echo "  ✅ Live monitoring with progress bars"
+        echo "  ✅ 8 specialist droids for different tasks"
+        echo "  ✅ GitHub helpers and status tools"
+        echo ""
+        echo -e "${CYAN}Next Steps:${NC}"
+        echo ""
+        echo "1. Check installation:"
+        echo -e "   ${GREEN}./status${NC}"
+        echo ""
+        echo "2. Start droid:"
+        echo -e "   ${GREEN}droid${NC}"
+        echo ""
+        echo "3. Enable custom features:"
+        echo -e "   ${GREEN}/settings${NC} → Toggle 'Custom Commands' and 'Custom Droids' ON"
+        echo -e "   Exit (Ctrl+C) then run ${GREEN}droid${NC} again"
+        echo ""
+        echo "4. Verify commands loaded:"
+        echo -e "   ${GREEN}/commands${NC} → Should see: auto-parallel, watch, gh-helper, etc."
+        echo ""
+        echo "5. Start using it:"
+        echo -e "   ${GREEN}/auto-parallel \"your task description\"${NC}"
+        echo -e "   ${GREEN}/watch${NC} → See live progress!"
+        echo ""
+    fi
+    echo -e "${BLUE}📚 Read README.md for complete beginner-friendly guide!${NC}"
+    echo -e "${BLUE}⚡ Quick reference: cat QUICK_START.md${NC}"
     echo ""
 }
 
