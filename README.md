@@ -5,18 +5,25 @@
 Transform complex projects into coordinated, parallel workflows using git worktrees, specialist droids, and automated task orchestration - now fully optimized for Factory.ai's Droid CLI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.5--droid-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.2.6--droid-blue.svg)](https://github.com/korallis/Droidz)
 [![Status](https://img.shields.io/badge/status-production%20ready-green.svg)](https://github.com/korallis/Droidz)
 [![Platform](https://img.shields.io/badge/platform-Factory.ai%20Droid%20CLI-orange.svg)](https://factory.ai)
 
 ---
 
-## 🎉 What's New in v2.2.5-droid
+## 🎉 What's New in v2.2.6-droid
 
 **Latest Improvements (November 14, 2025):**
 
+### 🚀 Improved Orchestrator UX
+- **Clean output** - Eliminated verbose Execute + echo commands that showed EXECUTE(cd... && echo...)
+- **Better readability** - Progress shown as clean markdown instead of bash command strings
+- **No more truncation** - Removed "press Ctrl+O for detailed view" messages
+- **Direct output** - Summaries appear as readable text, not command executions
+- **TodoWrite integration** - Progress tracking via TodoWrite updates instead of echo commands
+
 ### ✨ Enhanced Installer
-- **Version tracking** - Installer now displays version number (v2.2.5-droid) on execution
+- **Version tracking** - Installer now displays version number (v2.2.6-droid) on execution
 - **WSL compatibility** - Stricter bash safety settings (`set -euo pipefail`) for WSL environments
 - **Professional UX** - Unicode box banners for welcome and completion messages
 - **Better error handling** - Comprehensive cleanup on success/failure with proper signal handling
@@ -71,7 +78,7 @@ Your support helps maintain and improve this framework for everyone! 🙏
 
 ## 📋 Table of Contents
 
-- [What's New in v2.2.5-droid](#-whats-new-in-v225-droid)
+- [What's New in v2.2.6-droid](#-whats-new-in-v226-droid)
 - [What Is Droidz for Factory.ai?](#what-is-droidz-for-factoryai)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
@@ -177,14 +184,14 @@ That's it! The framework is ready to use.
 
 ### One-Line Install ⚡
 
-**Smart installer v2.2.5-droid with auto-dependency installation:**
+**Smart installer v2.2.6-droid with auto-dependency installation:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 ```
 
 **What it does:**
-- ✅ **Displays version** - Shows v2.2.5-droid on execution so you know you have the latest
+- ✅ **Displays version** - Shows v2.2.6-droid on execution so you know you have the latest
 - ✅ **Auto-detects your OS** - Supports macOS, Linux, WSL2 with multiple package managers
 - ✅ **Auto-installs dependencies** - git, jq, tmux, Bun (with your permission)
 - ✅ **Initializes git repo** - Creates repository if you're not in one
