@@ -17,6 +17,7 @@ Think of it like having a team of specialized helpers instead of doing everythin
 - [How It Works Behind the Scenes](#how-it-works-behind-the-scenes)
 - [All the Commands Explained](#all-the-commands-explained)
 - [All the Helper Droids Explained](#all-the-helper-droids-explained)
+- [Skills System - Teach Droidz Your Standards](#-skills-system---teach-droidz-your-standards)
 - [Advanced Examples](#advanced-examples)
 - [Troubleshooting](#troubleshooting)
 
@@ -783,6 +784,178 @@ When the main droid uses it:
 - Research tasks
 
 Think of it as: The jack-of-all-trades
+
+---
+
+## 📖 Skills System - Teach Droidz Your Standards
+
+**Skills** are like cheat sheets that automatically teach droids how to write code YOUR way!
+
+### What Are Skills?
+
+Skills are markdown files containing:
+- ✅ Coding standards (TypeScript rules, React patterns)
+- ✅ Framework best practices (Tailwind classes, Convex patterns)
+- ✅ Security guidelines (never commit secrets, sanitize inputs)
+- ✅ Project-specific patterns (how YOU want code written)
+
+### How Skills Work
+
+**Automatic injection** - No need to repeat yourself in every prompt!
+
+```bash
+# WITHOUT Skills:
+You: "Create a React component with TypeScript and Tailwind"
+You: "Remember to use explicit types, function components, and Tailwind utilities"
+You: "Also follow accessibility best practices"
+You: "And don't forget proper error handling..."
+
+# WITH Skills:
+You: "Create a React component"
+Droidz: *automatically applies TypeScript, React, Tailwind, and security skills*
+        *writes perfect code following all your standards*
+```
+
+### Pre-Built Skills
+
+Droidz comes with professional skills ready to use:
+
+| Skill | What It Teaches |
+|-------|----------------|
+| `typescript.md` | Explicit types, strict mode, no `any`, utility types |
+| `tailwind-4.md` | Utility-first, responsive design, dark mode, accessibility |
+| `convex.md` | Queries, mutations, validators, authentication patterns |
+| `react.md` | Function components, hooks, TypeScript integration |
+| `security.md` | Never commit secrets, sanitize inputs, use HTTPS |
+| `testing.md` | Test structure, coverage, mocking, best practices |
+
+### Creating Your Own Skills
+
+**Step 1**: Create a file in `.factory/skills/`
+
+```bash
+# Example: Create a Python Django skill
+.factory/skills/django.md
+```
+
+**Step 2**: Write your standards using this structure:
+
+```markdown
+# Django Best Practices
+
+## Core Principles
+
+1. **Fat Models, Thin Views** - Business logic in models
+2. **Use Class-Based Views** - For reusability
+3. **Security First** - Always use Django's security features
+
+## Model Definitions
+
+### ✅ Good
+\`\`\`python
+class Product(models.Model):
+    name = models.CharField(max_length=200, db_index=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    class Meta:
+        ordering = ['-created_at']
+\`\`\`
+
+### ❌ Bad
+\`\`\`python
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    price = models.FloatField()  # ❌ Use DecimalField for money!
+\`\`\`
+
+**ALWAYS follow these Django patterns.**
+```
+
+**Step 3**: Skills load automatically!
+
+When you type prompts or edit files, relevant skills are injected:
+
+```bash
+# Editing a .tsx file:
+Auto-loads: typescript.md + react.md
+
+# Prompt mentions "Tailwind":
+Auto-loads: tailwind-4.md
+
+# Working in convex/ directory:
+Auto-loads: convex.md
+```
+
+### Skill Best Practices
+
+#### ✅ DO:
+- **Use concrete examples** (not pseudocode)
+- **Show good ✅ and bad ❌ patterns**
+- **Explain WHY** (not just what)
+- **Include specific versions** ("React 18+", "Python 3.11+")
+- **Add comments** in code examples
+
+#### ❌ DON'T:
+- Write vague advice ("write clean code")
+- Use placeholders (`// your code here`)
+- Forget language in code blocks
+- Include outdated patterns
+
+### Complete Guide
+
+For detailed documentation on creating skills:
+
+```bash
+# Read the comprehensive skills guide
+cat SKILLS.md
+
+# Or browse online:
+https://github.com/korallis/Droidz/blob/factory-ai/SKILLS.md
+```
+
+**📚 Topics covered in SKILLS.md:**
+- How skills injection works (hooks system)
+- Step-by-step skill creation guide
+- Skill template (copy-paste ready)
+- Real-world examples (Django, Docker, Vue, etc.)
+- Detection patterns (how to trigger your skills)
+- Troubleshooting common issues
+
+### Example: Using Skills in Practice
+
+```bash
+# Terminal:
+droid
+
+# In droid chat:
+> Create a user authentication component with login form
+
+# Droidz automatically:
+1. Detects: "component", "form" → React skill
+2. Detects: Project has TypeScript → TypeScript skill
+3. Detects: Project has Tailwind → Tailwind skill
+4. Loads: Security skill (always loaded)
+
+# Result: Perfect component with:
+✓ TypeScript types
+✓ React best practices
+✓ Tailwind styling
+✓ Accessibility (ARIA labels)
+✓ Security (input validation)
+✓ Error handling
+```
+
+### Skills vs. CLAUDE.md
+
+**Skills** and **CLAUDE.md** work together:
+
+| File | Purpose | Scope |
+|------|---------|-------|
+| `CLAUDE.md` | Project context, architecture, commands | Project-specific |
+| `skills/typescript.md` | TypeScript coding standards | Language/framework |
+| `skills/security.md` | Security best practices | Universal guidelines |
+
+**Use both together** for maximum AI effectiveness!
 
 ---
 
