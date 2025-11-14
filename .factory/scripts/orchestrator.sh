@@ -176,7 +176,7 @@ create_worktree() {
 
     # Create worktree
     cd "$PROJECT_ROOT"
-    if git worktree add -b "$branch_name" "$worktree_path" 2>&1 | tee -a "$ORCHESTRATION_LOG"; then
+    if git worktree add -b "$branch_name" "$worktree_path" >> "$ORCHESTRATION_LOG" 2>&1; then
         success "Created worktree: $worktree_path"
         success "Created branch: $branch_name"
 
@@ -220,15 +220,7 @@ create_tmux_session() {
     # Create detached tmux session
     tmux new-session -d -s "$session_name" -c "$worktree_path"
 
-    # Set up panes
-    tmux send-keys -t "$session_name:0" "clear" C-m
-    tmux send-keys -t "$session_name:0" "echo '${CYAN}╔════════════════════════════════════════════════╗${NC}'" C-m
-    tmux send-keys -t "$session_name:0" "echo '${CYAN}║${NC}  ${BOLD}Droidz Workspace: $task_key${NC}'" C-m
-    tmux send-keys -t "$session_name:0" "echo '${CYAN}║${NC}  Specialist: $specialist'" C-m
-    tmux send-keys -t "$session_name:0" "echo '${CYAN}╚════════════════════════════════════════════════╝${NC}'" C-m
-    tmux send-keys -t "$session_name:0" "echo ''" C-m
-
-    # Create instruction file for Claude
+    # Create instruction file for Claude FIRST (before tmux setup references it)
     cat > "$worktree_path/.factory-context.md" <<EOF
 # Task: $task_key
 
@@ -264,6 +256,17 @@ Implement this task following Droidz standards:
 When complete, update status in .droidz-meta.json to "completed".
 EOF
 
+    # Now set up tmux panes with welcome message (after context file exists)
+    tmux send-keys -t "$session_name:0" "clear" C-m
+    tmux send-keys -t "$session_name:0" "printf '╔════════════════════════════════════════════════╗\\n'" C-m
+    tmux send-keys -t "$session_name:0" "printf '║  Droidz Workspace: $task_key\\n'" C-m
+    tmux send-keys -t "$session_name:0" "printf '║  Specialist: $specialist\\n'" C-m
+    tmux send-keys -t "$session_name:0" "printf '╚════════════════════════════════════════════════╝\\n'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Context file: .factory-context.md'" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Progress file: .droidz-meta.json'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''" C-m
+
     success "Created tmux session: $session_name"
     echo "$session_name"
     return 0
@@ -275,32 +278,80 @@ start_droid_in_session() {
     local specialist="$2"
     local worktree_path="$3"
 
-    step "Starting Droid ($specialist) in $session_name"
+    step "Preparing workspace for $specialist in $session_name"
 
-    # Show context file for reference
-    tmux send-keys -t "$session_name:0" "# Task context loaded from .factory-context.md" C-m
-    tmux send-keys -t "$session_name:0" "cat .factory-context.md" C-m
+    # Display ready message (agent will be invoked manually)
     tmux send-keys -t "$session_name:0" "echo ''" C-m
-    tmux send-keys -t "$session_name:0" "echo 'Starting $specialist droid...'" C-m
+    tmux send-keys -t "$session_name:0" "echo '═══════════════════════════════════════════════════════'" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Workspace ready for: $specialist'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Task instructions: .factory-context.md'" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Progress tracking: .droidz-meta.json'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Attach to this session and invoke your agent:'" C-m
+    tmux send-keys -t "$session_name:0" "echo '  tmux attach -t $session_name'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''" C-m
+    tmux send-keys -t "$session_name:0" "echo 'Waiting for agent invocation...'" C-m
+    tmux send-keys -t "$session_name:0" "echo '═══════════════════════════════════════════════════════'" C-m
+    tmux send-keys -t "$session_name:0" "echo ''"
 
-    # Start droid exec with the specialist and context
-    # --auto medium allows: file operations, package install, tests, local commits
-    # Use --droid flag to specify which droid to use
-    local context_prompt="Read .factory-context.md for complete task instructions. Implement the task following all requirements, write tests, ensure they pass, and commit your changes. Update .droidz-meta.json status to 'completed' when done."
-
-    tmux send-keys -t "$session_name:0" "droid exec --auto medium --droid $specialist \"$context_prompt\" 2>&1 | tee droid-execution.log" C-m
-
-    success "Droid ($specialist) started in session: $session_name"
+    success "Workspace prepared in session: $session_name"
     info "Attach with: tmux attach -t $session_name"
-    info "Logs: $worktree_path/droid-execution.log"
+    info "Context file: $worktree_path/.factory-context.md"
+}
+
+# Filter out already completed tasks based on existing branches
+filter_incomplete_tasks() {
+    local tasks_json="$1"
+    
+    # Get list of already completed task keys from git branches (format: feat/TASK-001-*)
+    local completed_tasks=$(git branch -a 2>/dev/null | grep -oE '[A-Z]+-[0-9]+' | sort -u || echo "")
+    
+    if [ -z "$completed_tasks" ]; then
+        # No completed tasks found, return original JSON
+        echo "$tasks_json"
+        return 0
+    fi
+    
+    # Convert completed tasks to jq-compatible format for filtering
+    local completed_pattern=$(echo "$completed_tasks" | tr '\n' '|' | sed 's/|$//')
+    
+    # Filter tasks: keep only those whose key is NOT in the completed list
+    local filtered_json=$(echo "$tasks_json" | jq --arg pattern "$completed_pattern" '
+        .tasks = [.tasks[] | select(
+            (.key | test("^(" + $pattern + ")$")) | not
+        )]
+    ')
+    
+    echo "$filtered_json"
 }
 
 # Orchestrate multiple tasks in parallel
 orchestrate_tasks() {
     local tasks_json="$1"
+    local total_tasks=$(echo "$tasks_json" | jq '.tasks | length')
+    
+    # Filter out already completed tasks
+    tasks_json=$(filter_incomplete_tasks "$tasks_json")
     local num_tasks=$(echo "$tasks_json" | jq '.tasks | length')
-
-    info "Orchestrating $num_tasks tasks in parallel"
+    local completed_count=$((total_tasks - num_tasks))
+    
+    if [ $completed_count -gt 0 ]; then
+        info "Found $total_tasks total tasks"
+        success "$completed_count tasks already have branches (skipping)"
+        info "Orchestrating $num_tasks remaining tasks in parallel"
+    else
+        info "Orchestrating $num_tasks tasks in parallel"
+    fi
+    
+    if [ $num_tasks -eq 0 ]; then
+        warning "All tasks already have branches. Nothing to orchestrate."
+        echo ""
+        echo "To force re-orchestration, delete the existing branches first:"
+        echo "  git branch -D feat/TASK-XXX-*"
+        echo ""
+        return 0
+    fi
 
     # Create orchestration state file
     local state_file="$COORDINATION_DIR/orchestration-$SESSION_ID.json"
