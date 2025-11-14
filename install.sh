@@ -221,7 +221,7 @@ main() {
     log_info "Downloading commands..."
     
     # Markdown commands (prompts)
-    for cmd in parallel summary attach; do
+    for cmd in parallel auto-parallel summary attach; do
         download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
     done
     
@@ -229,9 +229,11 @@ main() {
     download_file "$REPO_URL/.factory/commands/status.sh" ".factory/commands/status.sh" "status command"
     download_file "$REPO_URL/.factory/commands/watch.sh" ".factory/commands/watch.sh" "watch command"
     download_file "$REPO_URL/.factory/commands/gh-helper.sh" ".factory/commands/gh-helper.sh" "gh-helper command"
+    download_file "$REPO_URL/.factory/commands/parallel-watch.sh" ".factory/commands/parallel-watch.sh" "parallel-watch command"
     chmod +x ".factory/commands/status.sh"
     chmod +x ".factory/commands/watch.sh"
     chmod +x ".factory/commands/gh-helper.sh"
+    chmod +x ".factory/commands/parallel-watch.sh"
     
     # Droids
     log_info "Downloading helper droids..."

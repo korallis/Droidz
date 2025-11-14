@@ -413,11 +413,37 @@ AUTH-003 depends on AUTH-001 → Phase 2 (can run with AUTH-002!)
 
 Droidz has **7 simple commands**. Here they are!
 
-### The Main Command (Use This 95% of the Time)
+### The Main Commands
+
+#### `/auto-parallel "what you want"` ⭐ **Recommended!**
+
+**New in v0.0.7** - The easiest way to use parallel orchestration!
+
+```
+# In droid chat:
+/auto-parallel "build authentication system"
+```
+
+**What it does:**
+- Breaks your request into tasks automatically
+- Figures out what can run in parallel
+- Spawns specialist droids
+- **Automatically guides you to use /watch for live monitoring**
+
+**Examples:**
+```
+/auto-parallel "create REST API for todos"
+/auto-parallel "fix all failing tests"
+/auto-parallel "add user profile page with avatar upload"
+```
+
+**That's it!** Just describe what you want and get guided monitoring.
+
+---
 
 #### `/parallel "what you want"`
 
-This is the **only command most people need**.
+The original orchestration command (still works great!).
 
 ```
 # In droid chat:

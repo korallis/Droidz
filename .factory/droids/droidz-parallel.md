@@ -154,14 +154,33 @@ Specialist droids spawned:
 - TASK-002: droidz-codegen (in progress)
 - TASK-003: droidz-test (in progress)
 
-Monitor progress:
-  /status
-  /summary [session-id]
-  /attach [task-key]
+I'll monitor completion and spawn Phase 2 tasks automatically.
+```
+
+Then tell the user:
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║  🎯 NEXT STEP: Monitor Progress in Real-Time                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+For live monitoring with visual progress bars, run:
+
+  /watch
+
+This shows:
+  ✓ Completed tasks (green checkmarks)
+  ⏳ Tasks in progress (blue, with specialist name)
+  ⏸ Pending tasks (yellow)
+  📊 Progress bar with percentage
+  🔄 Updates every 2 seconds automatically
+
+Or check status anytime:
+  /status          - Quick overview
+  /summary [id]    - Detailed breakdown
+  /attach [key]    - Watch specific task
 
 Logs: .runs/.coordination/orchestration.log
-
-I'll monitor completion and spawn Phase 2 tasks automatically.
 ```
 
 ## Example Flow

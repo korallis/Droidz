@@ -12,6 +12,10 @@ All notable changes to Droidz will be documented in this file.
 - **GitHub PR command errors** - Fixed JSON field name issues (`bucket` vs `status`)
 
 #### Added
+- **`/auto-parallel` command** ⭐ **NEW!** - Recommended way to use parallel orchestration
+  - Same as `/parallel` but with automatic monitoring guidance
+  - Prominently displays instructions to use `/watch` for live progress
+  - Better UX for new users
 - **`/watch` command** - Live monitoring with real-time updates every 2 seconds
   - Progress bar visualization
   - Color-coded task status (✓ done, ⏳ working, ⏸ pending, ✗ failed)
@@ -21,6 +25,7 @@ All notable changes to Droidz will be documented in this file.
   - `pr-checks <number>` - Show PR check status
   - `pr-status <number>` - Comprehensive PR info
   - `pr-list` - List all PRs
+- **`/parallel-watch` helper** - Convenience script that explains the workflow
 
 #### Changed
 - **Enhanced `/status` command** - Now reads actual task progress from worktree meta files
@@ -28,8 +33,11 @@ All notable changes to Droidz will be documented in this file.
   - Displays failed tasks
   - More accurate real-time progress tracking
 - **Updated `droidz-parallel.md`** - Added Step 5: Spawn Specialist Droids with Task() call template
-- **Installer updated** - Now downloads watch.sh and gh-helper.sh commands
-- **README.md** - Added documentation for new commands and v0.0.7 features
+  - Added prominent "NEXT STEP" section guiding users to `/watch`
+  - Formatted box with monitoring instructions
+  - Better workflow guidance
+- **Installer updated** - Now downloads all new commands (auto-parallel, watch, gh-helper, parallel-watch)
+- **README.md** - Added documentation for `/auto-parallel` as recommended command
 
 #### Technical Details
 - Previously, orchestrator.sh created git worktrees and tmux sessions but droids were never spawned
