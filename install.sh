@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.0.6
+# Version: 0.0.8
 # Updated: 2025-11-14
 #
 
 set -euo pipefail
 
-VERSION="0.0.7"
+VERSION="0.0.8"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -221,7 +221,7 @@ main() {
     
     # Create directory structure (only what we need)
     log_step "Creating directories"
-    mkdir -p .factory/{commands,droids,scripts}
+    mkdir -p .factory/{commands,droids,scripts,hooks,skills}
     log_success "Directories created"
     
     # Download framework files
@@ -258,6 +258,19 @@ main() {
         chmod +x ".factory/scripts/${script}.sh"
     done
     
+    # Hooks
+    log_info "Downloading skills injection hooks..."
+    for hook in inject-skills inject-file-skills load-project-skills; do
+        download_file "$REPO_URL/.factory/hooks/${hook}.sh" ".factory/hooks/${hook}.sh" "$hook hook"
+        chmod +x ".factory/hooks/${hook}.sh"
+    done
+    
+    # Skills
+    log_info "Downloading professional skill templates..."
+    for skill in typescript tailwind-4 convex security; do
+        download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
+    done
+    
     # Configuration
     log_info "Downloading configuration..."
     download_file "$REPO_URL/config.example.yml" "config.example.yml" "config template"
@@ -279,10 +292,16 @@ main() {
     # Documentation
     log_info "Downloading documentation..."
     download_file "$REPO_URL/README.md" "README.md" "README"
+    download_file "$REPO_URL/SKILLS.md" "SKILLS.md" "Skills guide"
     
     # Quick start guide (optional, don't fail if missing)
     if download_file "$REPO_URL/QUICK_START.md" "QUICK_START.md" "Quick Start guide" 2>/dev/null; then
         log_success "Quick Start guide downloaded"
+    fi
+    
+    # Skills summary (optional)
+    if download_file "$REPO_URL/SKILLS_SUMMARY.md" "SKILLS_SUMMARY.md" "Skills summary" 2>/dev/null; then
+        log_success "Skills summary downloaded"
     fi
     
     # Status script
@@ -326,11 +345,11 @@ EOF
         echo ""
         echo -e "${CYAN}🆕 What's New in v${VERSION}:${NC}"
         echo ""
-        echo "  ✅ /auto-parallel - Orchestration with automatic monitoring guidance"
-        echo "  ✅ /watch - Real-time progress with color-coded status (✓ ⏳ ⏸)"
-        echo "  ✅ /gh-helper - GitHub PR operations with correct fields"
-        echo "  ✅ ./status - Clean installation status display"
-        echo "  ✅ Enhanced droidz-parallel - Now actually spawns droids!"
+        echo "  ✅ Skills Injection System - Auto-enforce coding standards!"
+        echo "  ✅ 4 Professional Skills - TypeScript, Tailwind 4, Convex, Security"
+        echo "  ✅ 3 Smart Hooks - Inject skills based on prompts, files, and project"
+        echo "  ✅ SKILLS.md Guide - Complete documentation for creating custom skills"
+        echo "  ✅ Auto-Detection - Skills load automatically when relevant"
         echo ""
         echo -e "${CYAN}Quick Check:${NC}"
         echo -e "   ${GREEN}./status${NC} - See what's installed"
@@ -350,6 +369,8 @@ EOF
         echo "  ✅ Parallel orchestration that actually works"
         echo "  ✅ Live monitoring with progress bars"
         echo "  ✅ 8 specialist droids for different tasks"
+        echo "  ✅ Skills injection - Auto-enforce coding standards"
+        echo "  ✅ 4 professional skill templates (TypeScript, Tailwind, Convex, Security)"
         echo "  ✅ GitHub helpers and status tools"
         echo ""
         echo -e "${CYAN}Next Steps:${NC}"
@@ -371,9 +392,14 @@ EOF
         echo -e "   ${GREEN}/auto-parallel \"your task description\"${NC}"
         echo -e "   ${GREEN}/watch${NC} → See live progress!"
         echo ""
+        echo "6. Skills work automatically:"
+        echo -e "   Try: ${GREEN}\"Create a TypeScript component\"${NC}"
+        echo -e "   Skills auto-inject coding standards!"
+        echo ""
     fi
     echo -e "${BLUE}📚 Read README.md for complete beginner-friendly guide!${NC}"
     echo -e "${BLUE}⚡ Quick reference: cat QUICK_START.md${NC}"
+    echo -e "${BLUE}🎓 Skills guide: cat SKILLS.md${NC}"
     echo ""
 }
 

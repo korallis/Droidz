@@ -2,6 +2,93 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.8] - 2025-11-14
+
+### 🎓 Skills Injection System - Auto-Enforce Coding Standards!
+
+#### Added
+- **Complete Skills Injection System** via Factory.ai hooks
+  - Similar to Claude Code skills but with full customization for Factory.ai droid
+  - Automatic context injection based on prompts, file types, and project structure
+  - No need to repeat coding standards in every prompt
+  
+- **Three Smart Hook Scripts** (`.factory/hooks/`)
+  - `inject-skills.sh` - **UserPromptSubmit hook** - Detects keywords in prompts (TypeScript, Tailwind, Convex, etc.)
+  - `inject-file-skills.sh` - **PreToolUse hook** - Detects file types being edited (`.tsx`, `.css`, `convex/*`)
+  - `load-project-skills.sh` - **SessionStart hook** - Analyzes project structure once at startup
+  
+- **Four Professional Skill Templates** (`.factory/skills/`)
+  - `typescript.md` (~200 lines) - Type safety, strict mode, React+TS patterns, utility types
+  - `tailwind-4.md` (~180 lines) - Tailwind 4.0 features, responsive design, dark mode, accessibility
+  - `convex.md` (~250 lines) - Queries, mutations, validators, authentication, file storage
+  - `security.md` (~220 lines) - Environment vars, input validation, auth, CORS, rate limiting
+  
+- **Comprehensive Documentation**
+  - `SKILLS.md` (~500 lines) - Complete user guide with examples and templates
+    - What are skills and how they work
+    - Step-by-step creation guide
+    - Copy-paste ready skill template
+    - Real-world examples (Django, Docker)
+    - Detection patterns
+    - Troubleshooting guide
+  - `SKILLS_SUMMARY.md` - Implementation details and summary
+  - README.md enhanced with complete Skills System section
+
+#### Changed
+- **Updated `.factory/settings.json`** - Configured all three hooks
+  - SessionStart: Load project-wide skills automatically
+  - PreToolUse: Inject skills based on file type
+  - UserPromptSubmit: Inject skills based on prompt keywords
+- **Installer (install.sh)** - Now downloads all skills system files
+  - Creates `.factory/hooks/` and `.factory/skills/` directories
+  - Downloads all 3 hook scripts (executable)
+  - Downloads all 4 skill templates
+  - Downloads SKILLS.md documentation
+  - Version bumped to 0.0.8
+
+#### Features
+- **Automatic Detection** - Skills load based on:
+  - Prompt keywords ("TypeScript", "Tailwind", "component", etc.)
+  - File extensions (`.ts`, `.tsx`, `.css`, `convex/*`)
+  - Project files (`tsconfig.json`, `tailwind.config.ts`, `convex/`)
+- **Extensible** - Easy for users to create custom skills
+  - Professional template provided
+  - Detection patterns customizable
+  - Framework-agnostic approach
+- **Best Practices** - Built using research from:
+  - Claude Code official documentation
+  - Anthropic prompt engineering guides
+  - Factory.ai hooks documentation
+  - Framework official docs (TypeScript, React, Tailwind, Convex)
+
+#### Technical Details
+- Uses Factory.ai's hooks system (introduced in Factory CLI)
+- Hooks must be enabled in `/settings` (experimental feature)
+- stdout from SessionStart/UserPromptSubmit hooks automatically added to context
+- PreToolUse hooks use JSON `hookSpecificOutput.additionalContext` field
+- All hook scripts use absolute paths via `$FACTORY_PROJECT_DIR`
+
+### Example Workflow
+```bash
+# Session starts → SessionStart hook
+Detects: tsconfig.json, tailwind.config.ts, convex/
+Loads: TypeScript + Tailwind + Convex + Security skills
+
+# User: "Create a login component"
+UserPromptSubmit hook detects: "component"
+Injects: React patterns
+
+# Droid edits: components/LoginForm.tsx
+PreToolUse hook detects: .tsx file
+Injects: TypeScript + React standards
+
+# Result: Perfect code following ALL standards! 🎉
+```
+
+**Migration Guide:** No breaking changes. Skills work immediately after installation.
+
+---
+
 ## [0.0.7] - 2025-11-14
 
 ### 🎉 Major Fixes - Parallel Orchestration Now Actually Works!
