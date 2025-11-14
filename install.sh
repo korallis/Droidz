@@ -217,9 +217,9 @@ main() {
     # Download framework files
     log_step "Downloading Droidz framework"
     
-    # Commands
+    # Commands (only the 5 core commands)
     log_info "Downloading commands..."
-    for cmd in parallel status attach summary orchestrate; do
+    for cmd in parallel status summary attach orchestrate; do
         download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
     done
     

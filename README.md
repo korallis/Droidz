@@ -404,48 +404,42 @@ AUTH-003 depends on AUTH-001 → Phase 2 (can run with AUTH-002!)
 
 ## 📋 All the Commands Explained
 
-These are **slash commands** you type in the droid chat (after you type `droid` in terminal).
+Droidz has only **5 simple commands**. That's it!
 
-### Commands to Start Work
+### The Main Command (Use This 95% of the Time)
 
 #### `/parallel "what you want"`
-**The easiest way to use Droidz!**
+
+This is the **only command most people need**.
 
 ```
 # In droid chat:
 /parallel "add user login feature"
 ```
 
-What it does:
+**What it does:**
 - Breaks your request into tasks automatically
 - Figures out what can run in parallel
 - Starts working
 - Shows progress
 
-When to use: Most of the time! This is the main command.
+**Examples:**
+```
+/parallel "create REST API for todos"
+/parallel "fix the JWT token bug"
+/parallel "add test coverage for auth"
+/parallel "build a user profile page"
+```
+
+**That's it!** Just describe what you want in plain English.
 
 ---
 
-#### `/orchestrate tasks.json`
-**Run pre-made tasks from a file**
-
-```
-# In droid chat:
-/orchestrate my-tasks.json
-```
-
-What it does:
-- You already created a `tasks.json` file
-- This runs those exact tasks
-
-When to use: When you want to manually control exactly what tasks run.
-
----
-
-### Commands to Check Progress
+### Monitoring Commands (Check Progress)
 
 #### `/status`
-**See all running work**
+
+See all your running orchestrations.
 
 ```
 # In droid chat:
@@ -462,12 +456,11 @@ Active Orchestrations:
    Started: 1 hour ago
 ```
 
-When to use: To see the big picture of what's happening.
-
 ---
 
 #### `/summary [session-id]`
-**See detailed progress for one orchestration**
+
+See detailed progress for one orchestration.
 
 ```
 # In droid chat:
@@ -490,54 +483,35 @@ Progress: ████████░░░░ 67% (4/6 tasks)
   - AUTH-005: Integration
 ```
 
-When to use: To see exactly what's done and what's next.
-
 ---
 
 #### `/attach TASK-001`
-**Watch a specific task work in real-time**
+
+Watch a specific task work in real-time.
 
 ```
 # In droid chat:
 /attach AUTH-003
 ```
 
-What it does:
-- Opens a live view of that task
-- You can see the helper droid working
-- Press Ctrl+B then D to exit
+Opens a live view where you can see the helper droid working.
 
-When to use: To debug or watch how a task is being done.
+**Exit:** Press `Ctrl+B` then `D`
 
 ---
 
-### Other Useful Commands
+### Advanced Command (For Manual Control)
 
-#### `/commands`
-**See all your custom commands**
+#### `/orchestrate file:tasks.json`
 
-```
-# In droid chat:
-/commands
-```
-
-Shows all the shortcuts you've created.
-
----
-
-#### `/droids`
-**See all your helper droids**
+Only use this if you created a `tasks.json` file manually and want exact control.
 
 ```
 # In droid chat:
-/droids
+/orchestrate file:my-tasks.json
 ```
 
-Shows:
-- droidz-parallel (automatic task breakdown)
-- droidz-codegen (writes code)
-- droidz-test (writes tests)
-- etc.
+**Most people never need this.** Use `/parallel` instead!
 
 ---
 
