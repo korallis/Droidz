@@ -2,6 +2,11 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.91] - 2025-11-14
+
+### Changed
+- Version bumped to 0.0.91 (patch release for status.md fix)
+
 ## [0.0.9] - 2025-11-14
 
 ### Fixed
