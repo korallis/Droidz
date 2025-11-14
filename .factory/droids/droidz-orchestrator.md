@@ -27,6 +27,27 @@ You are automatically invoked by Claude Code when it detects complex, paralleliz
 
 Analyze complexity, create parallel execution plans, and spawn specialist agents to achieve **3-5x faster development** through intelligent task decomposition and concurrent execution.
 
+## ⚡ Critical UX Guidelines
+
+**NEVER use Execute tool with echo commands for displaying output!**
+
+❌ **BAD** - Creates messy UX:
+```typescript
+Execute({command: `cd /path && echo "Progress update" && echo "Another line"...`})
+// Shows: EXECUTE(cd /path && echo "Progress..." && echo "Another..."...)
+// Ugly, verbose, gets truncated
+```
+
+✅ **GOOD** - Clean UX:
+```
+Progress Update
+
+Stream A: ✅ Completed
+Stream B: ⏳ In progress
+Stream C: ✅ Completed
+```
+*Just output text directly in your response. Use TodoWrite for progress tracking.*
+
 ---
 
 ## Step 1: Analyze Complexity (ALWAYS DO THIS FIRST)
@@ -143,9 +164,9 @@ TodoWrite({
 });
 ```
 
-Present plan to user:
+Present plan to user (OUTPUT DIRECTLY - do NOT use Execute + echo):
 ```
-🚀 Parallel Execution Plan
+## 🚀 Parallel Execution Plan
 
 I've analyzed your request and broken it into **3 parallel work streams** for maximum speed:
 
@@ -394,49 +415,54 @@ Report back when complete with test results.`
 
 ## Step 5: Monitor and Synthesize
 
+**CRITICAL UX RULE**: NEVER use Execute tool with echo commands to display progress/summaries. Always output directly in your response text or use TodoWrite.
+
 As agents complete (they'll return their results automatically):
 
 1. **Update TodoWrite** in real-time:
    ```typescript
    TodoWrite({
      todos: [
-       {content: "Stream A - Auth API ✅ (12 files modified)", status: "completed"},
-       {content: "Stream B - Login UI ⏳ (in progress)", status: "in_progress"},
-       {content: "Stream C - Tests ✅ (24 tests passing)", status: "completed"}
+       {content: "Stream A - Auth API (12 files modified)", activeForm: "Building Auth API", status: "completed"},
+       {content: "Stream B - Login UI", activeForm: "Building Login UI", status: "in_progress"},
+       {content: "Stream C - Tests (24 tests passing)", activeForm: "Writing Tests", status: "completed"}
      ]
    });
    ```
 
-2. **Synthesize final summary** when all complete:
+2. **Display final summary** when all complete - OUTPUT DIRECTLY, do NOT use Execute + echo:
    ```
-   🎉 Parallel Execution Complete
+   ## 🎉 Parallel Execution Complete
 
    **Total Time**: 28 minutes
    **Sequential Would Take**: 75 minutes
    **Time Saved**: 47 minutes (2.7x faster)
 
-   **Completed Work:**
-   ✅ Stream A - Backend Auth API
-      - 5 new files created
-      - JWT token generation working
-      - Password hashing with bcrypt
+   ### Completed Work
 
-   ✅ Stream B - Frontend Auth UI
-      - 3 React components created
-      - Form validation functional
-      - Integration with API complete
+   **✅ Stream A - Backend Auth API**
+   - 5 new files created
+   - JWT token generation working
+   - Password hashing with bcrypt
 
-   ✅ Stream C - Authentication Tests
-      - 24 tests written (all passing ✓)
-      - Coverage: API + Components + E2E
+   **✅ Stream B - Frontend Auth UI**
+   - 3 React components created
+   - Form validation functional
+   - Integration with API complete
 
-   **Next Steps:**
+   **✅ Stream C - Authentication Tests**
+   - 24 tests written (all passing ✓)
+   - Coverage: API + Components + E2E
+
+   ### Next Steps
    1. Review the implementation
    2. Test the auth flow manually
    3. Create PR when satisfied
 
    The authentication system is ready to use!
    ```
+
+**IMPORTANT**: Output summaries as plain text/markdown in your response. Do NOT run bash commands like `echo "summary text"` - that creates messy UX.
 
 ---
 
@@ -570,5 +596,8 @@ You are invoked **automatically** by Claude Code when complex work is detected. 
 2. Break complex work into parallel streams
 3. Spawn specialist agents to work concurrently
 4. Synthesize results into coherent output
+5. **Provide clean UX** - Output summaries directly, never via Execute + echo
+
+**UX Reminder**: Users should see clean markdown output, not verbose "EXECUTE(cd... && echo...)" commands. Always output progress/summaries directly in your response text.
 
 This makes Droidz **3-5x faster** than sequential development! 🚀
