@@ -210,9 +210,52 @@ Ready to proceed with parallel execution?
 
 ---
 
-## Step 4: Spawn Parallel Agents
+## Step 4: Setup Isolation Environment
 
-**CRITICAL:** Use the Task tool to spawn multiple agents **in a single response** for true parallel execution.
+**IMPORTANT:** Before spawning agents, create isolated git worktrees and tmux sessions using the orchestrator script.
+
+### Use the orchestrator.sh script to prepare workspaces:
+
+```typescript
+// First, generate tasks.json with task breakdown
+const tasksJson = {
+  tasks: [
+    {
+      key: "TASK-001",
+      title: "Build login API",
+      description: "Implement JWT-based login endpoint",
+      specialist: "droidz-codegen",
+      priority: 1
+    },
+    // ... more tasks
+  ]
+};
+
+// Save to temporary file
+Create({
+  file_path: "/tmp/orchestration-tasks.json",
+  content: JSON.stringify(tasksJson, null, 2)
+});
+
+// Run orchestrator script to create worktrees + tmux sessions
+Execute({
+  command: `cd ${PROJECT_ROOT} && .factory/scripts/orchestrator.sh --tasks /tmp/orchestration-tasks.json`
+});
+
+// This creates:
+// - .runs/TASK-001/ (isolated git worktree)
+// - .runs/TASK-002/ (isolated git worktree)
+// - tmux session: droidz-TASK-001
+// - tmux session: droidz-TASK-002
+// - .factory-context.md files with task instructions
+// - .droidz-meta.json files for progress tracking
+```
+
+---
+
+## Step 5: Spawn Parallel Agents
+
+**CRITICAL:** After workspaces are ready, spawn Task agents **in a single response** for true parallel execution.
 
 ### Task Tool Syntax:
 ```
@@ -222,7 +265,7 @@ Call Task tool multiple times in ONE response:
 ### Example - Authentication System:
 
 ```
-I'm spawning 3 specialist agents in parallel now...
+Workspaces created! Spawning 3 specialist agents in parallel now...
 ```
 
 Then make these Task tool calls **in a single response**:
@@ -413,7 +456,75 @@ Report back when complete with test results.`
 
 ---
 
-## Step 5: Monitor and Synthesize
+## Step 6: Monitor Progress (Real-Time Visibility)
+
+**NEW CAPABILITY:** You can now monitor what agents are doing in their tmux sessions!
+
+### Option 1: Live Monitoring (Continuous Updates)
+
+```typescript
+// Start monitoring all tmux sessions (updates every 30 seconds)
+Execute({
+  command: `.factory/scripts/monitor-orchestration.sh --session ${SESSION_ID} --interval 30`
+});
+
+// This shows:
+// - Task status (completed/in_progress/pending)
+// - Last 10 lines from each tmux session
+// - Progress summary
+// - Real-time updates every 30s
+```
+
+### Option 2: Snapshots (One-Time Check)
+
+```typescript
+// Take single snapshot of all sessions
+Execute({
+  command: `.factory/scripts/monitor-orchestration.sh --snapshot --session ${SESSION_ID}`
+});
+
+// This captures:
+// - Current status of all tasks
+// - Last 50 lines from each tmux session
+// - Progress tracking from .droidz-meta.json files
+```
+
+### Option 3: Agent-Driven Polling
+
+Periodically check progress while agents work:
+
+```typescript
+// Every 30 seconds, take a snapshot and update user
+setInterval(() => {
+  Execute({
+    command: `.factory/scripts/monitor-orchestration.sh --snapshot --session ${SESSION_ID}`
+  });
+  
+  // Parse output and update TodoWrite
+  TodoWrite({
+    todos: [
+      {content: "Task 1: Login API", status: "completed"},
+      {content: "Task 2: Register API", status: "in_progress"},  
+      {content: "Task 3: Tests", status: "pending"}
+    ]
+  });
+}, 30000);
+```
+
+**What You Can See:**
+- ✅ Exact tmux terminal output (what the agent is doing)
+- ✅ Commands being run by agents
+- ✅ Test results, error messages, progress indicators
+- ✅ Status updates from .droidz-meta.json files
+
+**User Can Also:**
+- Attach to any tmux session: `tmux attach -t droidz-TASK-001`
+- Watch agents work in real-time
+- Switch between sessions: `Ctrl+B` then `S`
+
+---
+
+## Step 7: Synthesize Results
 
 **CRITICAL UX RULE**: NEVER use Execute tool with echo commands to display progress/summaries. Always output directly in your response text or use TodoWrite.
 
