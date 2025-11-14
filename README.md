@@ -966,7 +966,8 @@ The rest is automatic. You don't need to understand how it works to use it!
 
 1. **Check logs**: `.runs/.coordination/orchestration.log`
 2. **GitHub Issues**: https://github.com/korallis/Droidz/issues
-3. **Read this guide** again - the answer is probably here!
+3. **Discord Community**: [Join our Discord](https://discord.gg/your-invite-link) - Get help, share workflows, connect with other users
+4. **Read this guide** again - the answer is probably here!
 
 ### Common Questions
 
@@ -1043,6 +1044,17 @@ your-project/
 ```
 
 **You don't need to touch these files!** Droidz uses them automatically.
+
+---
+
+## 💝 Support Droidz
+
+If Droidz saves you time and makes development easier, consider supporting the project:
+
+**Donate via PayPal**: [paypal.me/leebarry84](https://paypal.me/leebarry84)  
+**Join the Community**: [Discord Server](https://discord.gg/your-invite-link)
+
+Your support helps keep Droidz free and constantly improving!
 
 ---
 
