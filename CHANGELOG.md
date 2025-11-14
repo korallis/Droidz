@@ -5,6 +5,10 @@ All notable changes to Droidz will be documented in this file.
 ## [0.0.9] - 2025-11-14
 
 ### Fixed
+- **Status Command Not Recognized** - Fixed Factory.ai not recognizing `/status` as executable command
+  - Created missing `status.md` wrapper file (slash commands need .md files)
+  - Updated installer to download `status.md`
+  - Factory.ai now properly executes the command instead of treating it as documentation
 - **Status Command Formatting** - Fixed broken multi-line echo in `/status` command
   - Added missing RED color variable definition
   - Fixed task summary line that was causing closing parenthesis to appear on separate line

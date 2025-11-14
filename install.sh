@@ -231,7 +231,7 @@ main() {
     log_info "Downloading commands..."
     
     # Markdown commands (prompts)
-    for cmd in parallel auto-parallel summary attach; do
+    for cmd in parallel auto-parallel summary attach status; do
         download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
     done
     
