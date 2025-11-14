@@ -1,5 +1,6 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+IFS=$'\n\t'
 
 # Droidz Installer (Factory.ai Droid CLI Edition) - Auto-Dependency Installation + Git Init
 # Installs or updates Droidz in your project
@@ -13,36 +14,51 @@ CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 ERROR_LOG_FILE=".droidz-install-$(date +%Y%m%d_%H%M%S).log"
 INSTALL_START_TIME=$(date +%s)
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+# Colors for output - only if output is to a terminal
+if [[ -t 1 ]]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    CYAN='\033[0;36m'
+    BOLD='\033[1m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    CYAN=''
+    BOLD=''
+    NC=''
+fi
 
 # Helper functions
 log_info() {
-    local msg="$1"
-    echo -e "${BLUE}ℹ${NC} $msg"
+    echo -e "${BLUE}ℹ${NC} $*"
 }
 
 log_success() {
-    echo -e "${GREEN}✓${NC} $1"
+    echo -e "${GREEN}✓${NC} $*"
 }
 
 log_warning() {
-    local msg="$1"
+    local msg="$*"
     echo -e "${YELLOW}⚠${NC} $msg"
-    # Also log to file with timestamp
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: $msg" >> "$ERROR_LOG_FILE"
 }
 
 log_error() {
-    local msg="$1"
-    echo -e "${RED}✗${NC} $msg"
+    local msg="$*"
+    echo -e "${RED}✗${NC} $msg" >&2
     # Also log to file with timestamp
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: $msg" >> "$ERROR_LOG_FILE"
+}
+
+log_step() {
+    echo -e "\n${CYAN}${BOLD}▸ $*${NC}"
+    # Log steps to file
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] STEP: $*" >> "$ERROR_LOG_FILE"
 }
 
 # ============================================================================
@@ -128,7 +144,7 @@ configure_wsl_for_claude_code() {
         if ! command -v nvm &> /dev/null && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
             log_info "Loading nvm for current session..."
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
             log_success "nvm loaded"
         fi
     else
@@ -226,9 +242,9 @@ generate_error_report() {
     local duration=$((install_end_time - INSTALL_START_TIME))
 
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log_error "Installation Failed - Error Report Generated"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "${RED}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}${BOLD}║   Installation Failed - Error Report Generated      ║${NC}"
+    echo -e "${RED}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
     echo ""
 
     # Append system info to log
@@ -308,15 +324,37 @@ generate_error_report() {
     echo ""
 }
 
-# Trap errors
-trap 'EXIT_CODE=$?; if [ $EXIT_CODE -ne 0 ]; then generate_error_report $EXIT_CODE; fi' EXIT
+cleanup() {
+    local exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        log_error "Installation failed with exit code $exit_code"
+        generate_error_report "$exit_code"
+    else
+        # Clean up log file on success
+        if [[ -f "$ERROR_LOG_FILE" ]]; then
+            rm -f "$ERROR_LOG_FILE"
+        fi
+    fi
+}
+
+trap cleanup EXIT
+trap 'log_error "Installation interrupted by user"; exit 130' INT TERM
+
+error_exit() {
+    log_error "$1"
+    exit "${2:-1}"
+}
+
+# ============================================================================
+# INSTALLATION PROCESS
+# ============================================================================
 
 # ============================================================================
 # DEPENDENCY CHECKS
 # ============================================================================
 
 detect_os
-log_info "Detected OS: $OS (Package manager: $PKG_MANAGER)"
+log_step "Detected OS: $OS (Package manager: $PKG_MANAGER)"
 
 # Check for git (CRITICAL)
 if ! command -v git &> /dev/null; then
@@ -330,23 +368,20 @@ if ! command -v git &> /dev/null; then
 
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
             if ! install_package git; then
-                log_error "Failed to install git. Please install manually: $(get_install_cmd git)"
-                exit 1
+                error_exit "Failed to install git. Please install manually: $(get_install_cmd git)" 1
             fi
         else
-            log_info "Install manually: $(get_install_cmd git)"
-            exit 1
+            error_exit "Install manually: $(get_install_cmd git)" 1
         fi
     else
-        log_error "Please install git manually"
-        exit 1
+        error_exit "Please install git manually" 1
     fi
 else
     log_success "Git found"
 fi
 
 # Check if we're in a git repo
-if [ ! -d ".git" ]; then
+if [[ ! -d ".git" ]]; then
     log_warning "Not in a git repository."
     echo ""
     echo -e "${YELLOW}Would you like to initialize this directory as a git repository?${NC}"
@@ -362,7 +397,7 @@ if [ ! -d ".git" ]; then
             log_success "Git repository initialized"
 
             # Create initial .gitignore if it doesn't exist
-            if [ ! -f ".gitignore" ]; then
+            if [[ ! -f ".gitignore" ]]; then
                 cat > .gitignore << 'EOF'
 # Droidz worktrees
 .runs/
@@ -392,12 +427,10 @@ EOF
                 log_info "Repository initialized (no initial commit created)"
             fi
         else
-            log_error "Failed to initialize git repository. Please run 'git init' manually."
-            exit 1
+            error_exit "Failed to initialize git repository. Please run 'git init' manually." 1
         fi
     else
-        log_info "Please initialize git manually with: git init"
-        exit 1
+        error_exit "Please initialize git manually with: git init" 1
     fi
 else
     log_success "Git repository detected"
@@ -472,7 +505,7 @@ if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
 fi
 
 # Detect if this is an install or update
-if [ -d ".factory/droids" ] && [ -f ".factory/orchestrator/task-coordinator.ts" ]; then
+if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.ts" ]]; then
     MODE="update"
     log_info "Existing Droidz installation detected. Updating..."
 else
@@ -483,7 +516,7 @@ fi
 echo ""
 
 # Create directories
-log_info "Creating directories..."
+log_step "Creating directories..."
 mkdir -p .factory/droids
 mkdir -p .factory/commands
 mkdir -p .factory/orchestrator
@@ -503,7 +536,7 @@ mkdir -p .factory/standards/templates
 log_success "Directories created"
 
 # Ensure package.json exists
-if [ ! -f "package.json" ]; then
+if [[ ! -f "package.json" ]]; then
     log_info "package.json not found. Initializing Bun project..."
     bun init --yes >/dev/null 2>&1
     log_success "Initialized package.json"
@@ -543,7 +576,7 @@ bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-e
 log_success "Installed development dependencies"
 
 # Download droids
-log_info "Downloading robot helpers (droids)..."
+log_step "Downloading robot helpers (droids)..."
 
 DROIDS=(
     "droidz-orchestrator.md"
@@ -561,7 +594,7 @@ for droid in "${DROIDS[@]}"; do
 done
 
 # Download custom commands
-log_info "Downloading custom slash commands..."
+log_step "Downloading custom slash commands..."
 
 COMMANDS=(
     "droidz-orchestrator.md"
@@ -593,7 +626,7 @@ for command in "${COMMANDS[@]}"; do
 done
 
 # Download orchestrator scripts
-log_info "Downloading orchestrator scripts..."
+log_step "Downloading orchestrator scripts..."
 
 ORCHESTRATOR_FILES=(
     "worktree-setup.ts"
@@ -604,13 +637,13 @@ ORCHESTRATOR_FILES=(
 )
 
 for file in "${ORCHESTRATOR_FILES[@]}"; do
-    if [ "$file" = "config.json" ]; then
+    if [[ "$file" = "config.json" ]]; then
         tmp_file=$(mktemp)
         curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o "$tmp_file"
 
         target_file=".factory/orchestrator/${file}"
 
-        if [ ! -f "$target_file" ]; then
+        if [[ ! -f "$target_file" ]]; then
             mv "$tmp_file" "$target_file"
             log_success "Downloaded ${file}"
         else
@@ -652,12 +685,12 @@ PY
 done
 
 # Download config.example.yml template
-log_info "Downloading configuration template..."
+log_step "Downloading configuration template..."
 curl -fsSL "${GITHUB_RAW}/config.example.yml${CACHE_BUST}" -o "config.example.yml"
 log_success "Downloaded config.example.yml"
 
 # Handle config.yml
-if [ -f "config.yml" ]; then
+if [[ -f "config.yml" ]]; then
     log_warning "config.yml already exists - preserving your existing configuration"
     log_info "Compare with config.example.yml to see new simplified settings"
 else
@@ -667,7 +700,7 @@ else
 fi
 
 # Download hooks
-log_info "Downloading hooks..."
+log_step "Downloading hooks..."
 
 HOOKS=(
     "auto-lint.sh"
@@ -681,7 +714,7 @@ for hook in "${HOOKS[@]}"; do
 done
 
 # Download memory templates
-log_info "Downloading memory templates..."
+log_step "Downloading memory templates..."
 curl -fsSL "${GITHUB_RAW}/.factory/memory/user/README.md${CACHE_BUST}" -o ".factory/memory/user/README.md"
 log_success "Downloaded user memory template"
 
@@ -689,7 +722,7 @@ curl -fsSL "${GITHUB_RAW}/.factory/memory/org/README.md${CACHE_BUST}" -o ".facto
 log_success "Downloaded org memory template"
 
 # Download skills
-log_info "Downloading skills..."
+log_step "Downloading skills..."
 
 SKILLS=(
     "standards-enforcer.md"
@@ -703,7 +736,7 @@ for skill in "${SKILLS[@]}"; do
 done
 
 # Download nested skills (with subdirectories)
-log_info "Downloading nested skills..."
+log_step "Downloading nested skills..."
 
 curl -fsSL "${GITHUB_RAW}/.factory/skills/auto-orchestrator/SKILL.md${CACHE_BUST}" -o ".factory/skills/auto-orchestrator/SKILL.md"
 log_success "Downloaded auto-orchestrator skill"
@@ -718,7 +751,7 @@ curl -fsSL "${GITHUB_RAW}/.factory/skills/spec-shaper/SKILL.md${CACHE_BUST}" -o 
 log_success "Downloaded spec-shaper skill"
 
 # Download spec templates
-log_info "Downloading spec templates..."
+log_step "Downloading spec templates..."
 curl -fsSL "${GITHUB_RAW}/.factory/specs/README.md${CACHE_BUST}" -o ".factory/specs/README.md"
 log_success "Downloaded specs README"
 
@@ -733,7 +766,7 @@ touch .factory/specs/active/.gitkeep
 touch .factory/specs/archive/.gitkeep
 
 # Download product documentation
-log_info "Downloading product documentation..."
+log_step "Downloading product documentation..."
 
 PRODUCT_FILES=(
     "vision.md"
@@ -747,13 +780,13 @@ for file in "${PRODUCT_FILES[@]}"; do
 done
 
 # Download scripts
-log_info "Downloading scripts..."
+log_step "Downloading scripts..."
 curl -fsSL "${GITHUB_RAW}/.factory/scripts/orchestrator.sh${CACHE_BUST}" -o ".factory/scripts/orchestrator.sh"
 chmod +x ".factory/scripts/orchestrator.sh"
 log_success "Downloaded orchestrator.sh"
 
 # Download standards templates
-log_info "Downloading standards templates..."
+log_step "Downloading standards templates..."
 
 STANDARDS=(
     "typescript.md"
@@ -772,8 +805,8 @@ for standard in "${STANDARDS[@]}"; do
 done
 
 # Download settings.json (main configuration)
-log_info "Downloading settings.json..."
-if [ -f ".factory/settings.json" ]; then
+log_step "Downloading settings.json..."
+if [[ -f ".factory/settings.json" ]]; then
     log_warning "settings.json already exists - preserving your configuration"
     log_info "Compare with the latest version to see new settings"
 else
@@ -782,12 +815,12 @@ else
 fi
 
 # Download documentation (keep local README untouched)
-log_info "Downloading documentation updates..."
+log_step "Downloading documentation updates..."
 curl -fsSL "${GITHUB_RAW}/CHANGELOG.md${CACHE_BUST}" -o "CHANGELOG.md"
 log_success "Downloaded CHANGELOG.md"
 
 # Create .gitignore entries if needed
-if [ -f ".gitignore" ]; then
+if [[ -f ".gitignore" ]]; then
     # Add .runs/ if not present
     if ! grep -q ".runs/" .gitignore 2>/dev/null; then
         echo "" >> .gitignore
@@ -839,20 +872,15 @@ EOF
     log_success "Created .gitignore with security settings"
 fi
 
-# Clean up log file on success
-if [[ -f "$ERROR_LOG_FILE" ]]; then
-    rm -f "$ERROR_LOG_FILE"
-fi
-
 # Summary
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-if [ "$MODE" = "install" ]; then
-    log_success "Droidz v${DROIDZ_VERSION} installed successfully! 🎉"
+echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
+if [[ "$MODE" = "install" ]]; then
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz v${DROIDZ_VERSION} Installation Complete!          ║${NC}"
 else
-    log_success "Droidz updated to v${DROIDZ_VERSION}! 🎉"
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz Updated to v${DROIDZ_VERSION}!                    ║${NC}"
 fi
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
 
 # Next steps
