@@ -1140,7 +1140,7 @@ your-project/
 
 ---
 
-**Version:** 2.0.3  
+**Version:** 0.0.4  
 **Updated:** 2025-11-14  
 **Difficulty:** Beginner-Friendly ⭐⭐⭐⭐⭐
 
