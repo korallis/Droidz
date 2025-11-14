@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.0.91
+# Version: 0.0.92
 # Updated: 2025-11-14
 #
 
 set -euo pipefail
 
-VERSION="0.0.91"
+VERSION="0.0.92"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -231,7 +231,7 @@ main() {
     log_info "Downloading commands..."
     
     # Markdown commands (prompts)
-    for cmd in parallel auto-parallel summary attach status; do
+    for cmd in parallel auto-parallel summary attach status watch gh-helper parallel-watch; do
         download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
     done
     

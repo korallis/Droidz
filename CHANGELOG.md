@@ -2,6 +2,19 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.92] - 2025-11-14
+
+### Fixed
+- **All Slash Commands Now Recognized** - Fixed Factory.ai command recognition for all slash commands
+  - Created missing `watch.md` wrapper for `/watch` command
+  - Created missing `gh-helper.md` wrapper for `/gh-helper` command
+  - Created missing `parallel-watch.md` wrapper for `/parallel-watch` command
+  - Updated installer to download all .md wrapper files
+  - All slash commands now properly execute instead of being treated as documentation
+
+### Changed
+- Version bumped to 0.0.92 across all files
+
 ## [0.0.91] - 2025-11-14
 
 ### Changed
