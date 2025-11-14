@@ -270,6 +270,10 @@ main() {
     log_info "Downloading documentation..."
     download_file "$REPO_URL/README.md" "README.md" "README"
     
+    # Status script
+    download_file "$REPO_URL/status" "status" "status script"
+    chmod +x "status"
+    
     # Create .gitignore
     if [[ ! -f ".gitignore" ]]; then
         cat > .gitignore << 'EOF'
