@@ -3,42 +3,50 @@ description: Orchestrate tasks in parallel with automatic live monitoring
 argument-hint: "task description"
 ---
 
-Please invoke the droidz-parallel specialist droid to orchestrate this task in parallel.
+I will orchestrate this task using parallel execution with live progress tracking.
 
 **Task:** $ARGUMENTS
 
-Use the Task tool to call droidz-parallel:
-```
-subagent_type: droidz-parallel
-description: Parallel orchestration
-prompt: Orchestrate this task in parallel: $ARGUMENTS
+## Step 1: Analyze and Break Down
 
-Break down the task into 3-7 discrete components, generate tasks.json with 
-dependencies, and execute the orchestrator to spawn specialist droids.
+I'll analyze the request to identify 3-5 discrete, parallelizable components. For each component, I'll consider:
+- What can be done independently vs. sequentially
+- Which specialist droid is best (droidz-codegen, droidz-test, droidz-refactor, droidz-integration, droidz-infra)
+- Dependencies between tasks
 
-After orchestration starts, remind the user to run `/watch` for live monitoring.
-```
+## Step 2: Create Execution Plan
 
-The droidz-parallel droid will:
-- Analyze the request and create optimal task breakdown
-- Generate tasks.json with dependencies
-- Execute `.factory/scripts/orchestrator.sh` to spawn parallel droids
-- Set up worktrees and tmux sessions
+Using TodoWrite, I'll create a task list showing:
+- Phase 1 tasks (can start immediately)
+- Phase 2+ tasks (depend on earlier phases)
+- Estimated time for each
 
-After the droid completes, display:
+## Step 3: Execute in Parallel
+
+I'll use the Task tool to spawn specialist droids for each Phase 1 task simultaneously.
+
+## Step 4: Monitor and Guide
+
+After spawning droids, I'll display:
 
 ╔══════════════════════════════════════════════════════════╗
-║  ✅ Orchestration Started!                               ║
+║  ✅ Parallel Execution Started!                          ║
 ╚══════════════════════════════════════════════════════════╝
 
-📊 NEXT STEP: Monitor live progress
+📊 MONITOR LIVE PROGRESS
 
-Run this command to see real-time updates:
+For real-time updates:
 
     /watch
 
-This will show:
+This shows:
   • ✓ Completed tasks
-  • ⏳ Tasks in progress
-  • ⏸ Pending tasks
+  • ⏳ In progress  
+  • ⏸ Pending
   • Live progress bars
+
+Other commands:
+  • /status - Quick overview
+  • /summary [id] - Detailed breakdown
+
+Let me begin the analysis now...

@@ -2,6 +2,19 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.95] - 2025-11-14
+
+### Fixed
+- **Auto-Parallel Architecture** - Fixed `/auto-parallel` droid failures by following Factory.ai best practices
+  - Rewrote auto-parallel.md to contain orchestration workflow directly (not delegate to droid)
+  - According to Factory.ai docs: slash commands should contain prompts/workflows, droids are for focused helpers
+  - Root cause: droidz-parallel droid was 368 lines trying to do everything (too complex, kept failing)
+  - Solution: Slash command now handles orchestration directly, uses Task tool to spawn specialist droids
+  - Researched Factory.ai documentation using exa-code and ref MCP for proper patterns
+
+### Changed
+- Version bumped to 0.0.95 across all files
+
 ## [0.0.94] - 2025-11-14
 
 ### Changed

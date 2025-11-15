@@ -1,6 +1,6 @@
 {
   "name": "droidz",
-  "version": "0.0.94",
+  "version": "0.0.95",
   "description": "Parallel task orchestration framework with skills injection for Factory.ai",
   "type": "module",
   "dependencies": {
