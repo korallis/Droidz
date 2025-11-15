@@ -114,10 +114,43 @@ Used **exa-code** and **ref MCP** to research Factory.ai best practices:
 - ✅ 60-second intervals optimal (not too spammy, not too quiet)
 - ✅ Users strongly prefer frequent small updates over one big final update
 
+### 🔧 Fixed - Removed Outdated Worktree/Tmux References
+
+**CRITICAL CORRECTION:** Several droid files still had outdated documentation from the old tmux + git worktree system (removed in v0.1.3).
+
+**Droids Fixed:**
+
+- **droidz-orchestrator.md**
+  - ❌ Removed: Step 4 "Setup Isolation Environment" (80 lines of worktree/tmux instructions)
+  - ❌ Removed: orchestrator.sh script instructions (script was deleted in v0.1.3!)
+  - ❌ Removed: tmux session monitoring examples
+  - ❌ Removed: .runs/ directory references
+  - ✅ Updated: Agents work in main repository (not worktrees)
+  - ✅ Updated: Factory.ai handles progress streaming (no tmux monitoring needed)
+
+- **droidz-codegen.md**
+  - ❌ Removed: "isolated git worktree" from description
+  - ❌ Removed: "Pre-configured git worktree" context
+  - ✅ Added: Clear note that droid works in main repository on current branch
+
+- **droidz-test.md**
+  - ❌ Removed: "isolated git worktree" from description
+  - ❌ Removed: "Pre-configured git worktree" context
+  - ✅ Added: Clear note that droid works in main repository on current branch
+
+**Current System Confirmed (v0.1.4):**
+- ✅ Uses Factory.ai Task tool (NOT tmux/worktrees)
+- ✅ Agents work in main repository on current branch
+- ✅ Progress via TodoWrite streaming (NOT tmux monitoring)
+- ✅ No .runs/ directory, no orchestrator.sh, no worktrees
+- ✅ Clean, simple, and actually works!
+
 ### 📦 Commits
 
 - `2ae6518` - feat: add live progress reporting to all droids (60s updates)
 - `ba112ff` - docs: add comprehensive progress reporting documentation
+- `28ae97b` - chore: bump version to 0.1.4
+- `a0d4214` - fix: remove outdated worktree/tmux references from droids
 
 ### 🔗 Release
 
