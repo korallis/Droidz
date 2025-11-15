@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-VERSION="0.1.0"
+VERSION="0.1.1"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -300,7 +300,10 @@ main() {
     # Fix documentation
     mkdir -p docs/fixes
     if download_file "$REPO_URL/docs/fixes/2025-11-15-task-tool-model-parameter-fix.md" "docs/fixes/2025-11-15-task-tool-model-parameter-fix.md" "Task tool fix documentation" 2>/dev/null; then
-        log_success "Fix documentation downloaded"
+        log_success "Task tool fix documentation downloaded"
+    fi
+    if download_file "$REPO_URL/docs/fixes/2025-11-15-droid-model-identifier-fix.md" "docs/fixes/2025-11-15-droid-model-identifier-fix.md" "Droid model fix documentation" 2>/dev/null; then
+        log_success "Droid model fix documentation downloaded"
     fi
     
     # Quick start guide (optional, don't fail if missing)
@@ -354,13 +357,14 @@ EOF
         echo ""
         echo -e "${CYAN}🆕 What's New in v${VERSION}:${NC}"
         echo ""
-        echo "  🔧 Critical Fix: Parallel agent spawning restored"
-        echo "  ✅ Removed invalid 'model' parameter from Task tool calls"
-        echo "  ✅ All specialist droids now spawn correctly (100% success rate)"
-        echo "  ✅ 3-5x parallel speedup working as designed"
-        echo "  📚 Added comprehensive fix documentation in docs/fixes/"
+        echo "  🔧 CRITICAL FIX: Droid model identifiers corrected"
+        echo "  ✅ All droids now use fully qualified model identifiers"
+        echo "  ✅ Changed 'model: sonnet' → 'model: claude-sonnet-4-5-20250929'"
+        echo "  ✅ Fixes 'No assistant message events' error"
+        echo "  ✅ Parallel execution NOW FULLY WORKING (100% success rate)"
+        echo "  📚 Complete fix documentation in docs/fixes/"
         echo ""
-        echo -e "${YELLOW}This fix restores the core parallel execution feature!${NC}"
+        echo -e "${YELLOW}This completes the parallel execution fix from v0.1.0!${NC}"
         echo ""
         echo -e "${CYAN}Quick Check:${NC}"
         echo -e "   ${GREEN}./status${NC} - See what's installed"

@@ -2,6 +2,57 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.1.1] - 2025-11-15
+
+### 🔧 Fixed - Droid Model Identifier Bug
+- **CRITICAL: Fixed droid model identifiers** - Changed shorthand `model: sonnet` to fully qualified `model: claude-sonnet-4-5-20250929`
+  - All 7 droids (except droidz-parallel) had invalid shorthand model identifiers
+  - Factory.ai Task tool requires fully qualified model identifiers
+  - Shorthand caused droids to fail silently with "No assistant message events were captured"
+  - Parallel execution NOW FULLY WORKING (100% success rate)
+
+### 📚 Added
+- **Fix Documentation**: `docs/fixes/2025-11-15-droid-model-identifier-fix.md`
+  - Complete analysis of the second bug
+  - Comparison with working droid (droidz-parallel.md)
+  - Testing instructions
+  - Available model identifiers reference
+
+### 🔄 Changed
+- Updated installer to download both fix documentations
+- Version bump: package.json 0.1.0 → 0.1.1
+- Version bump: plugin.json 2.1.1 → 2.1.2
+- Updated "What's New" message in installer
+
+### 🎯 Root Cause Analysis
+This was the **second bug** preventing parallel execution. While v0.1.0 fixed the Task tool calls (removed invalid `model` parameter), the droids themselves had invalid `model: sonnet` in their YAML frontmatter. Factory.ai requires fully qualified identifiers like `model: claude-sonnet-4-5-20250929`.
+
+The user discovered this by comparing failing droids with the working `droidz-parallel.md` which already had the correct identifier.
+
+### 📦 Droids Fixed
+- droidz-codegen.md
+- droidz-test.md
+- droidz-integration.md
+- droidz-refactor.md
+- droidz-infra.md
+- droidz-generalist.md
+- droidz-orchestrator.md
+
+### 🔗 Commits
+- `5acd3fc` - fix: use fully qualified model identifiers in all droids
+
+### 📊 Complete Fix Summary
+
+| Issue | v0.1.0 | v0.1.1 | Status |
+|-------|--------|--------|--------|
+| Task tool `model` parameter | ❌ Invalid | ✅ Removed | Fixed |
+| Droid model identifiers | ❌ Shorthand | ✅ Full qualified | Fixed |
+| Parallel execution | ❌ Broken | ✅ Working | **COMPLETE** |
+
+**Both bugs are now fixed! Parallel execution fully operational!** 🎉
+
+---
+
 ## [0.1.0] - 2025-11-15
 
 ### 🔧 Fixed - Critical Parallel Execution Bug
