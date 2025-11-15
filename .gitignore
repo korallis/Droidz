@@ -41,3 +41,9 @@ V2.0.2_MIGRATION_GUIDE.md
 *-tasks.json
 .claude-*-backup*
 .droidz-install-*.log
+
+# .droidz/ - Local state and specs (controlled by .droidz/.gitignore)
+# Users can optionally commit specs by modifying .droidz/.gitignore
+.droidz/*
+!.droidz/.gitignore
+!.droidz/specs/000-*.md

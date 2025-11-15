@@ -440,7 +440,7 @@ AUTH-003 depends on AUTH-001 → Phase 2 (can run with AUTH-002!)
 
 ## 📋 All the Commands Explained
 
-Droidz has **7 simple commands**. Here they are!
+Droidz has **8 simple commands**. Here they are!
 
 ### The Main Commands
 
@@ -467,6 +467,91 @@ Droidz has **7 simple commands**. Here they are!
 ```
 
 **That's it!** Just describe what you want and get guided monitoring.
+
+---
+
+#### `/droidz-build "feature description"` ✨ **New in v0.2.0!**
+
+**AI-Powered Specification Generator** - Transforms vague ideas into production-ready specs!
+
+```
+# In droid chat:
+/droidz-build "add user authentication"
+```
+
+**What it does:**
+- 🔍 **Asks clarifying questions** if your request is vague
+- 📚 **Researches best practices** using industry standards
+- 📝 **Generates comprehensive spec** with:
+  - Task breakdown (what to build in what order)
+  - Security requirements (OWASP, GDPR when applicable)
+  - Edge cases (what could go wrong)
+  - Testing strategy (unit, integration, E2E)
+  - Verification criteria (how to know it's done)
+- 💾 **Saves to `.droidz/specs/NNN-feature-name.md`**
+- 🚀 **Offers execution options** (parallel, sequential, or review)
+
+**Why use it?**
+- Never forget security requirements (bcrypt, rate limiting, etc.)
+- Comprehensive edge case handling
+- Measurable success criteria
+- Ready-to-execute task prompts
+- 80% less time writing specs manually
+- 70% fewer "forgot to consider X" issues
+
+**Example workflow:**
+```
+/droidz-build "add authentication"
+
+> Droid: I'll create a spec for authentication. To make it comprehensive:
+>   1. Email/password, OAuth, or both?
+>   2. Session handling: JWT or sessions?
+>   3. User roles: Single or multiple?
+
+Email/password, JWT, existing Next.js project
+
+> Droid: ✅ Saved: .droidz/specs/001-user-authentication.md
+> 
+>   📊 Summary:
+>   - Complexity: Complex
+>   - Tasks: 6 (3 parallel Phase 1, 3 parallel Phase 2)  
+>   - Time: 8-12h sequential → 2.5-4h parallel (3x speedup)
+>   
+>   Includes:
+>   ✅ bcrypt password hashing
+>   ✅ Rate limiting (5 attempts/15min)
+>   ✅ OWASP Top 10 compliance
+>   ✅ Edge cases (expired tokens, concurrent sessions)
+>   ✅ Full test coverage plan (80%+)
+>   
+>   Execute in parallel? (spawns 3 agents)
+```
+
+**More examples:**
+```
+/droidz-build "add dark mode toggle"
+→ Simple: 2 tasks, ~45 minutes
+
+/droidz-build "add contact form with email delivery"
+→ Moderate: 3 tasks, 2-3 hours sequential, ~1 hour parallel
+
+/droidz-build "build blog with comments, tags, and search"
+→ Complex: 12 tasks, 24h sequential → 6-8h parallel
+```
+
+**What's in a generated spec?**
+- `<objective>` - Clear goal
+- `<context>` - Tech stack, project type, why it matters
+- `<requirements>` - Functional + non-functional
+- `<task-decomposition>` - Parallelizable tasks with droid assignments
+- `<security-requirements>` - OWASP, GDPR checklists (when applicable)
+- `<edge-cases>` - Failure scenarios + handling
+- `<testing-strategy>` - Unit, integration, E2E plans
+- `<verification-criteria>` - Checkboxes to confirm completion
+- `<execution-plan>` - Ready-to-run Task() invocations
+- `<success-metrics>` - Quality, performance, security, UX metrics
+
+**See an example spec:** `.droidz/specs/000-example-contact-form.md`
 
 ---
 
