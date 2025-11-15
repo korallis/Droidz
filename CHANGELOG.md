@@ -2,6 +2,35 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.97] - 2025-11-14
+
+### Added - QoL/UX Improvements (Factory.ai Research-Backed)
+- **AGENTS.md Template** - Copy-paste ready template following Factory.ai standards
+  - Comprehensive project context file (build commands, conventions, security, etc.)
+  - Replaces need to manually write project documentation
+  - Gets ingested by droids at start of every conversation
+  - Based on Factory.ai's official AGENTS.md specification
+- **HOOKS.md Documentation** - Complete guide to Factory.ai hooks system
+  - Explains all hook types (PreToolUse, PostToolUse, Stop, etc.)
+  - Includes practical examples and best practices
+  - Shows how to write custom hook scripts
+  - Documents exit codes and debugging
+- **SETTINGS.md Documentation** - Comprehensive settings reference
+  - Explains all configuration options
+  - Provides recommended configurations for solo/team/CI-CD
+  - Documents context management, memory, and standards enforcement
+  - Includes troubleshooting section
+
+### Research
+- Used exa-code and ref MCP to research Factory.ai official documentation
+- Identified missing QoL features compared to Factory.ai's offerings
+- Focused on high-priority, well-documented Factory.ai patterns
+- All improvements backed by official Factory.ai documentation
+
+### Changed
+- Updated installer to download AGENTS.md template and documentation
+- Version bumped to 0.0.97 across all files
+
 ## [0.0.96] - 2025-11-14
 
 ### Fixed
