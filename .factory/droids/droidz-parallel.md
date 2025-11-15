@@ -1,7 +1,7 @@
 ---
 name: droidz-parallel
 description: Simple parallel task breakdown - analyzes request and suggests task breakdown
-model: claude-sonnet-4-5-20250929
+model: inherit
 ---
 
 # Droidz Parallel - Simple Task Analyzer

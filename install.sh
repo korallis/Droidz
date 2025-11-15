@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-VERSION="0.1.1"
+VERSION="0.1.2"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors

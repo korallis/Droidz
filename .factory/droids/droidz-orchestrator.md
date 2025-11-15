@@ -16,7 +16,7 @@ description: |
 
   Auto-activates when Claude Code detects complex/parallel work patterns.
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
-model: claude-sonnet-4-5-20250929
+model: inherit
 ---
 
 # Droidz Orchestrator - Automatic Parallel Execution

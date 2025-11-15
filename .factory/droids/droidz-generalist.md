@@ -1,7 +1,7 @@
 ---
 name: droidz-generalist
 description: Safe fallback specialist for miscellaneous tasks that don't fit other categories. Makes conservative, incremental changes. Use when task is unclear or spans multiple domains.
-model: claude-sonnet-4-5-20250929
+model: inherit
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 
