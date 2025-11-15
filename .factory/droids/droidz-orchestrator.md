@@ -275,7 +275,6 @@ Then make these Task tool calls **in a single response**:
 Task({
   subagent_type: "droidz-codegen",
   description: "Build authentication API",
-  model: "sonnet",
   prompt: `# Task: Build Authentication API
 
 ## Context
@@ -335,7 +334,6 @@ Report back when complete with file list and any issues encountered.`
 Task({
   subagent_type: "droidz-codegen",
   description: "Build authentication UI components",
-  model: "sonnet",
   prompt: `# Task: Build Authentication UI
 
 ## Context
@@ -396,7 +394,6 @@ Report back when complete.`
 Task({
   subagent_type: "droidz-test",
   description: "Write authentication tests",
-  model: "sonnet",
   prompt: `# Task: Write Authentication Tests
 
 ## Context
