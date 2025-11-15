@@ -2,6 +2,63 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.1.2] - 2025-11-15
+
+### 🎛️ Changed - Model Inheritance for User Control
+- **MAJOR: All droids now use `model: inherit`** - Respects user's CLI model selection
+  - Users can now choose GPT-5 Codex, Claude Opus, Gemini, or any model
+  - Changed from hardcoded `model: claude-sonnet-4-5-20250929` to `model: inherit`
+  - All 8 droids updated: codegen, test, integration, refactor, infra, generalist, orchestrator, parallel
+  - Droids automatically use whatever model user selects in CLI
+  - Full control over model choice, costs, and performance
+
+### 📚 Added
+- **Model Inheritance Documentation**: `docs/fixes/2025-11-15-model-inheritance-fix.md`
+  - Comprehensive guide to model inheritance
+  - Factory.ai best practices research
+  - Use cases and examples
+  - Benefits and testing instructions
+
+### 🔄 Changed
+- Version bump: package.json 0.1.1 → 0.1.2
+- Version bump: plugin.json 2.1.2 → 2.1.3
+- Version bump: install.sh 0.1.1 → 0.1.2
+
+### 🎯 Research & Validation
+According to [Factory.ai documentation](https://docs.factory.ai/cli/configuration/custom-droids), `model: inherit` is the official best practice for general-purpose droids. This allows droids to use the parent session's model, giving users full control.
+
+Researched using `exa-code` and `ref` MCP tools as requested.
+
+### 💡 User Impact
+
+**Before (v0.1.1):**
+```bash
+droid --model gpt-5-codex
+# Droids still used Claude Sonnet (forced model)
+```
+
+**After (v0.1.2):**
+```bash
+droid --model gpt-5-codex
+# All droids use GPT-5 Codex (user's choice!)
+```
+
+### 🎉 Benefits
+✅ User control over model selection  
+✅ Cost management flexibility  
+✅ Performance optimization options  
+✅ Future-proof for new models  
+✅ Follows Factory.ai best practices  
+
+### 📦 Commits
+- `87e75b7` - fix: use model inheritance for user CLI model selection
+
+### 🔗 Release
+- Git tag: `v0.1.2`
+- GitHub release: https://github.com/korallis/Droidz/releases/tag/v0.1.2
+
+---
+
 ## [0.1.1] - 2025-11-15
 
 ### 🔧 Fixed - Droid Model Identifier Bug
