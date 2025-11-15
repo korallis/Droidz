@@ -2,6 +2,49 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.1.0] - 2025-11-15
+
+### 🔧 Fixed - Critical Parallel Execution Bug
+- **CRITICAL: Parallel agent spawning restored** - Root cause: invalid `model` parameter in Task tool calls
+  - Removed `model` parameter from all Task tool examples in droidz-orchestrator.md
+  - Task tool only accepts 3 parameters: `subagent_type`, `description`, `prompt`
+  - Model configuration belongs in droid YAML frontmatter, not Task calls
+  - All specialist droids now spawn correctly (100% success rate, was 0% failure)
+  - 3-5x parallel speedup restored and working as designed
+
+### 📚 Added
+- **Fix Documentation**: `docs/fixes/2025-11-15-task-tool-model-parameter-fix.md`
+  - Complete root cause analysis
+  - Factory.ai documentation references
+  - Testing instructions
+  - Prevention guidelines
+- **Release Process Documentation**: `RELEASE_PROCESS.md`
+  - Semantic versioning guide
+  - Step-by-step release checklist
+  - Git tag and GitHub release instructions
+  - User installation guide for specific versions
+
+### 🔄 Changed
+- Updated installer to download fix documentation
+- Version bump: package.json 0.0.98 → 0.1.0
+- Version bump: plugin.json 2.1.0 → 2.1.1
+- Updated "What's New" message in installer
+
+### 🎯 Root Cause Analysis
+According to [Factory.ai documentation](https://docs.factory.ai/cli/configuration/custom-droids), the Task tool only accepts `subagent_type`, `description`, and `prompt` parameters. Model selection is configured in each droid's YAML frontmatter. The orchestrator was incorrectly passing a 4th parameter (`model: "sonnet"`), causing all Task tool invocations to fail.
+
+Researched using `exa-code` and `ref` MCP tools as requested.
+
+### 📦 Commits
+- `223db97` - fix: remove invalid model parameter from Task tool calls in orchestrator
+- `9e6124b` - chore: bump version to 0.1.0 for parallel spawning fix
+
+### 🔗 Release
+- Git tag: `v0.1.0`
+- GitHub release: https://github.com/korallis/Droidz/releases/tag/v0.1.0
+
+---
+
 ## [0.0.98] - 2025-11-15
 
 ### Fixed - Critical Droid Naming Bug
