@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-VERSION="0.1.2"
+VERSION="0.1.3"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -227,36 +227,25 @@ main() {
     # Download framework files
     log_step "Downloading Droidz framework"
     
-    # Commands (only the 4 core commands)
+    # Commands
     log_info "Downloading commands..."
     
     # Markdown commands (prompts)
-    for cmd in parallel auto-parallel summary attach status watch gh-helper parallel-watch; do
-        download_file "$REPO_URL/.factory/commands/${cmd}.md" ".factory/commands/${cmd}.md" "$cmd command"
-    done
+    download_file "$REPO_URL/.factory/commands/auto-parallel.md" ".factory/commands/auto-parallel.md" "auto-parallel command"
+    download_file "$REPO_URL/.factory/commands/gh-helper.md" ".factory/commands/gh-helper.md" "gh-helper command"
     
     # Executable commands (bash scripts)
-    download_file "$REPO_URL/.factory/commands/status.sh" ".factory/commands/status.sh" "status command"
-    download_file "$REPO_URL/.factory/commands/watch.sh" ".factory/commands/watch.sh" "watch command"
-    download_file "$REPO_URL/.factory/commands/gh-helper.sh" ".factory/commands/gh-helper.sh" "gh-helper command"
-    download_file "$REPO_URL/.factory/commands/parallel-watch.sh" ".factory/commands/parallel-watch.sh" "parallel-watch command"
-    chmod +x ".factory/commands/status.sh"
-    chmod +x ".factory/commands/watch.sh"
+    download_file "$REPO_URL/.factory/commands/gh-helper.sh" ".factory/commands/gh-helper.sh" "gh-helper script"
     chmod +x ".factory/commands/gh-helper.sh"
-    chmod +x ".factory/commands/parallel-watch.sh"
     
     # Droids
-    log_info "Downloading helper droids..."
-    for droid in droidz-parallel droidz-orchestrator droidz-codegen droidz-test droidz-refactor droidz-integration droidz-infra droidz-generalist; do
+    log_info "Downloading specialist droids..."
+    for droid in droidz-orchestrator droidz-codegen droidz-test droidz-refactor droidz-integration droidz-infra droidz-generalist; do
         download_file "$REPO_URL/.factory/droids/${droid}.md" ".factory/droids/${droid}.md" "$droid droid"
     done
     
-    # Scripts
-    log_info "Downloading orchestration scripts..."
-    for script in orchestrator dependency-resolver parallel-executor; do
-        download_file "$REPO_URL/.factory/scripts/${script}.sh" ".factory/scripts/${script}.sh" "$script script"
-        chmod +x ".factory/scripts/${script}.sh"
-    done
+    # Scripts directory (currently empty, but keep structure for future use)
+    mkdir -p .factory/scripts
     
     # Hooks
     log_info "Downloading skills injection hooks..."
@@ -316,9 +305,7 @@ main() {
         log_success "Skills summary downloaded"
     fi
     
-    # Status script
-    download_file "$REPO_URL/status" "status" "status script"
-    chmod +x "status"
+    # No legacy status script needed - use Factory.ai conversation for monitoring
     
     # Create .gitignore
     if [[ ! -f ".gitignore" ]]; then
@@ -372,7 +359,7 @@ EOF
         echo -e "${CYAN}Try It Now:${NC}"
         echo -e "   ${GREEN}droid${NC}"
         echo -e "   ${GREEN}/auto-parallel \"your task\"${NC}"
-        echo -e "   ${GREEN}/watch${NC} - Live monitoring!"
+        echo -e "   Monitor progress directly in conversation!"
         echo ""
     else
         echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
@@ -381,9 +368,9 @@ EOF
         echo ""
         echo -e "${CYAN}What You Got (v${VERSION}):${NC}"
         echo ""
-        echo "  ✅ Parallel orchestration that actually works"
-        echo "  ✅ Live monitoring with progress bars"
-        echo "  ✅ 8 specialist droids for different tasks"
+        echo "  ✅ Parallel execution with Factory.ai Task tool"
+        echo "  ✅ Live progress tracking in conversation"
+        echo "  ✅ 7 specialist droids for different tasks"
         echo "  ✅ Skills injection - Auto-enforce coding standards"
         echo "  ✅ 4 professional skill templates (TypeScript, Tailwind, Convex, Security)"
         echo "  ✅ GitHub helpers and status tools"

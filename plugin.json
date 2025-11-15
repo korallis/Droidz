@@ -1,7 +1,7 @@
 {
   "name": "droidz-claude-code",
   "displayName": "Droidz - Ultimate Claude Code Framework",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Multi-layer context management, automatic tech stack detection, intelligent optimization, and cross-session memory for Claude Code",
   "author": "Lee Barry",
   "license": "MIT",
