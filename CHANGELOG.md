@@ -2,6 +2,24 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.98] - 2025-11-15
+
+### Fixed - Critical Droid Naming Bug
+- **Fixed droidz-test.md failure** - Root cause: filename/name mismatch
+  - Factory.ai requires droid filename (without .md) to exactly match the `name:` field
+  - Renamed 6 droids to match their internal names:
+    - `test.md` → `droidz-test.md`
+    - `codegen.md` → `droidz-codegen.md`
+    - `generalist.md` → `droidz-generalist.md`
+    - `infra.md` → `droidz-infra.md`
+    - `integration.md` → `droidz-integration.md`
+    - `refactor.md` → `droidz-refactor.md`
+- Updated installer to download correct filenames
+- All 8 droids now have consistent naming (verified with validation script)
+
+### Root Cause Analysis
+The issue was inconsistent naming where some droids had filenames like `test.md` but internal names like `droidz-test`. Factory.ai's droid loader requires exact filename matches to function properly. This was causing invocation failures when users tried to use the test droid.
+
 ## [0.0.97] - 2025-11-14
 
 ### Added - QoL/UX Improvements (Factory.ai Research-Backed)

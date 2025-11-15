@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.0.97
-# Updated: 2025-11-14
+# Version: 0.0.98
+# Updated: 2025-11-15
 #
 
 set -euo pipefail
 
-VERSION="0.0.97"
+VERSION="0.0.98"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -247,7 +247,7 @@ main() {
     
     # Droids
     log_info "Downloading helper droids..."
-    for droid in droidz-parallel droidz-orchestrator codegen test refactor integration infra generalist; do
+    for droid in droidz-parallel droidz-orchestrator droidz-codegen droidz-test droidz-refactor droidz-integration droidz-infra droidz-generalist; do
         download_file "$REPO_URL/.factory/droids/${droid}.md" ".factory/droids/${droid}.md" "$droid droid"
     done
     
