@@ -2,6 +2,12 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.94] - 2025-11-14
+
+### Changed
+- Version bumped to 0.0.94 for user testing of command fixes
+- Ready for testing: /status, /watch, /gh-helper, /parallel-watch, /auto-parallel
+
 ## [0.0.93] - 2025-11-14
 
 ### Fixed
