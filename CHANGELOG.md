@@ -2,6 +2,36 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.96] - 2025-11-14
+
+### Fixed
+- **Complete Architecture Audit** - Systematic review and fix of all commands and droids
+  - Fixed `/parallel.md` - Had same delegation issue as `/auto-parallel.md`
+  - Rewrote to contain orchestration workflow directly (not delegate to failing droid)
+  - Audited all 8 commands and 8 droids for Factory.ai architecture compliance
+  
+### Audit Results
+**Commands Fixed:**
+- ✅ `/auto-parallel.md` - Fixed in 0.0.95 (contains workflow directly)
+- ✅ `/parallel.md` - Fixed in 0.0.96 (contains workflow directly)
+
+**Commands Already Correct:**
+- ✅ `/attach.md`, `/status.md`, `/summary.md`, `/watch.md` - Simple wrappers
+- ✅ `/gh-helper.md`, `/parallel-watch.md` - Simple wrappers
+
+**Droids - Specialist Helpers (Correct Size):**
+- ✅ `codegen.md` - 150 lines (reasonable specialist)
+- ✅ `test.md` - 144 lines (reasonable specialist)
+- ✅ `generalist.md`, `infra.md`, `integration.md`, `refactor.md` - 55-57 lines (perfect)
+
+**Droids - Complex But Not Invoked:**
+- ⚠️ `droidz-orchestrator.md` - 714 lines (too complex, but not invoked by commands)
+- ⚠️ `droidz-parallel.md` - 367 lines (too complex, but not invoked anymore)
+- Note: Left in place for documentation/reference, but slash commands now handle orchestration
+
+### Changed
+- Version bumped to 0.0.96 across all files
+
 ## [0.0.95] - 2025-11-14
 
 ### Fixed

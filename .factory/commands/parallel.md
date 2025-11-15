@@ -3,21 +3,31 @@ description: One-command orchestration - analyzes request and executes in parall
 argument-hint: "task description"
 ---
 
-I need you to orchestrate this task using the Droidz parallel orchestration system:
+I will orchestrate this task using parallel execution for maximum efficiency.
 
-**User Request:** $ARGUMENTS
+**Task:** $ARGUMENTS
 
-Please use the `droidz-parallel` specialist droid to:
+## Step 1: Analyze and Break Down
 
-1. Analyze the request and break it into 3-7 discrete tasks
-2. Generate a tasks.json file with dependencies
-3. Use the dependency resolver to create an optimal execution plan
-4. Execute tasks in parallel phases using the orchestrator
+I'll analyze the request to identify 3-5 discrete, parallelizable components. For each component, I'll determine:
+- What can be done independently vs. sequentially
+- Which specialist droid is best suited (droidz-codegen, droidz-test, droidz-refactor, droidz-integration, droidz-infra)
+- Dependencies between tasks
 
-The droidz-parallel droid knows how to:
-- Create proper task breakdowns with dependencies
-- Assign the right specialist droids (codegen, test, refactor, integration, infra)
-- Generate tasks.json in the correct format
-- Execute `.factory/scripts/orchestrator.sh --tasks [file]`
+## Step 2: Create Execution Plan
 
-Start the orchestration now and report progress.
+Using TodoWrite, I'll create a clear task list showing:
+- Phase 1 tasks (can start immediately in parallel)
+- Phase 2+ tasks (depend on earlier phases)
+- Estimated time for each task
+- Expected total time vs. sequential execution
+
+## Step 3: Execute in Parallel
+
+I'll use the Task tool to spawn specialist droids for each Phase 1 task simultaneously, achieving 3-5x faster execution.
+
+## Step 4: Monitor Progress
+
+I'll track completion and automatically spawn Phase 2 tasks when their dependencies complete.
+
+Let me begin the analysis and orchestration now...
