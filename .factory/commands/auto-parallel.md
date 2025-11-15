@@ -25,28 +25,26 @@ Using TodoWrite, I'll create a task list showing:
 
 I'll use the Task tool to spawn specialist droids for each Phase 1 task simultaneously.
 
-## Step 4: Monitor and Guide
+## Step 4: Monitor and Report
 
-After spawning droids, I'll display:
+After spawning droids, progress will appear directly in this conversation:
 
 ╔══════════════════════════════════════════════════════════╗
 ║  ✅ Parallel Execution Started!                          ║
 ╚══════════════════════════════════════════════════════════╝
 
-📊 MONITOR LIVE PROGRESS
+📊 LIVE PROGRESS TRACKING
 
-For real-time updates:
+Task tool provides real-time updates:
+  • Task spawn notifications appear immediately
+  • Droid progress updates stream to conversation
+  • TodoWrite shows status changes live
+  • Completion results return automatically
 
-    /watch
-
-This shows:
-  • ✓ Completed tasks
-  • ⏳ In progress  
-  • ⏸ Pending
-  • Live progress bars
-
-Other commands:
-  • /status - Quick overview
-  • /summary [id] - Detailed breakdown
+You'll see:
+  ✓ "TASK (droidz-codegen: 'Build API') ✅ Task completed"
+  ⏳ "TASK (droidz-test: 'Write tests') - In progress..."
+  
+All updates appear directly here - no separate monitoring needed!
 
 Let me begin the analysis now...
