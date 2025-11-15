@@ -2,6 +2,18 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.0.93] - 2025-11-14
+
+### Fixed
+- **Auto-Parallel Command Not Executing** - Fixed `/auto-parallel` showing conversational text instead of executing
+  - Rewrote auto-parallel.md to use clear instruction format ("Please invoke..." instead of "I'll orchestrate...")
+  - Changed first-person narrative to imperative command structure
+  - Now properly invokes droidz-parallel specialist droid
+  - Factory.ai now executes the command instead of treating it as text to display
+
+### Changed
+- Version bumped to 0.0.93 across all files
+
 ## [0.0.92] - 2025-11-14
 
 ### Fixed

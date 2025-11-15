@@ -6,11 +6,11 @@ cd "$(dirname "$0")"
 cat << 'EOF'
 
 ╔══════════════════════════════════════════════════════════════╗
-║  ✅ DROIDZ v0.0.92 - INSTALLATION STATUS                     ║
+║  ✅ DROIDZ v0.0.93 - INSTALLATION STATUS                     ║
 ╚══════════════════════════════════════════════════════════════╝
 
 📦 INSTALLATION COMPLETE
-  • All v0.0.92 features deployed
+  • All v0.0.93 features deployed
   • All documentation updated
   • All commands available
 

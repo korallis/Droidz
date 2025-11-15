@@ -3,34 +3,42 @@ description: Orchestrate tasks in parallel with automatic live monitoring
 argument-hint: "task description"
 ---
 
-I'll orchestrate this task using Droidz parallel orchestration with automatic live monitoring:
+Please invoke the droidz-parallel specialist droid to orchestrate this task in parallel.
 
-**User Request:** $ARGUMENTS
+**Task:** $ARGUMENTS
 
-Please use the `droidz-parallel` specialist droid to:
+Use the Task tool to call droidz-parallel:
+```
+subagent_type: droidz-parallel
+description: Parallel orchestration
+prompt: Orchestrate this task in parallel: $ARGUMENTS
 
-1. Analyze the request and break it into 3-7 discrete tasks
-2. Generate a tasks.json file with dependencies
-3. Execute the orchestrator to create worktrees and spawn specialist droids
-4. **After spawning droids, automatically start live monitoring**
+Break down the task into 3-7 discrete components, generate tasks.json with 
+dependencies, and execute the orchestrator to spawn specialist droids.
 
-The droidz-parallel droid will:
-- Create optimal task breakdown
-- Spawn Task() calls for each specialist
-- Set up parallel execution infrastructure
-- **Then use Execute to run the /watch command for real-time monitoring**
-
-Start the orchestration now and show live progress updates.
-
-**Important:** After spawning all Phase 1 droids, execute:
-```bash
-# Run watch in the background with output to user
-.factory/commands/watch.sh
+After orchestration starts, remind the user to run `/watch` for live monitoring.
 ```
 
-This will show real-time progress with:
-- ✓ Completed tasks
-- ⏳ Tasks in progress  
-- ⏸ Pending tasks
-- Progress bar visualization
-- Active tmux sessions
+The droidz-parallel droid will:
+- Analyze the request and create optimal task breakdown
+- Generate tasks.json with dependencies
+- Execute `.factory/scripts/orchestrator.sh` to spawn parallel droids
+- Set up worktrees and tmux sessions
+
+After the droid completes, display:
+
+╔══════════════════════════════════════════════════════════╗
+║  ✅ Orchestration Started!                               ║
+╚══════════════════════════════════════════════════════════╝
+
+📊 NEXT STEP: Monitor live progress
+
+Run this command to see real-time updates:
+
+    /watch
+
+This will show:
+  • ✓ Completed tasks
+  • ⏳ Tasks in progress
+  • ⏸ Pending tasks
+  • Live progress bars
