@@ -1,7 +1,7 @@
 ---
 name: droidz-codegen
 description: PROACTIVELY USED for implementing features and bugfixes with comprehensive tests. Auto-invokes when user requests feature implementation, bug fixes, or code generation in isolated workspace.
-model: sonnet
+model: claude-sonnet-4-5-20250929
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 

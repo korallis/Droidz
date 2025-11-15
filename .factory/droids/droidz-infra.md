@@ -1,7 +1,7 @@
 ---
 name: droidz-infra
 description: PROACTIVELY USED for CI/CD, build tooling, deployment configs, and infrastructure. Auto-invokes when user mentions CI, pipelines, builds, deployment, Docker, GitHub Actions, or infrastructure changes.
-model: sonnet
+model: claude-sonnet-4-5-20250929
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 

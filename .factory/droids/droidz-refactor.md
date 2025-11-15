@@ -1,7 +1,7 @@
 ---
 name: droidz-refactor
 description: PROACTIVELY USED for code refactoring and structural improvements. Auto-invokes when user mentions refactoring, code cleanup, improving code structure, reducing duplication, or enhancing maintainability. Ensures no behavior changes.
-model: sonnet
+model: claude-sonnet-4-5-20250929
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 
