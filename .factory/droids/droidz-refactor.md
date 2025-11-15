@@ -40,6 +40,32 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 
 **Key Principle**: If a tool helps you refactor code better/safer, use it without asking.
 
+## Progress Reporting (CRITICAL UX)
+
+**Users need to see what you're doing!** Use TodoWrite every 30-60 seconds:
+
+```typescript
+// At start
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze code for refactoring opportunities", status: "in_progress", priority: "high"},
+    {id: "2", content: "Apply refactoring patterns", status: "pending", priority: "high"},
+    {id: "3", content: "Verify tests still pass", status: "pending", priority: "high"}
+  ]
+});
+
+// After analysis
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze code ✅ (found 3 improvements)", status: "completed", priority: "high"},
+    {id: "2", content: "Apply refactoring patterns (extracting functions...)", status: "in_progress", priority: "high"},
+    {id: "3", content: "Verify tests still pass", status: "pending", priority: "high"}
+  ]
+});
+```
+
+**Update every 60 seconds or after major steps.**
+
 ## Constraints
 
 - Use Bun (bun run/test) only; do not use npm or npx.

@@ -301,6 +301,28 @@ Build a complete JWT-based authentication API with:
    - Extract user ID from token
    - Attach user to request object
 
+## CRITICAL: Progress Reporting
+⏰ **USE TodoWrite EVERY 60 SECONDS** to report what you're doing!
+
+Users need to see progress during long-running work. Update your todo list:
+- At task start (create initial todos)
+- Every 60 seconds during work
+- After each major step completes
+- When running long commands
+
+Example:
+\`\`\`typescript
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze codebase ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Implement login endpoint (creating route...)", status: "in_progress", priority: "high"},
+    {id: "3", content: "Write tests", status: "pending", priority: "medium"}
+  ]
+});
+\`\`\`
+
+This prevents users from waiting with no feedback!
+
 ## Standards to Follow
 Read .factory/standards/templates/nextjs.md and typescript.md for patterns.
 

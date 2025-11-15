@@ -67,6 +67,57 @@ When delegated by user, you get:
 - Use Read/Grep to understand existing code patterns
 - Match the project's coding style and conventions
 
+### 2. **Report Progress Regularly (CRITICAL UX)**
+
+**Users need to see what you're doing!** Use TodoWrite to report progress every 30-60 seconds during long-running work:
+
+```typescript
+// At task start
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze codebase structure", status: "in_progress", priority: "high"},
+    {id: "2", content: "Implement feature logic", status: "pending", priority: "high"},
+    {id: "3", content: "Write tests", status: "pending", priority: "medium"},
+    {id: "4", content: "Run tests and verify", status: "pending", priority: "medium"}
+  ]
+});
+
+// After analyzing (60 seconds later)
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze codebase structure ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Implement feature logic (creating API endpoints...)", status: "in_progress", priority: "high"},
+    {id: "3", content: "Write tests", status: "pending", priority: "medium"},
+    {id: "4", content: "Run tests and verify", status: "pending", priority: "medium"}
+  ]
+});
+
+// After implementation (another 60 seconds)
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze codebase structure ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Implement feature logic ✅ (5 files created)", status: "completed", priority: "high"},
+    {id: "3", content: "Write tests (writing unit tests...)", status: "in_progress", priority: "medium"},
+    {id: "4", content: "Run tests and verify", status: "pending", priority: "medium"}
+  ]
+});
+```
+
+**When to update:**
+- ✅ Task start (create initial todo list)
+- ✅ Every 60 seconds during long operations (file reading, implementation, testing)
+- ✅ After completing each major step
+- ✅ When running long commands (tests, builds)
+- ✅ Final update when complete
+
+**What to include:**
+- Current step you're working on
+- What you're doing right now ("creating components...", "running tests...")
+- Files created/modified count
+- Test results
+
+This prevents users from staring at a blank screen wondering if you're working!
+
 ### 3. Implement Feature
 
 - **Create new files** with Create tool

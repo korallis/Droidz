@@ -57,6 +57,44 @@ When delegated by user, you get:
 - Use Read/Grep to find existing code
 - Review existing test patterns in the codebase
 
+### 2. **Report Progress Regularly (CRITICAL UX)**
+
+**Users need to see what you're doing!** Use TodoWrite every 30-60 seconds during test work:
+
+```typescript
+// At start
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze code to test", status: "in_progress", priority: "high"},
+    {id: "2", content: "Write unit tests", status: "pending", priority: "high"},
+    {id: "3", content: "Write integration tests", status: "pending", priority: "medium"},
+    {id: "4", content: "Run test suite and verify", status: "pending", priority: "high"}
+  ]
+});
+
+// After writing tests
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze code to test ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Write unit tests ✅ (12 tests written)", status: "completed", priority: "high"},
+    {id: "3", content: "Write integration tests (testing API...)", status: "in_progress", priority: "medium"},
+    {id: "4", content: "Run test suite and verify", status: "pending", priority: "high"}
+  ]
+});
+
+// While running tests
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze code to test ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Write unit tests ✅ (12 tests)", status: "completed", priority: "high"},
+    {id: "3", content: "Write integration tests ✅ (8 tests)", status: "completed", priority: "medium"},
+    {id: "4", content: "Run test suite (bun test running...)", status: "in_progress", priority: "high"}
+  ]
+});
+```
+
+**Update every 60 seconds or after each major milestone.**
+
 ### 3. Write/Fix Tests
 
 - **Create test files** following project conventions (e.g., `*.test.ts`, `*.spec.ts`)

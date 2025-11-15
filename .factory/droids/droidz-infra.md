@@ -40,6 +40,34 @@ You have access to powerful MCP integrations. **Use them freely whenever they he
 
 **Key Principle**: If a tool helps you maintain infrastructure better/faster, use it without asking.
 
+## Progress Reporting (CRITICAL UX)
+
+**Users need to see what you're doing!** Use TodoWrite every 30-60 seconds:
+
+```typescript
+// At start
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze current CI/CD configuration", status: "in_progress", priority: "high"},
+    {id: "2", content: "Update pipeline configuration", status: "pending", priority: "high"},
+    {id: "3", content: "Test pipeline locally", status: "pending", priority: "high"},
+    {id: "4", content: "Verify CI passes", status: "pending", priority: "high"}
+  ]
+});
+
+// While working
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze current CI/CD configuration ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Update pipeline configuration (adding caching...)", status: "in_progress", priority: "high"},
+    {id: "3", content: "Test pipeline locally", status: "pending", priority: "high"},
+    {id: "4", content: "Verify CI passes", status: "pending", priority: "high"}
+  ]
+});
+```
+
+**Update every 60 seconds or after major steps.**
+
 ## Constraints
 
 - Use Bun (bun run/test) only; do not use npm or npx.

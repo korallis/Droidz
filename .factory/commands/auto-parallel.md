@@ -35,16 +35,34 @@ After spawning droids, progress will appear directly in this conversation:
 
 📊 LIVE PROGRESS TRACKING
 
-Task tool provides real-time updates:
-  • Task spawn notifications appear immediately
-  • Droid progress updates stream to conversation
-  • TodoWrite shows status changes live
-  • Completion results return automatically
+Each droid reports progress every 60 seconds using TodoWrite:
 
-You'll see:
-  ✓ "TASK (droidz-codegen: 'Build API') ✅ Task completed"
-  ⏳ "TASK (droidz-test: 'Write tests') - In progress..."
-  
-All updates appear directly here - no separate monitoring needed!
+**What You'll See:**
+```
+TODO LIST UPDATED
+
+✅ Analyze codebase structure (completed)
+⏳ Implement login API (creating endpoints...)
+⏸ Write tests (pending)
+⏸ Run test suite (pending)
+```
+
+**Progress Updates Include:**
+  • Current step the droid is working on
+  • What it's doing right now ("creating components...", "running tests...")
+  • Files created/modified count
+  • Test results as they complete
+
+**Task Completion:**
+```
+TASK (droidz-codegen: 'Build API') ✅ Completed
+- 5 files created
+- All tests passing
+- Ready for review
+```
+
+All updates stream directly to this conversation - no separate monitoring needed!
+
+**Expected Timeline:** Each droid updates every 60 seconds during long operations.
 
 Let me begin the analysis now...
