@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.3.0
+# Version: 0.4.0
 # Updated: 2025-01-16
 #
 
 set -euo pipefail
 
-VERSION="0.3.0"
+VERSION="0.4.0"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors

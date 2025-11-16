@@ -2,7 +2,7 @@
 
 **Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
-> **v0.3.0** - **MASSIVE UPDATE**: 5 comprehensive skills (4,668 lines) for Next.js 16, Supabase, Tailwind v4, TypeScript, and Convex. **Production-ready guidance auto-loads based on your code.** Plus: AI-powered spec generation and 3-5x faster parallel execution.
+> **v0.4.0** - **MASSIVE UPDATE**: 21 comprehensive skills (31,296 lines) covering full-stack development! React, Prisma, PostgreSQL, Drizzle, tRPC, Stripe, Clerk, Vercel, Cloudflare, Tanstack Query + upgraded Neon, Design, Security. **Production-ready guidance auto-loads based on your code.** Plus: AI-powered spec generation and 3-5x faster parallel execution.
 
 ---
 
@@ -38,23 +38,37 @@ droid
 
 Droidz is a framework for [Factory.ai](https://factory.ai) that adds:
 
-1. **🎓 Comprehensive Skills System** - 5 massive skills (4,668 lines) auto-load based on your code
+1. **🎓 Comprehensive Skills System** - 21 massive skills (31,296 lines) auto-load based on your code
 2. **🚀 AI-Powered Spec Generator** - `/droidz-build` transforms vague ideas into production-ready specifications
 3. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
 4. **📊 Live Progress Tracking** - See what's happening every 60 seconds
 
-### 🔥 NEW in v0.3.0: Comprehensive Skills System
+### 🔥 NEW in v0.4.0: Complete Full-Stack Skills System
 
 Factory.ai automatically loads **production-ready coding standards** based on your code context:
 
 | Skill | Lines | Coverage |
 |-------|-------|----------|
-| **Next.js 16** | 1,053 | App Router, React 19, Server Components, Async APIs |
-| **Supabase** | 963 | RLS, Realtime, Auth, Storage, Edge Functions |
-| **Tailwind v4** | 963 | CSS-first config, Container Queries, 3D Transforms |
+| **Vercel** | 2,443 | Deployment, Edge Functions, Analytics, Domains |
+| **Clerk** | 2,361 | Auth, User Mgmt, Organizations, Webhooks |
+| **Security** | 2,337 | OWASP Top 10, Auth Patterns, Vulnerabilities |
+| **React** | 2,232 | Hooks, Patterns, Server Components, Performance |
+| **PostgreSQL** | 2,089 | Indexing, Queries, Optimization, Transactions |
+| **Prisma** | 2,072 | Migrations, Relations, Queries, TypeScript |
+| **Drizzle ORM** | 1,992 | Type-safe Queries, Migrations, Relations |
+| **Cloudflare** | 1,927 | Workers, KV, Durable Objects, R2, Edge |
+| **tRPC** | 1,815 | Type Safety, Routers, Middleware, Validation |
+| **Tanstack Query** | 1,729 | Caching, Mutations, Pagination, Optimistic |
+| **Stripe** | 1,686 | Payments, Webhooks, Subscriptions, Security |
+| **Neon** | 1,304 | Database Branching, Migrations, Serverless |
+| **Design** | 1,297 | Accessibility, Responsive, Design Systems |
+| **Next.js 16** | 1,053 | App Router, Server Components, Async APIs |
+| **Supabase** | 963 | RLS, Realtime, Auth, Storage |
+| **Tailwind v4** | 963 | CSS-first, Container Queries, 3D Transforms |
 | **TypeScript** | 871 | Generics, Utility Types, Advanced Patterns |
-| **Convex** | 818 | Official rules, Functions, Validators, Realtime |
-| **TOTAL** | **4,668** | **Based on official documentation** |
+| **Convex** | 818 | Realtime, Functions, Validators |
+| **+ 3 Utility** | 1,344 | Tech Stack Analyzer, Standards, Context |
+| **TOTAL** | **31,296** | **All based on official documentation** |
 
 **How it works:**
 - Write Next.js code → Next.js 16 skill auto-loads (1,053 lines of guidance)
@@ -165,9 +179,9 @@ TODO LIST UPDATED
 ⏳ Frontend UI (building forms...)
 ```
 
-### 🎓 Comprehensive Skills System (NEW in v0.3.0)
+### 🎓 Comprehensive Skills System (NEW in v0.4.0)
 
-**5 Massive Skills (4,668 Lines Total) - All Based on Official Documentation**
+**21 Massive Skills (31,296 Lines Total) - All Based on Official Documentation**
 
 Factory.ai automatically loads production-ready coding standards from `.factory/skills/`:
 
