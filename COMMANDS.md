@@ -7,9 +7,56 @@
 
 ## 🎯 All Available Commands
 
-Droidz has **3 simple commands**. Here they are:
+Droidz has **4 simple commands**. Here they are:
 
-### 1. `/droidz-build` - AI-Powered Spec Generator 🆕
+### 1. `/droidz-init` - Smart Onboarding 🆕
+
+**Purpose:** Verify installation, analyze project, generate architecture docs
+
+**Usage:**
+```
+/droidz-init
+```
+
+**Optional arguments:**
+```
+/droidz-init frontend    # Focus on frontend analysis
+/droidz-init backend     # Focus on backend analysis
+/droidz-init fullstack   # Analyze both
+```
+
+**What it does:**
+- ✅ Verifies Droidz installation (all commands & droids)
+- 🔍 Detects project type (greenfield vs brownfield)
+- 📊 Analyzes tech stack (framework, database, UI library)
+- 📁 Maps codebase architecture
+- 📄 Generates `.droidz/architecture.md` documentation
+- 💾 Creates `.droidz/project.json` metadata
+- 🎯 Provides personalized next steps
+
+**When to use:**
+- First time using Droidz in a project
+- Want to verify installation
+- Need architecture documentation
+- Onboarding new team members
+
+**Output:**
+- `.droidz/architecture.md` - Complete project analysis
+- `.droidz/project.json` - Structured metadata
+- Recommendations for next steps
+
+**Example output:**
+```
+✅ Installation verified - all 7 droids present
+📊 Project: Brownfield (Existing Next.js 14 app)
+📁 156 TypeScript files, 47 dependencies
+📄 Generated: .droidz/architecture.md
+🎯 Next: /droidz-build "add user authentication"
+```
+
+---
+
+### 2. `/droidz-build` - AI-Powered Spec Generator
 
 **Purpose:** Transform vague ideas into production-ready specifications
 
@@ -46,7 +93,7 @@ Droidz has **3 simple commands**. Here they are:
 
 ---
 
-### 2. `/auto-parallel` - Parallel Task Execution
+### 3. `/auto-parallel` - Parallel Task Execution
 
 **Purpose:** Execute tasks in parallel with automatic progress tracking
 
@@ -80,7 +127,7 @@ TODO LIST UPDATED
 
 ---
 
-### 3. `/gh-helper` - GitHub CLI Helpers
+### 4. `/gh-helper` - GitHub CLI Helpers
 
 **Purpose:** GitHub operations with correct JSON field names
 
@@ -111,19 +158,27 @@ TODO LIST UPDATED
 
 ## 📋 Command Comparison
 
-| Feature | /droidz-build | /auto-parallel | /gh-helper |
-|---------|---------------|----------------|------------|
-| **Purpose** | Generate specs | Execute tasks | GitHub ops |
-| **When to use** | Planning features | Building code | PR management |
-| **Output** | Specification file | Working code | PR status |
-| **Time** | 1-5 minutes | 1-4 hours | Instant |
-| **Parallelization** | N/A | Yes (3-5x faster) | N/A |
+| Feature | /droidz-init | /droidz-build | /auto-parallel | /gh-helper |
+|---------|--------------|---------------|----------------|------------|
+| **Purpose** | Onboard & analyze | Generate specs | Execute tasks | GitHub ops |
+| **When to use** | First time setup | Planning features | Building code | PR management |
+| **Output** | Architecture docs | Spec file | Working code | PR status |
+| **Time** | 1-2 minutes | 1-5 minutes | 1-4 hours | Instant |
+| **Parallelization** | N/A | N/A | Yes (3-5x faster) | N/A |
 
 ---
 
 ## 🎯 Common Workflows
 
-### Workflow 1: Generate Spec → Execute
+### Workflow 1: First Time Setup → Build
+```
+1. /droidz-init                      # Verify & analyze
+2. Review .droidz/architecture.md    # Understand project
+3. /droidz-build "add authentication" # Generate spec
+4. Choose "Execute in parallel"       # Build it
+```
+
+### Workflow 2: Generate Spec → Execute
 ```
 1. /droidz-build "add authentication"
 2. Answer clarifying questions
@@ -131,13 +186,13 @@ TODO LIST UPDATED
 4. Choose "Execute in parallel"
 ```
 
-### Workflow 2: Direct Execution
+### Workflow 3: Direct Execution
 ```
 1. /auto-parallel "build REST API"
 2. Monitor progress in conversation
 ```
 
-### Workflow 3: PR Management
+### Workflow 4: PR Management
 ```
 1. Create PR via git/GitHub
 2. /gh-helper pr-status <number>
@@ -165,19 +220,21 @@ These commands no longer exist (removed in v0.1.3):
 
 These commands are planned but not yet implemented:
 
-- `/droidz-init` - Smart project initialization
 - `/droidz-status` - Resume conversations with state tracking
+- Spec execution tracking in `.droidz/tasks/`
 
 ---
 
 ## 🤔 Which Command Should I Use?
 
 **If you want to:**
+- **Get started / verify setup** → `/droidz-init`
+- **Understand your project** → `/droidz-init`
 - **Plan a feature carefully** → `/droidz-build`
 - **Build something quickly** → `/auto-parallel`
 - **Check a GitHub PR** → `/gh-helper`
 
-**Pro tip:** For complex features, use `/droidz-build` first to generate a comprehensive spec, then execute it in parallel for 3-5x speedup!
+**Pro tip:** Run `/droidz-init` first to verify everything, then use `/droidz-build` to plan features, and execute them in parallel for 3-5x speedup!
 
 ---
 
@@ -190,4 +247,4 @@ These commands are planned but not yet implemented:
 
 ---
 
-**Current Version:** v0.2.0 | **Commands:** 3 | **Last Updated:** 2025-11-15
+**Current Version:** v0.2.0 | **Commands:** 4 | **Last Updated:** 2025-11-15
