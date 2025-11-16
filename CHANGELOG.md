@@ -2,6 +2,29 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.5.1] - 2025-11-16
+
+### 🔧 Fixed
+- **Skills injection hooks** - Added missing hook scripts that were causing 404 errors during installation
+  - Created `inject-skills.sh` (157 lines) - UserPromptSubmit hook for prompt-based skill detection
+  - Created `inject-file-skills.sh` (149 lines) - PreToolUse hook for file-type-based skill detection
+  - Created `load-project-skills.sh` (146 lines) - SessionStart hook for project structure analysis
+- **Installer bug** - Fixed incorrect skill filename reference (`tailwind-4` → `tailwind-v4`)
+
+### 📦 What's Included
+- **452 lines of hook scripts** - Complete skills injection system now fully functional
+- **Automatic skill loading** - Skills auto-load based on project structure, prompts, and file types
+- **20+ skill detectors** - TypeScript, React, Next.js, Tailwind, Convex, Prisma, Drizzle, Stripe, Clerk, and more
+
+### 🎯 Impact
+- ✅ Installer now completes successfully without errors
+- ✅ Skills system works out of the box
+- ✅ 100% feature parity with Claude Code's skills system
+
+### 📝 Commits
+- `4cfe50b` - feat: add skills injection hook scripts
+- `470bbb6` - fix: correct tailwind skill filename in installer
+
 ## [0.5.0] - 2025-01-16
 
 ### 🔥 COMPLETE DEVELOPMENT LIFECYCLE - 40 Comprehensive Skills (35,552 Lines!)
