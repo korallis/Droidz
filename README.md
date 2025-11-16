@@ -147,24 +147,40 @@ TODO LIST UPDATED
 
 ### 🎓 Skills System
 
-**Automatic code standards enforcement**
+**Automatic code standards enforcement** - Factory.ai automatically loads skills from `.factory/skills/`
 
-Skills auto-inject when you work on code:
-- **TypeScript** - Strict mode, proper types, JSDoc
-- **Tailwind 4** - v4 syntax, modern patterns
-- **Security** - OWASP compliance, input validation
-- **Convex** - Best practices for queries/mutations
+**Available Skills:**
+- **Next.js 15** - App Router, Server Components, Server Actions
+- **Supabase** - RLS policies, Realtime, Auth best practices
+- **Neon** - Database branching, serverless driver, autoscaling
+- **Design (UI/UX)** - Component patterns, accessibility, design systems
+- **TypeScript** - Strict mode, proper types, no `any`
+- **Tailwind 4** - v4 syntax, modern patterns, dark mode
+- **Security** - OWASP compliance, input validation, auth
+- **Convex** - Queries, mutations, reactivity patterns
+
+**How it works:**
+Factory.ai droid CLI automatically loads all `.md` files from `.factory/skills/` and injects relevant best practices when you work on code.
 
 **Example:**
 ```
-You: "Create a TypeScript component for user profile"
+You: "Create a Next.js Server Action for login"
 
-Droid: [TypeScript skill auto-injected]
-       Creating component with:
-       ✅ Strict type definitions
-       ✅ JSDoc comments
-       ✅ Proper interface exports
-       ✅ No 'any' types
+Droid: [Next.js 15 + Security skills auto-loaded]
+       Creating secure server action with:
+       ✅ 'use server' directive
+       ✅ Zod input validation
+       ✅ bcrypt password hashing
+       ✅ Rate limiting
+       ✅ Proper error handling
+```
+
+**Add your own skills:**
+```bash
+# Create custom skill
+vim .factory/skills/react.md
+
+# Skill automatically loads on next droid start
 ```
 
 ---
