@@ -2,6 +2,31 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.5.2] - 2025-11-16
+
+### 🔧 Fixed
+- **Installer downloads all 41 skills** - Previously only downloaded 4 of 41 available skills
+  - Now downloads all 21 framework/integration skills
+  - Now downloads all 19 workflow/process skills (adapted from obra/superpowers)
+  - Now downloads ADAPTATION_GUIDE.md
+  
+### 📦 Complete Skills Library (41 Total)
+
+**Framework & Integration Skills (21):**
+TypeScript, React, Next.js 16, Tailwind v4, Convex, Prisma, Drizzle, PostgreSQL, Supabase, Neon, Clerk, Stripe, Vercel, Cloudflare Workers, tRPC, TanStack Query, Security, Design, Context Optimizer, Standards Enforcer, Tech Stack Analyzer
+
+**Workflow & Process Skills (19 - from obra/superpowers):**
+Test-Driven Development, Systematic Debugging, Verification Before Completion, Defense-in-Depth, Testing Anti-Patterns, Brainstorming, Writing Skills, Executing Plans, Requesting Code Review, Receiving Code Review, Root Cause Tracing, Subagent-Driven Development, Finishing Development Branch, Using Git Worktrees, Condition-Based Waiting, Dispatching Parallel Agents, Testing Skills with Subagents, Sharing Skills, Using Droidz
+
+### 🎯 Impact
+- ✅ Users now get the complete 41-skill library on installation
+- ✅ Full coverage of modern development stack
+- ✅ Complete development lifecycle support (from obra/superpowers)
+- ✅ 35,552 lines of comprehensive best practices
+
+### 📝 Commits
+- `377a2ba` - fix: installer now downloads all 41 comprehensive skills
+
 ## [0.5.1] - 2025-11-16
 
 ### 🔧 Fixed
