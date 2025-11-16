@@ -1,8 +1,8 @@
 # 🤖 Droidz - AI-Powered Development Framework for Factory.ai
 
-**Transform vague ideas into production-ready code with AI-generated specifications and parallel task execution.**
+**Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
-> **v0.2.0** - Now with `/droidz-build`: Turn "add auth" into a comprehensive spec with security requirements, edge cases, tests, and ready-to-execute tasks. **80% less time writing specs, 3-5x faster execution.**
+> **v0.3.0** - **MASSIVE UPDATE**: 5 comprehensive skills (4,668 lines) for Next.js 16, Supabase, Tailwind v4, TypeScript, and Convex. **Production-ready guidance auto-loads based on your code.** Plus: AI-powered spec generation and 3-5x faster parallel execution.
 
 ---
 
@@ -38,10 +38,30 @@ droid
 
 Droidz is a framework for [Factory.ai](https://factory.ai) that adds:
 
-1. **🚀 AI-Powered Spec Generator** - `/droidz-build` transforms vague ideas into production-ready specifications
-2. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
-3. **🎓 Skills System** - Auto-inject coding standards (TypeScript, Tailwind, security best practices)
+1. **🎓 Comprehensive Skills System** - 5 massive skills (4,668 lines) auto-load based on your code
+2. **🚀 AI-Powered Spec Generator** - `/droidz-build` transforms vague ideas into production-ready specifications
+3. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
 4. **📊 Live Progress Tracking** - See what's happening every 60 seconds
+
+### 🔥 NEW in v0.3.0: Comprehensive Skills System
+
+Factory.ai automatically loads **production-ready coding standards** based on your code context:
+
+| Skill | Lines | Coverage |
+|-------|-------|----------|
+| **Next.js 16** | 1,053 | App Router, React 19, Server Components, Async APIs |
+| **Supabase** | 963 | RLS, Realtime, Auth, Storage, Edge Functions |
+| **Tailwind v4** | 963 | CSS-first config, Container Queries, 3D Transforms |
+| **TypeScript** | 871 | Generics, Utility Types, Advanced Patterns |
+| **Convex** | 818 | Official rules, Functions, Validators, Realtime |
+| **TOTAL** | **4,668** | **Based on official documentation** |
+
+**How it works:**
+- Write Next.js code → Next.js 16 skill auto-loads (1,053 lines of guidance)
+- Write Supabase queries → Supabase skill auto-loads (963 lines of RLS, Auth patterns)
+- Write Tailwind classes → Tailwind v4 skill auto-loads (963 lines of modern CSS)
+- Write TypeScript → TypeScript skill auto-loads (871 lines of best practices)
+- No configuration needed - Factory.ai handles everything automatically!
 
 ### The Problem
 
@@ -145,42 +165,76 @@ TODO LIST UPDATED
 ⏳ Frontend UI (building forms...)
 ```
 
-### 🎓 Skills System
+### 🎓 Comprehensive Skills System (NEW in v0.3.0)
 
-**Automatic code standards enforcement** - Factory.ai automatically loads skills from `.factory/skills/`
+**5 Massive Skills (4,668 Lines Total) - All Based on Official Documentation**
 
-**Available Skills:**
-- **Next.js 15** - App Router, Server Components, Server Actions
-- **Supabase** - RLS policies, Realtime, Auth best practices
-- **Neon** - Database branching, serverless driver, autoscaling
-- **Design (UI/UX)** - Component patterns, accessibility, design systems
-- **TypeScript** - Strict mode, proper types, no `any`
-- **Tailwind 4** - v4 syntax, modern patterns, dark mode
-- **Security** - OWASP compliance, input validation, auth
-- **Convex** - Queries, mutations, reactivity patterns
+Factory.ai automatically loads production-ready coding standards from `.factory/skills/`:
+
+#### **1. Next.js 16 Skill (1,053 lines)**
+- ✅ **CRITICAL**: Async request APIs - `await params`, `await searchParams`, `await cookies()`, `await headers()`
+- ✅ Server Components (default), Client Components (when needed)
+- ✅ Server Actions with Zod validation
+- ✅ Data fetching (parallel, sequential, caching strategies)
+- ✅ Loading & Streaming with Suspense
+- ✅ Route handlers, Middleware, Metadata
+- ✅ Error handling (error.tsx, not-found.tsx)
+- ✅ Migration guide from Next.js 15 → 16
+
+#### **2. Supabase Skill (963 lines)**
+- ✅ RLS: Complete guide with performance optimization
+- ✅ Realtime: Broadcast, Presence, Postgres Changes with authorization
+- ✅ Authentication: Email/Password, OAuth, Magic Links, SSR for Next.js
+- ✅ Storage: Upload, download, signed URLs, RLS policies
+- ✅ Edge Functions: Deno with Auth context
+- ✅ Database: Typed queries, transactions, pagination, full-text search
+
+#### **3. Tailwind v4 Skill (963 lines)**
+- ✅ CSS-first configuration with `@theme`
+- ✅ Oxide engine (10x faster builds, 100x faster incremental)
+- ✅ Container queries (built-in, no plugin)
+- ✅ 3D transforms (rotate-x, rotate-y, translate-z, scale-z)
+- ✅ Gradients (linear, radial, conic with color interpolation)
+- ✅ `@starting-style` for entry animations
+- ✅ `not-*` variant, composable variants
+- ✅ Modern oklch colors (P3 wide gamut)
+
+#### **4. TypeScript Skill (871 lines)**
+- ✅ Strict mode configuration
+- ✅ Avoiding `any` (use `unknown`, generics)
+- ✅ Generics (functions, classes, interfaces, constraints)
+- ✅ Utility types (Partial, Pick, Omit, Record, ReturnType, Awaited, etc.)
+- ✅ Advanced types (conditional, infer, mapped, template literals)
+- ✅ Type guards, function overloads
+- ✅ Result type pattern for error handling
+
+#### **5. Convex Skill (818 lines)**
+- ✅ Official rules from convex.link/convex_rules.txt
+- ✅ New function syntax (args, returns, handler)
+- ✅ All validators, pagination, file storage
+- ✅ Cron jobs, HTTP endpoints
+- ✅ TypeScript best practices
 
 **How it works:**
-Factory.ai droid CLI automatically loads all `.md` files from `.factory/skills/` and injects relevant best practices when you work on code.
+```typescript
+// You write Next.js code...
+export default async function Page({ params }) {
+  const { id } = await params  // Next.js 16 skill auto-loads!
+}
 
-**Example:**
-```
-You: "Create a Next.js Server Action for login"
-
-Droid: [Next.js 15 + Security skills auto-loaded]
-       Creating secure server action with:
-       ✅ 'use server' directive
-       ✅ Zod input validation
-       ✅ bcrypt password hashing
-       ✅ Rate limiting
-       ✅ Proper error handling
+// Droid knows:
+// ✅ params must be awaited in Next.js 16
+// ✅ This is a breaking change from Next.js 15
+// ✅ searchParams, cookies(), headers() also need await
+// Plus 1,050+ more lines of Next.js 16 guidance
 ```
 
 **Add your own skills:**
 ```bash
-# Create custom skill
-vim .factory/skills/react.md
+# Create custom skill in .factory/skills/
+vim .factory/skills/your-framework.md
 
-# Skill automatically loads on next droid start
+# Factory.ai auto-loads it on next start
 ```
 
 ---
@@ -517,4 +571,36 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 **Built with ❤️ for the Factory.ai community**
 
-**Current Version:** v0.2.0 | **Last Updated:** 2025-11-15
+**Current Version:** v0.3.0 | **Last Updated:** 2025-01-16
+
+---
+
+## 🆕 What's New in v0.3.0
+
+### **Comprehensive Skills System (4,668 Lines)**
+
+We've created **5 massive, production-ready skills** based on official documentation:
+
+1. **Next.js 16** (1,053 lines) - Critical async API changes, Server Components, Server Actions
+2. **Supabase** (963 lines) - RLS optimization, Realtime authorization, SSR Auth
+3. **Tailwind v4** (963 lines) - CSS-first config, Container Queries, 3D transforms
+4. **TypeScript** (871 lines) - Generics, utility types, advanced patterns
+5. **Convex** (818 lines) - Official rules from Convex team
+
+**Every skill includes:**
+- ✅ Clear ✅ Good / ❌ Bad examples for every concept
+- ✅ Performance optimization tips
+- ✅ Migration guides (Next.js 15→16, Tailwind v3→v4)
+- ✅ Error handling patterns
+- ✅ Real-world usage examples
+
+**Research Method:**
+- Used exa-code MCP for latest documentation
+- Used ref MCP for official API references
+- All patterns verified against official docs
+
+**Impact:**
+- 10x more comprehensive than v0.2.0
+- Production-ready guidance
+- Auto-loads based on code context
+- No configuration needed
