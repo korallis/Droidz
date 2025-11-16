@@ -238,7 +238,7 @@ main() {
     
     # Skills
     log_info "Downloading professional skill templates..."
-    for skill in typescript tailwind-4 convex security; do
+    for skill in typescript tailwind-v4 convex security; do
         download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
     done
     
