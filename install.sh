@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-VERSION="0.5.1"
+VERSION="0.5.2"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -236,11 +236,21 @@ main() {
         chmod +x ".factory/hooks/${hook}.sh"
     done
     
-    # Skills
-    log_info "Downloading professional skill templates..."
-    for skill in typescript tailwind-v4 convex security; do
+    # Skills (all 41 comprehensive skills)
+    log_info "Downloading comprehensive skill library (41 skills)..."
+    
+    # Framework & Integration Skills (21)
+    for skill in typescript react nextjs-16 tailwind-v4 convex prisma drizzle postgresql supabase neon clerk stripe vercel cloudflare-workers trpc tanstack-query security design context-optimizer standards-enforcer tech-stack-analyzer; do
         download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
     done
+    
+    # Workflow & Process Skills (19 - adapted from obra/superpowers)
+    for skill in test-driven-development systematic-debugging verification-before-completion defense-in-depth testing-anti-patterns brainstorming writing-skills executing-plans requesting-code-review receiving-code-review root-cause-tracing subagent-driven-development finishing-a-development-branch using-git-worktrees condition-based-waiting dispatching-parallel-agents testing-skills-with-subagents sharing-skills using-droidz; do
+        download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
+    done
+    
+    # Meta/Guide Skills (2)
+    download_file "$REPO_URL/.factory/skills/ADAPTATION_GUIDE.md" ".factory/skills/ADAPTATION_GUIDE.md" "adaptation guide"
     
     # Configuration
     log_info "Downloading configuration..."
@@ -391,7 +401,8 @@ EOF
         echo ""
         echo "  ✅ /auto-parallel - Parallel task execution (3-5x faster)"
         echo "  ✅ 7 specialist droids for different tasks"
-        echo "  ✅ Skills injection - Auto-enforce coding standards"
+        echo "  ✅ 41 comprehensive skills - Auto-enforce coding standards"
+        echo "  ✅ Skills injection - Auto-loads based on project/prompts/files"
         echo "  ✅ Live progress tracking every 60 seconds"
         echo ""
         echo -e "${CYAN}Next Steps:${NC}"
