@@ -2,7 +2,7 @@
 
 **Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
-> **v0.4.0** - **MASSIVE UPDATE**: 21 comprehensive skills (31,296 lines) covering full-stack development! React, Prisma, PostgreSQL, Drizzle, tRPC, Stripe, Clerk, Vercel, Cloudflare, Tanstack Query + upgraded Neon, Design, Security. **Production-ready guidance auto-loads based on your code.** Plus: AI-powered spec generation and 3-5x faster parallel execution.
+> **v0.5.0** - **COMPLETE DEVELOPMENT LIFECYCLE**: 40 comprehensive skills (35,552 lines)! 21 framework skills (React, Prisma, PostgreSQL, etc.) + 19 workflow skills (TDD, systematic debugging, code reviews, planning, etc.). **Complete development lifecycle** from idea → design → implementation → testing → review → deployment. **Production-ready guidance auto-loads based on your code.**
 
 ---
 
@@ -38,37 +38,64 @@ droid
 
 Droidz is a framework for [Factory.ai](https://factory.ai) that adds:
 
-1. **🎓 Comprehensive Skills System** - 21 massive skills (31,296 lines) auto-load based on your code
+1. **🎓 Comprehensive Skills System** - 40 massive skills (35,552 lines) auto-load based on your code
 2. **🚀 AI-Powered Spec Generator** - `/droidz-build` transforms vague ideas into production-ready specifications
 3. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
 4. **📊 Live Progress Tracking** - See what's happening every 60 seconds
 
-### 🔥 NEW in v0.4.0: Complete Full-Stack Skills System
+### 🔥 NEW in v0.5.0: Complete Development Lifecycle
 
 Factory.ai automatically loads **production-ready coding standards** based on your code context:
 
+#### **Framework & Integration Skills (21)**
+
 | Skill | Lines | Coverage |
 |-------|-------|----------|
-| **Vercel** | 2,443 | Deployment, Edge Functions, Analytics, Domains |
-| **Clerk** | 2,361 | Auth, User Mgmt, Organizations, Webhooks |
-| **Security** | 2,337 | OWASP Top 10, Auth Patterns, Vulnerabilities |
-| **React** | 2,232 | Hooks, Patterns, Server Components, Performance |
-| **PostgreSQL** | 2,089 | Indexing, Queries, Optimization, Transactions |
-| **Prisma** | 2,072 | Migrations, Relations, Queries, TypeScript |
-| **Drizzle ORM** | 1,992 | Type-safe Queries, Migrations, Relations |
-| **Cloudflare** | 1,927 | Workers, KV, Durable Objects, R2, Edge |
-| **tRPC** | 1,815 | Type Safety, Routers, Middleware, Validation |
-| **Tanstack Query** | 1,729 | Caching, Mutations, Pagination, Optimistic |
-| **Stripe** | 1,686 | Payments, Webhooks, Subscriptions, Security |
-| **Neon** | 1,304 | Database Branching, Migrations, Serverless |
-| **Design** | 1,297 | Accessibility, Responsive, Design Systems |
-| **Next.js 16** | 1,053 | App Router, Server Components, Async APIs |
-| **Supabase** | 963 | RLS, Realtime, Auth, Storage |
-| **Tailwind v4** | 963 | CSS-first, Container Queries, 3D Transforms |
-| **TypeScript** | 871 | Generics, Utility Types, Advanced Patterns |
-| **Convex** | 818 | Realtime, Functions, Validators |
-| **+ 3 Utility** | 1,344 | Tech Stack Analyzer, Standards, Context |
-| **TOTAL** | **31,296** | **All based on official documentation** |
+| **Vercel** | 2,443 | Deployment, Edge Functions, Analytics |
+| **Clerk** | 2,361 | Auth, Organizations, Webhooks |
+| **Security** | 2,337 | OWASP Top 10, Vulnerabilities |
+| **React** | 2,232 | Hooks, Server Components, Performance |
+| **PostgreSQL** | 2,089 | Indexing, Optimization, Advanced SQL |
+| **Prisma** | 2,072 | Migrations, Relations, TypeScript |
+| **Drizzle ORM** | 1,992 | Type-safe Queries, Migrations |
+| **Cloudflare** | 1,927 | Workers, KV, Durable Objects, R2 |
+| **tRPC** | 1,815 | Type Safety, Routers, Middleware |
+| **Tanstack Query** | 1,729 | Caching, Mutations, Pagination |
+| **Stripe** | 1,686 | Payments, Webhooks, Subscriptions |
+| **Neon** | 1,304 | Database Branching, Serverless |
+| **Design** | 1,297 | Accessibility, Design Systems |
+| **Next.js 16** | 1,053 | App Router, Async APIs |
+| **Supabase** | 963 | RLS, Realtime, Auth |
+| **Tailwind v4** | 963 | CSS-first, Container Queries |
+| **TypeScript** | 871 | Generics, Utility Types |
+| **Convex** | 818 | Realtime, Functions |
+| **+ 3 Utility** | 1,344 | Stack Analyzer, Standards |
+
+#### **Workflow & Process Skills (19)**
+
+| Skill | Category | Focus |
+|-------|----------|-------|
+| **test-driven-development** | Testing | RED-GREEN-REFACTOR cycle |
+| **systematic-debugging** | Testing | 4-phase debugging framework |
+| **verification-before-completion** | Quality | Pre-completion checklist |
+| **defense-in-depth** | Testing | Multi-layer validation |
+| **testing-anti-patterns** | Testing | Common mistakes to avoid |
+| **brainstorming** | Collaboration | Design through questions |
+| **writing-skills** | Meta | Creating new skills |
+| **executing-plans** | Collaboration | Following plans step-by-step |
+| **requesting-code-review** | Collaboration | Pre-review checklist |
+| **receiving-code-review** | Collaboration | Responding to feedback |
+| **root-cause-tracing** | Development | Backward tracing technique |
+| **subagent-driven-development** | Development | Task-by-task with fresh agents |
+| **finishing-a-development-branch** | Development | Completion checklist |
+| **using-git-worktrees** | Development | Parallel work branches |
+| **condition-based-waiting** | Development | Replace arbitrary timeouts |
+| **dispatching-parallel-agents** | Advanced | Spawning multiple agents |
+| **testing-skills-with-subagents** | Meta | Validating skill quality |
+| **sharing-skills** | Meta | Publishing skills |
+| **using-droidz** | Meta | How to use this system |
+
+**TOTAL:** **40 Skills, 35,552 Lines** (All based on official documentation)
 
 **How it works:**
 - Write Next.js code → Next.js 16 skill auto-loads (1,053 lines of guidance)
