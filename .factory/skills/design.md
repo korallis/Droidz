@@ -607,4 +607,691 @@ When converting designs to code:
 </Dialog>
 ```
 
-**ALWAYS follow these design principles and patterns to create accessible, consistent, and user-friendly interfaces.**
+## Advanced ARIA Patterns
+
+### ✅ Good: Accessible Dialog/Modal
+```tsx
+import * as React from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+
+function AccessibleModal() {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger asChild>
+        <button className="btn">Open Dialog</button>
+      </Dialog.Trigger>
+      
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+        
+        <Dialog.Content
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-xl max-w-md w-full"
+          aria-describedby="dialog-description"
+        >
+          <Dialog.Title className="text-xl font-bold mb-4">
+            Delete Account
+          </Dialog.Title>
+          
+          <Dialog.Description id="dialog-description" className="text-gray-600 mb-4">
+            This action cannot be undone. This will permanently delete your account.
+          </Dialog.Description>
+          
+          <div className="flex gap-2 justify-end">
+            <Dialog.Close asChild>
+              <button className="btn btn-secondary">Cancel</button>
+            </Dialog.Close>
+            <button className="btn btn-danger">Delete</button>
+          </div>
+          
+          <Dialog.Close asChild>
+            <button 
+              className="absolute top-2 right-2 p-1"
+              aria-label="Close dialog"
+            >
+              <XIcon aria-hidden="true" />
+            </button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+```
+
+### ✅ Good: Accessible Dropdown Menu
+```tsx
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
+function AccessibleDropdown() {
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button className="btn" aria-label="Open menu">
+          <MenuIcon aria-hidden="true" />
+        </button>
+      </DropdownMenu.Trigger>
+      
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          className="bg-white rounded-md shadow-lg p-1"
+          sideOffset={5}
+        >
+          <DropdownMenu.Item className="dropdown-item">
+            <EditIcon aria-hidden="true" />
+            Edit
+            <DropdownMenu.Shortcut>⌘E</DropdownMenu.Shortcut>
+          </DropdownMenu.Item>
+          
+          <DropdownMenu.Item className="dropdown-item">
+            <DuplicateIcon aria-hidden="true" />
+            Duplicate
+            <DropdownMenu.Shortcut>⌘D</DropdownMenu.Shortcut>
+          </DropdownMenu.Item>
+          
+          <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
+          
+          <DropdownMenu.Item className="dropdown-item text-red-600">
+            <DeleteIcon aria-hidden="true" />
+            Delete
+            <DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
+          </DropdownMenu.Item>
+          
+          <DropdownMenu.Arrow className="fill-white" />
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+### ✅ Good: Accessible Tabs Pattern
+```tsx
+import * as Tabs from '@radix-ui/react-tabs';
+
+function AccessibleTabs() {
+  return (
+    <Tabs.Root defaultValue="tab1">
+      <Tabs.List 
+        className="flex border-b border-gray-200"
+        aria-label="Manage your account"
+      >
+        <Tabs.Trigger
+          value="tab1"
+          className="px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+        >
+          Profile
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          value="tab2"
+          className="px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+        >
+          Settings
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          value="tab3"
+          className="px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+        >
+          Billing
+        </Tabs.Trigger>
+      </Tabs.List>
+      
+      <Tabs.Content value="tab1" className="p-4">
+        <h2 className="text-xl font-bold mb-2">Profile</h2>
+        <p>Manage your profile settings here.</p>
+      </Tabs.Content>
+      
+      <Tabs.Content value="tab2" className="p-4">
+        <h2 className="text-xl font-bold mb-2">Settings</h2>
+        <p>Configure your application settings.</p>
+      </Tabs.Content>
+      
+      <Tabs.Content value="tab3" className="p-4">
+        <h2 className="text-xl font-bold mb-2">Billing</h2>
+        <p>Manage your billing information.</p>
+      </Tabs.Content>
+    </Tabs.Root>
+  );
+}
+```
+
+### ✅ Good: Accessible Accordion
+```tsx
+import * as Accordion from '@radix-ui/react-accordion';
+
+function AccessibleAccordion() {
+  return (
+    <Accordion.Root type="multiple" className="space-y-2">
+      <Accordion.Item value="item-1" className="border rounded-lg">
+        <Accordion.Header>
+          <Accordion.Trigger className="flex w-full items-center justify-between p-4 font-medium">
+            What is accessibility?
+            <ChevronDownIcon 
+              aria-hidden="true"
+              className="transition-transform data-[state=open]:rotate-180"
+            />
+          </Accordion.Trigger>
+        </Accordion.Header>
+        <Accordion.Content className="px-4 pb-4">
+          Accessibility ensures that people with disabilities can perceive, understand, navigate, and interact with websites and tools.
+        </Accordion.Content>
+      </Accordion.Item>
+      
+      <Accordion.Item value="item-2" className="border rounded-lg">
+        <Accordion.Header>
+          <Accordion.Trigger className="flex w-full items-center justify-between p-4 font-medium">
+            Why is WCAG important?
+            <ChevronDownIcon 
+              aria-hidden="true"
+              className="transition-transform data-[state=open]:rotate-180"
+            />
+          </Accordion.Trigger>
+        </Accordion.Header>
+        <Accordion.Content className="px-4 pb-4">
+          WCAG (Web Content Accessibility Guidelines) provides a standard for making web content accessible to all users, including those with disabilities.
+        </Accordion.Content>
+      </Accordion.Item>
+    </Accordion.Root>
+  );
+}
+```
+
+### ✅ Good: Toast Notifications with Live Regions
+```tsx
+import * as Toast from '@radix-ui/react-toast';
+
+function ToastNotifications() {
+  const [open, setOpen] = React.useState(false);
+  
+  return (
+    <Toast.Provider swipeDirection="right">
+      <button onClick={() => setOpen(true)}>Show notification</button>
+      
+      <Toast.Root
+        open={open}
+        onOpenChange={setOpen}
+        className="bg-white rounded-lg shadow-lg p-4 flex items-start gap-3"
+      >
+        <InfoIcon aria-hidden="true" className="text-blue-500" />
+        
+        <div className="flex-1">
+          <Toast.Title className="font-semibold">
+            Update available
+          </Toast.Title>
+          <Toast.Description className="text-gray-600 text-sm">
+            A new version of the app is ready to install.
+          </Toast.Description>
+        </div>
+        
+        <Toast.Action asChild altText="Install update">
+          <button className="btn btn-sm">Install</button>
+        </Toast.Action>
+        
+        <Toast.Close aria-label="Close notification">
+          <XIcon aria-hidden="true" />
+        </Toast.Close>
+      </Toast.Root>
+      
+      <Toast.Viewport className="fixed bottom-0 right-0 p-6 flex flex-col gap-2 max-w-md" />
+    </Toast.Provider>
+  );
+}
+```
+
+## Complete Keyboard Navigation Guide
+
+### ✅ Good: Focus Management in Modals
+```tsx
+import { useEffect, useRef } from 'react';
+
+function FocusTrappedModal({ isOpen, onClose, children }) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  
+  useEffect(() => {
+    if (isOpen) {
+      // Store currently focused element
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      
+      // Focus first focusable element in modal
+      const firstFocusable = modalRef.current?.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      ) as HTMLElement;
+      firstFocusable?.focus();
+      
+      // Trap focus within modal
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+        
+        const focusableElements = Array.from(
+          modalRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          ) || []
+        ) as HTMLElement[];
+        
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      };
+      
+      document.addEventListener('keydown', handleKeyDown);
+      
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        // Restore focus when modal closes
+        previousFocusRef.current?.focus();
+      };
+    }
+  }, [isOpen]);
+  
+  if (!isOpen) return null;
+  
+  return (
+    <div
+      ref={modalRef}
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50"
+    >
+      {children}
+    </div>
+  );
+}
+```
+
+### ✅ Good: Skip Links
+```tsx
+// At the top of your app
+function App() {
+  return (
+    <>
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white"
+      >
+        Skip to main content
+      </a>
+      
+      <Header />
+      
+      <main id="main-content" tabIndex={-1}>
+        {/* Main content */}
+      </main>
+    </>
+  );
+}
+```
+
+### ✅ Good: Keyboard Shortcuts
+```tsx
+import { useEffect } from 'react';
+
+function useKeyboardShortcut(
+  key: string,
+  callback: () => void,
+  modifiers: { ctrl?: boolean; shift?: boolean; alt?: boolean } = {}
+) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const matchesModifiers =
+        (modifiers.ctrl ? e.ctrlKey || e.metaKey : !e.ctrlKey && !e.metaKey) &&
+        (modifiers.shift ? e.shiftKey : !e.shiftKey) &&
+        (modifiers.alt ? e.altKey : !e.altKey);
+      
+      if (e.key === key && matchesModifiers) {
+        e.preventDefault();
+        callback();
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [key, callback, modifiers]);
+}
+
+// Usage
+function Editor() {
+  useKeyboardShortcut('s', handleSave, { ctrl: true });
+  useKeyboardShortcut('k', openSearch, { ctrl: true });
+  useKeyboardShortcut('/', focusSearch);
+  
+  return <div>...</div>;
+}
+```
+
+## Responsive Design Complete Guide
+
+### ✅ Good: Mobile-First Breakpoint Strategy
+```tsx
+// tailwind.config.js
+module.exports = {
+  theme: {
+    screens: {
+      'sm': '640px',   // Small devices (phones, 640px and up)
+      'md': '768px',   // Medium devices (tablets, 768px and up)
+      'lg': '1024px',  // Large devices (desktops, 1024px and up)
+      'xl': '1280px',  // Extra large devices (large desktops, 1280px and up)
+      '2xl': '1536px', // 2X large devices (larger desktops, 1536px and up)
+    }
+  }
+};
+
+// Mobile-first component
+function ResponsiveGrid() {
+  return (
+    <div className="
+      grid grid-cols-1     /* Mobile: 1 column */
+      sm:grid-cols-2       /* Small: 2 columns */
+      md:grid-cols-3       /* Medium: 3 columns */
+      lg:grid-cols-4       /* Large: 4 columns */
+      gap-4 sm:gap-6 md:gap-8  /* Progressive spacing */
+    ">
+      {items.map(item => <Card key={item.id} {...item} />)}
+    </div>
+  );
+}
+```
+
+### ✅ Good: Container Queries (Modern Approach)
+```tsx
+// Use container queries for truly responsive components
+function ProductCard() {
+  return (
+    <div className="@container">
+      <div className="
+        flex flex-col         /* Mobile: stack vertically */
+        @md:flex-row          /* When container > md, switch to row */
+        gap-4
+      ">
+        <img className="
+          w-full @md:w-48     /* Full width on mobile, fixed on larger */
+          aspect-square
+          object-cover
+        " />
+        <div className="flex-1">
+          <h3 className="text-lg @md:text-xl">Product Name</h3>
+          <p className="text-sm @md:text-base">Description</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### ✅ Good: Responsive Typography
+```tsx
+// Fluid typography using clamp()
+const styles = {
+  heading: {
+    fontSize: 'clamp(1.5rem, 5vw, 3rem)',  // Min 24px, scales with viewport, max 48px
+    lineHeight: '1.2',
+  },
+  body: {
+    fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',  // Min 16px, max 18px
+    lineHeight: '1.6',
+  }
+};
+
+// Or with Tailwind
+<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+  Responsive Heading
+</h1>
+```
+
+### ✅ Good: Touch-Friendly Interfaces
+```tsx
+// Minimum touch target: 44x44px (iOS), 48x48px (Android)
+function TouchFriendlyButton() {
+  return (
+    <button className="
+      min-h-[44px] min-w-[44px]  /* Meet minimum touch target */
+      px-6 py-3                   /* Comfortable spacing */
+      text-base                   /* Readable text */
+      rounded-lg
+      active:scale-95             /* Visual feedback on tap */
+      transition-transform
+    ">
+      Tap Me
+    </button>
+  );
+}
+
+// Increase tap area without changing visual size
+function IconButton() {
+  return (
+    <button className="relative p-2">
+      {/* Extend tap area beyond visual bounds */}
+      <span className="absolute inset-0 -m-2" />
+      <Icon className="w-6 h-6" />
+    </button>
+  );
+}
+```
+
+### ✅ Good: iOS/Android Safe Areas
+```css
+/* Respect device safe areas (notches, rounded corners) */
+.app-container {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* Fixed header accounting for safe areas */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+```
+
+## Design Tokens & Design Systems
+
+### ✅ Good: Comprehensive Design Token System
+```typescript
+// design-tokens.ts
+export const tokens = {
+  colors: {
+    // Brand colors
+    primary: {
+      50: '#eff6ff',
+      100: '#dbeafe',
+      500: '#3b82f6',
+      600: '#2563eb',
+      900: '#1e3a8a',
+    },
+    // Semantic colors
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#3b82f6',
+    // Neutrals
+    gray: {
+      50: '#f9fafb',
+      100: '#f3f4f6',
+      500: '#6b7280',
+      900: '#111827',
+    }
+  },
+  
+  spacing: {
+    0: '0',
+    1: '0.25rem',  // 4px
+    2: '0.5rem',   // 8px
+    3: '0.75rem',  // 12px
+    4: '1rem',     // 16px
+    6: '1.5rem',   // 24px
+    8: '2rem',     // 32px
+    12: '3rem',    // 48px
+    16: '4rem',    // 64px
+  },
+  
+  typography: {
+    fontFamily: {
+      sans: ['Inter', 'system-ui', 'sans-serif'],
+      mono: ['JetBrains Mono', 'monospace'],
+    },
+    fontSize: {
+      xs: ['0.75rem', { lineHeight: '1rem' }],      // 12px
+      sm: ['0.875rem', { lineHeight: '1.25rem' }],  // 14px
+      base: ['1rem', { lineHeight: '1.5rem' }],     // 16px
+      lg: ['1.125rem', { lineHeight: '1.75rem' }],  // 18px
+      xl: ['1.25rem', { lineHeight: '1.75rem' }],   // 20px
+      '2xl': ['1.5rem', { lineHeight: '2rem' }],    // 24px
+    },
+    fontWeight: {
+      normal: '400',
+      medium: '500',
+      semibold: '600',
+      bold: '700',
+    }
+  },
+  
+  borderRadius: {
+    none: '0',
+    sm: '0.125rem',   // 2px
+    md: '0.375rem',   // 6px
+    lg: '0.5rem',     // 8px
+    xl: '0.75rem',    // 12px
+    full: '9999px',
+  },
+  
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+  },
+  
+  animation: {
+    duration: {
+      fast: '150ms',
+      base: '200ms',
+      slow: '300ms',
+    },
+    easing: {
+      linear: 'linear',
+      in: 'cubic-bezier(0.4, 0, 1, 1)',
+      out: 'cubic-bezier(0, 0, 0.2, 1)',
+      inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    }
+  },
+  
+  zIndex: {
+    dropdown: 1000,
+    sticky: 1020,
+    modal: 1040,
+    popover: 1050,
+    toast: 1060,
+  }
+} as const;
+```
+
+### ✅ Good: Component Variant System
+```tsx
+// Using class-variance-authority (CVA)
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const button = cva(
+  // Base styles
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+  {
+    variants: {
+      variant: {
+        primary: 'bg-blue-600 text-white hover:bg-blue-700',
+        secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
+        ghost: 'hover:bg-gray-100',
+        danger: 'bg-red-600 text-white hover:bg-red-700',
+      },
+      size: {
+        sm: 'h-8 px-3 text-sm',
+        md: 'h-10 px-4 text-base',
+        lg: 'h-12 px-6 text-lg',
+      },
+      disabled: {
+        true: 'opacity-50 cursor-not-allowed pointer-events-none',
+      }
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    }
+  }
+);
+
+type ButtonProps = VariantProps<typeof button> & 
+  React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export function Button({ variant, size, disabled, className, ...props }: ButtonProps) {
+  return (
+    <button
+      className={button({ variant, size, disabled, className })}
+      disabled={disabled}
+      {...props}
+    />
+  );
+}
+```
+
+## Accessibility Testing Tools
+
+### ✅ Good: Automated Testing with axe-core
+```typescript
+// __tests__/accessibility.test.tsx
+import { render } from '@testing-library/react';
+import { axe, toHaveNoViolations } from 'jest-axe';
+
+expect.extend(toHaveNoViolations);
+
+describe('Accessibility', () => {
+  it('should not have any accessibility violations', async () => {
+    const { container } = render(<MyComponent />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+```
+
+### ✅ Good: Manual Testing Checklist
+```markdown
+## Accessibility Testing Checklist
+
+### Keyboard Navigation
+- [ ] All interactive elements are keyboard accessible
+- [ ] Focus is visible on all focusable elements
+- [ ] Tab order is logical
+- [ ] No keyboard traps
+- [ ] Skip links work correctly
+
+### Screen Reader
+- [ ] All images have alt text
+- [ ] ARIA labels are present where needed
+- [ ] Form inputs have associated labels
+- [ ] Headings follow proper hierarchy (h1 → h2 → h3)
+- [ ] Live regions announce dynamic content
+
+### Visual
+- [ ] Color contrast meets WCAG AA (4.5:1 for normal text)
+- [ ] Content is readable when zoomed to 200%
+- [ ] No information conveyed by color alone
+- [ ] Focus indicators are visible
+
+### Forms
+- [ ] All form fields have labels
+- [ ] Error messages are descriptive
+- [ ] Required fields are indicated
+- [ ] Validation errors are announced to screen readers
+```
+
+**ALWAYS follow these design principles and patterns to create accessible, consistent, and user-friendly interfaces. Test with real screen readers (NVDA, JAWS, VoiceOver) and keyboard-only navigation to ensure true accessibility.**
