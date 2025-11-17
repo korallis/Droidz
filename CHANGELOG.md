@@ -7,6 +7,13 @@ All notable changes to Droidz will be documented in this file.
 ### Fixed
 - Installer now uses robust git detection (worktrees/parent search with fallback) to avoid false "Not in a git repository" prompts.
 
+## [0.5.8] - 2025-11-17
+
+### Fixed
+- Installer now pulls from `main` and will initialize git automatically in non-interactive runs.
+- Repository metadata switched to track `main` (no more `Claude-Code` branch references).
+- README updated with correct versioning plus Discord and PayPal (Gideonapp) links.
+
 ## [0.5.7] - 2025-11-17
 
 ### Fixed

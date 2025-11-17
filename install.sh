@@ -3,16 +3,16 @@
 # Droidz Installer for Factory.ai
 #
 # One-line install:
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
-# Version: 0.5.7
+# Version: 0.5.8
 # Updated: 2025-11-17
 #
 
 set -euo pipefail
 
-VERSION="0.5.7"
-REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
+VERSION="0.5.8"
+REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/main"
 
 # Colors
 if [[ -t 1 ]]; then

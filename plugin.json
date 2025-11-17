@@ -1,7 +1,7 @@
 {
   "name": "droidz-claude-code",
   "displayName": "Droidz - Ultimate Claude Code Framework",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "Multi-layer context management, automatic tech stack detection, intelligent optimization, and cross-session memory for Claude Code",
   "author": "Lee Barry",
   "license": "MIT",
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/korallis/Droidz.git",
-    "branch": "Claude-Code"
+    "branch": "main"
   },
   "keywords": [
     "claude-code",

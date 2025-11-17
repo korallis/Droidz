@@ -2,7 +2,7 @@
 
 **Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
-> **v0.5.3** - **Reliability & Transparency**: no phantom parallel starts, structured progress (step/next action/files/tests/heartbeat), stall detection, validation-gated completion, and headless guidance (`droid exec --auto high`)—all while keeping the user’s selected model.
+> **v0.5.8** - **Reliability & Transparency**: no phantom parallel starts, structured progress (step/next action/files/tests/heartbeat), stall detection, validation-gated completion, and headless guidance (`droid exec --auto high`)—all while keeping the user’s selected model.
 
 ---
 
@@ -43,7 +43,7 @@ Droidz is a framework for [Factory.ai](https://factory.ai) that adds:
 3. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
 4. **📊 Live Progress Tracking** - See what's happening every 60 seconds
 
-### 🔥 NEW in v0.5.3: Reliable Parallel Execution
+### 🔥 NEW in v0.5.8: Reliable Parallel Execution
 
 **Highlights:** no phantom task starts (Task IDs recorded), rich progress (step, next action, files touched, test results, heartbeat), stall detection, validation gating (lint/type/tests must pass), and headless readiness via `droid exec --auto high` using the user-selected model.
 
@@ -558,7 +558,9 @@ MIT License - see [LICENSE](LICENSE) file for details
 - **Factory.ai:** https://factory.ai
 - **Issues:** https://github.com/korallis/Droidz/issues
 - **Discussions:** https://github.com/korallis/Droidz/discussions
-- **Latest Release:** https://github.com/korallis/Droidz/releases/tag/v0.2.0
+- **Discord:** https://discord.gg/gideonapp
+- **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
+- **Latest Release:** https://github.com/korallis/Droidz/releases/tag/v0.5.8
 
 ---
 
@@ -584,8 +586,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ## 💬 Community
 
-- **Discord:** Coming soon
-- **Twitter:** Coming soon
+- **Discord:** https://discord.gg/gideonapp
 - **GitHub Discussions:** https://github.com/korallis/Droidz/discussions
 
 ---
@@ -616,7 +617,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 **Built with ❤️ for the Factory.ai community**
 
-**Current Version:** v0.5.3 | **Last Updated:** 2025-11-17
+**Current Version:** v0.5.8 | **Last Updated:** 2025-11-17
 
 ---
 
