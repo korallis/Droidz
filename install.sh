@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.5.5
+# Version: 0.5.6
 # Updated: 2025-11-17
 #
 
 set -euo pipefail
 
-VERSION="0.5.5"
+VERSION="0.5.6"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -142,6 +142,29 @@ download_file() {
     fi
 }
 
+# Robustly detect if we're inside a git repository (handles worktrees/safe-directory issues)
+detect_git_repo() {
+    local start_dir="${1:-$(pwd)}"
+
+    # Fast path: ask git directly
+    if git -C "$start_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        GIT_ROOT=$(git -C "$start_dir" rev-parse --show-toplevel 2>/dev/null || echo "$start_dir")
+        return 0
+    fi
+
+    # Fallback: walk up to find .git directory or gitfile (worktree pointer)
+    local dir="$start_dir"
+    while [[ "$dir" != "/" ]]; do
+        if [[ -d "$dir/.git" ]] || [[ -f "$dir/.git" ]]; then
+            GIT_ROOT="$dir"
+            return 0
+        fi
+        dir=$(dirname "$dir")
+    done
+
+    return 1
+}
+
 # Main installation
 main() {
     # Banner
@@ -182,8 +205,11 @@ main() {
     echo ""
     
     # Check if in git repo
-    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-        log_warning "Not in a git repository"
+    GIT_ROOT=""
+    if detect_git_repo "$(pwd)"; then
+        log_success "Git repository detected at ${GIT_ROOT}"
+    else
+        log_warning "Not in a git repository (checked $(pwd) and parents)"
         echo ""
         echo -e "${YELLOW}Initialize git repository now?${NC}"
         read -p "[Y/n]: " -n 1 -r
@@ -191,6 +217,7 @@ main() {
         
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
             git init
+            GIT_ROOT="$(pwd)"
             log_success "Git repository initialized"
         else
             log_error "Droidz requires a git repository"

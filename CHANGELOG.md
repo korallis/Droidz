@@ -2,6 +2,11 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.5.6] - 2025-11-17
+
+### Fixed
+- Installer now uses robust git detection (worktrees/parent search with fallback) to avoid false "Not in a git repository" prompts.
+
 ## [0.5.5] - 2025-11-17
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
   "name": "droidz",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "AI-powered specification generator and parallel task orchestration framework for Factory.ai",
   "type": "module",
   "dependencies": {
