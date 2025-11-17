@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.5.6
+# Version: 0.5.7
 # Updated: 2025-11-17
 #
 
 set -euo pipefail
 
-VERSION="0.5.6"
+VERSION="0.5.7"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -211,17 +211,23 @@ main() {
     else
         log_warning "Not in a git repository (checked $(pwd) and parents)"
         echo ""
-        echo -e "${YELLOW}Initialize git repository now?${NC}"
-        read -p "[Y/n]: " -n 1 -r
-        echo ""
-        
-        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+
+        if [[ -t 0 ]]; then
+            echo -e "${YELLOW}Initialize git repository now?${NC}"
+            read -p "[Y/n]: " -n 1 -r || true
+            echo ""
+            if [[ $REPLY =~ ^[Nn]$ ]]; then
+                log_error "Droidz requires a git repository"
+                exit 1
+            fi
             git init
             GIT_ROOT="$(pwd)"
             log_success "Git repository initialized"
         else
-            log_error "Droidz requires a git repository"
-            exit 1
+            log_info "Non-interactive run detected; initializing git repository automatically"
+            git init
+            GIT_ROOT="$(pwd)"
+            log_success "Git repository initialized"
         fi
     fi
     

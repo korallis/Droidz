@@ -7,6 +7,11 @@ All notable changes to Droidz will be documented in this file.
 ### Fixed
 - Installer now uses robust git detection (worktrees/parent search with fallback) to avoid false "Not in a git repository" prompts.
 
+## [0.5.7] - 2025-11-17
+
+### Fixed
+- Installer auto-initializes git when run non-interactively (curl | bash) and defaults to initialize on interactive runs unless explicitly declined.
+
 ## [0.5.5] - 2025-11-17
 
 ### Fixed
