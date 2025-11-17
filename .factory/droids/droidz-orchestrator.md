@@ -90,6 +90,14 @@ Then DO NOT continue with orchestration. Let Claude Code handle it directly.
 
 ### If YES - Continue to Step 2
 
+### Reliability & Preflight (run before Step 2)
+
+- Confirm `Task` and `TodoWrite` tools are available; if not, stay sequential and state the blocker.
+- Ensure ≥2 independent streams remain; if not, proceed sequentially and call out why.
+- Check workspace constraints (sandbox/read-only, missing deps, dirty git status). If blocked, surface the issue and avoid claiming background work.
+- Announce parallel start **only after Task calls succeed** and you have recorded task ids.
+- Maintain a local registry for each stream: name, Task id, start time, status (pending/in_progress/blocked/completed), last heartbeat timestamp.
+
 ---
 
 ## Step 2: Decompose Into Parallel Streams
@@ -213,6 +221,13 @@ Ready to proceed with parallel execution?
 ## Step 4: Spawn Parallel Agents
 
 **CRITICAL:** Spawn Task agents **in a single response** for true parallel execution. Each agent works in the main repository - no git worktrees or tmux sessions needed!
+
+**Before Spawning: Reliability Checklist**
+- Confirm each stream is independent; merge/remove if not.
+- Prepare retry-once per spawn with short backoff; if a stream fails twice, mark it **blocked** with the error, continue others.
+- Record Task id, stream name, and start time in your registry; only report a stream as "started" after Task returns successfully.
+- Require spawned droids to emit structured progress: step, next action, files touched, commands/tests run with pass/fail, runtime/heartbeat.
+- If no streams can be spawned, fall back to sequential and explain why (tool missing, sandbox limits, etc.).
 
 ### Task Tool Syntax:
 ```
@@ -440,8 +455,9 @@ Report back when complete with test results.`
 
 As agents work, their TodoWrite updates appear in the conversation:
 
-```
-TODO LIST UPDATED (from droidz-codegen)
+2. **Detect stalls** - If no heartbeat for 10 minutes, mark the stream stalled and surface which step hung
+3. **Wait for completion** - Task tool will return results when done
+4. **Update your TodoWrite** - Show overall orchestration progress with stream status, task id, latest step, files changed, and test/command results:
 
 ✅ Analyze backend structure (completed)
 ⏳ Implement login API (creating endpoints...)
@@ -465,9 +481,9 @@ TODO LIST UPDATED (from droidz-test)
 ```typescript
 TodoWrite({
   todos: [
-    {content: "Stream A: Auth API (✅ completed - 5 files)", status: "completed"},
-    {content: "Stream B: Auth UI (⏳ in progress)", status: "in_progress"},
-    {content: "Stream C: Tests (⏸ pending)", status: "pending"}
+    {content: "Stream A: Auth API (✅ completed - id 123, 5 files, tests passing)", status: "completed"},
+    {content: "Stream B: Auth UI (⏳ id 124, implementing forms, 3 files so far)", status: "in_progress"},
+    {content: "Stream C: Tests (⏸ pending - waiting on API schema)", status: "pending"}
   ]
 });
 ```
@@ -487,6 +503,10 @@ Just wait for agents to complete and report back!
 ## Step 6: Synthesize Results
 
 **CRITICAL UX RULE**: NEVER use Execute tool with echo commands to display progress/summaries. Always output directly in your response text or use TodoWrite.
+
+Before claiming completion:
+- Run lightweight validation if available (lint/typecheck/unit subset). If any command fails, keep status **blocked** and surface the failing output.
+- Cross-check your registry: only summarize streams that actually returned; if any stalled/failed, call them out explicitly.
 
 As agents complete (they'll return their results automatically):
 

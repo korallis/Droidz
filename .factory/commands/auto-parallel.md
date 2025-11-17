@@ -7,12 +7,21 @@ I will orchestrate this task using parallel execution with live progress trackin
 
 **Task:** $ARGUMENTS
 
+## Preflight Guardrails (No Phantom Tasks)
+
+- Verify tools available: `Task`, `TodoWrite`, and required droids; if missing, **do not claim background start**—fall back to sequential and say why.
+- Confirm at least 2 independent components; otherwise run sequential and note the decision.
+- Capture workspace cleanliness constraints; if blocked (e.g., read-only, missing deps), report and switch to sequential.
+- Only announce “parallel execution started” after Task calls succeed and you have task ids recorded.
+
 ## Step 1: Analyze and Break Down
 
 I'll analyze the request to identify 3-5 discrete, parallelizable components. For each component, I'll consider:
 - What can be done independently vs. sequentially
 - Which specialist droid is best (droidz-codegen, droidz-test, droidz-refactor, droidz-integration, droidz-infra)
 - Dependencies between tasks
+
+If fewer than 2 viable parallel streams remain, **run sequential with an explicit note** (include reason).
 
 ## Step 2: Create Execution Plan
 
@@ -24,6 +33,10 @@ Using TodoWrite, I'll create a task list showing:
 ## Step 3: Execute in Parallel
 
 I'll use the Task tool to spawn specialist droids for each Phase 1 task simultaneously.
+
+- Record each Task id/description in a local registry; update TodoWrite with these ids.
+- If any Task spawn fails, retry once with backoff; on second failure, mark that stream blocked, continue others, and surface the failure reason.
+- Do not claim a stream is running unless the Task call succeeded.
 
 ## Step 4: Monitor and Report
 
@@ -47,10 +60,10 @@ TODO LIST UPDATED
 ⏸ Run test suite (pending)
 ```
 
-**Progress Updates Include:**
-  • Current step the droid is working on
-  • What it's doing right now ("creating components...", "running tests...")
+  • Current step and next action
   • Files created/modified count
+  • Commands/tests run with pass/fail status (include failing test names)
+  • Runtime/heartbeat (detect stalled >10m and mark stalled with reason)
   • Test results as they complete
 
 **Task Completion:**
@@ -59,6 +72,8 @@ TASK (droidz-codegen: 'Build API') ✅ Completed
 - 5 files created
 - All tests passing
 - Ready for review
+
+If validation commands fail, do NOT mark completed; attach failing logs/output and keep status as blocked.
 ```
 
 All updates stream directly to this conversation - no separate monitoring needed!
@@ -66,3 +81,9 @@ All updates stream directly to this conversation - no separate monitoring needed
 **Expected Timeline:** Each droid updates every 60 seconds during long operations.
 
 Let me begin the analysis now...
+
+## Headless / CI Usage (factory CLI)
+
+- Run via `droid exec --auto high -f <prompt-file>` when you need non-interactive orchestration.
+- Uses the user's currently selected model—no model switching is performed by Droidz.
+- Ensure required tools (Task, TodoWrite, specialist droids) remain enabled; if disabled, parallel execution will fall back or block per preflight guardrails.

@@ -2,6 +2,24 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.5.3] - 2025-11-17
+
+### 🔧 Reliability & Progress Transparency
+- Prevent phantom parallel starts by requiring Task IDs before reporting streams
+- Structured progress: step, next action, files touched, commands/tests with pass/fail, heartbeat
+- Stall detection and blocker surfacing for idle streams
+- Validation gating: failing lint/type/tests block completion with surfaced output
+- Headless guidance for CI: use `droid exec --auto high` (no model switching)
+
+### 📖 Docs & Installer
+- Updated installer banners/What's New and quickstart bullets for clarity
+- README version and messaging aligned with latest reliability changes
+
+### 📝 Impact
+- Clearer visibility into parallel execution status
+- Safer completion gating with explicit failure surfacing
+- Ready-to-use headless orchestration guidance
+
 ## [0.5.2] - 2025-11-16
 
 ### 🔧 Fixed

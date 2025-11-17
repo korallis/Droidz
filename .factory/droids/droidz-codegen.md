@@ -115,9 +115,12 @@ TodoWrite({
 - Current step you're working on
 - What you're doing right now ("creating components...", "running tests...")
 - Files created/modified count
-- Test results
+- Commands/tests run with pass/fail (name failing tests)
+- Next action + heartbeat so stalls are visible
 
 This prevents users from staring at a blank screen wondering if you're working!
+
+If any validation (lint/type/test) fails, keep the stream marked in_progress/blocked, include the failing output, and do not claim completion until fixed.
 
 ### 3. Implement Feature
 

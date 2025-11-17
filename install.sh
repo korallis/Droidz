@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.5.0
-# Updated: 2025-01-16
+# Version: 0.5.3
+# Updated: 2025-11-17
 #
 
 set -euo pipefail
 
-VERSION="0.5.2"
+VERSION="0.5.3"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -358,18 +358,11 @@ EOF
         echo ""
         echo -e "${CYAN}🆕 What's New in v${VERSION}:${NC}"
         echo ""
-        echo "  🚀 NEW: /droidz-init - Smart Onboarding & Analysis"
-        echo "  ✅ Verify installation (all commands & droids)"
-        echo "  ✅ Detect project type (greenfield vs brownfield)"
-        echo "  ✅ Analyze tech stack automatically"
-        echo "  ✅ Generate architecture documentation"
-        echo "  ✅ Personalized next steps"
-        echo ""
-        echo "  🚀 NEW: /droidz-build - AI-Powered Spec Generator"
-        echo "  ✅ Transform vague ideas into production-ready specs"
-        echo "  ✅ Security requirements (OWASP, GDPR)"
-        echo "  ✅ Edge cases & testing strategies"
-        echo "  ✅ 80% less time writing specs manually"
+        echo "  ✅ Reliable parallel execution: no phantom tasks; Task IDs recorded before start"
+        echo "  📣 Rich progress: step + next action + files changed + test results + heartbeat"
+        echo "  ⏱ Stall detection: streams marked stalled after idle; blockers surfaced"
+        echo "  🔒 Validation gating: failing lint/type/tests block completion with output shown"
+        echo "  🛠 Headless ready: run with 'droid exec --auto high' for non-interactive orchestration"
         echo ""
         echo -e "${YELLOW}Try: /droidz-init  (verify & analyze)${NC}"
         echo -e "${YELLOW}Then: /droidz-build \"add authentication\"${NC}"
@@ -399,11 +392,12 @@ EOF
         echo "     - Security requirements (OWASP, GDPR)"
         echo "     - 80% less time writing specs"
         echo ""
-        echo "  ✅ /auto-parallel - Parallel task execution (3-5x faster)"
-        echo "  ✅ 7 specialist droids for different tasks"
-        echo "  ✅ 41 comprehensive skills - Auto-enforce coding standards"
+        echo "  ✅ /auto-parallel - Parallel task execution (3-5x faster, no phantom tasks)"
+        echo "  ✅ Rich progress: step, next action, files touched, test results, heartbeat"
+        echo "  ✅ Stall detection + validation gating to prevent silent failures"
+        echo "  ✅ Headless ready: use 'droid exec --auto high' for CI/non-interactive runs"
+        echo "  ✅ 7 specialist droids + 41 skills with auto enforcement"
         echo "  ✅ Skills injection - Auto-loads based on project/prompts/files"
-        echo "  ✅ Live progress tracking every 60 seconds"
         echo ""
         echo -e "${CYAN}Next Steps:${NC}"
         echo ""
