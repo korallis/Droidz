@@ -1,39 +1,20 @@
 #!/bin/bash
 #
-# Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
+# Droidz Installer for Factory.ai
 #
-# Install with:
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+# One-line install:
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
-# Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh
-#   chmod +x install.sh
-#   ./install.sh
-#
-# Version: 2.2.6-droid - WSL compatibility + UX improvements + Orchestrator fixes
-# Features:
-#   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
-#   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
-#   - Offers to initialize git repository if not already in one
-#   - WSL auto-configuration for Factory.ai Droid CLI compatibility
-#   - Comprehensive error logging with system diagnostics
-#   - Fixed installer to only download existing files (no 404 errors)
-#   - Improved orchestrator UX (clean output instead of verbose Execute commands)
-# Updated: November 14, 2025
+# Version: 0.5.8
+# Updated: 2025-11-17
 #
 
 set -euo pipefail
-IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.6-droid"
-GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
-CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
+VERSION="0.5.8"
+REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/main"
 
-# Error logging
-ERROR_LOG_FILE=".droidz-install-$(date +%Y%m%d_%H%M%S).log"
-INSTALL_START_TIME=$(date +%s)
-
-# Colors for output - only if output is to a terminal
+# Colors
 if [[ -t 1 ]]; then
     RED='\033[0;31m'
     GREEN='\033[0;32m'
@@ -41,401 +22,346 @@ if [[ -t 1 ]]; then
     BLUE='\033[0;34m'
     CYAN='\033[0;36m'
     BOLD='\033[1m'
-    NC='\033[0m' # No Color
+    NC='\033[0m'
 else
-    RED=''
-    GREEN=''
-    YELLOW=''
-    BLUE=''
-    CYAN=''
-    BOLD=''
-    NC=''
+    RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' NC=''
 fi
 
 # Helper functions
-log_info() {
-    echo -e "${BLUE}ℹ${NC} $*"
-}
+log_info() { echo -e "${BLUE}ℹ${NC} $*"; }
+log_success() { echo -e "${GREEN}✓${NC} $*"; }
+log_warning() { echo -e "${YELLOW}⚠${NC} $*"; }
+log_error() { echo -e "${RED}✗${NC} $*" >&2; }
+log_step() { echo -e "\n${CYAN}${BOLD}▸ $*${NC}"; }
 
-log_success() {
-    echo -e "${GREEN}✓${NC} $*"
-}
-
-log_warning() {
-    local msg="$*"
-    echo -e "${YELLOW}⚠${NC} $msg"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: $msg" >> "$ERROR_LOG_FILE"
-}
-
-log_error() {
-    local msg="$*"
-    echo -e "${RED}✗${NC} $msg" >&2
-    # Also log to file with timestamp
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: $msg" >> "$ERROR_LOG_FILE"
-}
-
-log_step() {
-    echo -e "\n${CYAN}${BOLD}▸ $*${NC}"
-    # Log steps to file
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] STEP: $*" >> "$ERROR_LOG_FILE"
-}
-
-# ============================================================================
-# OS AND PACKAGE MANAGER DETECTION
-# ============================================================================
-
+# Detect OS and package manager
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         OS="macos"
         PKG_MANAGER="brew"
-    elif [[ -f /proc/version ]] && grep -qi microsoft /proc/version; then
-        OS="wsl2"
-        detect_package_manager
-        configure_wsl_for_claude_code
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         OS="linux"
-        detect_package_manager
+        if command -v apt-get &> /dev/null; then
+            PKG_MANAGER="apt"
+        elif command -v dnf &> /dev/null; then
+            PKG_MANAGER="dnf"
+        elif command -v yum &> /dev/null; then
+            PKG_MANAGER="yum"
+        elif command -v pacman &> /dev/null; then
+            PKG_MANAGER="pacman"
+        else
+            PKG_MANAGER="unknown"
+        fi
     else
         OS="unknown"
         PKG_MANAGER="unknown"
     fi
 }
 
-detect_package_manager() {
-    if command -v apt-get &> /dev/null; then
-        PKG_MANAGER="apt"
-    elif command -v dnf &> /dev/null; then
-        PKG_MANAGER="dnf"
-    elif command -v yum &> /dev/null; then
-        PKG_MANAGER="yum"
-    elif command -v pacman &> /dev/null; then
-        PKG_MANAGER="pacman"
-    elif command -v zypper &> /dev/null; then
-        PKG_MANAGER="zypper"
-    elif command -v apk &> /dev/null; then
-        PKG_MANAGER="apk"
-    else
-        PKG_MANAGER="unknown"
-    fi
-}
-
-configure_wsl_for_claude_code() {
-    echo ""
-    log_info "Configuring WSL2 for Claude Code compatibility..."
-
-    # Check if npm is available
-    if ! command -v npm &> /dev/null; then
-        log_warning "npm not found. Node.js installation required for Claude Code."
-        echo ""
-        return 0
-    fi
-
-    # Check if npm is pointing to Windows installation
-    local npm_path
-    npm_path=$(which npm 2>/dev/null || echo "")
-
-    if [[ "$npm_path" == /mnt/c/* ]]; then
-        log_warning "Detected Windows npm in WSL. Claude Code requires Linux Node.js."
-        log_info "Please install Node.js via nvm for WSL:"
-        echo ""
-        echo -e "${CYAN}curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash${NC}"
-        echo -e "${CYAN}source ~/.bashrc${NC}"
-        echo -e "${CYAN}nvm install --lts${NC}"
-        echo ""
-        log_warning "Continuing installation, but Claude Code may not work until Node.js is installed in WSL."
-        echo ""
-        return 0
-    fi
-
-    # Configure npm for Linux platform
-    log_info "Setting npm platform to 'linux' for WSL2 compatibility..."
-    if npm config set os linux 2>/dev/null; then
-        log_success "npm configured to treat environment as Linux"
-    else
-        log_warning "Could not configure npm platform (may require manual configuration)"
-    fi
-
-    # Verify nvm is properly loaded
-    if command -v nvm &> /dev/null || [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-        log_success "nvm detected - Node.js environment ready"
-
-        # Source nvm if not already loaded
-        if ! command -v nvm &> /dev/null && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-            log_info "Loading nvm for current session..."
-            export NVM_DIR="$HOME/.nvm"
-            [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
-            log_success "nvm loaded"
-        fi
-    else
-        log_info "nvm not detected (optional but recommended for WSL2)"
-    fi
-
-    log_success "WSL2 configuration complete"
-    log_info "When installing Claude Code, use: npm install -g @anthropic-ai/claude-code --force --no-os-check"
-    echo ""
-}
-
+# Get install command for a package
 get_install_cmd() {
     local package="$1"
     case "$PKG_MANAGER" in
-        brew)
-            echo "brew install $package"
-            ;;
-        apt)
-            echo "sudo apt update && sudo apt install -y $package"
-            ;;
-        dnf)
-            echo "sudo dnf install -y $package"
-            ;;
-        yum)
-            echo "sudo yum install -y $package"
-            ;;
-        pacman)
-            echo "sudo pacman -S --noconfirm $package"
-            ;;
-        zypper)
-            echo "sudo zypper install -y $package"
-            ;;
-        apk)
-            echo "sudo apk add --update $package"
-            ;;
-        *)
-            echo "Please install $package manually"
-            ;;
+        brew) echo "brew install $package" ;;
+        apt) echo "sudo apt update && sudo apt install -y $package" ;;
+        dnf) echo "sudo dnf install -y $package" ;;
+        yum) echo "sudo yum install -y $package" ;;
+        pacman) echo "sudo pacman -S --noconfirm $package" ;;
+        *) echo "Please install $package manually" ;;
     esac
 }
 
-install_package() {
-    local command_name="$1"
-    local package_name="${2:-$1}"
-
-    log_info "Installing $package_name..."
-
-    if command -v "$command_name" &> /dev/null; then
-        log_success "$command_name is already installed"
+# Check and optionally install a dependency
+check_dependency() {
+    local cmd="$1"
+    local name="$2"
+    local package="${3:-$1}"
+    
+    if command -v "$cmd" &> /dev/null; then
+        log_success "$name found"
         return 0
     fi
-
-    local install_result=1
+    
+    log_warning "$name not found"
+    
+    if [[ "$PKG_MANAGER" == "unknown" ]]; then
+        log_error "Cannot auto-install. Please install manually: $name"
+        return 1
+    fi
+    
+    echo -e "${YELLOW}Install $name now?${NC}"
+    echo -e "  Command: $(get_install_cmd "$package")"
+    read -p "Install? [y/N]: " -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_error "$name is required but not installed"
+        return 1
+    fi
+    
+    log_info "Installing $name..."
     case "$PKG_MANAGER" in
         brew)
-            brew install "$package_name" &> /dev/null && install_result=0
+            brew install "$package" || return 1
             ;;
         apt)
-            sudo apt-get update -y &> /dev/null && sudo apt-get install -y "$package_name" &> /dev/null && install_result=0
+            sudo apt-get update && sudo apt-get install -y "$package" || return 1
             ;;
         dnf)
-            sudo dnf install -y "$package_name" &> /dev/null && install_result=0
+            sudo dnf install -y "$package" || return 1
             ;;
         yum)
-            sudo yum install -y "$package_name" &> /dev/null && install_result=0
+            sudo yum install -y "$package" || return 1
             ;;
         pacman)
-            sudo pacman -S --noconfirm "$package_name" &> /dev/null && install_result=0
-            ;;
-        zypper)
-            sudo zypper install -y "$package_name" &> /dev/null && install_result=0
-            ;;
-        apk)
-            sudo apk add --update "$package_name" &> /dev/null && install_result=0
-            ;;
-        *)
-            log_error "No supported package manager found"
-            return 1
+            sudo pacman -S --noconfirm "$package" || return 1
             ;;
     esac
-
-    if [[ $install_result -eq 0 ]] && command -v "$command_name" &> /dev/null; then
-        log_success "$command_name installed successfully"
+    
+    if command -v "$cmd" &> /dev/null; then
+        log_success "$name installed"
         return 0
     else
-        log_error "Failed to install $command_name"
-        log_info "Please install manually: $(get_install_cmd "$package_name")"
+        log_error "Installation failed"
         return 1
     fi
 }
 
-generate_error_report() {
-    local exit_code="${1:-1}"
-    local install_end_time=$(date +%s)
-    local duration=$((install_end_time - INSTALL_START_TIME))
+# Download a file with error checking
+download_file() {
+    local url="$1"
+    local dest="$2"
+    local desc="${3:-file}"
+    
+    if curl -fsSL "$url" -o "$dest"; then
+        log_success "Downloaded $desc"
+        return 0
+    else
+        log_error "Failed to download $desc"
+        return 1
+    fi
+}
 
-    echo ""
-    echo -e "${RED}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-    echo -e "${RED}${BOLD}║   Installation Failed - Error Report Generated      ║${NC}"
-    echo -e "${RED}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
-    echo ""
+# Robustly detect if we're inside a git repository (handles worktrees/safe-directory issues)
+detect_git_repo() {
+    local start_dir="${1:-$(pwd)}"
 
-    # Append system info to log
-    {
+    # Fast path: ask git directly
+    if git -C "$start_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        GIT_ROOT=$(git -C "$start_dir" rev-parse --show-toplevel 2>/dev/null || echo "$start_dir")
+        return 0
+    fi
+
+    # Fallback: walk up to find .git directory or gitfile (worktree pointer)
+    local dir="$start_dir"
+    while [[ "$dir" != "/" ]]; do
+        if [[ -d "$dir/.git" ]] || [[ -f "$dir/.git" ]]; then
+            GIT_ROOT="$dir"
+            return 0
+        fi
+        dir=$(dirname "$dir")
+    done
+
+    return 1
+}
+
+# Main installation
+main() {
+    # Banner
+    echo ""
+    echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}${BOLD}║   Droidz Framework Installer v${VERSION}           ║${NC}"
+    echo -e "${CYAN}${BOLD}║   For Factory.ai Droid CLI                      ║${NC}"
+    echo -e "${CYAN}${BOLD}║   🚀 AI-Powered Spec Generator + Parallel Exec  ║${NC}"
+    echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Detect if this is an upgrade
+    UPGRADING=false
+    if [[ -d ".factory/droids" ]] && [[ -f ".factory/droids/droidz-parallel.md" ]]; then
+        UPGRADING=true
+        echo -e "${YELLOW}📦 Existing Droidz installation detected${NC}"
+        echo -e "${YELLOW}   Upgrading to v${VERSION}...${NC}"
         echo ""
-        echo "=========================================="
-        echo "SYSTEM INFORMATION"
-        echo "=========================================="
-        echo "Date: $(date)"
-        echo "Exit Code: $exit_code"
-        echo "Duration: ${duration}s"
-        echo "OS Type: $OSTYPE"
-        echo "Detected OS: ${OS:-unknown}"
-        echo "Package Manager: ${PKG_MANAGER:-unknown}"
-        echo "Shell: $SHELL"
-        echo "User: $USER"
+    fi
+    
+    # Detect OS
+    detect_os
+    log_info "Detected: $OS (package manager: $PKG_MANAGER)"
+    echo ""
+    
+    # Check dependencies
+    log_step "Checking dependencies"
+    
+    # Git (required)
+    if ! check_dependency "git" "Git"; then
         echo ""
-        echo "=========================================="
-        echo "ENVIRONMENT"
-        echo "=========================================="
-        echo "Working Directory: $(pwd)"
-        echo "Git Available: $(command -v git &>/dev/null && echo "yes" || echo "no")"
-        if command -v git &>/dev/null; then
-            echo "Git Version: $(git --version 2>/dev/null || echo "unknown")"
-            echo "In Git Repo: $(git rev-parse --git-dir &>/dev/null && echo "yes" || echo "no")"
-        fi
-        echo "Bun Available: $(command -v bun &>/dev/null && echo "yes" || echo "no")"
-        if command -v bun &>/dev/null; then
-            echo "Bun Version: $(bun --version 2>/dev/null || echo "unknown")"
-        fi
-        echo "npm Available: $(command -v npm &>/dev/null && echo "yes" || echo "no")"
-        if command -v npm &>/dev/null; then
-            echo "npm Version: $(npm --version 2>/dev/null || echo "unknown")"
-            echo "npm Path: $(which npm 2>/dev/null || echo "unknown")"
-        fi
-        echo "node Available: $(command -v node &>/dev/null && echo "yes" || echo "no")"
-        if command -v node &>/dev/null; then
-            echo "node Version: $(node --version 2>/dev/null || echo "unknown")"
-            echo "node Path: $(which node 2>/dev/null || echo "unknown")"
-        fi
-        echo "nvm Available: $(command -v nvm &>/dev/null && echo "yes" || [[ -s "$HOME/.nvm/nvm.sh" ]] && echo "installed but not loaded" || echo "no")"
+        echo -e "${RED}Git is required. Please install it first:${NC}"
+        echo -e "  $(get_install_cmd git)"
+        exit 1
+    fi
+    
+    # Note: jq and tmux no longer required as we use Factory.ai Task tool for orchestration
+    echo ""
+    
+    # Check if in git repo
+    GIT_ROOT=""
+    if detect_git_repo "$(pwd)"; then
+        log_success "Git repository detected at ${GIT_ROOT}"
+    else
+        log_warning "Not in a git repository (checked $(pwd) and parents)"
         echo ""
-        echo "=========================================="
-        echo "INSTALLED DEPENDENCIES"
-        echo "=========================================="
-        echo "jq: $(command -v jq &>/dev/null && jq --version 2>/dev/null || echo "not installed")"
-        echo "tmux: $(command -v tmux &>/dev/null && tmux -V 2>/dev/null || echo "not installed")"
-        if [[ "$OS" == "macos" ]]; then
-            echo "caffeinate: $(command -v caffeinate &>/dev/null && echo "available" || echo "not available")"
-        fi
-        echo ""
-        if [[ "$OS" == "wsl2" ]]; then
-            echo "=========================================="
-            echo "WSL SPECIFIC INFO"
-            echo "=========================================="
-            echo "WSL Version Info:"
-            cat /proc/version 2>/dev/null || echo "Could not read /proc/version"
+
+        if [[ -t 0 ]]; then
+            echo -e "${YELLOW}Initialize git repository now?${NC}"
+            read -p "[Y/n]: " -n 1 -r || true
             echo ""
-            echo "Windows PATH in use: $([[ "$PATH" == */mnt/c/* ]] && echo "yes" || echo "no")"
-        fi
-    } >> "$ERROR_LOG_FILE"
-
-    echo -e "${CYAN}Error log saved to: ${NC}$ERROR_LOG_FILE"
-    echo ""
-    echo -e "${YELLOW}Please share this file when reporting the issue:${NC}"
-    echo -e "  ${BLUE}1.${NC} Open an issue at: ${CYAN}https://github.com/korallis/Droidz/issues${NC}"
-    echo -e "  ${BLUE}2.${NC} Copy and paste the contents of: $ERROR_LOG_FILE"
-    echo ""
-    echo -e "${CYAN}Quick copy command:${NC}"
-    if command -v pbcopy &>/dev/null; then
-        echo -e "  cat $ERROR_LOG_FILE | pbcopy  # Then paste with Cmd+V"
-    elif command -v xclip &>/dev/null; then
-        echo -e "  cat $ERROR_LOG_FILE | xclip -selection clipboard"
-    else
-        echo -e "  cat $ERROR_LOG_FILE  # Then copy manually"
-    fi
-    echo ""
-}
-
-cleanup() {
-    local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
-        log_error "Installation failed with exit code $exit_code"
-        generate_error_report "$exit_code"
-    else
-        # Clean up log file on success
-        if [[ -f "$ERROR_LOG_FILE" ]]; then
-            rm -f "$ERROR_LOG_FILE"
-        fi
-    fi
-}
-
-trap cleanup EXIT
-trap 'log_error "Installation interrupted by user"; exit 130' INT TERM
-
-error_exit() {
-    log_error "$1"
-    exit "${2:-1}"
-}
-
-# ============================================================================
-# INSTALLATION PROCESS
-# ============================================================================
-
-# Display welcome banner
-echo ""
-echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}${BOLD}║   Droidz Factory.ai Installer v${DROIDZ_VERSION}            ║${NC}"
-echo -e "${CYAN}${BOLD}║   Smart Update with Auto-Dependency Installation    ║${NC}"
-echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
-echo ""
-
-# ============================================================================
-# DEPENDENCY CHECKS
-# ============================================================================
-
-detect_os
-log_step "Detected OS: $OS (Package manager: $PKG_MANAGER)"
-
-# Check for git (CRITICAL)
-if ! command -v git &> /dev/null; then
-    log_error "Git is not installed."
-
-    if [[ "$PKG_MANAGER" != "unknown" ]]; then
-        echo ""
-        echo -e "${YELLOW}Git is required. Install now?${NC}"
-        read -p "Choice [Y/n]: " -n 1 -r
-        echo ""
-
-        if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-            if ! install_package git; then
-                error_exit "Failed to install git. Please install manually: $(get_install_cmd git)" 1
+            if [[ $REPLY =~ ^[Nn]$ ]]; then
+                log_error "Droidz requires a git repository"
+                exit 1
             fi
-        else
-            error_exit "Install manually: $(get_install_cmd git)" 1
-        fi
-    else
-        error_exit "Please install git manually" 1
-    fi
-else
-    log_success "Git found"
-fi
-
-# Check if we're in a git repo
-if [[ ! -d ".git" ]]; then
-    log_warning "Not in a git repository."
-    echo ""
-    echo -e "${YELLOW}Would you like to initialize this directory as a git repository?${NC}"
-    echo -e "  ${CYAN}[Y]${NC} Yes, initialize git repository (recommended)"
-    echo -e "  ${CYAN}[N]${NC} No, I'll do it manually"
-    echo ""
-    read -p "Choice [Y/n]: " -n 1 -r
-    echo ""
-
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-        log_info "Initializing git repository..."
-        if git init > /dev/null 2>&1; then
+            git init
+            GIT_ROOT="$(pwd)"
             log_success "Git repository initialized"
-
-            # Create initial .gitignore if it doesn't exist
-            if [[ ! -f ".gitignore" ]]; then
-                cat > .gitignore << 'EOF'
-# Droidz worktrees
+        else
+            log_info "Non-interactive run detected; initializing git repository automatically"
+            git init
+            GIT_ROOT="$(pwd)"
+            log_success "Git repository initialized"
+        fi
+    fi
+    
+    # Create directory structure (only what we need)
+    log_step "Creating directories"
+    mkdir -p .factory/{commands,droids,scripts,hooks,skills}
+    mkdir -p .droidz/specs
+    log_success "Directories created"
+    
+    # Download framework files
+    log_step "Downloading Droidz framework"
+    
+    # Commands
+    log_info "Downloading commands..."
+    
+    # Markdown commands (prompts)
+    download_file "$REPO_URL/.factory/commands/droidz-init.md" ".factory/commands/droidz-init.md" "droidz-init command (NEW!)"
+    download_file "$REPO_URL/.factory/commands/droidz-build.md" ".factory/commands/droidz-build.md" "droidz-build command"
+    download_file "$REPO_URL/.factory/commands/auto-parallel.md" ".factory/commands/auto-parallel.md" "auto-parallel command"
+    download_file "$REPO_URL/.factory/commands/gh-helper.md" ".factory/commands/gh-helper.md" "gh-helper command"
+    
+    # Executable commands (bash scripts)
+    download_file "$REPO_URL/.factory/commands/gh-helper.sh" ".factory/commands/gh-helper.sh" "gh-helper script"
+    chmod +x ".factory/commands/gh-helper.sh"
+    
+    # Droids
+    log_info "Downloading specialist droids..."
+    for droid in droidz-orchestrator droidz-codegen droidz-test droidz-refactor droidz-integration droidz-infra droidz-generalist; do
+        download_file "$REPO_URL/.factory/droids/${droid}.md" ".factory/droids/${droid}.md" "$droid droid"
+    done
+    
+    # Scripts directory (currently empty, but keep structure for future use)
+    mkdir -p .factory/scripts
+    
+    # Hooks
+    log_info "Downloading skills injection hooks..."
+    for hook in inject-skills inject-file-skills load-project-skills; do
+        download_file "$REPO_URL/.factory/hooks/${hook}.sh" ".factory/hooks/${hook}.sh" "$hook hook"
+        chmod +x ".factory/hooks/${hook}.sh"
+    done
+    
+    # Skills (all 41 comprehensive skills)
+    log_info "Downloading comprehensive skill library (41 skills)..."
+    
+    # Framework & Integration Skills (21)
+    for skill in typescript react nextjs-16 tailwind-v4 convex prisma drizzle postgresql supabase neon clerk stripe vercel cloudflare-workers trpc tanstack-query security design context-optimizer standards-enforcer tech-stack-analyzer; do
+        download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
+    done
+    
+    # Workflow & Process Skills (19 - adapted from obra/superpowers)
+    for skill in test-driven-development systematic-debugging verification-before-completion defense-in-depth testing-anti-patterns brainstorming writing-skills executing-plans requesting-code-review receiving-code-review root-cause-tracing subagent-driven-development finishing-a-development-branch using-git-worktrees condition-based-waiting dispatching-parallel-agents testing-skills-with-subagents sharing-skills using-droidz; do
+        download_file "$REPO_URL/.factory/skills/${skill}.md" ".factory/skills/${skill}.md" "$skill skill"
+    done
+    
+    # Meta/Guide Skills (2)
+    download_file "$REPO_URL/.factory/skills/ADAPTATION_GUIDE.md" ".factory/skills/ADAPTATION_GUIDE.md" "adaptation guide"
+    
+    # Configuration
+    log_info "Downloading configuration..."
+    download_file "$REPO_URL/config.example.yml" "config.example.yml" "config template"
+    
+    if [[ ! -f "config.yml" ]]; then
+        cp config.example.yml config.yml
+        log_success "Created config.yml"
+    else
+        log_info "config.yml exists - keeping your settings"
+    fi
+    
+    # Settings
+    if [[ ! -f ".factory/settings.json" ]]; then
+        download_file "$REPO_URL/.factory/settings.json" ".factory/settings.json" "settings"
+    else
+        log_info "settings.json exists - keeping your settings"
+    fi
+    
+    # Documentation
+    log_info "Downloading documentation..."
+    download_file "$REPO_URL/README.md" "README.md" "README"
+    download_file "$REPO_URL/SKILLS.md" "SKILLS.md" "Skills guide"
+    download_file "$REPO_URL/AGENTS.md.template" "AGENTS.md.template" "AGENTS.md template"
+    download_file "$REPO_URL/.factory/HOOKS.md" ".factory/HOOKS.md" "Hooks documentation"
+    download_file "$REPO_URL/.factory/SETTINGS.md" ".factory/SETTINGS.md" "Settings documentation"
+    
+    # Fix documentation
+    mkdir -p docs/fixes
+    if download_file "$REPO_URL/docs/fixes/2025-11-15-task-tool-model-parameter-fix.md" "docs/fixes/2025-11-15-task-tool-model-parameter-fix.md" "Task tool fix documentation" 2>/dev/null; then
+        log_success "Task tool fix documentation downloaded"
+    fi
+    if download_file "$REPO_URL/docs/fixes/2025-11-15-droid-model-identifier-fix.md" "docs/fixes/2025-11-15-droid-model-identifier-fix.md" "Droid model fix documentation" 2>/dev/null; then
+        log_success "Droid model fix documentation downloaded"
+    fi
+    
+    # Quick start guide (optional, don't fail if missing)
+    if download_file "$REPO_URL/QUICK_START.md" "QUICK_START.md" "Quick Start guide" 2>/dev/null; then
+        log_success "Quick Start guide downloaded"
+    fi
+    
+    # Skills summary (optional)
+    if download_file "$REPO_URL/SKILLS_SUMMARY.md" "SKILLS_SUMMARY.md" "Skills summary" 2>/dev/null; then
+        log_success "Skills summary downloaded"
+    fi
+    
+    # Spec generator example
+    log_info "Downloading spec generator example..."
+    if download_file "$REPO_URL/.droidz/specs/000-example-contact-form.md" ".droidz/specs/000-example-contact-form.md" "example spec" 2>/dev/null; then
+        log_success "Example spec downloaded"
+    fi
+    
+    # .droidz/.gitignore
+    if [[ ! -f ".droidz/.gitignore" ]]; then
+        download_file "$REPO_URL/.droidz/.gitignore" ".droidz/.gitignore" ".droidz gitignore"
+    fi
+    
+    # No legacy status script needed - use Factory.ai conversation for monitoring
+    
+    # Create .gitignore
+    if [[ ! -f ".gitignore" ]]; then
+        cat > .gitignore << 'EOF'
+# Droidz runtime
 .runs/
 
-# Configuration file with API keys (NEVER commit this!)
+# Configuration with API keys - NEVER commit this!
 config.yml
 
-# Keep the example template
+# Keep the template
 !config.example.yml
 
-# Dependency artifacts
+# .droidz/ - Local state and specs (controlled by .droidz/.gitignore)
+# Users can optionally commit specs by modifying .droidz/.gitignore
+.droidz/*
+!.droidz/.gitignore
+!.droidz/specs/000-*.md
+
+# Dependencies
 node_modules/
 bun.lockb
 
@@ -443,518 +369,103 @@ bun.lockb
 .DS_Store
 *.log
 EOF
-                log_success "Created .gitignore"
-            fi
-
-            # Create initial commit
-            git add .gitignore > /dev/null 2>&1
-            if git commit -m "chore: initialize repository with Droidz framework" > /dev/null 2>&1; then
-                log_success "Created initial commit"
-            else
-                log_info "Repository initialized (no initial commit created)"
-            fi
-        else
-            error_exit "Failed to initialize git repository. Please run 'git init' manually." 1
-        fi
-    else
-        error_exit "Please initialize git manually with: git init" 1
-    fi
-else
-    log_success "Git repository detected"
-fi
-
-# Check for Bun runtime
-if ! command -v bun >/dev/null 2>&1; then
-    log_warning "Bun runtime not found. Required for running Droidz orchestration."
-    log_info "Install from: https://bun.sh (or use: curl -fsSL https://bun.sh/install | bash)"
-    echo ""
-    log_warning "Continuing installation, but you'll need Bun to run orchestration."
-    echo ""
-fi
-
-# Check for optional dependencies (jq and tmux)
-MISSING_DEPS=()
-
-if ! command -v jq &> /dev/null; then
-    log_warning "jq not found. Required for orchestration features."
-    MISSING_DEPS+=("jq")
-else
-    log_success "jq found"
-fi
-
-if ! command -v tmux &> /dev/null; then
-    log_warning "tmux not found. Required for parallel task monitoring."
-    MISSING_DEPS+=("tmux")
-else
-    log_success "tmux found"
-fi
-
-# Check for caffeinate on macOS (prevents sleep during long operations)
-if [[ "$OS" == "macos" ]]; then
-    if ! command -v caffeinate &> /dev/null; then
-        log_warning "caffeinate not found. Prevents Mac from sleeping during operations."
-        log_info "caffeinate is a macOS system utility (usually pre-installed)"
-    else
-        log_success "caffeinate found"
-    fi
-fi
-
-# Offer to install missing optional dependencies
-if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
-    echo ""
-    log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
-    echo -e "${YELLOW}Install these now for full orchestration support?${NC}"
-    read -p "Choice [Y/n]: " -n 1 -r
-    echo ""
-
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-        for dep in "${MISSING_DEPS[@]}"; do
-            install_package "$dep"
-        done
-        echo ""
-    else
-        log_info "You can install later with:"
-        case "$PKG_MANAGER" in
-            apt)
-                log_info "  sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
-                ;;
-            brew)
-                log_info "  brew install ${MISSING_DEPS[*]}"
-                ;;
-            *)
-                for dep in "${MISSING_DEPS[@]}"; do
-                    log_info "  $(get_install_cmd "$dep")"
-                done
-                ;;
-        esac
-        echo ""
-    fi
-fi
-
-# Detect if this is an install or update
-if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.ts" ]]; then
-    MODE="update"
-    log_info "Existing Droidz installation detected. Updating..."
-else
-    MODE="install"
-    log_info "Installing Droidz v${DROIDZ_VERSION}..."
-fi
-
-echo ""
-
-# Create directories
-log_step "Creating directories..."
-mkdir -p .factory/droids
-mkdir -p .factory/commands
-mkdir -p .factory/orchestrator
-mkdir -p .factory/hooks
-mkdir -p .factory/memory/user
-mkdir -p .factory/memory/org
-mkdir -p .factory/skills/auto-orchestrator
-mkdir -p .factory/skills/memory-manager
-mkdir -p .factory/skills/graphite-stacked-diffs
-mkdir -p .factory/skills/spec-shaper
-mkdir -p .factory/specs/active
-mkdir -p .factory/specs/archive
-mkdir -p .factory/specs/templates
-mkdir -p .factory/product
-mkdir -p .factory/scripts
-mkdir -p .factory/standards/templates
-log_success "Directories created"
-
-# Ensure package.json exists
-if [[ ! -f "package.json" ]]; then
-    log_info "package.json not found. Initializing Bun project..."
-    bun init --yes >/dev/null 2>&1
-    log_success "Initialized package.json"
-else
-    log_info "package.json detected – preserving existing settings"
-fi
-
-# Ensure package.json uses ESM modules
-if command -v python3 >/dev/null 2>&1; then
-    python3 - <<'PY'
-import json
-from pathlib import Path
-
-path = Path("package.json")
-pkg = json.loads(path.read_text())
-updated = False
-
-if pkg.get("type") != "module":
-    pkg["type"] = "module"
-    updated = True
-
-if updated:
-    path.write_text(json.dumps(pkg, indent=2) + "\n")
-PY
-    log_success "Ensured package.json is configured for ES modules"
-else
-    log_warning "python3 not found. Please ensure package.json includes \"type\": \"module\"."
-fi
-
-# Install runtime and linting dependencies
-log_info "Installing runtime dependency: yaml"
-bun add yaml >/dev/null 2>&1
-log_success "Added yaml dependency"
-
-log_info "Installing development dependencies for linting and types"
-bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-log_success "Installed development dependencies"
-
-# Download droids
-log_step "Downloading robot helpers (droids)..."
-
-DROIDS=(
-    "droidz-orchestrator.md"
-    "codegen.md"
-    "test.md"
-    "refactor.md"
-    "infra.md"
-    "integration.md"
-    "generalist.md"
-)
-
-for droid in "${DROIDS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/droids/${droid}${CACHE_BUST}" -o ".factory/droids/${droid}"
-    log_success "Downloaded ${droid}"
-done
-
-# Download custom commands
-log_step "Downloading custom slash commands..."
-
-COMMANDS=(
-    "droidz-init.md"
-    "graphite.md"
-    "orchestrate.md"
-    "spec-shaper.md"
-    "validate-spec.md"
-    "create-spec.md"
-    "analyze-tech-stack.md"
-    "save-decision.md"
-    "spec-to-tasks.md"
-    "auto-orchestrate.md"
-    "optimize-context.md"
-    "check-standards.md"
-    "load-memory.md"
-)
-
-for command in "${COMMANDS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/commands/${command}${CACHE_BUST}" -o ".factory/commands/${command}"
-    log_success "Downloaded ${command}"
-done
-
-# Download orchestrator scripts
-log_step "Downloading orchestrator scripts..."
-
-ORCHESTRATOR_FILES=(
-    "worktree-setup.ts"
-    "task-coordinator.ts"
-    "types.ts"
-    "config.json"
-    "tsconfig.json"
-)
-
-for file in "${ORCHESTRATOR_FILES[@]}"; do
-    if [[ "$file" = "config.json" ]]; then
-        tmp_file=$(mktemp)
-        curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o "$tmp_file"
-
-        target_file=".factory/orchestrator/${file}"
-
-        if [[ ! -f "$target_file" ]]; then
-            mv "$tmp_file" "$target_file"
-            log_success "Downloaded ${file}"
-        else
-            if command -v python3 >/dev/null 2>&1; then
-                python3 - "$tmp_file" "$target_file" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-default_path = Path(sys.argv[1])
-current_path = Path(sys.argv[2])
-
-default_cfg = json.loads(default_path.read_text())
-current_cfg = json.loads(current_path.read_text())
-
-def merge(default, current):
-    if isinstance(default, dict) and isinstance(current, dict):
-        for key, value in default.items():
-            if key not in current:
-                current[key] = value
-            else:
-                current[key] = merge(value, current[key])
-        return current
-    return current
-
-merged = merge(default_cfg, current_cfg)
-current_path.write_text(json.dumps(merged, indent=2) + "\n")
-PY
-                log_success "Updated ${file} with new defaults"
-            else
-                log_warning "python3 not found. Skipping merge for ${file}; existing customization preserved."
-            fi
-            rm -f "$tmp_file"
-        fi
-    else
-        curl -fsSL "${GITHUB_RAW}/.factory/orchestrator/${file}${CACHE_BUST}" -o ".factory/orchestrator/${file}"
-        log_success "Downloaded ${file}"
-    fi
-done
-
-# Download config.example.yml template
-log_step "Downloading configuration template..."
-curl -fsSL "${GITHUB_RAW}/config.example.yml${CACHE_BUST}" -o "config.example.yml"
-log_success "Downloaded config.example.yml"
-
-# Handle config.yml
-if [[ -f "config.yml" ]]; then
-    log_warning "config.yml already exists - preserving your existing configuration"
-    log_info "Compare with config.example.yml to see new simplified settings"
-else
-    cp config.example.yml config.yml
-    log_success "Created config.yml from template"
-    log_info "Simple config - just set your Linear project name (optional)"
-fi
-
-# Download hooks
-log_step "Downloading hooks..."
-
-HOOKS=(
-    "auto-lint.sh"
-    "monitor-context.sh"
-)
-
-for hook in "${HOOKS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/hooks/${hook}${CACHE_BUST}" -o ".factory/hooks/${hook}"
-    chmod +x ".factory/hooks/${hook}"
-    log_success "Downloaded ${hook}"
-done
-
-# Download memory templates
-log_step "Downloading memory templates..."
-curl -fsSL "${GITHUB_RAW}/.factory/memory/user/README.md${CACHE_BUST}" -o ".factory/memory/user/README.md"
-log_success "Downloaded user memory template"
-
-curl -fsSL "${GITHUB_RAW}/.factory/memory/org/README.md${CACHE_BUST}" -o ".factory/memory/org/README.md"
-log_success "Downloaded org memory template"
-
-# Download skills
-log_step "Downloading skills..."
-
-SKILLS=(
-    "standards-enforcer.md"
-    "context-optimizer.md"
-    "tech-stack-analyzer.md"
-)
-
-for skill in "${SKILLS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/skills/${skill}${CACHE_BUST}" -o ".factory/skills/${skill}"
-    log_success "Downloaded ${skill}"
-done
-
-# Download nested skills (with subdirectories)
-log_step "Downloading nested skills..."
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/auto-orchestrator/SKILL.md${CACHE_BUST}" -o ".factory/skills/auto-orchestrator/SKILL.md"
-log_success "Downloaded auto-orchestrator skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/memory-manager/SKILL.md${CACHE_BUST}" -o ".factory/skills/memory-manager/SKILL.md"
-log_success "Downloaded memory-manager skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/graphite-stacked-diffs/SKILL.md${CACHE_BUST}" -o ".factory/skills/graphite-stacked-diffs/SKILL.md"
-log_success "Downloaded graphite-stacked-diffs skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/spec-shaper/SKILL.md${CACHE_BUST}" -o ".factory/skills/spec-shaper/SKILL.md"
-log_success "Downloaded spec-shaper skill"
-
-# Download spec templates
-log_step "Downloading spec templates..."
-curl -fsSL "${GITHUB_RAW}/.factory/specs/README.md${CACHE_BUST}" -o ".factory/specs/README.md"
-log_success "Downloaded specs README"
-
-curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/feature-spec.md${CACHE_BUST}" -o ".factory/specs/templates/feature-spec.md"
-log_success "Downloaded feature-spec template"
-
-curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/epic-spec.md${CACHE_BUST}" -o ".factory/specs/templates/epic-spec.md"
-log_success "Downloaded epic-spec template"
-
-# Create .gitkeep files for empty directories
-touch .factory/specs/active/.gitkeep
-touch .factory/specs/archive/.gitkeep
-
-# Download product documentation
-log_step "Downloading product documentation..."
-
-PRODUCT_FILES=(
-    "vision.md"
-    "use-cases.md"
-    "roadmap.md"
-)
-
-for file in "${PRODUCT_FILES[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/product/${file}${CACHE_BUST}" -o ".factory/product/${file}"
-    log_success "Downloaded ${file}"
-done
-
-# Download scripts
-log_step "Downloading scripts..."
-curl -fsSL "${GITHUB_RAW}/.factory/scripts/orchestrator.sh${CACHE_BUST}" -o ".factory/scripts/orchestrator.sh"
-chmod +x ".factory/scripts/orchestrator.sh"
-log_success "Downloaded orchestrator.sh"
-
-# Download standards templates
-log_step "Downloading standards templates..."
-
-STANDARDS=(
-    "typescript.md"
-    "react.md"
-    "nextjs.md"
-    "vue.md"
-    "shadcn-ui.md"
-    "convex.md"
-    "tailwind.md"
-    "python.md"
-)
-
-for standard in "${STANDARDS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/standards/templates/${standard}${CACHE_BUST}" -o ".factory/standards/templates/${standard}"
-    log_success "Downloaded ${standard} standard"
-done
-
-# Download settings.json (main configuration)
-log_step "Downloading settings.json..."
-if [[ -f ".factory/settings.json" ]]; then
-    log_warning "settings.json already exists - preserving your configuration"
-    log_info "Compare with the latest version to see new settings"
-else
-    curl -fsSL "${GITHUB_RAW}/.factory/settings.json${CACHE_BUST}" -o ".factory/settings.json"
-    log_success "Downloaded settings.json"
-fi
-
-# Download documentation (keep local README untouched)
-log_step "Downloading documentation updates..."
-curl -fsSL "${GITHUB_RAW}/CHANGELOG.md${CACHE_BUST}" -o "CHANGELOG.md"
-log_success "Downloaded CHANGELOG.md"
-
-# Create .gitignore entries if needed
-if [[ -f ".gitignore" ]]; then
-    # Add .runs/ if not present
-    if ! grep -q ".runs/" .gitignore 2>/dev/null; then
+        log_success "Created .gitignore"
+    elif ! grep -q "config.yml" .gitignore; then
         echo "" >> .gitignore
-        echo "# Droidz worktrees" >> .gitignore
-        echo ".runs/" >> .gitignore
-        log_success "Added .runs/ to .gitignore"
-    fi
-    
-    # Add config.yml if not present (CRITICAL for security)
-    if ! grep -q "config.yml" .gitignore 2>/dev/null; then
-        echo "" >> .gitignore
-        echo "# Configuration file with API keys (NEVER commit this!)" >> .gitignore
+        echo "# Droidz configuration - NEVER commit this!" >> .gitignore
         echo "config.yml" >> .gitignore
         echo "" >> .gitignore
-        echo "# Keep the example template" >> .gitignore
-        echo "!config.example.yml" >> .gitignore
-        log_success "Added config.yml to .gitignore (keeps your API keys safe!)"
+        echo "# .droidz/ - Local state and specs" >> .gitignore
+        echo ".droidz/*" >> .gitignore
+        echo "!.droidz/.gitignore" >> .gitignore
+        echo "!.droidz/specs/000-*.md" >> .gitignore
+        log_success "Updated .gitignore"
     fi
-
-    # Ensure dependencies are ignored
-    if ! grep -q "node_modules/" .gitignore 2>/dev/null; then
-        echo "" >> .gitignore
-        echo "# Dependency artifacts" >> .gitignore
-        echo "node_modules/" >> .gitignore
-        log_success "Added node_modules/ to .gitignore"
+    
+    # Success message
+    echo ""
+    if [[ "$UPGRADING" = true ]]; then
+        echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
+        echo -e "${GREEN}${BOLD}║   ✅ Upgrade to v${VERSION} Complete!               ║${NC}"
+        echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${CYAN}🆕 What's New in v${VERSION}:${NC}"
+        echo ""
+        echo "  ✅ Reliable parallel execution: no phantom tasks; Task IDs recorded before start"
+        echo "  📣 Rich progress: step + next action + files changed + test results + heartbeat"
+        echo "  ⏱ Stall detection: streams marked stalled after idle; blockers surfaced"
+        echo "  🔒 Validation gating: failing lint/type/tests block completion with output shown"
+        echo "  🛠 Git detection: handles worktrees/subdirectories before prompting to init"
+        echo "  🛠 Headless ready: run with 'droid exec --auto high' for non-interactive orchestration"
+        echo ""
+        echo -e "${YELLOW}Try: /droidz-init  (verify & analyze)${NC}"
+        echo -e "${YELLOW}Then: /droidz-build \"add authentication\"${NC}"
+        echo ""
+        echo -e "${CYAN}Quick Check:${NC}"
+        echo -e "   ${GREEN}./status${NC} - See what's installed"
+        echo ""
+        echo -e "${CYAN}Try It Now:${NC}"
+        echo -e "   ${GREEN}droid${NC}"
+        echo -e "   ${GREEN}/auto-parallel \"your task\"${NC}"
+        echo -e "   Monitor progress directly in conversation!"
+        echo ""
+    else
+        echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════╗${NC}"
+        echo -e "${GREEN}${BOLD}║   🎉 Installation Complete!                     ║${NC}"
+        echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${CYAN}What You Got (v${VERSION}):${NC}"
+        echo ""
+        echo "  🚀 /droidz-init - Smart Onboarding (NEW!)"
+        echo "     - Verify installation"
+        echo "     - Analyze project (greenfield/brownfield)"
+        echo "     - Generate architecture docs"
+        echo ""
+        echo "  🚀 /droidz-build - AI-Powered Spec Generator (NEW!)"
+        echo "     - Turn vague ideas into production-ready specs"
+        echo "     - Security requirements (OWASP, GDPR)"
+        echo "     - 80% less time writing specs"
+        echo ""
+        echo "  ✅ /auto-parallel - Parallel task execution (3-5x faster, no phantom tasks)"
+        echo "  ✅ Rich progress: step, next action, files touched, test results, heartbeat"
+        echo "  ✅ Stall detection + validation gating to prevent silent failures"
+        echo "  ✅ Headless ready: use 'droid exec --auto high' for CI/non-interactive runs"
+        echo "  ✅ 7 specialist droids + 41 skills with auto enforcement"
+        echo "  ✅ Skills injection - Auto-loads based on project/prompts/files"
+        echo ""
+        echo -e "${CYAN}Next Steps:${NC}"
+        echo ""
+        echo "1. Check installation:"
+        echo -e "   ${GREEN}./status${NC}"
+        echo ""
+        echo "2. Start droid:"
+        echo -e "   ${GREEN}droid${NC}"
+        echo ""
+        echo "3. Enable custom features:"
+        echo -e "   ${GREEN}/settings${NC} → Toggle 'Custom Commands' and 'Custom Droids' ON"
+        echo -e "   Exit (Ctrl+C) then run ${GREEN}droid${NC} again"
+        echo ""
+        echo "4. Verify commands loaded:"
+        echo -e "   ${GREEN}/commands${NC} → Should see: droidz-init, droidz-build, auto-parallel"
+        echo ""
+        echo "5. Start with onboarding:"
+        echo -e "   ${GREEN}/droidz-init${NC}"
+        echo -e "   Verifies setup, analyzes project, generates docs!"
+        echo ""
+        echo "6. Generate specs for features:"
+        echo -e "   ${GREEN}/droidz-build \"add user authentication\"${NC}"
+        echo -e "   Creates comprehensive spec with security, tests, edge cases!"
+        echo ""
+        echo "7. Execute in parallel:"
+        echo -e "   ${GREEN}/auto-parallel \"your task\"${NC}"
+        echo -e "   3-5x faster with live progress updates!"
+        echo ""
     fi
+    echo -e "${BLUE}📚 Read README.md for complete beginner-friendly guide!${NC}"
+    echo -e "${BLUE}⚡ Quick reference: cat QUICK_START.md${NC}"
+    echo -e "${BLUE}🎓 Skills guide: cat SKILLS.md${NC}"
+    echo ""
+}
 
-    if ! grep -q "bun.lockb" .gitignore 2>/dev/null; then
-        echo "" >> .gitignore
-        echo "bun.lockb" >> .gitignore
-        log_success "Added bun.lockb to .gitignore"
-    fi
-else
-    # Create new .gitignore with both entries
-    cat > .gitignore << 'EOF'
-# Droidz worktrees
-.runs/
-
-# Configuration file with API keys (NEVER commit this!)
-config.yml
-
-# Keep the example template
-!config.example.yml
-
-# Dependency artifacts
-node_modules/
-bun.lockb
-EOF
-    log_success "Created .gitignore with security settings"
-fi
-
-# Summary
-echo ""
-echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-if [[ "$MODE" = "install" ]]; then
-    echo -e "${GREEN}${BOLD}║   🎉 Droidz v${DROIDZ_VERSION} Installation Complete!          ║${NC}"
-else
-    echo -e "${GREEN}${BOLD}║   🎉 Droidz Updated to v${DROIDZ_VERSION}!                    ║${NC}"
-fi
-echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
-echo ""
-
-# Next steps
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 Next Steps"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "1. Enable Custom Droids:"
-echo "   droid"
-echo "   /settings"
-echo "   Toggle 'Custom Droids' ON"
-echo ""
-echo "2. Restart Factory:"
-echo "   Exit (Ctrl+C) then run 'droid' again"
-echo ""
-echo "3. Verify droids loaded:"
-echo "   /droids"
-echo "   Should see: droidz-orchestrator, droidz-codegen, etc."
-echo ""
-echo "4. Add MCP servers (recommended):"
-echo "   /mcp add exa      → AI/code research (authenticate when prompted)"
-echo "   /mcp add linear   → Project management (follow MCP auth flow)"
-echo "   /mcp add ref      → Documentation lookup (CLI will guide you)"
-echo ""
-echo "   OR just set your Linear project in config.yml:"
-echo "   linear:"
-echo "     project_name: \"MyProject\""
-echo ""
-echo "5. Explore new features:"
-echo "   /commands         → See all available slash commands"
-echo "   /spec-shaper      → Create structured specs for features"
-echo "   /auto-orchestrate → Auto-detect and orchestrate complex tasks"
-echo "   /graphite         → Manage stacked diffs workflow"
-echo "   /analyze-tech-stack → Analyze project tech stack"
-echo "   /load-memory      → Load saved decisions and patterns"
-echo ""
-echo "6. Start building:"
-echo "   droid"
-echo "   Then say: Use droidz-orchestrator to build [your idea]"
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✨ What's New in Factory.ai Edition:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "• Auto-activation hooks for proactive assistance"
-echo "• Memory management for decisions and patterns"
-echo "• Advanced skills (spec-shaper, auto-orchestrator, etc.)"
-echo "• Standards enforcement with auto-fix"
-echo "• Context optimization and monitoring"
-echo "• Product vision and roadmap templates"
-echo "• 100% feature parity with Claude Code"
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📚 Docs: README.md | CHANGELOG.md"
-echo "💝 Support: paypal.me/gideonapp"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Happy building! 🚀🤖"
+# Run main function
+main

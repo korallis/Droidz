@@ -2,6 +2,16 @@
   "hooks": {
     "SessionStart": [
       {
+        "name": "load-project-skills",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/load-project-skills.sh",
+            "description": "Load project-relevant coding standards and patterns"
+          }
+        ]
+      },
+      {
         "name": "load-project-context",
         "type": "prompt",
         "prompt": "Load project context by:\n1. Checking if tech stack has been analyzed\n2. Loading organization memory if available\n3. Verifying all CLAUDE.md standards are accessible\n4. Reporting current project setup\n\nIf tech stack not analyzed, suggest running /analyze-tech-stack"
@@ -13,6 +23,16 @@
       }
     ],
     "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/inject-file-skills.sh",
+            "description": "Inject coding standards based on file type"
+          }
+        ]
+      },
       {
         "matcher": "Bash|Execute",
         "hooks": [
@@ -43,6 +63,15 @@
       }
     ],
     "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/inject-skills.sh",
+            "description": "Inject relevant coding standards based on prompt content"
+          }
+        ]
+      },
       {
         "name": "context-usage-monitor",
         "type": "command",

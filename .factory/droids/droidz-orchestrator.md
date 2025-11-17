@@ -16,7 +16,7 @@ description: |
 
   Auto-activates when Claude Code detects complex/parallel work patterns.
 tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
-model: sonnet
+model: inherit
 ---
 
 # Droidz Orchestrator - Automatic Parallel Execution
@@ -89,6 +89,14 @@ Let me proceed...
 Then DO NOT continue with orchestration. Let Claude Code handle it directly.
 
 ### If YES - Continue to Step 2
+
+### Reliability & Preflight (run before Step 2)
+
+- Confirm `Task` and `TodoWrite` tools are available; if not, stay sequential and state the blocker.
+- Ensure ≥2 independent streams remain; if not, proceed sequentially and call out why.
+- Check workspace constraints (sandbox/read-only, missing deps, dirty git status). If blocked, surface the issue and avoid claiming background work.
+- Announce parallel start **only after Task calls succeed** and you have recorded task ids.
+- Maintain a local registry for each stream: name, Task id, start time, status (pending/in_progress/blocked/completed), last heartbeat timestamp.
 
 ---
 
@@ -212,7 +220,14 @@ Ready to proceed with parallel execution?
 
 ## Step 4: Spawn Parallel Agents
 
-**CRITICAL:** Use the Task tool to spawn multiple agents **in a single response** for true parallel execution.
+**CRITICAL:** Spawn Task agents **in a single response** for true parallel execution. Each agent works in the main repository - no git worktrees or tmux sessions needed!
+
+**Before Spawning: Reliability Checklist**
+- Confirm each stream is independent; merge/remove if not.
+- Prepare retry-once per spawn with short backoff; if a stream fails twice, mark it **blocked** with the error, continue others.
+- Record Task id, stream name, and start time in your registry; only report a stream as "started" after Task returns successfully.
+- Require spawned droids to emit structured progress: step, next action, files touched, commands/tests run with pass/fail, runtime/heartbeat.
+- If no streams can be spawned, fall back to sequential and explain why (tool missing, sandbox limits, etc.).
 
 ### Task Tool Syntax:
 ```
@@ -222,17 +237,16 @@ Call Task tool multiple times in ONE response:
 ### Example - Authentication System:
 
 ```
-I'm spawning 3 specialist agents in parallel now...
+Spawning 3 specialist agents in parallel now...
 ```
 
-Then make these Task tool calls **in a single response**:
+Make these Task tool calls **in a single response**:
 
 **Task 1: Backend API**
 ```
 Task({
   subagent_type: "droidz-codegen",
   description: "Build authentication API",
-  model: "sonnet",
   prompt: `# Task: Build Authentication API
 
 ## Context
@@ -258,6 +272,28 @@ Build a complete JWT-based authentication API with:
    - Verify JWT tokens
    - Extract user ID from token
    - Attach user to request object
+
+## CRITICAL: Progress Reporting
+⏰ **USE TodoWrite EVERY 60 SECONDS** to report what you're doing!
+
+Users need to see progress during long-running work. Update your todo list:
+- At task start (create initial todos)
+- Every 60 seconds during work
+- After each major step completes
+- When running long commands
+
+Example:
+\`\`\`typescript
+TodoWrite({
+  todos: [
+    {id: "1", content: "Analyze codebase ✅", status: "completed", priority: "high"},
+    {id: "2", content: "Implement login endpoint (creating route...)", status: "in_progress", priority: "high"},
+    {id: "3", content: "Write tests", status: "pending", priority: "medium"}
+  ]
+});
+\`\`\`
+
+This prevents users from waiting with no feedback!
 
 ## Standards to Follow
 Read .factory/standards/templates/nextjs.md and typescript.md for patterns.
@@ -292,7 +328,6 @@ Report back when complete with file list and any issues encountered.`
 Task({
   subagent_type: "droidz-codegen",
   description: "Build authentication UI components",
-  model: "sonnet",
   prompt: `# Task: Build Authentication UI
 
 ## Context
@@ -353,7 +388,6 @@ Report back when complete.`
 Task({
   subagent_type: "droidz-test",
   description: "Write authentication tests",
-  model: "sonnet",
   prompt: `# Task: Write Authentication Tests
 
 ## Context
@@ -413,9 +447,66 @@ Report back when complete with test results.`
 
 ---
 
-## Step 5: Monitor and Synthesize
+## Step 5: Monitor Progress (Real-Time Visibility)
+
+**Factory.ai Task tool automatically streams progress!** Each spawned agent reports progress using TodoWrite every 60 seconds (they're instructed to do this in their prompts).
+
+### What You'll See
+
+As agents work, their TodoWrite updates appear in the conversation:
+
+2. **Detect stalls** - If no heartbeat for 10 minutes, mark the stream stalled and surface which step hung
+3. **Wait for completion** - Task tool will return results when done
+4. **Update your TodoWrite** - Show overall orchestration progress with stream status, task id, latest step, files changed, and test/command results:
+
+✅ Analyze backend structure (completed)
+⏳ Implement login API (creating endpoints...)
+⏸ Write tests (pending)
+```
+
+```
+TODO LIST UPDATED (from droidz-test)
+
+✅ Analyze code to test (completed)
+⏳ Write unit tests (8/12 tests written)
+⏸ Run test suite (pending)
+```
+
+### Your Role in Monitoring
+
+1. **Trust the droids** - They're instructed to update every 60 seconds
+2. **Wait for completion** - Task tool will return results when done
+3. **Update your TodoWrite** - Show overall orchestration progress:
+
+```typescript
+TodoWrite({
+  todos: [
+    {content: "Stream A: Auth API (✅ completed - id 123, 5 files, tests passing)", status: "completed"},
+    {content: "Stream B: Auth UI (⏳ id 124, implementing forms, 3 files so far)", status: "in_progress"},
+    {content: "Stream C: Tests (⏸ pending - waiting on API schema)", status: "pending"}
+  ]
+});
+```
+
+### No Monitoring Scripts Needed!
+
+Factory.ai handles all the streaming. You don't need to:
+- ❌ Poll for updates
+- ❌ Monitor tmux sessions (we don't use them)
+- ❌ Check worktree status (we don't use them)
+- ❌ Run external monitoring scripts
+
+Just wait for agents to complete and report back!
+
+---
+
+## Step 6: Synthesize Results
 
 **CRITICAL UX RULE**: NEVER use Execute tool with echo commands to display progress/summaries. Always output directly in your response text or use TodoWrite.
+
+Before claiming completion:
+- Run lightweight validation if available (lint/typecheck/unit subset). If any command fails, keep status **blocked** and surface the failing output.
+- Cross-check your registry: only summarize streams that actually returned; if any stalled/failed, call them out explicitly.
 
 As agents complete (they'll return their results automatically):
 

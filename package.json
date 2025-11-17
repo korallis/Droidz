@@ -1,4 +1,7 @@
 {
+  "name": "droidz",
+  "version": "0.5.8",
+  "description": "AI-powered specification generator and parallel task orchestration framework for Factory.ai",
   "type": "module",
   "dependencies": {
     "yaml": "^2.8.1"
