@@ -2,7 +2,7 @@
 
 **Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
-**Discord:** https://discord.gg/gideonapp | **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
+**Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW | **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
 
 > **v0.5.8** - **Reliability & Transparency**: no phantom parallel starts, structured progress (step/next action/files/tests/heartbeat), stall detection, validation-gated completion, and headless guidance (`droid exec --auto high`)—all while keeping the user’s selected model.
 
@@ -560,7 +560,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 - **Factory.ai:** https://factory.ai
 - **Issues:** https://github.com/korallis/Droidz/issues
 - **Discussions:** https://github.com/korallis/Droidz/discussions
-- **Discord:** https://discord.gg/gideonapp
+- **Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW
 - **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
 - **Latest Release:** https://github.com/korallis/Droidz/releases/tag/v0.5.8
 
@@ -588,7 +588,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ## 💬 Community
 
-- **Discord:** https://discord.gg/gideonapp
+- **Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW
 - **GitHub Discussions:** https://github.com/korallis/Droidz/discussions
 
 ---
