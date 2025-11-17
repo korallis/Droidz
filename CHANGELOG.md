@@ -2,6 +2,14 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [0.5.5] - 2025-11-17
+
+### Fixed
+- Installer now detects nested git worktrees/subdirectories before prompting to initialize, preventing false "Not in a git repository" prompts.
+
+### Changed
+- Version bump for hotfix release.
+
 ## [0.5.3] - 2025-11-17
 
 ### 🔧 Reliability & Progress Transparency

@@ -5,13 +5,13 @@
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
 #
-# Version: 0.5.3
+# Version: 0.5.5
 # Updated: 2025-11-17
 #
 
 set -euo pipefail
 
-VERSION="0.5.3"
+VERSION="0.5.5"
 REPO_URL="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 
 # Colors
@@ -182,7 +182,7 @@ main() {
     echo ""
     
     # Check if in git repo
-    if [[ ! -d ".git" ]]; then
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         log_warning "Not in a git repository"
         echo ""
         echo -e "${YELLOW}Initialize git repository now?${NC}"
@@ -362,6 +362,7 @@ EOF
         echo "  📣 Rich progress: step + next action + files changed + test results + heartbeat"
         echo "  ⏱ Stall detection: streams marked stalled after idle; blockers surfaced"
         echo "  🔒 Validation gating: failing lint/type/tests block completion with output shown"
+        echo "  🛠 Git detection: handles worktrees/subdirectories before prompting to init"
         echo "  🛠 Headless ready: run with 'droid exec --auto high' for non-interactive orchestration"
         echo ""
         echo -e "${YELLOW}Try: /droidz-init  (verify & analyze)${NC}"
