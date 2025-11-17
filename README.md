@@ -2,6 +2,8 @@
 
 **Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
 
+**Discord:** https://discord.gg/gideonapp | **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
+
 > **v0.5.8** - **Reliability & Transparency**: no phantom parallel starts, structured progress (step/next action/files/tests/heartbeat), stall detection, validation-gated completion, and headless guidance (`droid exec --auto high`)—all while keeping the user’s selected model.
 
 ---
@@ -11,7 +13,7 @@
 ### Install (One Command)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
 ### Enable & Use
