@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.2.8-droid - Fix installer skills download + all 45 skills support
+# Version: 2.2.9-droid - Interactive installation modes: update, fresh install, uninstall
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.8-droid"
+DROIDZ_VERSION="2.2.9-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -531,10 +531,106 @@ if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
     fi
 fi
 
+# Function to completely remove Droidz
+uninstall_droidz() {
+    log_warning "This will completely remove Droidz from this project"
+    echo ""
+    echo "The following will be removed:"
+    echo "  • .factory/ directory and all contents"
+    echo "  • config.yml (your API keys and settings)"
+    echo "  • Droidz dependencies from package.json"
+    echo ""
+    read -p "Are you sure you want to uninstall? (yes/no): " confirm
+    
+    if [[ "$confirm" == "yes" ]]; then
+        log_step "Uninstalling Droidz..."
+        
+        # Remove .factory directory
+        if [[ -d ".factory" ]]; then
+            rm -rf .factory
+            log_success "Removed .factory/ directory"
+        fi
+        
+        # Remove config.yml
+        if [[ -f "config.yml" ]]; then
+            rm -f config.yml
+            log_success "Removed config.yml"
+        fi
+        
+        # Remove Droidz-specific dependencies
+        if command -v bun >/dev/null 2>&1 && [[ -f "package.json" ]]; then
+            bun remove yaml >/dev/null 2>&1 || true
+            log_success "Removed Droidz dependencies"
+        fi
+        
+        echo ""
+        log_success "Droidz has been completely uninstalled"
+        echo ""
+        echo "To reinstall later, run:"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash"
+        exit 0
+    else
+        log_info "Uninstall cancelled"
+        exit 0
+    fi
+}
+
 # Detect if this is an install or update
 if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.ts" ]]; then
-    MODE="update"
-    log_info "Existing Droidz installation detected. Updating..."
+    echo ""
+    log_warning "Existing Droidz installation detected"
+    echo ""
+    echo "What would you like to do?"
+    echo ""
+    echo "  1) Update (keep existing configuration and memory)"
+    echo "  2) Fresh Install (remove old installation and start clean)"
+    echo "  3) Uninstall (completely remove Droidz)"
+    echo "  4) Cancel"
+    echo ""
+    read -p "Enter your choice (1-4): " choice
+    echo ""
+    
+    case $choice in
+        1)
+            MODE="update"
+            log_info "Updating existing Droidz installation to v${DROIDZ_VERSION}..."
+            ;;
+        2)
+            MODE="fresh"
+            log_warning "Performing fresh installation..."
+            log_info "Backing up config.yml if it exists..."
+            
+            # Backup config.yml
+            if [[ -f "config.yml" ]]; then
+                cp config.yml config.yml.backup
+                log_success "Backed up config.yml to config.yml.backup"
+            fi
+            
+            # Remove old installation
+            log_info "Removing old Droidz installation..."
+            rm -rf .factory
+            log_success "Old installation removed"
+            
+            # Restore config.yml
+            if [[ -f "config.yml.backup" ]]; then
+                mv config.yml.backup config.yml
+                log_success "Restored config.yml"
+            fi
+            
+            log_info "Installing fresh copy of Droidz v${DROIDZ_VERSION}..."
+            ;;
+        3)
+            uninstall_droidz
+            ;;
+        4)
+            log_info "Installation cancelled"
+            exit 0
+            ;;
+        *)
+            log_error "Invalid choice. Installation cancelled."
+            exit 1
+            ;;
+    esac
 else
     MODE="install"
     log_info "Installing Droidz v${DROIDZ_VERSION}..."
