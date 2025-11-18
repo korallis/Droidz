@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.3.6-droid - Show package manager errors + handle workspace restrictions gracefully
+# Version: 2.4.0-droid - Restore original 4-command workflow with all hotfixes
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.3.6-droid"
+DROIDZ_VERSION="2.4.0-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -967,29 +967,32 @@ for droid in "${DROIDS[@]}"; do
     log_success "Downloaded ${droid}"
 done
 
+# Backup existing commands if updating
+if [[ -d ".factory/commands" ]] && [[ "$MODE" == "update" ]]; then
+    BACKUP_DIR=".factory-commands-backup-$(date +%s)"
+    cp -r .factory/commands "$BACKUP_DIR"
+    log_info "Backed up existing commands to $BACKUP_DIR"
+fi
+
 # Download custom commands
 log_step "Downloading custom slash commands..."
 
 COMMANDS=(
     "droidz-init.md"
-    "graphite.md"
-    "orchestrate.md"
-    "spec-shaper.md"
-    "validate-spec.md"
-    "create-spec.md"
-    "analyze-tech-stack.md"
-    "save-decision.md"
-    "spec-to-tasks.md"
-    "auto-orchestrate.md"
-    "optimize-context.md"
-    "check-standards.md"
-    "load-memory.md"
+    "droidz-build.md"
+    "auto-parallel.md"
+    "gh-helper.md"
 )
 
 for command in "${COMMANDS[@]}"; do
     curl -fsSL "${GITHUB_RAW}/.factory/commands/${command}${CACHE_BUST}" -o ".factory/commands/${command}"
     log_success "Downloaded ${command}"
 done
+
+# Download gh-helper script
+curl -fsSL "${GITHUB_RAW}/.factory/commands/gh-helper.sh${CACHE_BUST}" -o ".factory/commands/gh-helper.sh"
+chmod +x ".factory/commands/gh-helper.sh"
+log_success "Downloaded gh-helper.sh"
 
 # Download orchestrator scripts
 log_step "Downloading orchestrator scripts..."

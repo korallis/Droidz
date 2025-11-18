@@ -2,7 +2,9 @@
 .runs/
 
 # User-specific Droidz folders (never commit these!)
-.droidz/
+# But DO track .droidz/specs/ for spec examples
+.droidz/*.log
+.droidz/tmp/
 
 # User-specific .factory subdirectories only
 .factory/memory/user/

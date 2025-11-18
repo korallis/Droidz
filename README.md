@@ -5,7 +5,7 @@
 Droidz supercharges Factory.ai's Droid CLI with specialist agents, parallel execution, persistent memory, and intelligent automation for complex software projects.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.3.6--droid-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.4.0--droid-blue.svg)](https://github.com/korallis/Droidz)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
 [![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 
@@ -115,12 +115,12 @@ The orchestrator will automatically:
 
 | Command | Description |
 |---------|-------------|
-| `/orchestrate` | Manually trigger parallel orchestration |
-| `/spec-shaper` | Create structured specifications for features |
-| `/analyze-tech-stack` | Analyze your project's technology stack |
-| `/save-decision` | Save architectural decisions to memory |
-| `/load-memory` | Load saved decisions and patterns |
-| `/graphite` | Manage stacked diffs workflow (if using Graphite) |
+| `/droidz-init` | Smart onboarding - verify installation and analyze project |
+| `/droidz-build` | AI-powered spec generator with meta-prompting |
+| `/auto-parallel` | Execute tasks in parallel with live progress tracking |
+| `/gh-helper` | GitHub CLI helpers for PR management |
+
+**See [COMMANDS.md](COMMANDS.md) for detailed command documentation.**
 | `/commands` | See all available commands |
 
 ### Specialist Droids
@@ -232,10 +232,11 @@ After installation, your project will have:
 │   ├── droidz-codegen.md
 │   ├── droidz-test.md
 │   └── ...
-├── commands/            # Custom slash commands
-│   ├── orchestrate.md
-│   ├── spec-shaper.md
-│   └── ...
+├── commands/            # Custom slash commands (4 total)
+│   ├── droidz-init.md
+│   ├── droidz-build.md
+│   ├── auto-parallel.md
+│   └── gh-helper.md
 ├── skills/              # Auto-activated skills
 │   ├── auto-orchestrator/
 │   ├── memory-manager/
@@ -352,9 +353,15 @@ The orchestrator auto-triggers when you say:
 - "create [application]"
 - "add [feature touching 5+ files]"
 
-For manual triggering:
+For direct task execution:
 ```bash
-/orchestrate
+/auto-parallel "build REST API"
+```
+
+Or plan first, then execute:
+```bash
+/droidz-build "add authentication"
+# Generates spec, then asks: Execute in parallel?
 ```
 
 ---
