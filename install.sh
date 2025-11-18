@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.3.0-droid - Auto-detect package manager (npm/yarn/pnpm/bun) for monorepo support
+# Version: 2.3.1-droid - Fix interactive mode detection and add input validation
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.3.0-droid"
+DROIDZ_VERSION="2.3.1-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -614,58 +614,90 @@ uninstall_droidz() {
 if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.ts" ]]; then
     echo ""
     log_warning "Existing Droidz installation detected"
-    echo ""
-    echo "What would you like to do?"
-    echo ""
-    echo "  1) Update (keep existing configuration and memory)"
-    echo "  2) Fresh Install (remove old installation and start clean)"
-    echo "  3) Uninstall (completely remove Droidz)"
-    echo "  4) Cancel"
-    echo ""
-    read -p "Enter your choice (1-4): " choice
-    echo ""
     
-    case $choice in
-        1)
-            MODE="update"
-            log_info "Updating existing Droidz installation to v${DROIDZ_VERSION}..."
-            ;;
-        2)
-            MODE="fresh"
-            log_warning "Performing fresh installation..."
-            log_info "Backing up config.yml if it exists..."
+    # Check if running in interactive mode (has stdin and stdout connected to terminal)
+    if [[ -t 0 ]] && [[ -t 1 ]]; then
+        # Interactive mode - show menu
+        echo ""
+        echo "What would you like to do?"
+        echo ""
+        echo "  1) Update (keep existing configuration and memory)"
+        echo "  2) Fresh Install (remove old installation and start clean)"
+        echo "  3) Uninstall (completely remove Droidz)"
+        echo "  4) Cancel"
+        echo ""
+        
+        # Read with timeout and validation
+        choice=""
+        while [[ -z "$choice" ]]; do
+            read -r -p "Enter your choice (1-4): " choice
             
-            # Backup config.yml
-            if [[ -f "config.yml" ]]; then
-                cp config.yml config.yml.backup
-                log_success "Backed up config.yml to config.yml.backup"
+            # If read fails or returns empty, default to update
+            if [[ -z "$choice" ]]; then
+                log_warning "No input received, defaulting to UPDATE mode"
+                choice="1"
+                break
             fi
             
-            # Remove old installation
-            log_info "Removing old Droidz installation..."
-            rm -rf .factory
-            log_success "Old installation removed"
-            
-            # Restore config.yml
-            if [[ -f "config.yml.backup" ]]; then
-                mv config.yml.backup config.yml
-                log_success "Restored config.yml"
+            # Validate input
+            if [[ ! "$choice" =~ ^[1-4]$ ]]; then
+                log_error "Invalid choice '$choice'. Please enter 1, 2, 3, or 4."
+                choice=""
             fi
-            
-            log_info "Installing fresh copy of Droidz v${DROIDZ_VERSION}..."
-            ;;
-        3)
-            uninstall_droidz
-            ;;
-        4)
-            log_info "Installation cancelled"
-            exit 0
-            ;;
-        *)
-            log_error "Invalid choice. Installation cancelled."
-            exit 1
-            ;;
-    esac
+        done
+        echo ""
+        
+        case $choice in
+            1)
+                MODE="update"
+                log_info "Updating existing Droidz installation to v${DROIDZ_VERSION}..."
+                ;;
+            2)
+                MODE="fresh"
+                log_warning "Performing fresh installation..."
+                log_info "Backing up config.yml if it exists..."
+                
+                # Backup config.yml
+                if [[ -f "config.yml" ]]; then
+                    cp config.yml config.yml.backup
+                    log_success "Backed up config.yml to config.yml.backup"
+                fi
+                
+                # Remove old installation
+                log_info "Removing old Droidz installation..."
+                rm -rf .factory
+                log_success "Old installation removed"
+                
+                # Restore config.yml
+                if [[ -f "config.yml.backup" ]]; then
+                    mv config.yml.backup config.yml
+                    log_success "Restored config.yml"
+                fi
+                
+                log_info "Installing fresh copy of Droidz v${DROIDZ_VERSION}..."
+                ;;
+            3)
+                uninstall_droidz
+                ;;
+            4)
+                log_info "Installation cancelled"
+                exit 0
+                ;;
+        esac
+    else
+        # Non-interactive mode (piped from curl) - default to update
+        echo ""
+        log_info "Running in non-interactive mode (piped from curl)"
+        log_info "Defaulting to UPDATE mode (safest option)"
+        echo ""
+        echo "💡 Tip: For other options, download and run the installer directly:"
+        echo "   wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh"
+        echo "   chmod +x install.sh"
+        echo "   ./install.sh"
+        echo ""
+        MODE="update"
+        log_info "Updating existing Droidz installation to v${DROIDZ_VERSION}..."
+    fi
 else
     MODE="install"
     log_info "Installing Droidz v${DROIDZ_VERSION}..."
