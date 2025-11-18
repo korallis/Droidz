@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.3.4-droid - Fix read command to use /dev/tty instead of stdin
+# Version: 2.3.5-droid - Better install detection + respect existing package manager on updates
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.3.4-droid"
+DROIDZ_VERSION="2.3.5-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -610,8 +610,8 @@ uninstall_droidz() {
     fi
 }
 
-# Detect if this is an install or update
-if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.ts" ]]; then
+# Detect if this is an install or update (check for .factory directory)
+if [[ -d ".factory" ]]; then
     echo ""
     log_warning "Existing Droidz installation detected"
     
@@ -699,93 +699,105 @@ mkdir -p .factory/scripts
 mkdir -p .factory/standards/templates
 log_success "Directories created"
 
-# Ensure package.json exists
-if [[ ! -f "package.json" ]]; then
-    log_info "package.json not found. Need to create one..."
-    echo ""
-    echo "Which package manager would you like to use?"
-    echo ""
-    echo "  1) npm   - Node.js default (comes with Node.js)"
-    echo "  2) yarn  - Fast, reliable (install: npm install -g yarn)"
-    echo "  3) pnpm  - Disk space efficient (install: npm install -g pnpm)"
-    echo "  4) bun   - Ultra-fast (install: curl -fsSL https://bun.sh/install | bash)"
-    echo ""
-    
-    # Read package manager choice with validation (force read from terminal)
-    pkg_choice=""
-    while [[ -z "$pkg_choice" ]]; do
-        read -r -p "Enter your choice (1-4): " pkg_choice < /dev/tty
-        
-        # Validate input
-        if [[ ! "$pkg_choice" =~ ^[1-4]$ ]]; then
-            log_error "Invalid choice '$pkg_choice'. Please enter 1, 2, 3, or 4."
-            pkg_choice=""
-        fi
-    done
-    echo ""
-    
-    # Map choice to package manager
-    case $pkg_choice in
-        1)
-            CHOSEN_PKG_MANAGER="npm"
-            ;;
-        2)
-            CHOSEN_PKG_MANAGER="yarn"
-            ;;
-        3)
-            CHOSEN_PKG_MANAGER="pnpm"
-            ;;
-        4)
-            CHOSEN_PKG_MANAGER="bun"
-            ;;
-    esac
-    
-    # Check if chosen package manager is available
-    if ! command -v "$CHOSEN_PKG_MANAGER" &> /dev/null; then
-        log_error "$CHOSEN_PKG_MANAGER is not installed!"
+# Handle package.json based on installation mode
+if [[ "$MODE" == "update" ]]; then
+    # UPDATE MODE: Use existing setup, don't ask about package manager
+    if [[ ! -f "package.json" ]]; then
+        log_warning "package.json not found but this is an update. Creating with npm..."
+        npm init -y >/dev/null 2>&1
+        log_success "Created package.json"
+    else
+        log_info "package.json detected – preserving existing settings"
+    fi
+else
+    # FRESH INSTALL or NEW INSTALL: Ask for package manager choice
+    if [[ ! -f "package.json" ]]; then
+        log_info "package.json not found. Need to create one..."
         echo ""
-        echo "Installation instructions:"
-        case $CHOSEN_PKG_MANAGER in
-            npm)
-                echo "  npm comes with Node.js: https://nodejs.org"
+        echo "Which package manager would you like to use?"
+        echo ""
+        echo "  1) npm   - Node.js default (comes with Node.js)"
+        echo "  2) yarn  - Fast, reliable (install: npm install -g yarn)"
+        echo "  3) pnpm  - Disk space efficient (install: npm install -g pnpm)"
+        echo "  4) bun   - Ultra-fast (install: curl -fsSL https://bun.sh/install | bash)"
+        echo ""
+        
+        # Read package manager choice with validation (force read from terminal)
+        pkg_choice=""
+        while [[ -z "$pkg_choice" ]]; do
+            read -r -p "Enter your choice (1-4): " pkg_choice < /dev/tty
+            
+            # Validate input
+            if [[ ! "$pkg_choice" =~ ^[1-4]$ ]]; then
+                log_error "Invalid choice '$pkg_choice'. Please enter 1, 2, 3, or 4."
+                pkg_choice=""
+            fi
+        done
+        echo ""
+        
+        # Map choice to package manager
+        case $pkg_choice in
+            1)
+                CHOSEN_PKG_MANAGER="npm"
                 ;;
-            yarn)
-                echo "  npm install -g yarn"
-                echo "  Or: https://yarnpkg.com/getting-started/install"
+            2)
+                CHOSEN_PKG_MANAGER="yarn"
                 ;;
-            pnpm)
-                echo "  npm install -g pnpm"
-                echo "  Or: curl -fsSL https://get.pnpm.io/install.sh | sh -"
+            3)
+                CHOSEN_PKG_MANAGER="pnpm"
                 ;;
-            bun)
-                echo "  curl -fsSL https://bun.sh/install | bash"
+            4)
+                CHOSEN_PKG_MANAGER="bun"
                 ;;
         esac
-        exit 1
+        
+        # Check if chosen package manager is available
+        if ! command -v "$CHOSEN_PKG_MANAGER" &> /dev/null; then
+            log_error "$CHOSEN_PKG_MANAGER is not installed!"
+            echo ""
+            echo "Installation instructions:"
+            case $CHOSEN_PKG_MANAGER in
+                npm)
+                    echo "  npm comes with Node.js: https://nodejs.org"
+                    ;;
+                yarn)
+                    echo "  npm install -g yarn"
+                    echo "  Or: https://yarnpkg.com/getting-started/install"
+                    ;;
+                pnpm)
+                    echo "  npm install -g pnpm"
+                    echo "  Or: curl -fsSL https://get.pnpm.io/install.sh | sh -"
+                    ;;
+                bun)
+                    echo "  curl -fsSL https://bun.sh/install | bash"
+                    ;;
+            esac
+            exit 1
+        fi
+        
+        # Initialize package.json with chosen package manager
+        log_info "Initializing package.json with $CHOSEN_PKG_MANAGER..."
+        case $CHOSEN_PKG_MANAGER in
+            npm)
+                npm init -y >/dev/null 2>&1
+                ;;
+            yarn)
+                yarn init -y >/dev/null 2>&1
+                ;;
+            pnpm)
+                pnpm init >/dev/null 2>&1
+                ;;
+            bun)
+                bun init -y >/dev/null 2>&1
+                ;;
+        esac
+        log_success "Initialized package.json with $CHOSEN_PKG_MANAGER"
+        
+        # Set NODE_PKG_MANAGER to the chosen one
+        NODE_PKG_MANAGER="$CHOSEN_PKG_MANAGER"
+    else
+        log_info "package.json detected – preserving existing settings"
     fi
-    
-    # Initialize package.json with chosen package manager
-    log_info "Initializing package.json with $CHOSEN_PKG_MANAGER..."
-    case $CHOSEN_PKG_MANAGER in
-        npm)
-            npm init -y >/dev/null 2>&1
-            ;;
-        yarn)
-            yarn init -y >/dev/null 2>&1
-            ;;
-        pnpm)
-            pnpm init >/dev/null 2>&1
-            ;;
-        bun)
-            bun init -y >/dev/null 2>&1
-            ;;
-    esac
-    log_success "Initialized package.json with $CHOSEN_PKG_MANAGER"
-    
-    # Set NODE_PKG_MANAGER to the chosen one
-    NODE_PKG_MANAGER="$CHOSEN_PKG_MANAGER"
-else
-    log_info "package.json detected – preserving existing settings"
 fi
 
 # Ensure package.json uses ESM modules
