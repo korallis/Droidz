@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.3.5-droid - Better install detection + respect existing package manager on updates
+# Version: 2.3.6-droid - Show package manager errors + handle workspace restrictions gracefully
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.3.5-droid"
+DROIDZ_VERSION="2.3.6-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -839,43 +839,113 @@ fi
 
 log_step "Installing dependencies using ${NODE_PKG_MANAGER}..."
 
+# Check if yaml is already installed
+YAML_INSTALLED=false
+if [[ -f "package.json" ]]; then
+    if grep -q '"yaml"' package.json 2>/dev/null; then
+        YAML_INSTALLED=true
+        log_info "yaml dependency already in package.json"
+    fi
+fi
+
 # Install dependencies based on detected package manager
 case "$NODE_PKG_MANAGER" in
     npm)
-        log_info "Installing runtime dependency: yaml"
-        npm install yaml --save >/dev/null 2>&1
-        log_success "Added yaml dependency"
+        if [[ "$YAML_INSTALLED" == "false" ]]; then
+            log_info "Installing runtime dependency: yaml"
+            if npm install yaml --save 2>&1 | tee /tmp/npm-install.log | grep -q "error"; then
+                log_error "Failed to install yaml dependency"
+                echo ""
+                echo "npm error output:"
+                cat /tmp/npm-install.log
+                echo ""
+                log_warning "This might be a workspace/monorepo project with install restrictions"
+                log_info "You may need to add 'yaml' manually to your root package.json"
+                rm -f /tmp/npm-install.log
+            else
+                log_success "Added yaml dependency"
+                rm -f /tmp/npm-install.log
+            fi
+        fi
         
         log_info "Installing development dependencies for linting and types"
-        npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-        log_success "Installed development dependencies"
+        if npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
+            log_success "Installed development dependencies"
+        else
+            log_warning "Could not install dev dependencies (might be workspace restrictions)"
+        fi
         ;;
     yarn)
-        log_info "Installing runtime dependency: yaml"
-        yarn add yaml >/dev/null 2>&1
-        log_success "Added yaml dependency"
+        if [[ "$YAML_INSTALLED" == "false" ]]; then
+            log_info "Installing runtime dependency: yaml"
+            if yarn add yaml 2>&1 | tee /tmp/yarn-install.log | grep -q "error"; then
+                log_error "Failed to install yaml dependency"
+                echo ""
+                echo "yarn error output:"
+                cat /tmp/yarn-install.log
+                echo ""
+                log_warning "This might be a workspace/monorepo project with install restrictions"
+                rm -f /tmp/yarn-install.log
+            else
+                log_success "Added yaml dependency"
+                rm -f /tmp/yarn-install.log
+            fi
+        fi
         
         log_info "Installing development dependencies for linting and types"
-        yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-        log_success "Installed development dependencies"
+        if yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
+            log_success "Installed development dependencies"
+        else
+            log_warning "Could not install dev dependencies (might be workspace restrictions)"
+        fi
         ;;
     pnpm)
-        log_info "Installing runtime dependency: yaml"
-        pnpm add yaml >/dev/null 2>&1
-        log_success "Added yaml dependency"
+        if [[ "$YAML_INSTALLED" == "false" ]]; then
+            log_info "Installing runtime dependency: yaml"
+            if pnpm add yaml 2>&1 | tee /tmp/pnpm-install.log | grep -q "error"; then
+                log_error "Failed to install yaml dependency"
+                echo ""
+                echo "pnpm error output:"
+                cat /tmp/pnpm-install.log
+                echo ""
+                log_warning "This might be a workspace/monorepo project with install restrictions"
+                rm -f /tmp/pnpm-install.log
+            else
+                log_success "Added yaml dependency"
+                rm -f /tmp/pnpm-install.log
+            fi
+        fi
         
         log_info "Installing development dependencies for linting and types"
-        pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-        log_success "Installed development dependencies"
+        if pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
+            log_success "Installed development dependencies"
+        else
+            log_warning "Could not install dev dependencies (might be workspace restrictions)"
+        fi
         ;;
     bun)
-        log_info "Installing runtime dependency: yaml"
-        bun add yaml >/dev/null 2>&1
-        log_success "Added yaml dependency"
+        if [[ "$YAML_INSTALLED" == "false" ]]; then
+            log_info "Installing runtime dependency: yaml"
+            if bun add yaml 2>&1 | tee /tmp/bun-install.log | grep -q "error"; then
+                log_error "Failed to install yaml dependency"
+                echo ""
+                echo "bun error output:"
+                cat /tmp/bun-install.log
+                echo ""
+                log_warning "This might be a workspace/monorepo project with install restrictions"
+                rm -f /tmp/bun-install.log
+            else
+                log_success "Added yaml dependency"
+                rm -f /tmp/bun-install.log
+            fi
+        fi
         
         log_info "Installing development dependencies for linting and types"
-        bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-        log_success "Installed development dependencies"
+        if bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
+            log_success "Installed development dependencies"
+        else
+            log_warning "Could not install dev dependencies (might be workspace restrictions)"
+        fi
         ;;
 esac
 
