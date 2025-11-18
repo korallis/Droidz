@@ -3,7 +3,21 @@
 
 # User-specific Droidz folders (never commit these!)
 .droidz/
-.factory/
+
+# User-specific .factory subdirectories only
+.factory/memory/user/
+.factory/memory/org/*.json
+.factory/specs/active/*.json
+
+# But keep framework files in git:
+# .factory/droids/ (specialist agent definitions)
+# .factory/commands/ (slash commands)
+# .factory/skills/ (auto-skills)
+# .factory/orchestrator/ (orchestration scripts)
+# .factory/hooks/ (hooks)
+# .factory/standards/ (code standards)
+# .factory/product/ (product docs)
+# .factory/scripts/ (utility scripts)
 
 # Configuration file with API keys (NEVER commit this!)
 config.yml

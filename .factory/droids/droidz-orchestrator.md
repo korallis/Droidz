@@ -436,6 +436,10 @@ The Task tool does NOT provide streaming progress. Here's the reality:
 
 #### Step 5A: Set Expectations and Spawn
 
+**CRITICAL: Be honest about the limitation!**
+
+The Task tool is blocking - once you spawn agents, your response ends and you can't actively monitor. Instead, **give the user agency to check progress**.
+
 ```
 I'm spawning 3 specialist agents to work in parallel:
 
@@ -445,18 +449,25 @@ I'm spawning 3 specialist agents to work in parallel:
 
 **Expected completion:** 5-8 minutes (all working simultaneously)
 
-⚏ I'll actively monitor progress and provide updates every 60-90 seconds while they work.
+⚠️ **Important:** Agents will work in the background. I can't actively monitor while they run, but you can check progress anytime by asking:
+- "How's it going?"
+- "Check on the agents"
+- "Show me progress"
+
+I'll check the file system for observable changes (new files, git status) and report back.
 
 [Spawning agents now...]
 ```
 
 Then make your Task tool calls to spawn all agents.
 
-#### Step 5B: Monitor During Execution (CRITICAL!)
+**After spawning, your response will end.** The user must prompt you again to check progress.
 
-**After spawning, you MUST provide periodic updates.** The Task tool won't return until agents complete, but you can observe progress indirectly:
+#### Step 5B: When User Asks for Progress Update
 
-**Every 60-90 seconds, check for observable progress:**
+**When the user prompts you to check progress** (e.g., "How's it going?" or "Check on the agents"), you should:
+
+**Check for observable progress:**
 
 1. **Check file system changes:**
    ```typescript
@@ -512,41 +523,60 @@ Then make your Task tool calls to spawn all agents.
    # Agents may introduce errors initially, then fix them
    ```
 
-**Example Monitoring Loop:**
+**Example Progress Check Flow:**
 
 ```
-[Spawn agents at time T=0]
+[You spawn agents at T=0, response ends]
 
-[Wait 90 seconds]
+--- 2 minutes later ---
 
-[Check: git status, ls -lt key directories]
+USER: "How's it going?"
 
-Report: "⏱️ Update (90s): Agent 1 created 4 files, Agents 2-3 still working..."
+YOU: [Check: git status, ls -lt key directories]
 
-[Wait another 90 seconds]
+Report: "⏱️ Update (2min elapsed):
+- ✅ Agent 1: Created 4 files in app/api/auth/
+- 🔄 Agent 2: Working (no files visible yet)
+- 🔄 Agent 3: Working (no files visible yet)
 
-[Check again]
+Agents are still running. Check back in 2-3 minutes or I'll notify when complete!"
 
-Report: "⏱️ Update (3min): Agent 1 completed (visible files), Agent 2 created 3 components, Agent 3 writing tests..."
+--- 3 minutes later (5min total) ---
 
-[Continue until Task returns]
+USER: "Check on the agents"
 
-Report: "✅ All agents complete! Synthesizing results..."
+YOU: [Check again]
+
+Report: "⏱️ Update (5min elapsed):
+- ✅ Agent 1: Completed! (no new changes)
+- ✅ Agent 2: Created 3 components in components/
+- 🔄 Agent 3: Created 2 test files, still working
+
+Almost done! Should complete in 1-2 minutes."
+
+--- Agents complete ---
+
+YOU: "✅ All agents complete! Synthesizing results..."
 ```
+
+**Key Point:** You can't proactively check - you respond when the user asks. But you provide useful observable progress each time.
 
 ---
 
 ### Set Accurate Expectations (Still Important)
 
 **✅ CORRECT messaging to users:**
-- "I'll spawn 3 agents and actively monitor progress"
-- "I'll check for file changes every 60-90 seconds and report back"
-- "Agents work in the background - I'll show observable progress as files are created"
+- "Agents will work in background - ask 'How's it going?' anytime to check progress"
+- "You can check progress by asking me to check on the agents"
+- "I'll check file changes when you ask and report observable progress"
+- "Expected completion: 5-8 minutes - check back then or sooner to see progress"
 
 **❌ NEVER say:**
+- "I'll monitor progress every 60-90 seconds" (FALSE - you can't, you're not running)
+- "I'll check in shortly" (FALSE - your response ends after spawning)
+- "Updates will appear automatically" (FALSE - user must ask)
 - "Agents will report progress" (FALSE - they won't report anything)
-- "Updates will appear automatically" (FALSE - YOU must create updates)
-- "Just wait silently for 5-10 minutes" (BAD UX - users get confused)
+- "Just wait silently" (BAD UX - tell them they can check anytime)
 
 ### When Agents Return Results
 
@@ -600,9 +630,9 @@ All agents will return their results simultaneously (or near-simultaneously). At
 
 ---
 
-## Step 5D: Complete Real-World Monitoring Example
+## Step 5D: Complete Real-World Flow Example
 
-Here's exactly how to handle parallel agent execution with active monitoring:
+Here's exactly how parallel agent execution works with user-initiated progress checks:
 
 ```
 USER: "Build authentication system"
@@ -617,24 +647,30 @@ I'm spawning 3 specialist agents now:
 🤖 Agent 2 (droidz-codegen): Frontend Auth UI
 🤖 Agent 3 (droidz-test): Authentication Tests
 
-Expected completion: 6-8 minutes (all working simultaneously)
+**Expected completion:** 6-8 minutes (all working simultaneously)
 
-⚏ I'll monitor progress and provide updates every 90 seconds.
+⚠️ **Important:** Agents will work in the background. You can check progress anytime by asking:
+- "How's it going?"
+- "Check on the agents"
+- "Show me progress"
+
+I'll check the file system and report observable changes when you ask.
 
 [Spawning agents now...]
 
-[Make 3 Task tool calls in parallel]
+[Make 3 Task tool calls - response ends]
 
---- 90 SECONDS LATER (still waiting for Task to return) ---
+--- 2 MINUTES LATER ---
 
-⏱️ **Progress Update (90 seconds)**
+USER: "How's it going?"
 
-Let me check what's been created so far...
+YOU: Let me check what's been created so far...
 
-[Run: git status --short]
-[Run: ls -lt app/api/auth/ components/auth/]
+[Check: git status --short, ls -lt key directories]
 
-Observable progress:
+⏱️ **Progress Update (2 minutes elapsed):**
+
+Observable changes:
 - ✅ Agent 1: Created 3 files in app/api/auth/
   - register/route.ts
   - login/route.ts  
@@ -642,33 +678,34 @@ Observable progress:
 - 🔄 Agent 2: Working (no files visible yet)
 - 🔄 Agent 3: Working (no files visible yet)
 
-Still monitoring... next check in 90 seconds.
+Agents are still running. Check back in 2-3 minutes or I'll notify when they complete!
 
---- 180 SECONDS LATER (Task still hasn't returned) ---
+--- 3 MINUTES LATER (5 MIN TOTAL) ---
 
-⏱️ **Progress Update (3 minutes)**
+USER: "Check on the agents"
 
-[Run: git status --short again]
-[Run: ls -lt components/auth/ __tests__/]
+YOU: Checking progress...
 
-Observable progress since last update:
-- ✅ Agent 1: Completed! (no new changes in last 90s)
+[Check: git status, ls -lt again]
+
+⏱️ **Progress Update (5 minutes elapsed):**
+
+Observable progress since last check:
+- ✅ Agent 1: Completed! (no new changes)
 - ✅ Agent 2: Created 4 component files
   - components/auth/LoginForm.tsx
   - components/auth/RegisterForm.tsx
   - components/auth/ProtectedRoute.tsx
   - hooks/useAuth.ts
-- 🔄 Agent 3: Created 2 test files
+- 🔄 Agent 3: Created 2 test files, still working
   - __tests__/api/auth.test.ts
   - __tests__/components/LoginForm.test.tsx
 
-Almost done... continuing to monitor.
+Almost done! Should complete in 1-2 minutes.
 
---- 270 SECONDS LATER (Task finally returns!) ---
+--- AGENTS COMPLETE (Task tool returns) ---
 
-✅ All agents completed! Let me synthesize the results...
-
-[Task tool returns with all 3 agent reports]
+YOU: ✅ All agents completed! Let me synthesize the results...
 
 [Read agent reports, update TodoWrite, create final summary]
 
@@ -678,10 +715,10 @@ Almost done... continuing to monitor.
 ```
 
 **Key Points:**
-- User is NEVER confused about what's happening
-- Updates every 60-90 seconds keep them informed
-- Observable file changes show real progress
-- When Task returns, you have context to create great summary
+- **Honest about limitation:** Can't proactively monitor, but user can check anytime
+- **User has agency:** They control when to check progress
+- **Useful updates:** Each check shows observable file system changes
+- **Better UX:** No false promises, clear expectations, actionable instructions
 
 ---
 
@@ -747,8 +784,9 @@ Route tasks to the right specialist:
 2. **Communicate Clearly** - Show the user WHY you're orchestrating (or not)
 3. **Parallel by Default** - If 2+ streams are independent, run them simultaneously
 4. **Standards Inheritance** - All spawned agents automatically use .factory/standards/
-5. **ACTIVELY MONITOR** - Never let users sit in silence; check progress every 60-90 seconds and report observable changes
-6. **Synthesize Results** - Present unified summary of all parallel work when agents complete
+5. **HONEST ABOUT MONITORING** - You can't proactively monitor (Task tool is blocking), so tell users they can check progress by asking "How's it going?"
+6. **USER-INITIATED CHECKS** - When users ask for progress, check file system changes and report observable updates
+7. **Synthesize Results** - Present unified summary of all parallel work when agents complete
 
 ---
 
