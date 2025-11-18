@@ -5,7 +5,7 @@
 Droidz supercharges Factory.ai's Droid CLI with specialist agents, parallel execution, persistent memory, and intelligent automation for complex software projects.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.7--droid-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-2.2.8--droid-blue.svg)](https://github.com/korallis/Droidz)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
 [![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 

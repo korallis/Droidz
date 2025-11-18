@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.2.7-droid - Repo cleanup + active monitoring + simplified README
+# Version: 2.2.8-droid - Fix installer skills download + all 45 skills support
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.7-droid"
+DROIDZ_VERSION="2.2.8-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -550,10 +550,7 @@ mkdir -p .factory/orchestrator
 mkdir -p .factory/hooks
 mkdir -p .factory/memory/user
 mkdir -p .factory/memory/org
-mkdir -p .factory/skills/auto-orchestrator
-mkdir -p .factory/skills/memory-manager
-mkdir -p .factory/skills/graphite-stacked-diffs
-mkdir -p .factory/skills/spec-shaper
+mkdir -p .factory/skills
 mkdir -p .factory/specs/active
 mkdir -p .factory/specs/archive
 mkdir -p .factory/specs/templates
@@ -740,34 +737,65 @@ log_success "Downloaded user memory template"
 curl -fsSL "${GITHUB_RAW}/.factory/memory/org/README.md${CACHE_BUST}" -o ".factory/memory/org/README.md"
 log_success "Downloaded org memory template"
 
-# Download skills
+# Download all skills (new format: subdirectory/SKILL.md)
 log_step "Downloading skills..."
 
-SKILLS=(
-    "standards-enforcer.md"
-    "context-optimizer.md"
-    "tech-stack-analyzer.md"
+SKILL_NAMES=(
+    "ADAPTATION_GUIDE"
+    "auto-orchestrator"
+    "brainstorming"
+    "clerk"
+    "cloudflare-workers"
+    "condition-based-waiting"
+    "context-optimizer"
+    "convex"
+    "defense-in-depth"
+    "design"
+    "dispatching-parallel-agents"
+    "drizzle"
+    "executing-plans"
+    "finishing-a-development-branch"
+    "graphite-stacked-diffs"
+    "memory-manager"
+    "neon"
+    "nextjs-16"
+    "postgresql"
+    "prisma"
+    "react"
+    "receiving-code-review"
+    "requesting-code-review"
+    "root-cause-tracing"
+    "security"
+    "sharing-skills"
+    "spec-shaper"
+    "standards-enforcer"
+    "stripe"
+    "subagent-driven-development"
+    "supabase"
+    "systematic-debugging"
+    "tailwind-v4"
+    "tanstack-query"
+    "tech-stack-analyzer"
+    "test-driven-development"
+    "testing-anti-patterns"
+    "testing-skills-with-subagents"
+    "trpc"
+    "typescript"
+    "using-droidz"
+    "using-git-worktrees"
+    "vercel"
+    "verification-before-completion"
+    "writing-skills"
 )
 
-for skill in "${SKILLS[@]}"; do
-    curl -fsSL "${GITHUB_RAW}/.factory/skills/${skill}${CACHE_BUST}" -o ".factory/skills/${skill}"
-    log_success "Downloaded ${skill}"
+for skill in "${SKILL_NAMES[@]}"; do
+    mkdir -p ".factory/skills/${skill}"
+    if curl -fsSL "${GITHUB_RAW}/.factory/skills/${skill}/SKILL.md${CACHE_BUST}" -o ".factory/skills/${skill}/SKILL.md" 2>/dev/null; then
+        log_success "Downloaded ${skill} skill"
+    else
+        log_warning "Could not download ${skill} skill (may not exist on remote yet)"
+    fi
 done
-
-# Download nested skills (with subdirectories)
-log_step "Downloading nested skills..."
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/auto-orchestrator/SKILL.md${CACHE_BUST}" -o ".factory/skills/auto-orchestrator/SKILL.md"
-log_success "Downloaded auto-orchestrator skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/memory-manager/SKILL.md${CACHE_BUST}" -o ".factory/skills/memory-manager/SKILL.md"
-log_success "Downloaded memory-manager skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/graphite-stacked-diffs/SKILL.md${CACHE_BUST}" -o ".factory/skills/graphite-stacked-diffs/SKILL.md"
-log_success "Downloaded graphite-stacked-diffs skill"
-
-curl -fsSL "${GITHUB_RAW}/.factory/skills/spec-shaper/SKILL.md${CACHE_BUST}" -o ".factory/skills/spec-shaper/SKILL.md"
-log_success "Downloaded spec-shaper skill"
 
 # Download spec templates
 log_step "Downloading spec templates..."
