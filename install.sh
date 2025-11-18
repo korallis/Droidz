@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.3.3-droid - Let users choose package manager (npm/yarn/pnpm/bun) for new installs
+# Version: 2.3.4-droid - Fix read command to use /dev/tty instead of stdin
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.3.3-droid"
+DROIDZ_VERSION="2.3.4-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -625,10 +625,10 @@ if [[ -d ".factory/droids" ]] && [[ -f ".factory/orchestrator/task-coordinator.t
     echo "  4) Cancel"
     echo ""
     
-    # Read user choice with validation
+    # Read user choice with validation (force read from terminal, not script stdin)
     choice=""
     while [[ -z "$choice" ]]; do
-        read -r -p "Enter your choice (1-4): " choice
+        read -r -p "Enter your choice (1-4): " choice < /dev/tty
         
         # Validate input
         if [[ ! "$choice" =~ ^[1-4]$ ]]; then
@@ -711,10 +711,10 @@ if [[ ! -f "package.json" ]]; then
     echo "  4) bun   - Ultra-fast (install: curl -fsSL https://bun.sh/install | bash)"
     echo ""
     
-    # Read package manager choice with validation
+    # Read package manager choice with validation (force read from terminal)
     pkg_choice=""
     while [[ -z "$pkg_choice" ]]; do
-        read -r -p "Enter your choice (1-4): " pkg_choice
+        read -r -p "Enter your choice (1-4): " pkg_choice < /dev/tty
         
         # Validate input
         if [[ ! "$pkg_choice" =~ ^[1-4]$ ]]; then
