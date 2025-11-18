@@ -1,6 +1,10 @@
 # Droidz worktrees
 .runs/
 
+# User-specific Droidz folders (never commit these!)
+.droidz/
+.factory/
+
 # Configuration file with API keys (NEVER commit this!)
 config.yml
 

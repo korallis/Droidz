@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.2.6-droid - WSL compatibility + UX improvements + Orchestrator fixes
+# Version: 2.2.7-droid - Repo cleanup + active monitoring + simplified README
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.6-droid"
+DROIDZ_VERSION="2.2.7-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/factory-ai"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -833,10 +833,9 @@ else
     log_success "Downloaded settings.json"
 fi
 
-# Download documentation (keep local README untouched)
-log_step "Downloading documentation updates..."
-curl -fsSL "${GITHUB_RAW}/CHANGELOG.md${CACHE_BUST}" -o "CHANGELOG.md"
-log_success "Downloaded CHANGELOG.md"
+# Documentation is maintained in the repository
+# Users should reference GitHub for CHANGELOG and updates
+log_step "Framework files installed successfully"
 
 # Create .gitignore entries if needed
 if [[ -f ".gitignore" ]]; then
@@ -895,9 +894,9 @@ fi
 echo ""
 echo -e "${GREEN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
 if [[ "$MODE" = "install" ]]; then
-    echo -e "${GREEN}${BOLD}║   🎉 Droidz v${DROIDZ_VERSION} Installation Complete!          ║${NC}"
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz v${DROIDZ_VERSION} Installation Complete!         ║${NC}"
 else
-    echo -e "${GREEN}${BOLD}║   🎉 Droidz Updated to v${DROIDZ_VERSION}!                    ║${NC}"
+    echo -e "${GREEN}${BOLD}║   🎉 Droidz Updated to v${DROIDZ_VERSION}!                   ║${NC}"
 fi
 echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
@@ -953,7 +952,7 @@ echo "• Product vision and roadmap templates"
 echo "• 100% feature parity with Claude Code"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📚 Docs: README.md | CHANGELOG.md"
+echo "📚 Docs: https://github.com/korallis/Droidz"
 echo "💝 Support: paypal.me/gideonapp"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
