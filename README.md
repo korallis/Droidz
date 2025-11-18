@@ -64,11 +64,12 @@ chmod +x install.sh
 
 ### Setup
 
-1. **Enable Custom Droids in Factory.ai:**
+1. **Enable Custom Droids and Hooks in Factory.ai:**
    ```bash
    droid
    /settings
    # Toggle "Custom Droids" ON
+   # Toggle "Hooks" ON
    ```
 
 2. **Restart Droid CLI:**
