@@ -1,6 +1,6 @@
 {
   "name": "droidz",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "Intelligent AI development framework for Factory.ai Droid CLI with parallel execution, persistent memory, and intelligent automation",
   "type": "module",
   "keywords": [

@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.5.1"
+DROIDZ_VERSION="2.5.2"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -1322,13 +1322,13 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "✨ What's New in Factory.ai Edition:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "• Skills enabled by default (45+ skills ready out-of-the-box)"
 echo "• Auto-activation hooks for proactive assistance"
 echo "• Memory management for decisions and patterns"
 echo "• Advanced skills (TDD, systematic-debugging, graphite, etc.)"
 echo "• Standards enforcement with auto-fix"
 echo "• Context optimization and monitoring"
 echo "• Product vision and roadmap templates"
-echo "• 100% feature parity with Claude Code"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📚 Docs: https://github.com/korallis/Droidz"
