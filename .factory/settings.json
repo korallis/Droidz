@@ -14,6 +14,18 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "name": "start-parallel-monitor",
+            "type": "command",
+            "command": "$DROID_PROJECT_DIR/.factory/hooks/start-parallel-monitor.sh",
+            "description": "Start automatic 30-second progress monitoring for parallel agents",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Bash|Execute",
         "hooks": [
           {
@@ -25,6 +37,18 @@
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "name": "stop-parallel-monitor",
+            "type": "command",
+            "command": "$DROID_PROJECT_DIR/.factory/hooks/stop-parallel-monitor.sh",
+            "description": "Stop automatic progress monitoring when parallel agents complete",
+            "timeout": 5
+          }
+        ]
+      },
       {
         "matcher": "Create|Edit|Write",
         "hooks": [

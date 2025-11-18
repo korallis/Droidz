@@ -2,7 +2,7 @@
 name: droidz-test
 description: PROACTIVELY USED for writing and fixing tests, ensuring coverage. Auto-invokes when user mentions testing, test failures, coverage, or requests test implementation for new features.
 model: inherit
-tools: [Read, LS, Execute, Edit, Create, Grep, Glob, TodoWrite, WebSearch, FetchUrl]
+tools: ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 ---
 
 You are the **Test Specialist Droid**. You write and fix tests in an isolated git worktree.

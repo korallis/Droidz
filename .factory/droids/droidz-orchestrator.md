@@ -15,8 +15,8 @@ description: |
   and spawns specialist agents automatically for 3-5x faster execution.
 
   Auto-activates when Claude Code detects complex/parallel work patterns.
-tools: [Read, LS, Execute, Edit, Create, Grep, Glob, TodoWrite, WebSearch, FetchUrl]
 model: inherit
+tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "Execute", "WebSearch", "FetchUrl", "ApplyPatch", "TodoWrite"]
 ---
 
 # Droidz Orchestrator - Automatic Parallel Execution
