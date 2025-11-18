@@ -1,5 +1,27 @@
 {
+  "name": "droidz",
+  "version": "2.2.7-droid",
+  "description": "Intelligent AI development framework for Factory.ai Droid CLI with parallel execution, persistent memory, and intelligent automation",
   "type": "module",
+  "keywords": [
+    "factory-ai",
+    "droid-cli",
+    "ai-agents",
+    "parallel-execution",
+    "code-generation",
+    "automation",
+    "orchestration"
+  ],
+  "author": "Droidz Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/korallis/Droidz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/korallis/Droidz/issues"
+  },
+  "homepage": "https://github.com/korallis/Droidz#readme",
   "dependencies": {
     "yaml": "^2.8.1"
   },
