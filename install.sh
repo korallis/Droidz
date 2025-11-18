@@ -3,10 +3,10 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with:
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/factory-ai/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
