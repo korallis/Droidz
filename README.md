@@ -6,6 +6,28 @@ Droidz supercharges Factory.ai's Droid CLI with specialist agents, parallel exec
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-2.2.7--droid-blue.svg)](https://github.com/korallis/Droidz)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+[![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
+
+---
+
+## 💬 Join Our Discord Community
+
+**Built specifically for Ray Fernando's Discord members!** 🎯
+
+Join our exclusive community to get early access, share tips, connect with contributors, get priority support, and influence future development.
+
+**[→ Join Discord Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+---
+
+## 💝 Support This Project
+
+If Droidz saves you time and improves your workflow, consider supporting its development!
+
+**[→ Donate via PayPal](https://www.paypal.com/paypalme/gideonapp)** (@gideonapp)
+
+Your support helps maintain and improve this framework for the entire community! 🙏
 
 ---
 
