@@ -10,7 +10,7 @@
 #   chmod +x install.sh
 #   ./install.sh
 #
-# Version: 2.2.9-droid - Interactive installation modes: update, fresh install, uninstall
+# Version: 2.3.0-droid - Auto-detect package manager (npm/yarn/pnpm/bun) for monorepo support
 # Features:
 #   - Detects OS and package manager (apt, dnf, yum, pacman, zypper, apk, brew)
 #   - Auto-installs missing dependencies (git, jq, tmux, Bun) with user permission
@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.2.9-droid"
+DROIDZ_VERSION="2.3.0-droid"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -116,6 +116,40 @@ detect_package_manager() {
         PKG_MANAGER="apk"
     else
         PKG_MANAGER="unknown"
+    fi
+}
+
+# Detect Node.js package manager for the project
+detect_node_package_manager() {
+    # Check for lock files first (most reliable indicator)
+    if [[ -f "pnpm-lock.yaml" ]]; then
+        NODE_PKG_MANAGER="pnpm"
+        log_info "Detected pnpm (found pnpm-lock.yaml)"
+    elif [[ -f "yarn.lock" ]]; then
+        NODE_PKG_MANAGER="yarn"
+        log_info "Detected yarn (found yarn.lock)"
+    elif [[ -f "package-lock.json" ]]; then
+        NODE_PKG_MANAGER="npm"
+        log_info "Detected npm (found package-lock.json)"
+    elif [[ -f "bun.lockb" ]]; then
+        NODE_PKG_MANAGER="bun"
+        log_info "Detected bun (found bun.lockb)"
+    # Fall back to checking which commands are available
+    elif command -v pnpm &> /dev/null; then
+        NODE_PKG_MANAGER="pnpm"
+        log_info "Using pnpm (detected in PATH)"
+    elif command -v yarn &> /dev/null; then
+        NODE_PKG_MANAGER="yarn"
+        log_info "Using yarn (detected in PATH)"
+    elif command -v bun &> /dev/null; then
+        NODE_PKG_MANAGER="bun"
+        log_info "Using bun (detected in PATH)"
+    elif command -v npm &> /dev/null; then
+        NODE_PKG_MANAGER="npm"
+        log_info "Using npm (detected in PATH)"
+    else
+        NODE_PKG_MANAGER="none"
+        log_warning "No Node.js package manager found"
     fi
 }
 
@@ -278,6 +312,7 @@ generate_error_report() {
         echo "OS Type: $OSTYPE"
         echo "Detected OS: ${OS:-unknown}"
         echo "Package Manager: ${PKG_MANAGER:-unknown}"
+        echo "Node Package Manager: ${NODE_PKG_MANAGER:-not detected}"
         echo "Shell: $SHELL"
         echo "User: $USER"
         echo ""
@@ -686,14 +721,62 @@ else
     log_warning "python3 not found. Please ensure package.json includes \"type\": \"module\"."
 fi
 
-# Install runtime and linting dependencies
-log_info "Installing runtime dependency: yaml"
-bun add yaml >/dev/null 2>&1
-log_success "Added yaml dependency"
+# Detect Node.js package manager
+detect_node_package_manager
 
-log_info "Installing development dependencies for linting and types"
-bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
-log_success "Installed development dependencies"
+# Install runtime and linting dependencies
+if [[ "$NODE_PKG_MANAGER" == "none" ]]; then
+    log_error "No Node.js package manager found. Please install npm, yarn, pnpm, or bun first."
+    echo ""
+    echo "Installation options:"
+    echo "  npm:  comes with Node.js (https://nodejs.org)"
+    echo "  yarn: npm install -g yarn"
+    echo "  pnpm: npm install -g pnpm"
+    echo "  bun:  curl -fsSL https://bun.sh/install | bash"
+    exit 1
+fi
+
+log_step "Installing dependencies using ${NODE_PKG_MANAGER}..."
+
+# Install dependencies based on detected package manager
+case "$NODE_PKG_MANAGER" in
+    npm)
+        log_info "Installing runtime dependency: yaml"
+        npm install yaml --save >/dev/null 2>&1
+        log_success "Added yaml dependency"
+        
+        log_info "Installing development dependencies for linting and types"
+        npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
+        log_success "Installed development dependencies"
+        ;;
+    yarn)
+        log_info "Installing runtime dependency: yaml"
+        yarn add yaml >/dev/null 2>&1
+        log_success "Added yaml dependency"
+        
+        log_info "Installing development dependencies for linting and types"
+        yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
+        log_success "Installed development dependencies"
+        ;;
+    pnpm)
+        log_info "Installing runtime dependency: yaml"
+        pnpm add yaml >/dev/null 2>&1
+        log_success "Added yaml dependency"
+        
+        log_info "Installing development dependencies for linting and types"
+        pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
+        log_success "Installed development dependencies"
+        ;;
+    bun)
+        log_info "Installing runtime dependency: yaml"
+        bun add yaml >/dev/null 2>&1
+        log_success "Added yaml dependency"
+        
+        log_info "Installing development dependencies for linting and types"
+        bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint >/dev/null 2>&1
+        log_success "Installed development dependencies"
+        ;;
+esac
 
 # Download droids
 log_step "Downloading robot helpers (droids)..."
