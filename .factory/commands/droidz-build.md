@@ -1,124 +1,183 @@
 ---
-description: AI-powered spec generator - turn ideas into execution-ready features
+description: AI-powered spec generator with visual diagrams - turn ideas into execution-ready features
 argument-hint: "feature description"
 ---
 
-You are an expert specification engineer for Droidz. Your mission: transform vague feature requests into comprehensive, executable specifications with task decomposition, security requirements, edge cases, and execution strategy.
+You are an expert specification engineer for Droidz. Your mission: transform vague feature requests into comprehensive, executable specifications with task decomposition, security requirements, edge cases, execution strategy, and **visual diagrams**.
 
 **User Request:** $ARGUMENTS
 
 ---
 
-## Step 1: Clarity Check (GOLDEN RULE)
+## Step 1: Understand the Vision (Spec-Shaper Framework)
 
-Before generating anything, analyze the request to determine:
+Before generating anything, have a **conversation** to understand:
 
-### 1.1 Is this clear enough to spec?
+### 1.1 What are they building?
 
-Ask yourself:
-- Would a developer with minimal context understand what's being asked?
-- Are there ambiguous terms that could mean multiple things?
-- Are there missing details about constraints or requirements?
-- Is the context clear (who it's for, why it matters)?
+Ask open-ended discovery questions:
 
-### 1.2 What's the project context?
+```
+🔍 I'll help you create a comprehensive specification.
+
+Let me understand your vision:
+
+**Vision & Problem:**
+- What problem are you solving?
+- Who experiences this problem?
+- How do they currently solve it (if at all)?
+- What would success look like?
+
+**Scope:**
+- What's the minimum viable version?
+- Which features are must-have vs nice-to-have?
+- What's explicitly out of scope?
+
+Please share what you know, or say **'continue'** if you want me to proceed with what I have.
+```
+
+### 1.2 Analyze Project Context
 
 ```typescript
 // Check for existing project metadata
 Read(".droidz/project.json") // If exists, load tech stack info
-Read("package.json")         // Identify framework, dependencies
+Read("package.json")         // Identify framework, dependencies  
 Grep("import.*from", "**/*.{ts,tsx,js,jsx}") // Identify patterns
+LS(".") // Check project structure
 ```
 
-### 1.3 What's the complexity level?
+### 1.3 Determine Complexity & Spec Type
 
-- **Simple:** Single file, clear goal, < 2 hours (e.g., "Add a button to navbar")
-- **Moderate:** 2-5 files, some research needed, 2-6 hours (e.g., "Add contact form with email")
-- **Complex:** 5+ files, multiple domains, 6+ hours (e.g., "Add authentication system")
+**Complexity Levels:**
+- **Simple:** Single file, < 2 hours (e.g., "Add a button")
+- **Moderate:** 2-5 files, 2-6 hours (e.g., "Add contact form")
+- **Complex:** 5+ files, 6+ hours (e.g., "Add authentication")
+
+**Spec Types:**
+- **Feature Spec** - Single feature (1-2 weeks)
+- **Epic Spec** - Multiple features (months)
+- **Refactor Spec** - Code improvement, no new features
+- **Integration Spec** - Third-party service integration
 
 ---
 
-## Step 2: Clarification (If Needed)
+## Step 2: Ask Clarifying Questions (If Needed)
 
-**If request is vague or missing critical info, ask targeted questions:**
+**If request is vague, use targeted questioning:**
 
+### Technical Questions
+
+**For Authentication:**
 ```
-🔍 I'll create a comprehensive specification for: [brief summary of request]
-
-To ensure this spec is complete and actionable, I need to clarify a few things:
-
-1. [Specific question about ambiguous aspect]
-2. [Question about constraints/requirements]
-3. [Question about scope or edge cases]
-4. What is the end goal? Why is this needed?
-5. Who will use this feature?
-
-Please answer what applies, or say **'continue'** if I have enough context to proceed.
+1. Authentication method? (email/password, OAuth, SSO, magic link)
+2. Session handling? (JWT, server-side sessions, cookies)
+3. Social providers? (Google, GitHub, Twitter, etc.)
+4. Password requirements? (length, complexity, reset flow)
+5. Multi-factor authentication? (SMS, TOTP, email)
 ```
 
-### Examples of When to Ask:
+**For APIs:**
+```
+1. RESTful or GraphQL?
+2. Authentication? (API keys, OAuth, JWT)
+3. Rate limiting needs?
+4. Caching strategy?
+5. Error handling approach?
+```
 
-| Vague Request | Clarifying Questions |
-|--------------|---------------------|
-| "Add dashboard" | What type? Admin, analytics, user-facing? What data should it display? |
-| "Fix the bug" | Which bug? What's the expected vs actual behavior? Steps to reproduce? |
-| "Add auth" | Email/password, OAuth, or both? JWT or sessions? Social providers? |
-| "Optimize performance" | Which aspect? Page load, memory, database queries, API response time? |
-| "Add search" | Full-text search or simple filter? Which entities? Third-party service or built-in? |
+**For UI/UX:**
+```
+1. Desktop, mobile, or both?
+2. Accessibility requirements? (WCAG level)
+3. Browser support? (modern only vs legacy)
+4. Animation/transitions? (minimal vs rich)
+5. Theme support? (light/dark mode)
+```
+
+### Business Questions
+
+```
+**Users:**
+- Who will use this? (customers, admins, internal team)
+- What's their technical level? (novice, intermediate, expert)
+- Peak usage scenarios? (concurrent users, requests/second)
+
+**Success:**
+- How will you measure success?
+- What metrics matter? (conversion, engagement, performance)
+- What does "done" look like?
+```
 
 ---
 
 ## Step 3: Research Best Practices
 
-**Use MCP tools to gather industry best practices and documentation:**
+**Use MCP tools when needed:**
 
 ```typescript
-// Research industry patterns and security best practices
+// For security-sensitive features
 exa.getCodeContext({
-  query: `${framework} ${featureType} best practices security patterns 2025`,
+  query: `${framework} ${featureType} best practices security patterns 2025 OWASP`,
   tokensNum: 8000
 });
 
-// Get official documentation for specific tech stack
+// For framework-specific patterns
 ref.searchDocumentation({
-  query: `${framework} ${feature} implementation guide tutorial`
+  query: `${framework} ${feature} implementation guide official docs`
 });
 ```
 
-**Research when:**
-- Building authentication, payments, or security-sensitive features
-- Implementing unfamiliar frameworks or libraries
-- Need to ensure OWASP, GDPR, or compliance requirements
-- Want to identify common pitfalls and edge cases
+**Research for:**
+- Authentication, payments, file uploads (security)
+- Unfamiliar frameworks/libraries
+- OWASP, GDPR, HIPAA compliance
+- Performance optimization patterns
 
 ---
 
-## Step 4: Generate Specification
-
-### 4.1 Confirm Before Generating
+## Step 4: Confirm Before Generating
 
 ```
-✅ I'll create a specification for: [clear summary]
+✅ **Ready to create specification**
 
-**Complexity:** [Simple/Moderate/Complex]
-**Key Components:** [List 3-5 main components]
+**What I understand:**
+- **Feature:** [Brief summary]
+- **Type:** [Feature/Epic/Refactor/Integration]
+- **Complexity:** [Simple/Moderate/Complex]
+- **Spec Type:** [Describe approach]
+
+**Key Components:**
+1. [Component 1]
+2. [Component 2]
+3. [Component 3]
+
 **Execution Strategy:** [Parallel/Sequential/Mixed]
-**Estimated Time:** 
-  - Sequential: [X hours]
-  - Parallel: [Y hours] ([Z]x speedup)
+
+**Estimated Time:**
+- Sequential: [X hours]
+- Parallel: [Y hours] ([Z]x speedup)
+
+**Diagrams to include:**
+- Architecture diagram (system structure)
+- [Sequence diagram if API/auth flows]
+- [Data flow diagram if data processing]
+- [State diagram if state machine logic]
 
 Proceed with spec generation, or adjust anything first?
 ```
 
-### 4.2 Generate Comprehensive Spec
+---
 
-Create a specification following this XML-structured format:
+## Step 5: Generate Comprehensive Spec with Mermaid Diagrams
+
+Create a specification following this format with **visual diagrams**:
 
 ```markdown
 ---
 spec-id: [number, e.g., 001]
 feature: [Feature Name]
 complexity: [simple/moderate/complex]
+spec-type: [feature/epic/refactor/integration]
 execution-strategy: [parallel/sequential/mixed]
 created: [ISO timestamp]
 dependencies: []
@@ -133,170 +192,499 @@ dependencies: []
 <context>
 **User Request:** $ARGUMENTS
 
-**Project Type:** [Greenfield/Existing, determined from analysis]
-**Tech Stack:** [From package.json and codebase analysis]
+**Project Type:** [Greenfield/Existing]
+**Tech Stack:** [From package.json analysis]
 **Framework:** [Next.js/React/Express/etc.]
-**Database:** [If applicable]
+**Database:** [PostgreSQL/MongoDB/etc. if applicable]
 **Target Users:** [Who will use this feature]
 **Why This Matters:** [Business/user value]
+
+**Current State:** [What exists now]
+**Desired State:** [What we want to achieve]
 </context>
 
+<architecture-diagram>
+
+\`\`\`mermaid
+graph TB
+    subgraph "System Architecture"
+        A[Client/Browser] -->|HTTP/HTTPS| B[API Gateway]
+        B --> C[Authentication Service]
+        B --> D[Feature Service]
+        D --> E[(Database)]
+        D --> F[External API]
+        C --> E
+    end
+    
+    subgraph "Components to Build"
+        G[Frontend UI]
+        H[Backend API]
+        I[Database Schema]
+        J[Tests]
+    end
+    
+    style C fill:#f9f,stroke:#333
+    style D fill:#bbf,stroke:#333
+    style E fill:#bfb,stroke:#333
+\`\`\`
+
+**Architecture Notes:**
+- [Explain key architectural decisions]
+- [Highlight new vs existing components]
+- [Note critical paths and dependencies]
+
+</architecture-diagram>
+
 <requirements>
+
 **Functional Requirements:**
-1. [Specific, testable requirement]
+1. [Specific, testable requirement with acceptance criteria]
+   - Input: [What goes in]
+   - Output: [What comes out]
+   - Behavior: [How it works]
+
 2. [Another requirement]
-3. [...]
+   - Input: [...]
+   - Output: [...]
+   - Behavior: [...]
 
 **Non-Functional Requirements:**
-1. [Performance targets, if applicable]
-2. [Security requirements, if applicable]
-3. [Scalability needs, if applicable]
-4. [Accessibility standards, if applicable]
+1. **Performance:** [e.g., API responds in < 200ms for 95th percentile]
+2. **Security:** [e.g., All passwords hashed with bcrypt, salt rounds 10]
+3. **Scalability:** [e.g., Handle 1000 concurrent users]
+4. **Accessibility:** [e.g., WCAG 2.1 Level AA compliance]
+
+**Constraints:**
+- Technical: [e.g., Must work with existing auth system]
+- Timeline: [e.g., Launch in 2 weeks]
+- Resources: [e.g., Single developer]
+- Compatibility: [e.g., Support IE11]
+
 </requirements>
 
-<task-decomposition>
-**Phase 1: [Phase Name] ([Parallel/Sequential])**
+<user-flow-diagram>
 
-Task 1.1: [Task Name]
+\`\`\`mermaid
+sequenceDiagram
+    actor User
+    participant UI as Frontend
+    participant API as Backend API
+    participant DB as Database
+    participant Ext as External Service
+    
+    User->>UI: [Action 1: e.g., Click "Login"]
+    UI->>API: POST /auth/login {email, password}
+    API->>DB: Query user by email
+    DB-->>API: User data
+    API->>API: Verify password (bcrypt)
+    API-->>UI: JWT token
+    UI->>UI: Store token (localStorage)
+    UI-->>User: Redirect to dashboard
+    
+    Note over User,Ext: [Describe critical path]
+    Note over API,DB: [Highlight security measures]
+\`\`\`
+
+**Flow Notes:**
+- [Explain happy path]
+- [Note error handling points]
+- [Highlight security/validation steps]
+
+</user-flow-diagram>
+
+<data-model>
+
+**[If applicable - for features with data storage]**
+
+\`\`\`mermaid
+erDiagram
+    USER ||--o{ SESSION : has
+    USER ||--o{ PROFILE : has
+    USER {
+        uuid id PK
+        string email UK
+        string password_hash
+        timestamp created_at
+        timestamp updated_at
+    }
+    SESSION {
+        uuid id PK
+        uuid user_id FK
+        string token UK
+        timestamp expires_at
+        timestamp created_at
+    }
+    PROFILE {
+        uuid id PK
+        uuid user_id FK
+        string display_name
+        string avatar_url
+        json preferences
+    }
+\`\`\`
+
+**Data Model Notes:**
+- [Explain key relationships]
+- [Note indexes needed]
+- [Highlight sensitive fields]
+
+</data-model>
+
+<state-diagram>
+
+**[If applicable - for features with state machines]**
+
+\`\`\`mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Loading: User submits form
+    Loading --> Success: API returns 200
+    Loading --> Error: API returns 4xx/5xx
+    Success --> Idle: Reset after 3s
+    Error --> Idle: User clicks retry
+    
+    state Success {
+        [*] --> ShowMessage
+        ShowMessage --> Redirect
+        Redirect --> [*]
+    }
+    
+    note right of Loading
+        Show spinner
+        Disable form inputs
+    end note
+    
+    note right of Error
+        Show error message
+        Log to monitoring
+    end note
+\`\`\`
+
+**State Management Notes:**
+- [Explain state transitions]
+- [Note side effects]
+- [Highlight error states]
+
+</state-diagram>
+
+<task-decomposition>
+
+**Phase 1: Foundation ([Parallel/Sequential])**
+
+Task 1.1: [Task Name - e.g., Database Schema]
 - **droidz:** [codegen/test/refactor/integration/infra/generalist]
 - **priority:** [high/medium/low]
-- **files:** [List of files to create/modify]
-- **dependencies:** [Other tasks that must complete first, or "None"]
+- **effort:** [2 hours]
+- **files:** 
+  - `prisma/schema.prisma` - Add User, Session models
+  - `prisma/migrations/` - Generate migration
+- **dependencies:** None (can start immediately)
 - **acceptance criteria:**
-  - [Specific, measurable criterion]
-  - [Another criterion]
-  - [...]
+  - [ ] User model with email, password_hash, created_at, updated_at
+  - [ ] Session model with token, user_id FK, expires_at
+  - [ ] Migration runs successfully
+  - [ ] No existing data lost
 
-Task 1.2: [Next Task Name]
+Task 1.2: [Next Task Name - e.g., API Endpoints]
 - **droidz:** [specialist type]
 - **priority:** [high/medium/low]
-- **files:** [affected files]
-- **dependencies:** [task dependencies]
+- **effort:** [4 hours]
+- **files:**
+  - `src/routes/auth.ts` - Register, login, logout endpoints
+  - `src/middleware/auth.ts` - JWT verification
+- **dependencies:** Task 1.1 (needs database schema)
 - **acceptance criteria:**
-  - [criterion]
+  - [ ] POST /auth/register returns 201 with JWT
+  - [ ] POST /auth/login returns 200 with JWT
+  - [ ] POST /auth/logout returns 200
+  - [ ] All endpoints validate inputs
+  - [ ] Passwords hashed with bcrypt (10 rounds)
 
-[Repeat for all tasks in Phase 1]
+[Repeat for all Phase 1 tasks]
 
-**Phase 2: [Next Phase Name] ([Parallel/Sequential])**
-[Only if there are dependencies - tasks that must wait for Phase 1]
+**Phase 2: Integration ([Parallel/Sequential])**
+[Tasks that depend on Phase 1 completion]
 
-[Repeat task structure]
+**Phase 3: Polish ([Sequential])**
+[Final touches, testing, documentation]
 
 </task-decomposition>
 
 <security-requirements>
-[ONLY include this section if feature involves:]
-[- User authentication or authorization]
-[- Sensitive data (passwords, PII, payment info)]
-[- External API integrations]
-[- File uploads or user-generated content]
+
+**[ONLY if feature involves: auth, sensitive data, external APIs, file uploads]**
 
 **Critical Security Measures:**
 
-1. [Specific security requirement]
-   - Implementation: [How to implement]
-   - Validation: [How to verify]
+1. **Input Validation**
+   - Implementation: Validate all user inputs with Zod/Yup schemas
+   - Validation: Write tests for XSS, SQL injection attempts
+   - Tools: `zod`, `validator.js`
 
-2. [Another security requirement]
-   - Implementation: [How]
-   - Validation: [How to check]
+2. **Password Security**
+   - Implementation: Use bcrypt with 10 salt rounds
+   - Validation: Test that passwords are never logged or exposed
+   - Tools: `bcrypt`, `zxcvbn` for strength checking
+
+3. **Session Management**
+   - Implementation: JWT with 15-min expiry, refresh tokens with 30-day expiry
+   - Validation: Test token expiry, refresh flow, logout
+   - Tools: `jsonwebtoken`, `crypto` for token generation
 
 **Compliance Checklists:**
 
-OWASP Top 10 (if applicable):
-- [ ] A01:2021 – Broken Access Control
-- [ ] A02:2021 – Cryptographic Failures
-- [ ] A03:2021 – Injection
-- [ ] A04:2021 – Insecure Design
-- [ ] A05:2021 – Security Misconfiguration
-- [ ] A07:2021 – Authentication Failures
+**OWASP Top 10 (2021):**
+- [ ] A01:2021 – Broken Access Control: Role-based access, authorize on every request
+- [ ] A02:2021 – Cryptographic Failures: Use TLS, encrypt sensitive data at rest
+- [ ] A03:2021 – Injection: Parameterized queries, input validation
+- [ ] A04:2021 – Insecure Design: Threat modeling, secure-by-default
+- [ ] A05:2021 – Security Misconfiguration: Disable debug mode, remove defaults
+- [ ] A07:2021 – Authentication Failures: MFA, rate limiting, secure password reset
 
-GDPR (if handling EU user data):
-- [ ] User data deletion capability
-- [ ] Privacy policy consent
-- [ ] Data export functionality
-- [ ] Secure data storage
+**GDPR (if handling EU user data):**
+- [ ] User data deletion capability (right to be forgotten)
+- [ ] Privacy policy consent on signup
+- [ ] Data export functionality (right to portability)
+- [ ] Secure data storage (encryption at rest)
+- [ ] Data breach notification process
+
+**Security Testing:**
+- [ ] Run `npm audit` and fix critical/high vulnerabilities
+- [ ] Test rate limiting (max 5 login attempts per hour)
+- [ ] Test CORS configuration (whitelist trusted origins)
+- [ ] Test CSRF protection (use tokens for state-changing operations)
+
 </security-requirements>
 
 <edge-cases>
+
 **Scenarios to Handle:**
 
-1. [Edge Case Name]
-   - **Scenario:** [Description]
-   - **Expected Behavior:** [What should happen]
-   - **Error Message:** [If applicable]
-   - **HTTP Status:** [If applicable]
+1. **Concurrent Requests**
+   - **Scenario:** User clicks submit button twice rapidly
+   - **Expected Behavior:** First request processes, second is ignored/queued
+   - **Implementation:** Disable button on submit, debounce handler
+   - **HTTP Status:** 200 for first, 429 for second if within 1s
 
-2. [Another Edge Case]
-   - **Scenario:** [...]
-   - **Expected Behavior:** [...]
+2. **Network Failure**
+   - **Scenario:** API request fails mid-flight (timeout, connection lost)
+   - **Expected Behavior:** Show error, allow retry, don't lose user data
+   - **Implementation:** Try-catch with exponential backoff, persist form data
+   - **Error Message:** "Connection lost. Click retry to try again."
 
-[List 5-10 edge cases that could cause failures]
+3. **Invalid Token**
+   - **Scenario:** User's JWT expires while browsing
+   - **Expected Behavior:** Attempt token refresh, redirect to login if fails
+   - **Implementation:** Intercept 401, try refresh, clear storage on failure
+   - **HTTP Status:** 401 → 200 (refreshed) or 401 (redirect)
+
+4. **Race Condition**
+   - **Scenario:** Two tabs update same resource simultaneously
+   - **Expected Behavior:** Last write wins, show conflict warning
+   - **Implementation:** Optimistic locking with version field
+   - **Error Message:** "This item was updated elsewhere. Refresh to see changes."
+
+5. **Malicious Input**
+   - **Scenario:** User sends `<script>alert('xss')</script>` in form
+   - **Expected Behavior:** Input sanitized, attack logged, request rejected
+   - **Implementation:** Server-side validation, escape HTML, log to monitoring
+   - **HTTP Status:** 400 Bad Request
+
+[List 5-10 edge cases covering security, errors, race conditions, etc.]
+
 </edge-cases>
 
 <testing-strategy>
+
 **Test Coverage Plan:**
 
-**Unit Tests:**
-- [Component/function to test]
-- [Another unit to test]
-- [...]
+\`\`\`mermaid
+graph LR
+    A[Testing Pyramid] --> B[Unit Tests - 70%]
+    A --> C[Integration Tests - 20%]
+    A --> D[E2E Tests - 10%]
+    
+    B --> B1[Pure functions]
+    B --> B2[Components]
+    B --> B3[Utilities]
+    
+    C --> C1[API endpoints]
+    C --> C2[Database queries]
+    C --> C3[Auth flow]
+    
+    D --> D1[User journeys]
+    D --> D2[Critical paths]
+\`\`\`
 
-**Integration Tests:**
-- [End-to-end flow to test]
-- [Another integration test]
-- [...]
+**Unit Tests (70% coverage):**
+- `auth.service.test.ts` - Password hashing, token generation
+- `auth.validator.test.ts` - Input validation logic
+- `LoginForm.test.tsx` - Component rendering, form submission
 
-**E2E Tests (if applicable):**
-- [User journey to test]
-- [Another E2E scenario]
+**Integration Tests (20% coverage):**
+- `auth.routes.test.ts` - POST /auth/register, /login, /logout flows
+- `auth.middleware.test.ts` - JWT verification, token refresh
+- `database.test.ts` - User/Session CRUD operations
 
-**Target Coverage:** [80%+ for complex features, 60%+ for simple]
+**E2E Tests (10% coverage):**
+- `login-flow.spec.ts` - Register → Login → Access protected page
+- `password-reset.spec.ts` - Request reset → Click link → Set new password
+- `session-expiry.spec.ts` - Login → Wait for expiry → Auto-refresh
+
+**Target Coverage:** 80%+ for complex features, 60%+ for simple features
+
+**Test Data:**
+- Use factories for test data generation (`@faker-js/faker`)
+- Seed database with known test users
+- Clean up after each test (database transactions)
+
 </testing-strategy>
 
+<monitoring-and-observability>
+
+**[For production features]**
+
+**Metrics to Track:**
+- Authentication success/failure rate
+- Average login time (p50, p95, p99)
+- Token refresh rate
+- Failed auth attempts per IP (detect brute force)
+
+**Logging:**
+- Info: Successful logins (user ID, IP, timestamp)
+- Warn: Failed login attempts (IP, reason, timestamp)
+- Error: Auth errors (error message, stack trace, context)
+
+**Alerts:**
+- Failed auth rate > 10% (might indicate issue)
+- Login time p95 > 2 seconds (performance degradation)
+- 5+ failed attempts from same IP in 1 minute (brute force)
+
+**Tools:**
+- Application: Sentry, Datadog, New Relic
+- Infrastructure: Prometheus, Grafana
+- Logs: ELK stack, CloudWatch
+
+</monitoring-and-observability>
+
 <verification-criteria>
+
 **Before Marking Complete:**
 
-✅ [Specific success criterion - must be measurable]
-✅ [Another verification step]
-✅ [Security checklist completed (if applicable)]
-✅ [All tests passing]
-✅ [No hardcoded secrets or sensitive data]
-✅ [Code follows project standards]
-✅ [Documentation updated]
+✅ **Functionality:**
+- [ ] All functional requirements implemented
+- [ ] All acceptance criteria met
+- [ ] Manual testing of happy path completed
+- [ ] Edge cases tested and handled
 
-[These are the checkboxes that confirm the feature is DONE]
+✅ **Quality:**
+- [ ] Test coverage target met (80%+ or 60%+)
+- [ ] All tests passing (unit, integration, E2E)
+- [ ] No linting errors
+- [ ] TypeScript types correct (no `any`)
+
+✅ **Security:**
+- [ ] Security checklist completed (if applicable)
+- [ ] No hardcoded secrets or credentials
+- [ ] All inputs validated on server-side
+- [ ] `npm audit` shows no critical/high vulnerabilities
+
+✅ **Performance:**
+- [ ] Performance targets met (response times, load handling)
+- [ ] No N+1 queries or memory leaks
+- [ ] Assets optimized (images, bundles)
+
+✅ **Documentation:**
+- [ ] Code commented where non-obvious
+- [ ] README updated with new feature
+- [ ] API documentation updated (if applicable)
+- [ ] Changelog entry added
+
+✅ **Code Review:**
+- [ ] Code follows project standards
+- [ ] No unnecessary complexity
+- [ ] Reusable code extracted to utilities
+- [ ] Consistent naming conventions
+
 </verification-criteria>
 
 <execution-plan>
+
 **Recommended Execution Strategy:** [Parallel/Sequential/Mixed]
+
+**Visualization:**
+
+\`\`\`mermaid
+gantt
+    title Execution Timeline
+    dateFormat  HH:mm
+    axisFormat %H:%M
+    
+    section Phase 1 (Parallel)
+    Task 1.1: Database Schema     :a1, 00:00, 2h
+    Task 1.2: API Endpoints        :a2, 00:00, 4h
+    Task 1.3: Frontend UI          :a3, 00:00, 3h
+    
+    section Phase 2 (Parallel)
+    Task 2.1: Integration Tests    :a4, after a2, 2h
+    Task 2.2: E2E Tests           :a5, after a3, 2h
+    
+    section Phase 3 (Sequential)
+    Task 3.1: Code Review         :a6, after a4 a5, 1h
+    Task 3.2: Deployment          :a7, after a6, 1h
+\`\`\`
 
 **Phase 1 Tasks (can run in parallel):**
 
 \`\`\`typescript
 // Task 1.1: [Name]
 Task({
-  subagent_type: "droidz-[specialist]",
+  subagent_type: "[codegen/test/refactor/integration/infra/generalist]",
   description: "[1-sentence description]",
   prompt: \`# Task: [Task Name]
 
 ## Objective
-[What this task accomplishes]
+[What this task accomplishes - be specific]
 
 ## Context
 **Project:** [Project type and tech stack]
 **User Request:** $ARGUMENTS
-**Related Tasks:** [Other tasks in this phase]
+**Related Tasks:** [Other tasks running in parallel]
+**Why This Matters:** [Business value]
 
 ## Requirements
-[Specific requirements from task-decomposition]
+[Specific requirements from <task-decomposition>]
+
+## Architecture Reference
+Refer to the architecture diagram in the spec:
+- [Key architectural decision relevant to this task]
+- [Component this task builds]
+- [How it fits into the system]
 
 ## Files to Create/Modify
-[List with descriptions of what each file should contain]
+1. \`path/to/file1.ts\` - [What this file does]
+2. \`path/to/file2.ts\` - [What this file does]
 
 ## Acceptance Criteria
-✅ [Criterion from task-decomposition]
-✅ [Another criterion]
+✅ [Criterion 1 - must be measurable]
+✅ [Criterion 2 - must be testable]
+✅ [Criterion 3 - must be verifiable]
+
+## Implementation Notes
+- [Specific libraries to use]
+- [Patterns to follow]
+- [Gotchas to avoid]
+
+## Testing Requirements
+- Write unit tests for all functions
+- Test edge cases: [list from <edge-cases>]
+- Ensure [X]% coverage
+
+## Security Requirements
+[If applicable from <security-requirements>]
+- [ ] Validate all inputs
+- [ ] Hash sensitive data
+- [ ] Log security events
 
 ## CRITICAL: Progress Reporting
 ⏰ **USE TodoWrite EVERY 60 SECONDS** to report progress!
@@ -305,61 +693,71 @@ Example:
 TodoWrite({
   todos: [
     {id: "1", content: "Analyze codebase ✅", status: "completed", priority: "high"},
-    {id: "2", content: "Implement [feature] (creating files...)", status: "in_progress", priority: "high"},
+    {id: "2", content: "Implement [feature] (creating auth.ts...)", status: "in_progress", priority: "high"},
     {id: "3", content: "Write tests", status: "pending", priority: "medium"}
   ]
 });
 
 ## Success Criteria
-[How to verify this task is complete]
+- All acceptance criteria met
+- All tests passing
+- No linting/type errors
+- Code reviewed by self
 
 ## Tools Available
 ["Read", "LS", "Execute", "Edit", "Create", "Grep", "Glob", "TodoWrite", "WebSearch", "FetchUrl"]
 
 ## Standards
 Follow patterns in .factory/standards/ if available.
+Check existing code for consistency.
+
+## Resources
+- Spec file: .droidz/specs/[spec-id]-[feature-name].md
+- Architecture diagram: See <architecture-diagram> in spec
+- Flow diagram: See <user-flow-diagram> in spec
 \`
 });
 \`\`\`
 
-[Repeat for each Phase 1 task]
-
-**Phase 2 Tasks (wait for Phase 1, then parallel):**
-[If applicable]
-
 **Estimated Time:**
-- Sequential Execution: [X] hours
-- Parallel Execution: [Y] hours
-- **Speedup: [Z]x faster**
+- Sequential Execution: [X] hours (all tasks one-by-one)
+- Parallel Execution: [Y] hours (max task duration)
+- **Speedup: [Z]x faster** ⚡
 
 </execution-plan>
 
 <success-metrics>
+
 **How to Measure Success:**
 
 **Quality Metrics:**
-- Test coverage: [target %]
-- All acceptance criteria met: [Yes/No]
-- Zero critical bugs: [Yes/No]
-- Code review passed: [Yes/No]
+- Test coverage: [80% for complex, 60% for simple]
+- All acceptance criteria met: Yes/No
+- Zero critical bugs: Yes/No
+- Code review score: [1-5, target 4+]
 
-[If performance-related:]
-**Performance Metrics:**
-- [Metric name]: < [target value]
-- [Another metric]: > [target value]
+**Performance Metrics:** [if applicable]
+- API response time p95: < [X]ms
+- Page load time: < [Y]s
+- Database query time: < [Z]ms
+- Throughput: [N] requests/second
 
-[If security-related:]
-**Security Metrics:**
-- Zero hardcoded secrets in codebase
-- All inputs validated and sanitized
-- Security checklist 100% complete
-- No critical vulnerabilities (npm audit)
+**Security Metrics:** [if applicable]
+- Zero hardcoded secrets: Yes/No
+- All inputs validated: Yes/No
+- Security checklist: 100% complete
+- npm audit: Zero critical/high
 
-[If UX-related:]
-**UX Metrics:**
-- [User flow] completion rate: > [target %]
-- [Action] response time: < [target ms]
-- Accessibility score: [target]
+**UX Metrics:** [if applicable]
+- [User flow] completion rate: > [X]%
+- Time to complete task: < [Y] seconds
+- Error rate: < [Z]%
+- Accessibility score: [WCAG level]
+
+**Business Metrics:** [if applicable]
+- User adoption: [X]% of users try feature
+- Conversion: [Y]% complete intended action
+- Retention: [Z]% return within 7 days
 
 </success-metrics>
 
@@ -368,49 +766,46 @@ Follow patterns in .factory/standards/ if available.
 
 ---
 
-## Step 5: Save Specification
+## Step 6: Save Specification
 
-### 5.1 Create Directory Structure
+### 6.1 Create Directory Structure
 
 ```bash
-# Create .droidz/specs/ directory if it doesn't exist
 Execute("mkdir -p .droidz/specs/")
 ```
 
-### 5.2 Determine Spec Number
+### 6.2 Determine Spec Number
 
 ```bash
-# Find the highest existing spec number
+# Find highest spec number
 Execute("ls .droidz/specs/ 2>/dev/null | grep -o '^[0-9]\\+' | sort -n | tail -1")
 ```
 
-If no specs exist, start with `001`. Otherwise, increment the highest number.
+Start with `001` if no specs exist, otherwise increment.
 
-### 5.3 Generate Filename
+### 6.3 Generate Filename
 
 ```
 [number]-[feature-name-kebab-case].md
 
 Examples:
 - 001-user-authentication.md
-- 002-blog-system-with-comments.md
-- 003-payment-integration.md
+- 002-payment-integration-stripe.md
+- 003-blog-system-with-comments.md
 ```
 
-### 5.4 Save File
+### 6.4 Save File
 
 ```typescript
 Create({
   file_path: `.droidz/specs/${specNumber}-${featureName}.md`,
-  content: [generated specification]
+  content: [generated specification with all diagrams]
 });
 ```
 
 ---
 
-## Step 6: Present Options to User
-
-After saving, present a decision tree:
+## Step 7: Present Options with Preview
 
 ```
 ✅ **Specification Complete!**
@@ -418,21 +813,32 @@ After saving, present a decision tree:
 📄 **Saved to:** .droidz/specs/[number]-[feature-name].md
 
 📊 **Specification Summary:**
+- **Type:** [Feature/Epic/Refactor/Integration]
 - **Complexity:** [Simple/Moderate/Complex]
-- **Tasks:** [N] total ([X] parallel in Phase 1, [Y] in Phase 2)
-- **Estimated Time:**
-  - Sequential: [X] hours
-  - Parallel: [Y] hours
+- **Tasks:** [N] total ([X] parallel Phase 1, [Y] Phase 2, [Z] Phase 3)
+- **Diagrams:** 
+  - ✅ Architecture diagram (system structure)
+  - ✅ [User flow/sequence diagram if applicable]
+  - ✅ [Data model diagram if applicable]
+  - ✅ [State diagram if applicable]
+  - ✅ [Execution timeline (Gantt) if applicable]
+
+📈 **Estimated Time:**
+  - Sequential: [X] hours (one task at a time)
+  - Parallel: [Y] hours (max concurrent task duration)
   - **Speedup: [Z]x faster** ⚡
+
+**Preview of diagrams:**
+[Show first 50 lines of architecture diagram section]
 
 ---
 
 **What would you like to do next?**
 
-1. **Review the spec** (I'll display the full specification)
+1. **Review the full spec** (I'll display complete specification with all diagrams)
 2. **Execute in parallel** (recommended - spawns [N] agents simultaneously)
-3. **Execute sequentially** (safer for features with many shared files)
-4. **Modify the spec** (adjust and regenerate)
+3. **Execute sequentially** (safer if many shared files)
+4. **Modify the spec** (adjust requirements, add/remove tasks)
 5. **Save for later** (spec is saved, execute when ready)
 
 Choose 1-5, or type your preference: _
@@ -440,251 +846,157 @@ Choose 1-5, or type your preference: _
 
 ---
 
-## Step 7: Handle User Choice
+## Step 8: Handle User Choice
 
 ### Option 1: Review Spec
 
 ```typescript
-// Read and display the saved spec
 Read(`.droidz/specs/${specNumber}-${featureName}.md`);
 ```
 
-Then ask again: "Ready to execute? Choose option 2 (parallel) or 3 (sequential)."
+Display full spec including all diagrams. Then ask: "Ready to execute? Choose option 2 (parallel) or 3 (sequential)."
 
 ### Option 2: Execute in Parallel
 
-Parse the `<execution-plan>` section and spawn all Phase 1 tasks simultaneously:
-
 ```typescript
+// Create todos for all tasks
 TodoWrite({
   todos: [
     {id: "1", content: "Phase 1 Task 1: [Name]", status: "in_progress", priority: "high"},
     {id: "2", content: "Phase 1 Task 2: [Name]", status: "in_progress", priority: "high"},
-    {id: "3", content: "Phase 1 Task 3: [Name]", status: "in_progress", priority: "high"},
-    // ... Phase 2 tasks marked as pending
+    {id: "3", content: "Phase 2 Task 1: [Name]", status: "pending", priority: "high"},
+    // ...
   ]
 });
 
-// Spawn all Phase 1 tasks in PARALLEL (single response, multiple Task calls)
+// Spawn ALL Phase 1 tasks simultaneously (IMPORTANT: single response!)
 Task({
   subagent_type: "[from spec]",
   description: "[from spec]",
-  prompt: "[from execution-plan]"
+  prompt: "[from execution-plan, includes diagram references]"
 });
 
 Task({
   subagent_type: "[from spec]",
   description: "[from spec]",
-  prompt: "[from execution-plan]"
+  prompt: "[from execution-plan, includes diagram references]"
 });
-
-// etc...
+// ... more Task calls for Phase 1
 ```
-
-**Important:** Make ALL Task calls in a SINGLE response for true parallelization.
 
 ### Option 3: Execute Sequentially
 
-Execute tasks one at a time, waiting for completion before starting the next:
-
 ```typescript
-// Task 1
+// Task 1 only
 Task({
   subagent_type: "[from spec]",
   description: "[from spec]",
-  prompt: "[from execution-plan]"
+  prompt: "[from execution-plan, includes diagram references]"
 });
-
-// Wait for result, then proceed to Task 2
-// (This happens automatically - don't spawn next task in same response)
+// Wait for completion before spawning Task 2
 ```
 
 ### Option 4: Modify Spec
 
-Ask user: "What would you like to change about the specification?"
+Ask: "What would you like to change?"
 
-Then:
-1. Read the existing spec
-2. Apply the requested modifications
-3. Regenerate the spec
-4. Save over the previous file (or create new version)
-5. Present options again
+Options:
+- Add/remove tasks
+- Change complexity
+- Add more requirements
+- Refine diagrams
+- Adjust execution strategy
+
+Then regenerate and save.
 
 ### Option 5: Save for Later
 
 ```
 ✅ **Specification saved!**
 
-You can execute this spec anytime by:
-1. Reading: .droidz/specs/[number]-[feature-name].md
-2. Running: `/auto-parallel` with the tasks from the spec
-3. Or just ask me: "Execute spec [number]"
+📄 **File:** .droidz/specs/[number]-[feature-name].md
 
-The spec includes all task details and can be executed in parallel for [Z]x speedup.
+**Contains:**
+- Complete requirements
+- Visual architecture diagrams
+- User flow diagrams
+- Task breakdown
+- Ready-to-execute prompts
+
+**Execute anytime:**
+1. Read: \`.droidz/specs/[number]-[feature-name].md\`
+2. Run: \`/auto-parallel [feature-name]\`
+3. Or ask: "Execute spec [number]"
+
+Diagrams will render in any Markdown viewer that supports Mermaid.
 ```
 
 ---
 
-## Quality Rules for Specification Generation
+## Quality Rules
 
-### Intelligence Rules
+### Diagram Requirements
 
-1. **Clarity First (GOLDEN RULE)**
-   - If ANYTHING is unclear or ambiguous, ask before generating
-   - Test: "Would a colleague with minimal context understand this?"
-   - Better to ask 3 clarifying questions than generate an incomplete spec
+**ALWAYS include:**
+1. **Architecture diagram** - System structure, components, data flow
+2. **Execution timeline** - Gantt chart showing task parallelization
 
-2. **Context is Critical**
-   - Always include WHY the feature matters (business value)
-   - WHO will use it (target users)
-   - WHAT it will achieve (end goal)
-   - WHERE it fits (architectural context)
+**Include when applicable:**
+3. **User flow/sequence diagram** - For APIs, auth flows, integrations
+4. **Data model diagram** - For features with database changes
+5. **State diagram** - For features with complex state management
 
-3. **Be Explicit, Not Vague**
-   - ✅ "Use bcrypt with 10 salt rounds for password hashing"
-   - ❌ "Hash passwords securely"
-   - ✅ "API should respond in < 200ms for 95th percentile"
-   - ❌ "Make it fast"
+**Diagram Quality:**
+- Use clear labels and notes
+- Highlight new vs existing components
+- Show data flow direction
+- Note security boundaries
+- Color-code by function/priority
 
-4. **Research-Driven When Needed**
-   - Use `exa.getCodeContext()` for best practices on security-sensitive features
-   - Use `ref.searchDocumentation()` for framework-specific patterns
-   - Include citations in the spec when referencing external best practices
+### Spec Quality Checklist
 
-5. **Task Decomposition Excellence**
-   - Break into **parallelizable units** when possible
-   - Identify dependencies clearly (which tasks block others?)
-   - Assign to the **correct specialist droid** (codegen vs test vs infra vs integration)
-   - Each task should take 30min - 2 hours (not too small, not too large)
-
-6. **Verification Always**
-   - Every requirement must have a measurable acceptance criterion
-   - Security features must have validation steps
-   - Tests must have coverage targets
-   - Performance must have measurable metrics
-
-### Prompt Construction Rules
-
-**Always Include in Droidz Task Prompts:**
-- Clear objective (what is the goal?)
-- Context (why are we doing this?)
-- Explicit step-by-step instructions
-- File paths for outputs
-- Acceptance criteria (how do we know it's done?)
-- Progress reporting instructions (TodoWrite every 60s)
-- Success criteria (how to verify)
-- Available tools list
-
-**Conditionally Include:**
-- Security requirements (if auth, payments, user data, file uploads)
-- Compliance checklists (if GDPR, HIPAA, PCI-DSS, OWASP applicable)
-- Edge cases (always good to include 3-5 failure scenarios)
-- Performance requirements (if speed, memory, or scale matters)
-- Examples (if the task is ambiguous or has multiple valid approaches)
-
-**Never Include:**
-- Vague instructions like "do your best" or "figure it out"
-- Ambiguous acceptance criteria that can't be verified
-- Missing file paths or unclear file structure
-- Assumption that the droid has context from previous conversations
+- [ ] **Clear objective** - One-sentence summary
+- [ ] **Visual diagrams** - Architecture + relevant flow diagrams
+- [ ] **Complete requirements** - Functional + non-functional
+- [ ] **Task decomposition** - Parallelizable, clear dependencies
+- [ ] **Acceptance criteria** - Measurable, testable
+- [ ] **Security requirements** - If applicable (auth, data, APIs)
+- [ ] **Edge cases** - 5-10 scenarios covered
+- [ ] **Testing strategy** - Unit, integration, E2E plans
+- [ ] **Success metrics** - How to measure "done"
 
 ---
 
-## Examples
+## Example Output Preview
 
-### Example 1: Simple Feature
+**For "Add user authentication":**
 
-**Input:** `/droidz-build Add a dark mode toggle to settings page`
+✅ Specification would include:
 
-**Process:**
-1. Analyze: Simple feature, clear requirement, existing project
-2. Confirm: "This is a **simple** feature. I'll create a spec for adding a dark mode toggle with localStorage persistence. Proceed?"
-3. Generate: 2-task spec (1. Add toggle UI component, 2. Write tests)
-4. Save: `.droidz/specs/001-dark-mode-toggle.md`
-5. Offer: "Execute now? (1 agent, ~45 minutes)"
+1. **Architecture Diagram:**
+   - Shows: Client → API → Auth Service → Database
+   - Highlights: JWT flow, password hashing, token refresh
+   - Notes: Security boundaries, data encryption
 
-### Example 2: Complex Feature (Requires Clarification)
+2. **Sequence Diagram:**
+   - Login flow: User → Frontend → API → Database → JWT
+   - Register flow: User → Frontend → API → Email Service
+   - Password reset flow: Request → Email → Verify → Update
 
-**Input:** `/droidz-build Add authentication`
+3. **Data Model:**
+   - User table: id, email, password_hash, created_at
+   - Session table: id, user_id, token, expires_at
+   - Relationships: One user to many sessions
 
-**Process:**
-1. Analyze: Vague request, many possible approaches
-2. Clarify:
-   ```
-   🔍 I'll create a spec for authentication. To make it comprehensive:
-   
-   1. Authentication method: Email/password, OAuth, or both?
-   2. If OAuth: Which providers? (Google, GitHub, Twitter?)
-   3. Session handling: JWT tokens or server-side sessions?
-   4. User roles: Single type or multiple (admin, user, guest)?
-   5. Is this a new project or existing codebase?
-   ```
-3. User responds: "Email/password with JWT, existing Next.js project"
-4. Research: Use `exa.getCodeContext()` for Next.js auth best practices, OWASP guidelines
-5. Generate: 6-task spec with security requirements, edge cases, compliance checklist
-6. Save: `.droidz/specs/001-user-authentication.md`
-7. Offer: "Execute in parallel? (3 agents Phase 1, 3 agents Phase 2, ~3 hours total vs 10 hours sequential)"
+4. **Execution Timeline (Gantt):**
+   - Phase 1 (parallel): Database schema, API endpoints, Frontend UI
+   - Phase 2 (parallel): Integration tests, E2E tests
+   - Phase 3 (sequential): Code review, deployment
 
-### Example 3: Modify and Regenerate
+5. **Complete task breakdown** with ready-to-execute prompts
 
-**Input:** `/droidz-build Build a blog`
-**After spec generated:** "Actually, I also need comments and tags"
-
-**Process:**
-1. Read existing spec: `.droidz/specs/001-blog-system.md`
-2. Update requirements: Add comments and tags features
-3. Regenerate task decomposition: Now 8 tasks instead of 4
-4. Save updated spec (same file)
-5. Offer execution options again
+All diagrams render beautifully in GitHub, VS Code, and other Mermaid-supporting viewers.
 
 ---
 
-## Error Handling
-
-### If .droidz/specs/ directory creation fails:
-```
-⚠️ Unable to create .droidz/specs/ directory.
-
-Would you like me to:
-1. Save the spec in docs/ instead?
-2. Display the spec here (you can copy/paste)?
-3. Troubleshoot the directory creation?
-```
-
-### If spec generation fails (MCP tools unavailable):
-```
-⚠️ Research tools unavailable. I'll generate a spec based on general best practices.
-
-Note: For security-sensitive features (auth, payments), I recommend:
-1. Manual review of security requirements
-2. Consulting official framework documentation
-3. Running security audit tools after implementation
-```
-
-### If user request is completely unclear:
-```
-❌ I need more information to create a specification.
-
-Your request: "$ARGUMENTS"
-
-This is too vague to spec. Could you provide:
-1. What feature or functionality you want to add?
-2. Why it's needed (what problem does it solve)?
-3. Who will use it?
-4. Any constraints or requirements?
-
-Example: Instead of "make it better", try "Add user authentication with email/password and JWT tokens for the existing Next.js app"
-```
-
----
-
-## Final Notes
-
-- **Specs are documentation:** They serve as permanent project docs, not throwaway artifacts
-- **Iteration is expected:** Users can modify and regenerate specs easily
-- **Parallel by default:** Always recommend parallel execution when tasks are independent
-- **Security matters:** For auth, payments, or sensitive data, always include security section
-- **Progress visibility:** All spawned droids report progress every 60s via TodoWrite
-- **Quality over speed:** Better to ask clarifying questions than generate incomplete specs
-
-Let's build the specification now! 🚀
+**Let's create amazing, visual specifications! 🚀**
