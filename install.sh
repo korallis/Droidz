@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.6.2"
+DROIDZ_VERSION="2.6.3"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -1074,6 +1074,9 @@ log_step "Downloading hooks..."
 HOOKS=(
     "auto-lint.sh"
     "monitor-context.sh"
+    "parallel-agent-monitor.sh"
+    "start-parallel-monitor.sh"
+    "stop-parallel-monitor.sh"
 )
 
 for hook in "${HOOKS[@]}"; do
@@ -1081,6 +1084,10 @@ for hook in "${HOOKS[@]}"; do
     chmod +x ".factory/hooks/${hook}"
     log_success "Downloaded ${hook}"
 done
+
+# Download hooks documentation
+curl -fsSL "${GITHUB_RAW}/.factory/hooks/README.md${CACHE_BUST}" -o ".factory/hooks/README.md"
+log_success "Downloaded hooks documentation"
 
 # Download memory templates
 log_step "Downloading memory templates..."
