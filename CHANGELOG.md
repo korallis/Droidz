@@ -2,6 +2,64 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.7.6] - 2025-11-20
+
+### ✅ Compliance
+
+**Updated all skills to match Factory.ai official structure.**
+
+#### Fixed Skill File Structure (Verified with Official Docs)
+- ✅ All 61 skills now use official Factory.ai structure
+- ✅ Removed 40 duplicate flat .md files
+- ✅ All skills now in subdirectories with SKILL.md (uppercase)
+- ✅ Verified against official Factory.ai documentation
+
+**Official Factory.ai Structure:**
+```
+.factory/skills/{skill-name}/
+└── SKILL.md  ← UPPERCASE (required)
+```
+
+**Source:** https://docs.factory.ai/cli/configuration/skills/ai-data-analyst
+
+**Problem:**
+Mixed structure causing confusion:
+- 21 skills had correct structure: `.factory/skills/{skill-name}/SKILL.md`
+- 40 skills were flat files: `.factory/skills/react.md`
+
+**Root Cause:**
+- Repository grew organically with inconsistent structures
+- Some skills created with subdirectories, others as flat files
+- Installer expected subdirectory structure
+
+**Solution:**
+- Researched official Factory.ai documentation via Exa and Ref tools
+- Confirmed official structure: `.factory/skills/{skill-name}/SKILL.md`
+- Removed all 40 duplicate flat .md files from `.factory/skills/`
+- All skills now in proper subdirectories
+
+**Skills Updated:**
+All 61 skills now follow official structure including:
+- react, nextjs-16, typescript, prisma, tailwind-v4
+- clerk, stripe, supabase, vercel, cloudflare-workers
+- graphql-api-design, websocket-realtime, monitoring-observability
+- And 48 more...
+
+### 📊 Changes
+- **Files removed:** 40 duplicate flat .md files
+- **Structure:** 100% compliance with Factory.ai official docs
+- **Consistency:** All 61 skills use {skill-name}/SKILL.md format
+
+### 🎯 User Impact
+**Before:** Mixed structures (subdirectories + flat files)  
+**After:** Consistent official Factory.ai structure for all 61 skills
+
+### 🔍 Verification Method
+- Used Exa code context tool to research Factory.ai patterns
+- Used Ref documentation search to find official docs
+- Fetched official Factory.ai skill documentation
+- Confirmed structure: `.factory/skills/{skill-name}/SKILL.md`
+
 ## [2.7.5] - 2025-11-20
 
 ### 🐛 Bug Fixes
