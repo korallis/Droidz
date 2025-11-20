@@ -1,653 +1,489 @@
-# 🤖 Droidz - AI-Powered Development Framework for Factory.ai
+# 🤖 Droidz
 
-**Transform vague ideas into production-ready code with AI-generated specifications, parallel task execution, and comprehensive coding standards.**
+> **Simple AI development framework for Factory.ai Droid CLI**
 
-**Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW | **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
-> **v0.5.8** - **Reliability & Transparency**: no phantom parallel starts, structured progress (step/next action/files/tests/heartbeat), stall detection, validation-gated completion, and headless guidance (`droid exec --auto high`)—all while keeping the user’s selected model.
+Transform vague ideas into production code with AI-powered spec generation and parallel execution.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-2.7.0-blue.svg)](https://github.com/korallis/Droidz)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+[![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 
 ---
 
-## ⚡ Quick Start
+## 💬 Join Our Discord Community
 
-### Install (One Command)
+**Built specifically for Ray Fernando's Discord members!** 🎯
+
+Get early access, share tips, connect with contributors, and influence future development.
+
+**[→ Join Discord Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+---
+
+## 💝 Support This Project
+
+If Droidz saves you time, consider supporting its development!
+
+**[→ Donate via PayPal](https://www.paypal.com/paypalme/gideonapp)** (@gideonapp)
+
+Your support helps maintain and improve this framework! 🙏
+
+---
+
+## What is Droidz?
+
+**Droidz makes Factory.ai's Droid CLI more powerful with 4 simple commands:**
+
+1. **`/droidz-init`** - Analyze your project
+2. **`/droidz-build`** - Generate production specs from vague ideas
+3. **`/auto-parallel`** - Execute tasks 3-5x faster with parallel agents
+4. **`/gh-helper`** - Manage GitHub PRs
+
+**That's it. Simple, powerful, fast.**
+
+---
+
+## Quick Start
+
+### Installation
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-### Enable & Use
+Or download first:
 
 ```bash
-# Start Factory.ai droid
+wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+### Enable in Factory.ai
+
+```bash
 droid
+/settings
+# Toggle "Custom Droids" ON
+# Toggle "Hooks" ON
+```
 
-# Enable custom features (first time only)
-/settings → Toggle "Custom Commands" ON
+Then restart: `Ctrl+C` and run `droid` again.
 
-# Generate a specification
+### Verify
+
+```bash
+/droids
+# Should show: droidz-orchestrator, codegen, test, refactor, etc.
+```
+
+---
+
+## Usage
+
+### The Simple Workflow
+
+```bash
+# Step 1: Analyze your project (one-time)
+/droidz-init
+
+# Step 2: Generate a spec from your idea
 /droidz-build "add user authentication"
+# → Asks clarifying questions
+# → Generates .droidz/specs/001-authentication.md
+# → Asks: "Execute in parallel?"
 
-# Or execute directly
+# Step 3: Choose "Yes" → Done!
+# → Spawns 3 agents in parallel
+# → Live progress every 60 seconds
+# → 3-5x faster than sequential
+```
+
+### Or Skip the Spec
+
+```bash
+# Direct execution
 /auto-parallel "build REST API for todos"
+# → Analyzes, decomposes, spawns agents
+# → Live progress updates
 ```
 
-**That's it!** 🎉
+### GitHub Management
+
+```bash
+/gh-helper pr-status 10
+/gh-helper pr-checks 10
+/gh-helper pr-list
+```
 
 ---
 
-## 🎯 What is Droidz?
+## The 4 Commands
 
-Droidz is a framework for [Factory.ai](https://factory.ai) that adds:
+### 1. `/droidz-init` - Smart Onboarding
 
-1. **🎓 Comprehensive Skills System** - 40 massive skills (35,552 lines) auto-load based on your code
-2. **🚀 AI-Powered Spec Generator** - `/droidz-build` transforms vague ideas into production-ready specifications
-3. **⚡ Parallel Task Execution** - Work on 3-5 tasks simultaneously using specialist droids
-4. **📊 Live Progress Tracking** - See what's happening every 60 seconds
+- Verifies installation
+- Analyzes your project (tech stack, architecture)
+- Generates `.droidz/architecture.md`
 
-### 🔥 NEW in v0.5.8: Reliable Parallel Execution
-
-**Highlights:** no phantom task starts (Task IDs recorded), rich progress (step, next action, files touched, test results, heartbeat), stall detection, validation gating (lint/type/tests must pass), and headless readiness via `droid exec --auto high` using the user-selected model.
-
-### 🔥 Previously in v0.5.0: Complete Development Lifecycle
-
-Factory.ai automatically loads **production-ready coding standards** based on your code context:
-
-#### **Framework & Integration Skills (21)**
-
-| Skill | Lines | Coverage |
-|-------|-------|----------|
-| **Vercel** | 2,443 | Deployment, Edge Functions, Analytics |
-| **Clerk** | 2,361 | Auth, Organizations, Webhooks |
-| **Security** | 2,337 | OWASP Top 10, Vulnerabilities |
-| **React** | 2,232 | Hooks, Server Components, Performance |
-| **PostgreSQL** | 2,089 | Indexing, Optimization, Advanced SQL |
-| **Prisma** | 2,072 | Migrations, Relations, TypeScript |
-| **Drizzle ORM** | 1,992 | Type-safe Queries, Migrations |
-| **Cloudflare** | 1,927 | Workers, KV, Durable Objects, R2 |
-| **tRPC** | 1,815 | Type Safety, Routers, Middleware |
-| **Tanstack Query** | 1,729 | Caching, Mutations, Pagination |
-| **Stripe** | 1,686 | Payments, Webhooks, Subscriptions |
-| **Neon** | 1,304 | Database Branching, Serverless |
-| **Design** | 1,297 | Accessibility, Design Systems |
-| **Next.js 16** | 1,053 | App Router, Async APIs |
-| **Supabase** | 963 | RLS, Realtime, Auth |
-| **Tailwind v4** | 963 | CSS-first, Container Queries |
-| **TypeScript** | 871 | Generics, Utility Types |
-| **Convex** | 818 | Realtime, Functions |
-| **+ 3 Utility** | 1,344 | Stack Analyzer, Standards |
-
-#### **Workflow & Process Skills (19)**
-
-| Skill | Category | Focus |
-|-------|----------|-------|
-| **test-driven-development** | Testing | RED-GREEN-REFACTOR cycle |
-| **systematic-debugging** | Testing | 4-phase debugging framework |
-| **verification-before-completion** | Quality | Pre-completion checklist |
-| **defense-in-depth** | Testing | Multi-layer validation |
-| **testing-anti-patterns** | Testing | Common mistakes to avoid |
-| **brainstorming** | Collaboration | Design through questions |
-| **writing-skills** | Meta | Creating new skills |
-| **executing-plans** | Collaboration | Following plans step-by-step |
-| **requesting-code-review** | Collaboration | Pre-review checklist |
-| **receiving-code-review** | Collaboration | Responding to feedback |
-| **root-cause-tracing** | Development | Backward tracing technique |
-| **subagent-driven-development** | Development | Task-by-task with fresh agents |
-| **finishing-a-development-branch** | Development | Completion checklist |
-| **using-git-worktrees** | Development | Parallel work branches |
-| **condition-based-waiting** | Development | Replace arbitrary timeouts |
-| **dispatching-parallel-agents** | Advanced | Spawning multiple agents |
-| **testing-skills-with-subagents** | Meta | Validating skill quality |
-| **sharing-skills** | Meta | Publishing skills |
-| **using-droidz** | Meta | How to use this system |
-
-**TOTAL:** **40 Skills, 35,552 Lines** (All based on official documentation)
-
-**How it works:**
-- Write Next.js code → Next.js 16 skill auto-loads (1,053 lines of guidance)
-- Write Supabase queries → Supabase skill auto-loads (963 lines of RLS, Auth patterns)
-- Write Tailwind classes → Tailwind v4 skill auto-loads (963 lines of modern CSS)
-- Write TypeScript → TypeScript skill auto-loads (871 lines of best practices)
-- No configuration needed - Factory.ai handles everything automatically!
-
-### The Problem
-
-```
-You: "Add authentication"
-Droid: "Here's a login form..."
-❌ Missing: password reset, email verification, rate limiting, tests, edge cases
-```
-
-### The Droidz Solution
-
-```
-You: /droidz-build "add authentication"
-
-Droid: 🔍 I'll create a spec. To make it comprehensive:
-       1. Email/password, OAuth, or both?
-       2. Session handling: JWT or sessions?
-       3. User roles?
-
-You: Email/password, JWT, existing Next.js
-
-Droid: ✅ Saved: .droidz/specs/001-user-authentication.md
-       
-       📊 Summary:
-       - Tasks: 6 (3 parallel Phase 1, 3 parallel Phase 2)
-       - Time: 8-12h sequential → 2.5-4h parallel (3x speedup)
-       
-       Includes:
-       ✅ bcrypt password hashing (10+ salt rounds)
-       ✅ Rate limiting (5 attempts/15min)
-       ✅ OWASP Top 10 compliance checklist
-       ✅ Edge cases (expired tokens, concurrent sessions)
-       ✅ Full test coverage plan (80%+)
-       
-       Execute in parallel? (spawns 3 agents)
-```
-
-**Result:** Complete, production-ready implementation with security, tests, and edge cases handled.
+**When to use:** First time setup, onboarding new team members
 
 ---
 
-## ✨ Key Features
+### 2. `/droidz-build` - AI Spec Generator ⭐
 
-### 🚀 NEW: AI-Powered Specification Generator
+**Turn vague ideas into production-ready specifications.**
 
-**Command:** `/droidz-build "feature description"`
+**Input:**
+```bash
+/droidz-build "add authentication"
+```
 
-**What it does:**
-- 🔍 Asks clarifying questions for vague requests
-- 📚 Researches best practices via exa-code & ref MCP
-- 📝 Generates comprehensive XML-structured specs with:
-  - Task decomposition (parallelizable units)
-  - Security requirements (OWASP, GDPR when applicable)
-  - Edge cases & failure scenarios
-  - Testing strategy (unit, integration, E2E)
-  - Verification criteria (measurable success metrics)
-  - Ready-to-execute task prompts
+**Output:** `.droidz/specs/001-authentication.md`
+
+**Contains:**
+- Task decomposition (what to build, in what order)
+- Security requirements (OWASP, GDPR)
+- Edge cases (what could go wrong)
+- Testing strategy (unit, integration, e2e)
+- Ready-to-execute prompts for parallel agents
+
+**Features:**
+- Asks clarifying questions for vague requests
+- Researches best practices (security, frameworks)
+- Generates specs in 1-5 minutes
+- Offers: Execute now? (Parallel/Sequential/Review/Save)
 
 **Benefits:**
-- 80% less time writing specs manually
-- 70% fewer "forgot to consider X" issues
-- 3-5x execution speedup via parallel tasks
+- 80% less time writing specs
+- 70% fewer forgotten requirements
 - Zero missing security requirements
 
-**Example specs:**
-```bash
-/droidz-build "add dark mode toggle"
-→ Simple: 2 tasks, ~45 minutes
+---
 
-/droidz-build "add contact form with email"
-→ Moderate: 3 tasks, 2-3h sequential, ~1h parallel
+### 3. `/auto-parallel` - Parallel Execution
 
-/droidz-build "build blog with comments and search"
-→ Complex: 12 tasks, 24h sequential → 6-8h parallel
-```
-
-### ⚡ Parallel Task Execution
-
-**Command:** `/auto-parallel "task description"`
+**Execute tasks 3-5x faster with live progress tracking.**
 
 **How it works:**
-1. Analyzes complexity and breaks into subtasks
-2. Identifies what can run in parallel
-3. Spawns specialist droids for each task
-4. Reports progress every 60 seconds
+1. Analyzes your task
+2. Breaks into independent subtasks
+3. Spawns specialist agents (codegen, test, refactor, etc.)
+4. Reports progress every 60 seconds via TodoWrite
 5. Synthesizes results when complete
 
 **Example:**
 ```bash
-/auto-parallel "build authentication system"
+/auto-parallel "build payment integration"
 
-✓ Spawning 3 parallel tasks...
-  Task 1: Database schema (droidz-infra)
-  Task 2: API endpoints (droidz-codegen)
-  Task 3: Frontend UI (droidz-codegen)
-
-[Progress updates appear every 60s]
-TODO LIST UPDATED
+# You'll see:
 ✅ Database schema created (3 files)
-⏳ API endpoints (implementing login...)
-⏳ Frontend UI (building forms...)
+⏳ API endpoints (implementing Stripe webhook...)
+⏳ Frontend UI (building checkout form...)
+⏸ Tests (pending)
+
+# Then:
+✅ API endpoints complete (5 files, all tests passing)
+⏳ Frontend UI (adding error handling...)
+⏳ Tests (writing integration tests...)
+
+# Finally:
+✅ All tasks complete! Review: .droidz/results/payment-integration.md
 ```
 
-### 🎓 Comprehensive Skills System (NEW in v0.4.0)
+**Speedup:**
+- Sequential: 10 hours
+- Parallel: 3 hours (3.3x faster!)
 
-**21 Massive Skills (31,296 Lines Total) - All Based on Official Documentation**
+---
 
-Factory.ai automatically loads production-ready coding standards from `.factory/skills/`:
+### 4. `/gh-helper` - GitHub Operations
 
-#### **1. Next.js 16 Skill (1,053 lines)**
-- ✅ **CRITICAL**: Async request APIs - `await params`, `await searchParams`, `await cookies()`, `await headers()`
-- ✅ Server Components (default), Client Components (when needed)
-- ✅ Server Actions with Zod validation
-- ✅ Data fetching (parallel, sequential, caching strategies)
-- ✅ Loading & Streaming with Suspense
-- ✅ Route handlers, Middleware, Metadata
-- ✅ Error handling (error.tsx, not-found.tsx)
-- ✅ Migration guide from Next.js 15 → 16
+Simple GitHub CLI helpers with correct JSON fields.
 
-#### **2. Supabase Skill (963 lines)**
-- ✅ RLS: Complete guide with performance optimization
-- ✅ Realtime: Broadcast, Presence, Postgres Changes with authorization
-- ✅ Authentication: Email/Password, OAuth, Magic Links, SSR for Next.js
-- ✅ Storage: Upload, download, signed URLs, RLS policies
-- ✅ Edge Functions: Deno with Auth context
-- ✅ Database: Typed queries, transactions, pagination, full-text search
-
-#### **3. Tailwind v4 Skill (963 lines)**
-- ✅ CSS-first configuration with `@theme`
-- ✅ Oxide engine (10x faster builds, 100x faster incremental)
-- ✅ Container queries (built-in, no plugin)
-- ✅ 3D transforms (rotate-x, rotate-y, translate-z, scale-z)
-- ✅ Gradients (linear, radial, conic with color interpolation)
-- ✅ `@starting-style` for entry animations
-- ✅ `not-*` variant, composable variants
-- ✅ Modern oklch colors (P3 wide gamut)
-
-#### **4. TypeScript Skill (871 lines)**
-- ✅ Strict mode configuration
-- ✅ Avoiding `any` (use `unknown`, generics)
-- ✅ Generics (functions, classes, interfaces, constraints)
-- ✅ Utility types (Partial, Pick, Omit, Record, ReturnType, Awaited, etc.)
-- ✅ Advanced types (conditional, infer, mapped, template literals)
-- ✅ Type guards, function overloads
-- ✅ Result type pattern for error handling
-
-#### **5. Convex Skill (818 lines)**
-- ✅ Official rules from convex.link/convex_rules.txt
-- ✅ New function syntax (args, returns, handler)
-- ✅ All validators, pagination, file storage
-- ✅ Cron jobs, HTTP endpoints
-- ✅ TypeScript best practices
-
-**How it works:**
-```typescript
-// You write Next.js code...
-export default async function Page({ params }) {
-  const { id } = await params  // Next.js 16 skill auto-loads!
-}
-
-// Droid knows:
-// ✅ params must be awaited in Next.js 16
-// ✅ This is a breaking change from Next.js 15
-// ✅ searchParams, cookies(), headers() also need await
-// Plus 1,050+ more lines of Next.js 16 guidance
-```
-
-**Add your own skills:**
 ```bash
-# Create custom skill in .factory/skills/
-vim .factory/skills/your-framework.md
-
-# Factory.ai auto-loads it on next start
+/gh-helper pr-status 10    # Comprehensive PR status
+/gh-helper pr-checks 10    # Show check status
+/gh-helper pr-list         # List all PRs
 ```
 
 ---
 
-## 📋 All Commands
+## What You Get
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `/droidz-build` | 🆕 Generate production-ready specs | `/droidz-build "add payment processing"` |
-| `/auto-parallel` | Execute tasks in parallel with live monitoring | `/auto-parallel "build REST API"` |
-| `/gh-helper` | GitHub CLI helpers (PR checks, status) | `/gh-helper pr-status 10` |
+### 7 Specialist Droids
 
-**That's it!** Simple and powerful. 🎯
+| Droid | Purpose |
+|-------|---------|
+| **droidz-orchestrator** | Coordinate parallel work |
+| **codegen** | Implement features & bugfixes |
+| **test** | Write & fix tests |
+| **refactor** | Code improvements |
+| **infra** | CI/CD & deployment |
+| **integration** | External API integrations |
+| **generalist** | General tasks |
 
----
+### 61 Auto-Activated Skills
 
-## 🤖 Specialist Droids
+Skills automatically load based on your code:
 
-Droidz includes 7 specialist droids that handle different types of work:
+- **TypeScript** (871 lines) - Best practices, types
+- **React** (2,232 lines) - Hooks, patterns, performance
+- **Next.js 16** (1,053 lines) - App router, caching, PPR
+- **Tailwind v4** (963 lines) - Modern utilities
+- **Prisma** (2,072 lines) - Schema, migrations, queries
+- **GraphQL API Design** (650 lines) - Apollo Server, resolvers, DataLoader
+- **WebSocket Real-time** (680 lines) - Socket.io, SSE, presence
+- **Monitoring & Observability** (620 lines) - Prometheus, Grafana, tracing
+- **Load Testing** (580 lines) - k6, Artillery, benchmarking
+- **Security** - OWASP, GDPR, input validation
+- **TDD** - RED-GREEN-REFACTOR workflow
+- And 50 more...
 
-| Droid | Specialty | When Used |
-|-------|-----------|-----------|
-| **droidz-orchestrator** | Task decomposition & parallel execution | Complex multi-step features |
-| **droidz-codegen** | Feature implementation & bug fixes | Building new functionality |
-| **droidz-test** | Writing & fixing tests | Test coverage & validation |
-| **droidz-refactor** | Code improvements & cleanup | Improving code structure |
-| **droidz-integration** | External APIs & services | Third-party integrations |
-| **droidz-infra** | CI/CD, builds, deployment | Infrastructure changes |
-| **droidz-generalist** | Miscellaneous tasks | General-purpose work |
+### Persistent Memory
 
-**You don't call these directly** - the orchestrator assigns tasks to the right specialist automatically.
-
----
-
-## 📚 Documentation
-
-### Quick References
-- **Example Spec:** `.droidz/specs/000-example-contact-form.md` (6,000+ line reference)
-- **CHANGELOG:** See [CHANGELOG.md](CHANGELOG.md) for version history
-- **Skills Guide:** See [SKILLS.md](SKILLS.md) for details on skills system
-
-### Generated Specifications
-
-When you use `/droidz-build`, specs are saved to `.droidz/specs/NNN-feature-name.md` with:
-
-```markdown
-<objective>Clear goal</objective>
-<context>Tech stack, why it matters</context>
-<requirements>Functional + non-functional</requirements>
-<task-decomposition>Parallelizable tasks</task-decomposition>
-<security-requirements>OWASP, GDPR checklists</security-requirements>
-<edge-cases>Failure scenarios</edge-cases>
-<testing-strategy>Unit, integration, E2E</testing-strategy>
-<verification-criteria>Success checkboxes</verification-criteria>
-<execution-plan>Ready-to-run tasks</execution-plan>
-<success-metrics>Quality, performance, security, UX</success-metrics>
-```
-
-**See the example:** `cat .droidz/specs/000-example-contact-form.md`
-
----
-
-## 🎯 Common Workflows
-
-### Workflow 1: Generate Spec → Execute in Parallel
+Save architectural decisions, patterns, and context:
 
 ```bash
-# 1. Generate specification
-/droidz-build "add user authentication with JWT"
-
-# 2. Answer clarifying questions
-> Email/password with JWT, Next.js 14
-
-# 3. Review generated spec
-✅ Spec saved to .droidz/specs/001-user-authentication.md
-
-# 4. Execute in parallel
-> Execute in parallel? y
-
-# 5. Monitor progress
-[Updates appear every 60s in conversation]
-✅ Phase 1 complete (3 tasks)
-⏳ Phase 2 running (3 tasks)
-```
-
-### Workflow 2: Direct Parallel Execution
-
-```bash
-# Skip spec generation, execute immediately
-/auto-parallel "build REST API for todo items"
-
-# Droid breaks it down and executes
-✓ Task 1: Database schema
-✓ Task 2: CRUD endpoints  
-✓ Task 3: Tests
-```
-
-### Workflow 3: Use Skills for Quality
-
-```bash
-# Skills auto-inject for standards enforcement
-You: "Create a secure login endpoint"
-
-Droid: [Security skill injected]
-       ✅ bcrypt password hashing
-       ✅ Rate limiting
-       ✅ Input validation
-       ✅ OWASP compliance
+/save-decision "Why we chose PostgreSQL over MongoDB"
+/load-memory    # Loads saved context
 ```
 
 ---
 
-## 🔧 Installation Details
+## Installation Options
 
-### What Gets Installed
-
-```
-your-project/
-├── .factory/
-│   ├── commands/
-│   │   ├── droidz-build.md    # Spec generator
-│   │   ├── auto-parallel.md   # Orchestration
-│   │   └── gh-helper.md       # GitHub tools
-│   ├── droids/                # 7 specialist droids
-│   ├── skills/                # 4 skill templates
-│   ├── hooks/                 # Skills injection
-│   └── settings.json          # Configuration
-├── .droidz/
-│   ├── specs/                 # Generated specifications
-│   │   └── 000-example-contact-form.md
-│   └── .gitignore             # Privacy by default
-└── config.yml                 # Your settings
-```
-
-### Requirements
-
-- **Git:** Version control (required)
-- **Factory.ai Droid CLI:** Get it at [factory.ai](https://factory.ai)
-- **Node.js/Bun:** Optional, for TypeScript projects
-
-**No tmux or jq required** - we use Factory.ai's native Task tool for orchestration.
-
----
-
-## 🚀 Advanced Usage
-
-### Custom Specifications
-
-Modify generated specs before execution:
+### New Projects
 
 ```bash
-# 1. Generate spec
-/droidz-build "add feature"
-
-# 2. Edit the spec
-vim .droidz/specs/001-feature.md
-
-# 3. Execute manually
-/auto-parallel [paste task details from spec]
+./install.sh
+# Choose: 3) Fresh Install
+# Choose package manager: npm/yarn/pnpm/bun
 ```
 
-### Share Specifications
-
-Specs are git-ignored by default for privacy. To share:
+### Existing Projects (Update)
 
 ```bash
-# Edit .droidz/.gitignore to commit specific specs
-vim .droidz/.gitignore
-
-# Add line:
-!specs/001-user-authentication.md
-
-# Commit and share
-git add .droidz/specs/001-user-authentication.md
-git commit -m "docs: add authentication spec"
+./install.sh
+# Choose: 1) Update
+# Your custom commands are backed up automatically
 ```
 
-### Configure Skills
-
-Edit skills in `.factory/skills/*.md`:
+### Uninstall
 
 ```bash
-# Add your own coding standards
-vim .factory/skills/typescript.md
-
-# Skills auto-inject when relevant code is detected
+./install.sh
+# Choose: 2) Uninstall
+# Removes .factory/ directory
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## Configuration (Optional)
 
-### Commands not found
+Create `config.yml` (optional - Droidz works without it):
 
-**Problem:** `/droidz-build` or `/auto-parallel` not recognized
+```yaml
+# Linear Integration (optional)
+linear:
+  project_name: "MyProject"
 
-**Solution:**
-```bash
-# In droid chat:
-/settings → Enable "Custom Commands" → Restart droid
-
-# Verify:
-/commands  # Should show droidz-build, auto-parallel, gh-helper
-```
-
-### No droids showing
-
-**Problem:** Specialist droids not available
-
-**Solution:**
-```bash
-# In droid chat:
-/settings → Enable "Custom Droids" → Restart droid
-
-# Verify:
-/droids  # Should show all 7 specialist droids
-```
-
-### Spec generation fails
-
-**Problem:** `/droidz-build` generates incomplete specs
-
-**Solution:**
-- Provide more context in your request
-- Answer clarifying questions thoroughly
-- Check that exa-code and ref MCP are available
-
-### Parallel execution not starting
-
-**Problem:** Tasks spawn but don't make progress
-
-**Solution:**
-```bash
-# Check droid is responding
-/commands  # Should list commands
-
-# Try sequential execution instead
-Choose option 3 (Execute sequentially) when prompted
+# Orchestrator Settings (optional)
+orchestrator:
+  max_parallel_streams: 5
+  enable_monitoring: true
 ```
 
 ---
 
-## 📊 Performance Benchmarks
+## Project Structure
 
-| Task Complexity | Sequential Time | Parallel Time | Speedup |
-|----------------|-----------------|---------------|---------|
-| Simple (2 tasks) | 45 min | 30 min | 1.5x |
-| Moderate (3-5 tasks) | 3 hours | 1 hour | 3x |
-| Complex (6+ tasks) | 12 hours | 3 hours | 4x |
+After installation:
 
-**Average:** 3-5x faster with parallel execution
+```
+.factory/
+├── commands/           # 4 slash commands
+│   ├── droidz-init.md
+│   ├── droidz-build.md
+│   ├── auto-parallel.md
+│   └── gh-helper.md
+├── droids/             # 15 specialist droids
+│   ├── droidz-orchestrator.md
+│   ├── codegen.md
+│   ├── test.md
+│   └── ...
+├── skills/             # 61 auto-skills
+│   ├── typescript/
+│   ├── react/
+│   └── ...
+└── memory/             # Persistent context
+    ├── org/           # Team decisions
+    └── user/          # Your notes
+
+.droidz/
+└── specs/              # Generated specs
+    ├── 001-authentication.md
+    └── 002-payment-integration.md
+
+config.yml              # Your config (gitignored)
+```
 
 ---
 
-## 🤝 Contributing
+## Examples
 
-We welcome contributions! Please:
+### Example 1: Build Auth (15 minutes)
+
+```bash
+# Generate spec
+/droidz-build "add email/password authentication with JWT"
+
+# Droidz asks:
+# - Sessions or JWT? → JWT
+# - Password requirements? → 8+ chars, letters+numbers
+# - Social providers? → No
+
+# Generates spec → .droidz/specs/001-auth.md
+# Contains: 6 tasks (3 parallel Phase 1, 3 parallel Phase 2)
+
+# Execute
+Choose "Yes - Execute in parallel"
+
+# Progress (every 60s):
+✅ Database schema (User model, migrations)
+⏳ API endpoints (POST /register, POST /login...)
+⏳ JWT utilities (sign, verify, refresh...)
+
+# 15 minutes later:
+✅ All complete! 12 files created, 24 tests passing
+```
+
+### Example 2: Direct Execution (No Spec)
+
+```bash
+/auto-parallel "refactor payment module to use strategy pattern"
+
+# Analyzes → 2 parallel tasks
+# Task 1: Create strategy interfaces
+# Task 2: Write tests for new structure
+
+# Then sequential:
+# Task 3: Migrate existing code
+# Task 4: Update documentation
+
+# Done in 20 minutes vs 60 sequential
+```
+
+### Example 3: Analyze First
+
+```bash
+# Onboarding to new project
+/droidz-init
+
+# Output: .droidz/architecture.md
+# - Tech stack: Next.js 14, Prisma, PostgreSQL
+# - File structure: App router, /src layout
+# - Patterns: Server components, Tailwind
+# - Next steps: Suggestions for getting started
+```
+
+---
+
+## Troubleshooting
+
+### Droids not showing?
+
+```bash
+/settings
+# Ensure "Custom Droids" and "Hooks" are ON
+# Restart: Ctrl+C then `droid`
+/droids  # Should show all 7 droids
+```
+
+### Installation failed?
+
+```bash
+# Check logs
+cat .droidz-install-*.log
+
+# Common fixes:
+# 1. Workspace restrictions? Add 'yaml' to root package.json
+# 2. npm errors? Run: npm install yaml --save
+# 3. Re-run installer: ./install.sh
+```
+
+### Commands not working?
+
+```bash
+/commands  # Should show 4 commands
+# If missing, re-run: ./install.sh → Choose "1) Update"
+```
+
+---
+
+## What's New in v2.4.0
+
+**Major Restoration: Original 4-command workflow is back!**
+
+### Changes
+
+- ✅ Restored `/droidz-build` (AI spec generator with meta-prompting)
+- ✅ Restored `/auto-parallel` (parallel execution with live progress)
+- ✅ Restored `/gh-helper` (GitHub operations)
+- ✅ Simplified from 13 fragmented commands → 4 cohesive commands
+- ✅ Added automatic backup before updates
+- ✅ All installer hotfixes preserved (v2.3.0-v2.3.6)
+- ✅ Added comprehensive documentation (COMMANDS.md)
+
+### Why This Matters
+
+**Before (v2.3.6):**
+- 13 overlapping commands (confusing)
+- Missing the powerful spec generator
+- No clear workflow
+
+**After (v2.4.0):**
+- 4 simple commands (easy to learn)
+- Complete workflow: init → build → execute → manage
+- All improvements from v2.3.x preserved
+
+**See [CHANGELOG.md](CHANGELOG.md) or [Release Notes](https://github.com/korallis/Droidz/releases/tag/v2.4.0-droid) for full details.**
+
+---
+
+## Documentation
+
+- **Commands Guide:** [COMMANDS.md](COMMANDS.md) - Comprehensive 4-command reference
+- **Changelog:** [CHANGELOG.md](CHANGELOG.md) - Version history
+- **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+
+---
+
+## Support & Community
+
+- **Issues:** [GitHub Issues](https://github.com/korallis/Droidz/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/korallis/Droidz/discussions)
+- **Discord:** [Ray Fernando's Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
+- **Donate:** [PayPal @gideonapp](https://www.paypal.com/paypalme/gideonapp)
+
+---
+
+## Contributing
+
+Contributions welcome! Please:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ---
 
-## 📜 License
+## License
 
-MIT License - see [LICENSE](LICENSE) file for details
-
----
-
-## 🔗 Links
-
-- **GitHub:** https://github.com/korallis/Droidz
-- **Factory.ai:** https://factory.ai
-- **Issues:** https://github.com/korallis/Droidz/issues
-- **Discussions:** https://github.com/korallis/Droidz/discussions
-- **Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW
-- **Donate (PayPal - Gideonapp):** https://www.paypal.com/paypalme/gideonapp
-- **Latest Release:** https://github.com/korallis/Droidz/releases/tag/v0.5.8
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🎓 Learning Path
-
-### Beginner (Day 1)
-1. Install Droidz
-2. Try `/droidz-build "add contact form"`
-3. Review the generated spec
-4. Execute it
-
-### Intermediate (Week 1)
-1. Use `/auto-parallel` for direct execution
-2. Explore specialist droids
-3. Customize skills for your tech stack
-
-### Advanced (Month 1)
-1. Create custom specifications
-2. Share specs with your team
-3. Build your own droids (see AGENTS.md.template)
-
----
-
-## 💬 Community
-
-- **Discord:** https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW
-- **GitHub Discussions:** https://github.com/korallis/Droidz/discussions
-
----
-
-## 🙏 Acknowledgments
-
-- **Factory.ai** - For the amazing droid CLI
-- **taches-cc-prompts** - Inspiration for meta-prompting system
-- **Contributors** - Everyone who helped make Droidz better
-
----
-
-## 📈 Roadmap
-
-### v0.3.0 (Coming Soon)
-- [ ] `/droidz-init` - Smart project initialization
-- [ ] `/droidz-status` - Resume conversations with state tracking
-- [ ] Spec execution tracking (`.droidz/tasks/`)
-- [ ] Community spec library
-
-### v0.4.0 (Future)
-- [ ] Template system for common specs
-- [ ] Droid marketplace
-- [ ] Team collaboration features
-- [ ] Analytics & metrics
-
----
-
-**Built with ❤️ for the Factory.ai community**
-
-**Current Version:** v0.5.8 | **Last Updated:** 2025-11-17
-
----
-
-## 🆕 What's New in v0.3.0
-
-### **Comprehensive Skills System (4,668 Lines)**
-
-We've created **5 massive, production-ready skills** based on official documentation:
-
-1. **Next.js 16** (1,053 lines) - Critical async API changes, Server Components, Server Actions
-2. **Supabase** (963 lines) - RLS optimization, Realtime authorization, SSR Auth
-3. **Tailwind v4** (963 lines) - CSS-first config, Container Queries, 3D transforms
-4. **TypeScript** (871 lines) - Generics, utility types, advanced patterns
-5. **Convex** (818 lines) - Official rules from Convex team
-
-**Every skill includes:**
-- ✅ Clear ✅ Good / ❌ Bad examples for every concept
-- ✅ Performance optimization tips
-- ✅ Migration guides (Next.js 15→16, Tailwind v3→v4)
-- ✅ Error handling patterns
-- ✅ Real-world usage examples
-
-**Research Method:**
-- Used exa-code MCP for latest documentation
-- Used ref MCP for official API references
-- All patterns verified against official docs
-
-**Impact:**
-- 10x more comprehensive than v0.2.0
-- Production-ready guidance
-- Auto-loads based on code context
-- No configuration needed
+**Built for Factory.ai Droid CLI** | **v2.4.0-droid** | **Created by the community** 🚀
