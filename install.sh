@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.6.3"
+DROIDZ_VERSION="2.6.4"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
