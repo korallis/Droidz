@@ -415,30 +415,21 @@ Report back when complete with test results.`
 
 ---
 
-## Step 5: Actively Monitor and Provide Progress Updates
+## Step 5: Automatically Monitor Progress with Sleep Polling
 
-**CRITICAL: The Task tool provides NO streaming updates - YOU must actively monitor!**
+**CRITICAL: After spawning agents, use `sleep 30` to automatically check progress!**
 
-The Task tool does NOT provide streaming progress. Here's the reality:
+The Task tool is **blocking** - once you spawn agents, they work silently for 5-10 minutes. Instead of waiting silently, **actively poll for progress** using sleep commands.
 
-1. You spawn agents (Task tool calls)
-2. **Agents work silently for 2-10 minutes** (no output from Task tool)
-3. When agents finish, they return complete results
-4. **During the silence, users are confused and anxious**
+### Automatic Monitoring Pattern (REQUIRED)
 
-**YOUR JOB**: Break the silence with active monitoring!
+#### Step 5A: Spawn Agents and Start Monitoring Loop
 
----
+1. **Spawn all agents** in one response (Task tool calls)
+2. **Immediately start monitoring loop** with sleep command
+3. **Continue polling every 30 seconds** until all agents complete
 
-### Active Monitoring Strategy (REQUIRED)
-
-**DO NOT just spawn agents and wait silently!** Follow this pattern:
-
-#### Step 5A: Set Expectations and Spawn
-
-**CRITICAL: Be honest about the limitation!**
-
-The Task tool is blocking - once you spawn agents, your response ends and you can't actively monitor. Instead, **give the user agency to check progress**.
+**Example:**
 
 ```
 I'm spawning 3 specialist agents to work in parallel:
@@ -449,50 +440,84 @@ I'm spawning 3 specialist agents to work in parallel:
 
 **Expected completion:** 5-8 minutes (all working simultaneously)
 
-⚠️ **Important:** Agents will work in the background. I can't actively monitor while they run, but you can check progress anytime by asking:
-- "How's it going?"
-- "Check on the agents"
-- "Show me progress"
-
-I'll check the file system for observable changes (new files, git status) and report back.
+I'll monitor progress automatically every 30 seconds and report updates.
 
 [Spawning agents now...]
 ```
 
-Then make your Task tool calls to spawn all agents.
+Then make your Task tool calls, **followed by the monitoring sleep command**.
 
-**After spawning, your response will end.** The user must prompt you again to check progress.
+#### Step 5B: Automatic Progress Monitoring Loop
 
-#### Step 5B: When User Asks for Progress Update
+**After spawning agents, IMMEDIATELY run this command:**
 
-**When the user prompts you to check progress** (e.g., "How's it going?" or "Check on the agents"), you should:
+```typescript
+Execute({
+  command: "sleep 30",
+  timeout: 35,
+  riskLevel: "low",
+  riskLevelReason: "Sleep command used for monitoring parallel agents - no side effects, just timing delay"
+})
+```
+
+**What this does:**
+- Pauses for 30 seconds (allows agents to make progress)
+- Timeout of 35s ensures it completes
+- Low risk (no file modifications, just a timer)
+- **After sleep completes, YOU can check progress and report to user**
+
+**Then immediately check for progress:**
 
 **Check for observable progress:**
 
-1. **Check file system changes:**
-   ```typescript
-   // Use LS or Execute to see what files have been created/modified
-   Execute({command: "cd /path/to/project && git status --short"})
-   Execute({command: "cd /path/to/project && ls -lt app/api/auth/ | head -10"})
-   ```
+```typescript
+// After sleep completes, check file system changes
+Execute({
+  command: "cd /path/to/project && git status --short",
+  timeout: 10,
+  riskLevel: "low",
+  riskLevelReason: "Read-only git status command"
+})
 
-2. **Report what you observe:**
-   ```
-   ⏱️ **Progress Update (2 minutes in)**
-   
-   Observable changes:
-   - ✅ Agent 1: Created app/api/auth/register/route.ts (visible in git status)
-   - ✅ Agent 1: Created lib/auth.ts
-   - 🔄 Agent 2: Working... (no new files yet)
-   - 🔄 Agent 3: Working... (no new files yet)
-   
-   Still monitoring... next update in 60 seconds.
-   ```
+Execute({
+  command: "cd /path/to/project && ls -lt app/api/ | head -10",
+  timeout: 10,
+  riskLevel: "low",
+  riskLevelReason: "Read-only ls command to check file timestamps"
+})
+```
 
-3. **Continue monitoring until agents return:**
-   - Check again at 3-4 minutes
-   - Check again at 5-6 minutes
-   - When Task tool returns, agents are done
+**Then report what you observe:**
+
+```
+⏱️ **Progress Update (30 seconds elapsed)**
+
+Observable changes:
+- ✅ Agent 1: Created app/api/auth/register/route.ts
+- ✅ Agent 1: Created lib/auth.ts
+- 🔄 Agent 2: Working... (no new files yet)
+- 🔄 Agent 3: Working... (no new files yet)
+
+Checking again in 30 seconds...
+```
+
+**Then run sleep again:**
+
+```typescript
+Execute({
+  command: "sleep 30",
+  timeout: 35,
+  riskLevel: "low",
+  riskLevelReason: "Sleep command for monitoring - no side effects"
+})
+```
+
+**Repeat this loop:**
+1. Sleep 30 seconds
+2. Check git status / file changes
+3. Report observable progress
+4. Sleep 30 seconds again
+5. **Continue until all agents report complete**
 
 #### Step 5C: What to Monitor
 
@@ -517,66 +542,96 @@ Then make your Task tool calls to spawn all agents.
    # Count increases as agent creates files
    ```
 
-4. **TypeScript Compilation** - Check for syntax errors
-   ```bash
-   npx tsc --noEmit 2>&1 | grep -c "error"
-   # Agents may introduce errors initially, then fix them
-   ```
-
-**Example Progress Check Flow:**
+#### Step 5D: Automatic Monitoring Loop - Complete Example
 
 ```
-[You spawn agents at T=0, response ends]
+[You spawn agents at T=0]
 
---- 2 minutes later ---
+🤖 Spawning 3 agents...
+[Make 3 Task tool calls]
 
-USER: "How's it going?"
+Now monitoring progress automatically...
 
-YOU: [Check: git status, ls -lt key directories]
+[Execute: sleep 30, timeout: 35s, riskLevel: low]
+[Sleep completes after 30 seconds]
 
-Report: "⏱️ Update (2min elapsed):
+⏱️ **Progress Update (30s elapsed)**
+
+[Check: git status --short]
+
+Observable changes:
+- 🔄 Agent 1: Working (no files yet)
+- 🔄 Agent 2: Working (no files yet)
+- 🔄 Agent 3: Working (no files yet)
+
+Checking again in 30 seconds...
+
+[Execute: sleep 30, timeout: 35s, riskLevel: low]
+[Sleep completes]
+
+⏱️ **Progress Update (1 minute elapsed)**
+
+[Check: git status --short, ls -lt]
+
+Observable changes:
 - ✅ Agent 1: Created 4 files in app/api/auth/
-- 🔄 Agent 2: Working (no files visible yet)
-- 🔄 Agent 3: Working (no files visible yet)
+- 🔄 Agent 2: Working (no files yet)
+- 🔄 Agent 3: Working (no files yet)
 
-Agents are still running. Check back in 2-3 minutes or I'll notify when complete!"
+Checking again in 30 seconds...
 
---- 3 minutes later (5min total) ---
+[Execute: sleep 30, timeout: 35s, riskLevel: low]
+[Sleep completes]
 
-USER: "Check on the agents"
+⏱️ **Progress Update (1.5 minutes elapsed)**
 
-YOU: [Check again]
+Observable changes:
+- ✅ Agent 1: Created 2 more files (6 total)
+- ✅ Agent 2: Created 3 components
+- 🔄 Agent 3: Working (no files yet)
 
-Report: "⏱️ Update (5min elapsed):
-- ✅ Agent 1: Completed! (no new changes)
-- ✅ Agent 2: Created 3 components in components/
-- 🔄 Agent 3: Created 2 test files, still working
+Checking again in 30 seconds...
 
-Almost done! Should complete in 1-2 minutes."
+[Continue loop until agents complete or return results]
 
---- Agents complete ---
+--- When Task tool returns (agents finished) ---
 
-YOU: "✅ All agents complete! Synthesizing results..."
+✅ **All agents complete!** Synthesizing results...
+
+[Read agent reports, create final summary]
 ```
 
-**Key Point:** You can't proactively check - you respond when the user asks. But you provide useful observable progress each time.
+**Key Points:**
+- **Automatic monitoring** - No user prompting needed!
+- **Every 30 seconds** - Regular progress updates
+- **Sleep command** - Low-risk, just a timer
+- **Observable progress** - File system changes
+- **Continue until complete** - Loop stops when agents return results
 
 ---
 
-### Set Accurate Expectations (Still Important)
+### Monitoring Loop Instructions (CRITICAL)
+
+**✅ CORRECT approach:**
+
+1. **Spawn all agents** (multiple Task tool calls)
+2. **Immediately run:** `Execute({command: "sleep 30", timeout: 35, riskLevel: "low"})`
+3. **After sleep completes, check progress:** `git status --short`, `ls -lt`
+4. **Report observable changes** to user
+5. **Run sleep again:** `Execute({command: "sleep 30", timeout: 35, riskLevel: "low"})`
+6. **Repeat steps 3-5** until Task tool returns (agents complete)
 
 **✅ CORRECT messaging to users:**
-- "Agents will work in background - ask 'How's it going?' anytime to check progress"
-- "You can check progress by asking me to check on the agents"
-- "I'll check file changes when you ask and report observable progress"
-- "Expected completion: 5-8 minutes - check back then or sooner to see progress"
+- "I'll monitor progress automatically every 30 seconds"
+- "Checking progress in 30 seconds..."
+- "Updates will appear automatically as agents work"
+- "Expected completion: 5-8 minutes - I'll keep you updated"
 
 **❌ NEVER say:**
-- "I'll monitor progress every 60-90 seconds" (FALSE - you can't, you're not running)
-- "I'll check in shortly" (FALSE - your response ends after spawning)
-- "Updates will appear automatically" (FALSE - user must ask)
-- "Agents will report progress" (FALSE - they won't report anything)
-- "Just wait silently" (BAD UX - tell them they can check anytime)
+- "Ask me 'How's it going?'" (FALSE - you monitor automatically!)
+- "Check back later" (FALSE - YOU check automatically)
+- "Agents will work silently" (FALSE - you provide updates every 30s)
+- "Just wait" (BAD UX - you're actively monitoring!)
 
 ### When Agents Return Results
 
@@ -784,9 +839,10 @@ Route tasks to the right specialist:
 2. **Communicate Clearly** - Show the user WHY you're orchestrating (or not)
 3. **Parallel by Default** - If 2+ streams are independent, run them simultaneously
 4. **Standards Inheritance** - All spawned agents automatically use .factory/standards/
-5. **HONEST ABOUT MONITORING** - You can't proactively monitor (Task tool is blocking), so tell users they can check progress by asking "How's it going?"
-6. **USER-INITIATED CHECKS** - When users ask for progress, check file system changes and report observable updates
-7. **Synthesize Results** - Present unified summary of all parallel work when agents complete
+5. **AUTOMATIC MONITORING** - Use `sleep 30` (timeout: 35s, riskLevel: low) to poll every 30 seconds
+6. **PROACTIVE UPDATES** - Check file system changes after each sleep and report observable progress
+7. **CONTINUOUS LOOP** - Keep running sleep → check → report until agents complete
+8. **Synthesize Results** - Present unified summary of all parallel work when agents complete
 
 ---
 
