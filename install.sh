@@ -174,7 +174,7 @@ configure_wsl_for_claude_code() {
     fi
 
     log_success "WSL2 configuration complete"
-    log_info "When installing Claude Code, use: npm install -g @anthropic-ai/claude-code --force --no-os-check"
+    log_info "WSL2 is compatible with Factory.ai Droid CLI"
     echo ""
 }
 
