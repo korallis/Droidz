@@ -2,7 +2,7 @@
 
 All notable changes to Droidz will be documented in this file.
 
-## [2.7.0] - 2025-11-20
+## [2.7.2] - 2025-11-20
 
 ### 🚀 Major Enhancements
 
