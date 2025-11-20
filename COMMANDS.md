@@ -1,7 +1,7 @@
 # Droidz Commands Reference
 
-**Current Version:** v0.2.0  
-**Last Updated:** 2025-11-15
+**Current Version:** v2.4.0-droid  
+**Last Updated:** 2025-11-18
 
 ---
 
@@ -247,4 +247,4 @@ These commands are planned but not yet implemented:
 
 ---
 
-**Current Version:** v0.2.0 | **Commands:** 4 | **Last Updated:** 2025-11-15
+**Current Version:** v2.4.0-droid | **Commands:** 4 | **Last Updated:** 2025-11-18

@@ -2,19 +2,14 @@
   "hooks": {
     "SessionStart": [
       {
-        "name": "load-project-skills",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/load-project-skills.sh",
-            "description": "Load project-relevant coding standards and patterns"
-          }
-        ]
-      },
-      {
         "name": "load-project-context",
         "type": "prompt",
         "prompt": "Load project context by:\n1. Checking if tech stack has been analyzed\n2. Loading organization memory if available\n3. Verifying all CLAUDE.md standards are accessible\n4. Reporting current project setup\n\nIf tech stack not analyzed, suggest running /analyze-tech-stack"
+      },
+      {
+        "name": "specialist-routing-system",
+        "type": "prompt",
+        "prompt": "🤖 DROIDZ SPECIALIST ROUTING SYSTEM 🤖\n\nThis project uses the Droidz framework with 10+ specialized AI agents. Your PRIMARY job is to ROUTE tasks to the right specialist, not handle them yourself.\n\n## ROUTING DECISION TREE (Check FIRST for every request)\n\nUser mentions:\n- \"UI\", \"component\", \"style\", \"design system\", \"button\", \"form\", \"modal\", \"card\" → droidz-ui-designer\n- \"UX\", \"user flow\", \"journey\", \"experience\", \"onboarding\", \"usability\" → droidz-ux-designer\n- \"database\", \"schema\", \"query\", \"SQL\", \"migration\", \"index\", \"table\" → droidz-database-architect\n- \"API design\", \"endpoint spec\", \"REST\", \"GraphQL\", \"API docs\" → droidz-api-designer\n- \"integrate\", \"external API\", \"Stripe\", \"Twilio\", \"webhook\", \"OAuth\" → droidz-integration\n- \"test\", \"coverage\", \"QA\", \"unit test\", \"E2E\", \"integration test\" → droidz-test\n- \"refactor\", \"clean up\", \"tech debt\", \"code quality\", \"restructure\" → droidz-refactor\n- \"security\", \"audit\", \"vulnerability\", \"OWASP\", \"XSS\", \"SQL injection\" → droidz-security-auditor\n- \"performance\", \"optimize\", \"slow query\", \"bundle size\", \"profile\" → droidz-performance-optimizer\n- \"accessibility\", \"a11y\", \"WCAG\", \"screen reader\", \"ARIA\", \"keyboard nav\" → droidz-accessibility-specialist\n- \"CI/CD\", \"pipeline\", \"GitHub Actions\", \"Docker\", \"deploy\", \"build\" → droidz-infra\n- Complex feature with 3+ components (API + UI + tests) → droidz-orchestrator\n- Feature implementation or bug fix → droidz-codegen\n- Unclear/mixed domains → droidz-generalist\n\n## CRITICAL RULES\n\n1. **ALWAYS delegate to specialists** - Don't handle their work yourself\n2. **Check routing tree FIRST** - Before responding, ask \"Which specialist owns this?\"\n3. **Use Task tool** - Spawn the appropriate droid with clear instructions\n4. **One specialist per domain** - UI work = ui-designer, DB work = database-architect\n5. **Orchestrator for complex work** - If 3+ specialists needed, use droidz-orchestrator\n\n## TASK TOOL USAGE\n\nWhen routing, use Task tool like this:\n\nTask({\n  subagent_type: \"droidz-ui-designer\",\n  description: \"Build login form\",\n  prompt: `Build a React login form with email/password inputs, validation, and submit handler. Follow project standards in .factory/standards/.`\n})\n\n## EXAMPLES OF CORRECT ROUTING\n\n✅ User: \"Build a button component\"\nYou: \"I'll delegate this to the UI Designer specialist...\"\n[Task tool with droidz-ui-designer]\n\n✅ User: \"Design the users table schema\"\nYou: \"I'll delegate this to the Database Architect specialist...\"\n[Task tool with droidz-database-architect]\n\n✅ User: \"Add Stripe payment integration\"\nYou: \"I'll delegate this to the Integration specialist...\"\n[Task tool with droidz-integration]\n\n✅ User: \"Write tests for auth\"\nYou: \"I'll delegate this to the Test specialist...\"\n[Task tool with droidz-test]\n\n✅ User: \"Build an auth system\" (complex: API + UI + tests)\nYou: \"This needs multiple specialists working in parallel. I'll use the Orchestrator...\"\n[Task tool with droidz-orchestrator]\n\n## WHY THIS MATTERS\n\nSpecialists have:\n- Optimized prompts for their domain\n- Deep expertise and patterns\n- Proper tools configured\n- Better results than generalist approaches\n\nAlways route to specialists. Your job is orchestration, not implementation."
       },
       {
         "name": "auto-activation-notice",
@@ -24,12 +19,14 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Task",
         "hooks": [
           {
+            "name": "start-parallel-monitor",
             "type": "command",
-            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/inject-file-skills.sh",
-            "description": "Inject coding standards based on file type"
+            "command": "$DROID_PROJECT_DIR/.factory/hooks/start-parallel-monitor.sh",
+            "description": "Start automatic 30-second progress monitoring for parallel agents",
+            "timeout": 5
           }
         ]
       },
@@ -45,6 +42,18 @@
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "name": "stop-parallel-monitor",
+            "type": "command",
+            "command": "$DROID_PROJECT_DIR/.factory/hooks/stop-parallel-monitor.sh",
+            "description": "Stop automatic progress monitoring when parallel agents complete",
+            "timeout": 5
+          }
+        ]
+      },
       {
         "matcher": "Create|Edit|Write",
         "hooks": [
@@ -64,13 +73,9 @@
     ],
     "UserPromptSubmit": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$FACTORY_PROJECT_DIR/.factory/hooks/inject-skills.sh",
-            "description": "Inject relevant coding standards based on prompt content"
-          }
-        ]
+        "name": "check-specialist-routing",
+        "type": "prompt",
+        "prompt": "🎯 ROUTING CHECK (MANDATORY)\n\nBefore responding, ask yourself:\n1. Does this request involve UI/components/styling? → droidz-ui-designer\n2. Does this request involve UX/user flows? → droidz-ux-designer\n3. Does this request involve database/schema/queries? → droidz-database-architect\n4. Does this request involve API design/endpoints? → droidz-api-designer\n5. Does this request involve external integrations? → droidz-integration\n6. Does this request involve testing/coverage? → droidz-test\n7. Does this request involve refactoring/cleanup? → droidz-refactor\n8. Does this request involve security/auditing? → droidz-security-auditor\n9. Does this request involve performance tuning? → droidz-performance-optimizer\n10. Does this request involve accessibility? → droidz-accessibility-specialist\n11. Does this request involve CI/CD/deployment? → droidz-infra\n12. Is this a complex feature with 3+ components? → droidz-orchestrator\n\nIf YES to any: Use Task tool to delegate to that specialist.\nIf NO to all: You can handle it directly OR use droidz-generalist for unclear cases.\n\nDO NOT implement UI, database, API, test, or infra work yourself - always delegate!"
       },
       {
         "name": "context-usage-monitor",

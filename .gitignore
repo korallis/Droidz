@@ -1,6 +1,26 @@
 # Droidz worktrees
 .runs/
 
+# User-specific Droidz folders (never commit these!)
+# But DO track .droidz/specs/ for spec examples
+.droidz/*.log
+.droidz/tmp/
+
+# User-specific .factory subdirectories only
+.factory/memory/user/
+.factory/memory/org/*.json
+.factory/specs/active/*.json
+
+# But keep framework files in git:
+# .factory/droids/ (specialist agent definitions)
+# .factory/commands/ (slash commands)
+# .factory/skills/ (auto-skills)
+# .factory/orchestrator/ (orchestration scripts)
+# .factory/hooks/ (hooks)
+# .factory/standards/ (code standards)
+# .factory/product/ (product docs)
+# .factory/scripts/ (utility scripts)
+
 # Configuration file with API keys (NEVER commit this!)
 config.yml
 
@@ -41,9 +61,3 @@ V2.0.2_MIGRATION_GUIDE.md
 *-tasks.json
 .claude-*-backup*
 .droidz-install-*.log
-
-# .droidz/ - Local state and specs (controlled by .droidz/.gitignore)
-# Users can optionally commit specs by modifying .droidz/.gitignore
-.droidz/*
-!.droidz/.gitignore
-!.droidz/specs/000-*.md
