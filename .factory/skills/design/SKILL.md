@@ -1244,6 +1244,150 @@ export function Button({ variant, size, disabled, className, ...props }: ButtonP
 }
 ```
 
+## Liquid Glass Effects (Advanced)
+
+Apple's Liquid Glass UI from WWDC 2025 uses physics-based refraction for premium glass effects.
+
+### Core Physics
+
+**Refraction** = Light bending through materials (Snell's Law)
+- **Convex surfaces** (dome) - Push rays inward, keep content inside
+- **Concave surfaces** (bowl) - Push rays outward, divergence
+- **Squircle** (Apple's choice) - Smoother transitions, softer refraction edges
+
+### ✅ Good: Basic Glass Panel (Cross-Browser)
+```css
+.glass-panel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Specular highlight */
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+```
+
+### ✅ Good: SVG Displacement Maps (Chrome Only)
+```html
+<svg colorInterpolationFilters="sRGB">
+  <filter id="glass-distortion">
+    <feImage href={displacementMapDataUrl} result="displacement_map"/>
+    <feDisplacementMap 
+      in="SourceGraphic" 
+      in2="displacement_map"
+      scale="77"
+      xChannelSelector="R"
+      yChannelSelector="G" 
+    />
+    <feImage href={specularHighlightUrl} result="specular"/>
+    <feBlend in="SourceGraphic" in2="specular" mode="screen"/>
+  </filter>
+</svg>
+```
+
+```css
+.liquid-glass {
+  backdrop-filter: blur(3px) url(#glass-distortion);
+  overflow: hidden;
+}
+
+/* Layer structure */
+.liquid-glass-filter { z-index: 0; filter: url(#glass-distortion); }
+.liquid-glass-tint { z-index: 1; background: rgba(255, 255, 255, 0.25); }
+.liquid-glass-specular { z-index: 2; box-shadow: inset 2px 2px 1px rgba(255, 255, 255, 0.5); }
+.liquid-glass-content { z-index: 3; position: relative; }
+```
+
+### ✅ Good: Interactive Glass with Mouse Tracking
+```tsx
+function InteractiveGlass() {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const specular = e.currentTarget.querySelector('.glass-specular') as HTMLElement;
+    if (specular) {
+      specular.style.background = `radial-gradient(
+        circle at ${x}px ${y}px,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 30%,
+        rgba(255, 255, 255, 0) 60%
+      )`;
+    }
+  };
+  
+  return (
+    <div className="glass-button" onMouseMove={handleMouseMove}>
+      <div className="glass-filter" />
+      <div className="glass-tint" />
+      <div className="glass-specular" />
+      <div className="glass-content">Premium Button</div>
+    </div>
+  );
+}
+```
+
+### Design Parameters
+- **Bezel Width**: 10-30px (edge refraction intensity)
+- **Glass Thickness**: 50-150px (displacement magnitude)
+- **Surface Shape**: Squircle for Apple-like smoothness
+- **Specular Opacity**: 0.2-0.5 (highlight intensity)
+- **Blur Level**: 3-20px (background blur strength)
+
+### Browser Support
+| Feature | Chrome | Safari | Firefox |
+|---------|--------|--------|---------|
+| `backdrop-filter` | ✅ | ✅ | ✅ |
+| SVG as `backdrop-filter` | ✅ | ❌ | ❌ |
+| Basic glass | ✅ | ✅ | ✅ |
+| Advanced refraction | ✅ | ❌ | ❌ |
+
+**Strategy**: Use basic glass for cross-browser, advanced SVG refraction as progressive enhancement for Chrome.
+
+### Use Cases
+**✅ When to use:**
+- Premium UI (cards, panels, modals)
+- Hero sections with depth
+- Navigation bars with transparency
+- Music/media player controls
+
+**❌ When to avoid:**
+- Text-heavy content (readability)
+- High-contrast backgrounds (effect less visible)
+- Mobile (performance concerns)
+- Accessibility-critical UI
+
+### Performance
+✅ **Use CSS transforms** (hardware accelerated)
+✅ **Limit blur radius** (smaller = faster)
+✅ **Use `will-change`** for animations
+❌ **Don't nest glass effects** (compounds cost)
+❌ **Don't animate displacement maps** (pre-calculate)
+
+### References
+- [Liquid Glass CSS/SVG](https://kube.io/blog/liquid-glass-css-svg/) - Complete physics guide
+- [Apple WWDC 2025](https://www.youtube.com/watch?v=jGztGfRujSE) - Official introduction
+- [Glassmorphism UI](https://liquidglassui.org/) - Library & components
+
+---
+
 ## Accessibility Testing Tools
 
 ### ✅ Good: Automated Testing with axe-core
@@ -1294,4 +1438,4 @@ describe('Accessibility', () => {
 - [ ] Validation errors are announced to screen readers
 ```
 
-**ALWAYS follow these design principles and patterns to create accessible, consistent, and user-friendly interfaces. Test with real screen readers (NVDA, JAWS, VoiceOver) and keyboard-only navigation to ensure true accessibility.**
+**ALWAYS follow these design principles and patterns to create accessible, consistent, and user-friendly interfaces. Test with real screen readers (NVDA, JAWS, VoiceOver) and keyboard-only navigation to ensure true accessibility. For premium effects, consider liquid glass techniques with proper cross-browser fallbacks.**
