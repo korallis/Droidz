@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.6.4"
+DROIDZ_VERSION="2.6.5"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -119,39 +119,8 @@ detect_package_manager() {
     fi
 }
 
-# Detect Node.js package manager for the project
-detect_node_package_manager() {
-    # Check for lock files first (most reliable indicator)
-    if [[ -f "pnpm-lock.yaml" ]]; then
-        NODE_PKG_MANAGER="pnpm"
-        log_info "Detected pnpm (found pnpm-lock.yaml)"
-    elif [[ -f "yarn.lock" ]]; then
-        NODE_PKG_MANAGER="yarn"
-        log_info "Detected yarn (found yarn.lock)"
-    elif [[ -f "package-lock.json" ]]; then
-        NODE_PKG_MANAGER="npm"
-        log_info "Detected npm (found package-lock.json)"
-    elif [[ -f "bun.lockb" ]]; then
-        NODE_PKG_MANAGER="bun"
-        log_info "Detected bun (found bun.lockb)"
-    # Fall back to checking which commands are available
-    elif command -v pnpm &> /dev/null; then
-        NODE_PKG_MANAGER="pnpm"
-        log_info "Using pnpm (detected in PATH)"
-    elif command -v yarn &> /dev/null; then
-        NODE_PKG_MANAGER="yarn"
-        log_info "Using yarn (detected in PATH)"
-    elif command -v bun &> /dev/null; then
-        NODE_PKG_MANAGER="bun"
-        log_info "Using bun (detected in PATH)"
-    elif command -v npm &> /dev/null; then
-        NODE_PKG_MANAGER="npm"
-        log_info "Using npm (detected in PATH)"
-    else
-        NODE_PKG_MANAGER="none"
-        log_warning "No Node.js package manager found"
-    fi
-}
+# Removed: detect_node_package_manager()
+# Droidz doesn't install npm packages, so we don't need to detect package managers
 
 configure_wsl_for_claude_code() {
     echo ""
@@ -822,132 +791,29 @@ else
     log_warning "python3 not found. Please ensure package.json includes \"type\": \"module\"."
 fi
 
-# Detect Node.js package manager
-detect_node_package_manager
-
-# Install runtime and linting dependencies
-if [[ "$NODE_PKG_MANAGER" == "none" ]]; then
-    log_error "No Node.js package manager found. Please install npm, yarn, pnpm, or bun first."
-    echo ""
-    echo "Installation options:"
-    echo "  npm:  comes with Node.js (https://nodejs.org)"
-    echo "  yarn: npm install -g yarn"
-    echo "  pnpm: npm install -g pnpm"
-    echo "  bun:  curl -fsSL https://bun.sh/install | bash"
-    exit 1
-fi
-
-log_step "Installing dependencies using ${NODE_PKG_MANAGER}..."
-
-# Check if yaml is already installed
-YAML_INSTALLED=false
+# Check if package.json exists and ensure ESM support
 if [[ -f "package.json" ]]; then
-    if grep -q '"yaml"' package.json 2>/dev/null; then
-        YAML_INSTALLED=true
-        log_info "yaml dependency already in package.json"
+    log_step "Checking package.json for ESM support..."
+    
+    # Check if "type": "module" exists
+    if ! grep -q '"type"[[:space:]]*:[[:space:]]*"module"' package.json 2>/dev/null; then
+        log_info "Adding \"type\": \"module\" to package.json for ESM support"
+        
+        # Use jq if available for safe JSON manipulation
+        if command -v jq &> /dev/null; then
+            jq '. + {"type": "module"}' package.json > package.json.tmp && mv package.json.tmp package.json
+            log_success "Added ESM support to package.json"
+        else
+            log_warning "jq not found - please manually add '\"type\": \"module\"' to package.json"
+            log_info "Or install jq: brew install jq"
+        fi
+    else
+        log_success "package.json already has ESM support"
     fi
+else
+    log_info "No package.json found (optional for Droidz)"
+    log_info "Droidz works with bash scripts and doesn't require npm packages"
 fi
-
-# Install dependencies based on detected package manager
-case "$NODE_PKG_MANAGER" in
-    npm)
-        if [[ "$YAML_INSTALLED" == "false" ]]; then
-            log_info "Installing runtime dependency: yaml"
-            if npm install yaml --save 2>&1 | tee /tmp/npm-install.log | grep -q "error"; then
-                log_error "Failed to install yaml dependency"
-                echo ""
-                echo "npm error output:"
-                cat /tmp/npm-install.log
-                echo ""
-                log_warning "This might be a workspace/monorepo project with install restrictions"
-                log_info "You may need to add 'yaml' manually to your root package.json"
-                rm -f /tmp/npm-install.log
-            else
-                log_success "Added yaml dependency"
-                rm -f /tmp/npm-install.log
-            fi
-        fi
-        
-        log_info "Installing development dependencies for linting and types"
-        if npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
-        else
-            log_warning "Could not install dev dependencies (might be workspace restrictions)"
-        fi
-        ;;
-    yarn)
-        if [[ "$YAML_INSTALLED" == "false" ]]; then
-            log_info "Installing runtime dependency: yaml"
-            if yarn add yaml 2>&1 | tee /tmp/yarn-install.log | grep -q "error"; then
-                log_error "Failed to install yaml dependency"
-                echo ""
-                echo "yarn error output:"
-                cat /tmp/yarn-install.log
-                echo ""
-                log_warning "This might be a workspace/monorepo project with install restrictions"
-                rm -f /tmp/yarn-install.log
-            else
-                log_success "Added yaml dependency"
-                rm -f /tmp/yarn-install.log
-            fi
-        fi
-        
-        log_info "Installing development dependencies for linting and types"
-        if yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
-        else
-            log_warning "Could not install dev dependencies (might be workspace restrictions)"
-        fi
-        ;;
-    pnpm)
-        if [[ "$YAML_INSTALLED" == "false" ]]; then
-            log_info "Installing runtime dependency: yaml"
-            if pnpm add yaml 2>&1 | tee /tmp/pnpm-install.log | grep -q "error"; then
-                log_error "Failed to install yaml dependency"
-                echo ""
-                echo "pnpm error output:"
-                cat /tmp/pnpm-install.log
-                echo ""
-                log_warning "This might be a workspace/monorepo project with install restrictions"
-                rm -f /tmp/pnpm-install.log
-            else
-                log_success "Added yaml dependency"
-                rm -f /tmp/pnpm-install.log
-            fi
-        fi
-        
-        log_info "Installing development dependencies for linting and types"
-        if pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
-        else
-            log_warning "Could not install dev dependencies (might be workspace restrictions)"
-        fi
-        ;;
-    bun)
-        if [[ "$YAML_INSTALLED" == "false" ]]; then
-            log_info "Installing runtime dependency: yaml"
-            if bun add yaml 2>&1 | tee /tmp/bun-install.log | grep -q "error"; then
-                log_error "Failed to install yaml dependency"
-                echo ""
-                echo "bun error output:"
-                cat /tmp/bun-install.log
-                echo ""
-                log_warning "This might be a workspace/monorepo project with install restrictions"
-                rm -f /tmp/bun-install.log
-            else
-                log_success "Added yaml dependency"
-                rm -f /tmp/bun-install.log
-            fi
-        fi
-        
-        log_info "Installing development dependencies for linting and types"
-        if bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
-        else
-            log_warning "Could not install dev dependencies (might be workspace restrictions)"
-        fi
-        ;;
-esac
 
 # Download droids
 log_step "Downloading robot helpers (droids)..."
