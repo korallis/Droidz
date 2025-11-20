@@ -212,17 +212,24 @@ Simple GitHub CLI helpers with correct JSON fields.
 
 ## What You Get
 
-### 7 Specialist Droids
+### 15 Specialist Droids
 
 | Droid | Purpose |
 |-------|---------|
 | **droidz-orchestrator** | Coordinate parallel work |
-| **codegen** | Implement features & bugfixes |
-| **test** | Write & fix tests |
-| **refactor** | Code improvements |
-| **infra** | CI/CD & deployment |
-| **integration** | External API integrations |
-| **generalist** | General tasks |
+| **droidz-codegen** | Implement features & bugfixes |
+| **droidz-test** | Write & fix tests |
+| **droidz-refactor** | Code improvements |
+| **droidz-infra** | CI/CD & deployment |
+| **droidz-integration** | External API integrations |
+| **droidz-ui-designer** | UI design & components |
+| **droidz-ux-designer** | User experience & flows |
+| **droidz-database-architect** | Database schema & optimization |
+| **droidz-api-designer** | API design & documentation |
+| **droidz-security-auditor** | Security reviews & OWASP |
+| **droidz-performance-optimizer** | Performance profiling & tuning |
+| **droidz-accessibility-specialist** | WCAG compliance & a11y |
+| **droidz-generalist** | General tasks |
 
 ### 61 Auto-Activated Skills
 
@@ -422,33 +429,39 @@ cat .droidz-install-*.log
 
 ---
 
-## What's New in v2.4.0
+## What's New in v2.7.2
 
-**Major Restoration: Original 4-command workflow is back!**
+**🚀 Major Skills Expansion + CLI Auto-Activation!**
 
-### Changes
+### New Skills (4 Added)
 
-- ✅ Restored `/droidz-build` (AI spec generator with meta-prompting)
-- ✅ Restored `/auto-parallel` (parallel execution with live progress)
-- ✅ Restored `/gh-helper` (GitHub operations)
-- ✅ Simplified from 13 fragmented commands → 4 cohesive commands
-- ✅ Added automatic backup before updates
-- ✅ All installer hotfixes preserved (v2.3.0-v2.3.6)
-- ✅ Added comprehensive documentation (COMMANDS.md)
+- ✅ **GraphQL API Design** (650 lines) - Apollo Server, DataLoader, cursor pagination
+- ✅ **WebSocket Real-time** (680 lines) - Socket.io, SSE, presence systems
+- ✅ **Monitoring & Observability** (620 lines) - Prometheus, Grafana, OpenTelemetry
+- ✅ **Load Testing** (580 lines) - k6, Artillery, performance benchmarking
 
-### Why This Matters
+### CLI Auto-Activation
 
-**Before (v2.3.6):**
-- 13 overlapping commands (confusing)
-- Missing the powerful spec generator
-- No clear workflow
+- ✅ **All 61 skills now auto-activate** based on your context!
+- ✅ Added trigger keywords to 18 skills (React, TypeScript, Next.js, Prisma, etc.)
+- ✅ Skills load automatically when mentioned - just like magic ✨
 
-**After (v2.4.0):**
-- 4 simple commands (easy to learn)
-- Complete workflow: init → build → execute → manage
-- All improvements from v2.3.x preserved
+### Installer Improvements
 
-**See [CHANGELOG.md](CHANGELOG.md) or [Release Notes](https://github.com/korallis/Droidz/releases/tag/v2.4.0-droid) for full details.**
+- ✅ Updated skill list from 45 → 61 skills
+- ✅ Fixed missing skills in installer
+- ✅ Better consistency and error handling
+
+### Complete Coverage
+
+Now includes complete support for:
+- Modern API development (REST + GraphQL)
+- Real-time features (WebSocket + SSE)
+- Production monitoring and observability
+- Performance testing and validation
+- Full-stack development from dev to production
+
+**See [CHANGELOG.md](CHANGELOG.md) or [Release v2.7.2](https://github.com/korallis/Droidz/releases/tag/v2.7.2) for full details.**
 
 ---
 
@@ -486,4 +499,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built for Factory.ai Droid CLI** | **v2.4.0-droid** | **Created by the community** 🚀
+**Built for Factory.ai Droid CLI** | **v2.7.2** | **Created by the community** 🚀

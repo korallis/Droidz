@@ -1,63 +1,30 @@
 # Droidz worktrees
 .runs/
 
-# User-specific Droidz folders (never commit these!)
-# But DO track .droidz/specs/ for spec examples
-.droidz/*.log
-.droidz/tmp/
+# User-specific directories (never commit!)
+.droidz/
+.claude/
 
-# User-specific .factory subdirectories only
+# User memory and active work
 .factory/memory/user/
 .factory/memory/org/*.json
+.factory/specs/active/*.md
 .factory/specs/active/*.json
 
-# But keep framework files in git:
-# .factory/droids/ (specialist agent definitions)
-# .factory/commands/ (slash commands)
-# .factory/skills/ (auto-skills)
-# .factory/orchestrator/ (orchestration scripts)
-# .factory/hooks/ (hooks)
-# .factory/standards/ (code standards)
-# .factory/product/ (product docs)
-# .factory/scripts/ (utility scripts)
-
-# Configuration file with API keys (NEVER commit this!)
+# Configuration with API keys (NEVER commit!)
 config.yml
-
-# Keep the example template
 !config.example.yml
 
-# Claude Code - User-specific files only (but keep framework files)
-.claude/memory/user/*.json
-.claude/memory/org/*.json
-.claude/.checkpoints/
-.claude/commands/*.local.md
-
-# Keep framework files in git
-!.claude/agents/
-!.claude/skills/
-!.claude/standards/
-!.claude/memory/org/README.md
-!.claude/memory/user/README.md
-
-# Keep tasks JSON files - these are spec outputs, not user-specific
-!.claude/specs/active/tasks/
-!.claude/specs/active/tasks/*.json
-
-# Dependencies are resolved via bun and should not be committed
+# Dependencies
 node_modules/
 bun.lockb
 
-# Documentation files (keep only README.md and CHANGELOG.md in git)
-HOW_TO_USE_DROIDZ.md
-TOOL_COMPATIBILITY.md
-SOLUTION_SUMMARY.md
-V2.0.2_MIGRATION_GUIDE.md
-
-# Droidz Framework - User-specific files
-.claude/memory/user/
-.runs/
+# Backup and temporary files
 *.backup.*
+*-backup-*/
 *-tasks.json
-.claude-*-backup*
 .droidz-install-*.log
+
+# OS files
+.DS_Store
+Thumbs.db
