@@ -56,13 +56,6 @@ mcp_tools_enabled: true  # Enable MCP support in Factory
 linear:
   project_name: ""  # Name of your Linear project (leave empty for new projects)
 
-# Runtime Configuration
-# Choose which JavaScript runtime to use for orchestrator scripts
-runtime:
-  package_manager: "bun"  # Options: "bun" (recommended), "npm", "pnpm", "yarn"
-  # Bun is 3-10x faster than npm/node and is the recommended choice
-  # Install Bun: curl -fsSL https://bun.sh/install | bash
-
 # Parallel execution settings (CORE FEATURE - DO NOT DISABLE)
 # This is what makes Droidz 3-5x faster than sequential AI development
 parallel:
