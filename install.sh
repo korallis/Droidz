@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.6.6"
+DROIDZ_VERSION="2.7.0"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -717,6 +717,13 @@ DROIDS=(
     "infra.md"
     "integration.md"
     "generalist.md"
+    "ui-designer.md"
+    "ux-designer.md"
+    "api-designer.md"
+    "database-architect.md"
+    "security-auditor.md"
+    "performance-optimizer.md"
+    "accessibility-specialist.md"
 )
 
 for droid in "${DROIDS[@]}"; do
