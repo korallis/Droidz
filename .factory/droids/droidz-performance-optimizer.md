@@ -1,5 +1,5 @@
 ---
-name: performance-optimizer
+name: droidz-performance-optimizer
 description: PROACTIVELY USED for performance tuning, profiling, and optimization. Auto-invokes when user mentions slow performance, optimization needs, or performance bottlenecks. Expert in profiling, caching, and performance best practices.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Execute", "WebSearch", "FetchUrl", "TodoWrite"]

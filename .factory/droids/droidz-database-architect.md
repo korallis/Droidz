@@ -1,5 +1,5 @@
 ---
-name: database-architect
+name: droidz-database-architect
 description: PROACTIVELY USED for designing scalable database schemas, query optimization, and data modeling. Auto-invokes for database design, schema planning, migration strategies, or performance tuning. Expert in SQL, NoSQL, and distributed databases.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "Execute", "WebSearch", "FetchUrl", "TodoWrite"]

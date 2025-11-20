@@ -1,5 +1,5 @@
 ---
-name: security-auditor
+name: droidz-security-auditor
 description: PROACTIVELY USED for security reviews, vulnerability scanning, and threat modeling. Auto-invokes for security audits, penetration testing, compliance checks, or when reviewing authentication/authorization code. Expert in OWASP Top 10 and secure coding.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Execute", "WebSearch", "FetchUrl", "TodoWrite"]

@@ -1,5 +1,5 @@
 ---
-name: ux-designer
+name: droidz-ux-designer
 description: PROACTIVELY USED for crafting exceptional user experiences, user flows, and interaction patterns. Auto-invokes for UX design, user journey mapping, usability improvements, and interaction design. Expert in user psychology and behavior patterns.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "WebSearch", "FetchUrl", "TodoWrite"]

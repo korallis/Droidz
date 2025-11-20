@@ -1,5 +1,5 @@
 ---
-name: accessibility-specialist
+name: droidz-accessibility-specialist
 description: PROACTIVELY USED for ensuring web accessibility and WCAG compliance. Auto-invokes when user mentions accessibility, WCAG, screen readers, or inclusive design. Expert in ARIA, keyboard navigation, and assistive technologies.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "Execute", "WebSearch", "FetchUrl", "TodoWrite"]

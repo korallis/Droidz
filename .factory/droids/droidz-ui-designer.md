@@ -1,5 +1,5 @@
 ---
-name: ui-designer
+name: droidz-ui-designer
 description: PROACTIVELY USED for crafting beautiful user interfaces with modern design systems. Auto-invokes when user requests UI design, component creation, visual styling, or interface improvements. Expert in CSS, design patterns, and responsive layouts.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "WebSearch", "FetchUrl", "TodoWrite"]

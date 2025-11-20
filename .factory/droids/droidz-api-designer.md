@@ -1,5 +1,5 @@
 ---
-name: api-designer
+name: droidz-api-designer
 description: PROACTIVELY USED for designing clean, scalable REST and GraphQL APIs. Auto-invokes when user requests API design, endpoint planning, API documentation, or backend architecture. Expert in RESTful principles, GraphQL schemas, and API best practices.
 model: inherit
 tools: ["Read", "LS", "Grep", "Glob", "Create", "Edit", "WebSearch", "FetchUrl", "TodoWrite"]
