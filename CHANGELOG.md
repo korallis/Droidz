@@ -2,6 +2,58 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.7.5] - 2025-11-20
+
+### 🐛 Bug Fixes
+
+**Fixed skill download failures reported by users.**
+
+#### Fixed Missing Skills During Installation
+- ✅ Renamed 12 skill files from lowercase to uppercase (skill.md → SKILL.md)
+- ✅ Fixed: "Could not download [skill] skill (may not exist on remote yet)"
+- ✅ All 61 skills now download successfully
+
+**Problem:**
+During installation, 12 skills showed warnings:
+```
+⚠ Could not download api-documentation-generator skill (may not exist on remote yet)
+⚠ Could not download changelog-generator skill (may not exist on remote yet)
+... (10 more skills)
+```
+
+**Root Cause:**
+- Installer expects `SKILL.md` (uppercase)
+- 12 skills had `skill.md` (lowercase)
+- Git/GitHub URLs are case-sensitive
+
+**Skills Fixed:**
+1. api-documentation-generator
+2. changelog-generator
+3. ci-cd-pipelines
+4. code-review-checklist
+5. docker-containerization
+6. environment-management
+7. git-commit-messages
+8. performance-profiler
+9. pr-description-generator
+10. readme-generator
+11. security-audit-checklist
+12. unit-test-generator
+
+**Solution:**
+- Renamed all 12 files to `SKILL.md` (uppercase)
+- Now consistent with other 49 skills
+- All skills download successfully on fresh install/update
+
+### 📊 Changes
+- **Files renamed:** 12 skill files (skill.md → SKILL.md)
+- **Consistency:** All 61 skills now use `SKILL.md` format
+- **User experience:** No more "may not exist" warnings
+
+### 🎯 User Impact
+**Before:** 12 skills failed to download during installation  
+**After:** All 61 skills download successfully
+
 ## [2.7.4] - 2025-11-20
 
 ### 🐛 Bug Fixes
