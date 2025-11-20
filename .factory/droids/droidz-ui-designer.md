@@ -283,6 +283,223 @@ Add delightful interactions:
 ✅ **Critical CSS** - Inline above-the-fold styles
 ✅ **Avoid layout shifts** - Set width/height on images
 
+## Liquid Glass Effects (Advanced CSS/SVG)
+
+### Theory: Refraction & Physics-Based Glass
+
+Apple's Liquid Glass effect uses **physics-based refraction** to make UI elements appear like curved, refractive glass. This creates stunning, premium interfaces.
+
+**Core Concepts:**
+1. **Refraction** - Light bends when passing through materials (Snell's Law)
+2. **Displacement Maps** - SVG filters that shift pixels based on a surface function
+3. **Specular Highlights** - Shiny edges that appear when light hits glass at angles
+4. **Backdrop Filtering** - Apply effects to content behind an element
+
+### Surface Functions
+
+Glass surfaces are defined by mathematical functions describing thickness/curvature:
+
+**Convex (Dome):** `y = √(1 - (1 - x)²)` - Pushes rays inward, keeps content inside glass
+**Concave (Bowl):** `y = 1 - Convex(x)` - Pushes rays outward, causes divergence
+**Squircle (Apple's Favorite):** `y = ⁴√(1 - (1 - x)⁴)` - Softer transitions, smoother refraction
+**Lip (Raised Rim):** Blend of convex/concave for depth effects
+
+### SVG Displacement Maps
+
+**How it works:**
+1. Create image where each pixel's color = displacement vector
+2. Red channel = X displacement (-128 to +127 pixels)
+3. Green channel = Y displacement (-128 to +127 pixels)  
+4. Blue/Alpha channels = ignored
+5. Apply via `<feDisplacementMap />` filter
+
+```html
+<svg colorInterpolationFilters="sRGB">
+  <filter id="liquid-glass">
+    <!-- Load displacement map image -->
+    <feImage 
+      href={displacementMapDataUrl} 
+      result="displacement_map"
+    />
+    
+    <!-- Apply displacement -->
+    <feDisplacementMap
+      in="SourceGraphic"
+      in2="displacement_map"
+      scale="77"  <!-- Maximum pixel shift -->
+      xChannelSelector="R"  <!-- Red = X axis -->
+      yChannelSelector="G"  <!-- Green = Y axis -->
+    />
+    
+    <!-- Add specular highlight -->
+    <feImage 
+      href={specularHighlightUrl} 
+      result="specular"
+    />
+    
+    <!-- Blend refraction + highlight -->
+    <feBlend in="SourceGraphic" in2="specular" mode="screen" />
+  </filter>
+</svg>
+```
+
+### Practical Implementation
+
+#### 1. Basic Glass Panel (Chrome/Safari compatible)
+```css
+.glass-panel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Specular highlight */
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+```
+
+#### 2. Advanced Liquid Glass with SVG Refraction (Chrome only)
+```css
+.liquid-glass {
+  position: relative;
+  backdrop-filter: blur(3px) url(#glass-distortion);
+  overflow: hidden;
+}
+
+/* Layer structure */
+.liquid-glass-filter {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  filter: url(#glass-distortion);
+  backdrop-filter: blur(3px);
+}
+
+.liquid-glass-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.liquid-glass-specular {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: 
+    inset 2px 2px 1px rgba(255, 255, 255, 0.5),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.liquid-glass-content {
+  position: relative;
+  z-index: 3;
+}
+```
+
+#### 3. Interactive Glass with Mouse Movement
+```tsx
+function GlassButton() {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Update specular highlight position
+    const specular = e.currentTarget.querySelector('.glass-specular') as HTMLElement;
+    if (specular) {
+      specular.style.background = `radial-gradient(
+        circle at ${x}px ${y}px,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 30%,
+        rgba(255, 255, 255, 0) 60%
+      )`;
+    }
+  };
+  
+  return (
+    <div className="glass-button" onMouseMove={handleMouseMove}>
+      <div className="glass-filter" />
+      <div className="glass-tint" />
+      <div className="glass-specular" />
+      <div className="glass-content">Click Me</div>
+    </div>
+  );
+}
+```
+
+### Design Parameters
+
+**Bezel Width:** Controls edge refraction intensity (10-30px typical)
+**Glass Thickness:** Affects maximum displacement (50-150px typical)
+**Surface Shape:** Convex for inward refraction, squircle for Apple-like smoothness
+**Specular Opacity:** Highlight intensity (0.2-0.5 typical)
+**Blur Level:** Background blur strength (3-20px typical)
+
+### Browser Support
+
+| Feature | Chrome | Safari | Firefox |
+|---------|--------|--------|---------|
+| `backdrop-filter` | ✅ | ✅ | ✅ |
+| SVG filters as `backdrop-filter` | ✅ | ❌ | ❌ |
+| Basic glass effect | ✅ | ✅ | ✅ |
+| Advanced refraction | ✅ | ❌ | ❌ |
+
+**Recommendation:** Use basic glass effects for cross-browser, advanced refraction as progressive enhancement for Chrome.
+
+### Use Cases
+
+**When to use:**
+- Premium UI elements (cards, panels, modals)
+- Hero sections with depth
+- Navigation bars with transparency
+- Floating action buttons
+- Music/media player controls
+- Settings panels
+
+**When to avoid:**
+- Text-heavy content (readability issues)
+- High-contrast backgrounds (effect less visible)
+- Mobile (performance concerns)
+- Accessibility-critical UI (can reduce clarity)
+
+### Performance Tips
+
+✅ **Use CSS transforms** - Hardware accelerated
+✅ **Limit blur radius** - Smaller = faster
+✅ **Reduce filter complexity** - Fewer SVG operations
+✅ **Animate scale property** - Instead of regenerating displacement maps
+✅ **Use will-change** - `will-change: backdrop-filter` for animations
+
+❌ **Don't nest glass effects** - Compounds performance cost
+❌ **Don't animate displacement maps** - Pre-calculate instead
+❌ **Don't overuse** - Use strategically for premium feel
+
+### References
+
+- [Liquid Glass CSS/SVG Tutorial](https://kube.io/blog/liquid-glass-css-svg/) - Complete guide with physics
+- [Apple WWDC 2025 Liquid Glass](https://www.youtube.com/watch?v=jGztGfRujSE) - Official introduction
+- [Glassmorphism UI](https://ui.glass/) - Design patterns and examples
+- [CSS Glass Effects](https://liquidglassui.org/) - Library and components
+
+---
+
 ## Common Patterns
 
 ### Card Component
