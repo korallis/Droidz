@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.6.5"
+DROIDZ_VERSION="2.6.6"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -611,6 +611,20 @@ if [[ -d ".factory" ]]; then
         1)
             MODE="update"
             log_info "Updating existing Droidz installation to v${DROIDZ_VERSION}..."
+            
+            # Clean up legacy symlinks from old versions
+            if [[ -d ".factory/droids" ]]; then
+                symlink_count=0
+                for json_file in .factory/droids/*.json; do
+                    if [[ -L "$json_file" ]]; then
+                        rm "$json_file"
+                        ((symlink_count++))
+                    fi
+                done
+                if [[ $symlink_count -gt 0 ]]; then
+                    log_success "Removed $symlink_count legacy symlink(s) from previous version"
+                fi
+            fi
             ;;
         2)
             MODE="fresh"
