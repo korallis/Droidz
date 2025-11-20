@@ -2,6 +2,48 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.7.3] - 2025-11-20
+
+### 🧹 Repository Cleanup
+
+**Major cleanup to create a professional, easy-to-navigate repository.**
+
+#### Removed User-Specific Content
+- ✅ Removed `.droidz/` folder (user-generated specs, shouldn't be in framework repo)
+- ✅ Removed `.claude/` folder (legacy Claude Code compatibility)
+- ✅ Removed `config.yml` (user's personal config with API keys)
+- ✅ Removed backup directories (`.factory-commands-backup-*`)
+- ✅ Removed duplicate droid files (6 duplicate .md files)
+- ✅ Removed unnecessary root files (AGENTS.md.template, SKILLS_SUMMARY.md, etc.)
+- ✅ Removed test files (.factory/specs/active/todo-app-test.md)
+
+#### Documentation Improvements
+- ✅ Created `docs/REPOSITORY_STRUCTURE.md` - Complete explanation of every file/folder
+- ✅ Updated README with v2.7.2 features (15 specialist droids, 61 skills, CLI auto-activation)
+- ✅ Organized old docs into `docs/archive/` (11 historical planning docs)
+- ✅ Simplified `.gitignore` - cleaner, more maintainable
+
+#### Repository Structure
+- ✅ Clean root with only 8 essential files
+- ✅ Clear separation: framework code vs user content
+- ✅ Professional organization for new users
+- ✅ Active docs: INSTALLER_AUDIT.md, NEW_SKILLS_SUMMARY.md
+
+#### What This Means
+**Before:** Mixed framework files with developer's personal files (confusing)  
+**After:** Framework repository contains ONLY framework code (clean!)
+
+**Users get:**
+- `.droidz/` folder created automatically by installer
+- `config.yml` created by copying config.example.yml
+- Clear understanding of what's framework vs personal content
+
+### 📊 Final Stats
+- **Removed:** 34 unnecessary files
+- **Organized:** 11 docs moved to archive
+- **Documented:** Complete REPOSITORY_STRUCTURE.md guide
+- **Result:** Clean, professional, easy to navigate
+
 ## [2.7.2] - 2025-11-20
 
 ### 🚀 Major Enhancements
