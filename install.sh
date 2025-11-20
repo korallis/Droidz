@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="2.7.3"
+DROIDZ_VERSION="2.7.4"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -508,17 +508,18 @@ if ! command -v bun >/dev/null 2>&1; then
 fi
 
 # Check for optional dependencies (jq and tmux)
+# These are OPTIONAL - only needed for advanced orchestrator features
 MISSING_DEPS=()
 
 if ! command -v jq &> /dev/null; then
-    log_warning "jq not found. Required for orchestration features."
+    log_info "jq not found (optional - only needed for advanced orchestrator features)"
     MISSING_DEPS+=("jq")
 else
     log_success "jq found"
 fi
 
 if ! command -v tmux &> /dev/null; then
-    log_warning "tmux not found. Required for parallel task monitoring."
+    log_info "tmux not found (optional - only needed for parallel task monitoring)"
     MISSING_DEPS+=("tmux")
 else
     log_success "tmux found"
@@ -537,18 +538,19 @@ fi
 # Offer to install missing optional dependencies
 if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
     echo ""
-    log_warning "Missing optional dependencies: ${MISSING_DEPS[*]}"
-    echo -e "${YELLOW}Install these now for full orchestration support?${NC}"
-    read -p "Choice [Y/n]: " -n 1 -r
+    log_info "Optional dependencies missing: ${MISSING_DEPS[*]}"
+    log_info "Droidz will work without these. Only install if you need advanced orchestrator features."
+    echo -e "${YELLOW}Install optional dependencies now?${NC}"
+    read -p "Choice [y/N]: " -n 1 -r
     echo ""
 
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
         for dep in "${MISSING_DEPS[@]}"; do
             install_package "$dep"
         done
         echo ""
     else
-        log_info "You can install later with:"
+        log_info "Skipping optional dependencies. You can install later if needed:"
         case "$PKG_MANAGER" in
             apt)
                 log_info "  sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
@@ -563,6 +565,7 @@ if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
                 ;;
         esac
         echo ""
+        log_success "Continuing installation without optional dependencies"
     fi
 fi
 
@@ -954,12 +957,19 @@ log_step "Downloading robot helpers (droids)..."
 
 DROIDS=(
     "droidz-orchestrator.md"
-    "codegen.md"
-    "test.md"
-    "refactor.md"
-    "infra.md"
-    "integration.md"
-    "generalist.md"
+    "droidz-codegen.md"
+    "droidz-test.md"
+    "droidz-refactor.md"
+    "droidz-infra.md"
+    "droidz-integration.md"
+    "droidz-generalist.md"
+    "droidz-ui-designer.md"
+    "droidz-ux-designer.md"
+    "droidz-database-architect.md"
+    "droidz-api-designer.md"
+    "droidz-security-auditor.md"
+    "droidz-performance-optimizer.md"
+    "droidz-accessibility-specialist.md"
 )
 
 for droid in "${DROIDS[@]}"; do

@@ -2,6 +2,38 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [2.7.4] - 2025-11-20
+
+### 🐛 Bug Fixes
+
+**Critical installer fixes reported by users.**
+
+#### Fixed 404 Errors During Installation
+- ✅ Updated droid filenames in installer (codegen.md → droidz-codegen.md)
+- ✅ Added all 14 specialist droids to download list (was missing 8 new specialists)
+- ✅ Fixed: "curl: (56) The requested URL returned error: 404"
+
+**Before:** Tried to download old filenames (codegen.md, test.md, etc.)  
+**After:** Downloads correct filenames (droidz-codegen.md, droidz-test.md, etc.)
+
+#### Made jq and tmux Optional
+- ✅ Changed from **required** to **optional** dependencies
+- ✅ Clear messaging: "Droidz will work without these"
+- ✅ Only needed for advanced orchestrator features
+- ✅ Changed default from [Y/n] to [y/N] (defaults to skip)
+- ✅ Installation continues successfully without them
+
+**Why:** jq and tmux are only needed for advanced parallel orchestration features. Basic Droidz functionality works without them.
+
+### 📊 Changes
+- **Droids downloaded:** 7 → 14 (all specialists now included)
+- **Dependencies:** jq/tmux now optional (was: required)
+- **User experience:** Installation succeeds even without optional deps
+
+### 🎯 User Impact
+**Before:** Installation failed with 404 errors, required jq/tmux  
+**After:** Installation succeeds, optional deps are truly optional
+
 ## [2.7.3] - 2025-11-20
 
 ### 🧹 Repository Cleanup
