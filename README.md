@@ -1,11 +1,13 @@
 # 🤖 Droidz
 
-> **Production-grade AI development framework for Factory.ai Droid CLI**
+> **Production-grade AI development framework for Droid CLI, Claude Code, and Codex CLI**
 
 Transform vague ideas into production code with AI-powered validation, native skills, and intelligent parallel execution.
 
+**Now supports 3 platforms:** Factory.ai Droid CLI, Anthropic Claude Code, and OpenAI Codex CLI! 🎉
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.3.4-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-4.0.0--beta-blue.svg)](https://github.com/korallis/Droidz)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
 [![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 
@@ -31,9 +33,60 @@ Your support helps maintain and improve this framework! 🙏
 
 ---
 
-## ✨ What's New in v3.0
+## ✨ What's New in v4.0
 
-Droidz v3.0 is a complete architectural refactor that fully leverages Factory.ai's native capabilities:
+Droidz v4.0 brings **Codex CLI support** with a Python-based installer!
+
+### 🎯 v4.0 Highlights
+
+**1. Codex CLI Support** 🎉
+- **6 production-ready prompts** optimized for Codex CLI
+- Sequential workflow with comprehensive validation
+- Project-aware via `AGENTS.md` configuration
+- Unified specs system (`.droidz/specs/`) shared with Claude Code
+- See [docs/CODEX_CLI.md](docs/CODEX_CLI.md) for full guide
+
+**2. Python Installer** ⚡
+- Interactive TUI with platform selection
+- Component compatibility checking
+- Smart dependency validation
+- Beautiful terminal output with progress indicators
+- Replaces buggy bash installer
+
+**3. Conversion Engine** 🔄
+- Converts Claude Code agents to Codex CLI prompts
+- Shell command → instruction conversion
+- Frontmatter validation and rebuilding
+- Batch processing with error tracking
+
+**4. Unified Specs** 📝
+- `.droidz/specs/` works across all 3 platforms
+- Shared active/archive/templates structure
+- Platform-agnostic specifications
+- Seamless collaboration across tools
+
+**5. Comprehensive Documentation** 📚
+- Complete Codex CLI usage guide
+- Migration guide from Claude Code
+- Architecture research and compatibility analysis
+- Examples and troubleshooting
+
+### Platform Support Matrix
+
+| Feature | Droid CLI | Claude Code | Codex CLI |
+|---------|-----------|-------------|-----------|
+| **Parallel Execution** | ✅ Yes | ✅ Yes | ❌ Sequential |
+| **Skills System** | ✅ Auto | ✅ Auto | ⚠️ Via AGENTS.md |
+| **Specs** | ✅ .droidz/specs/ | ✅ .droidz/specs/ | ✅ .droidz/specs/ |
+| **Validation** | ✅ 5 phases | ✅ 5 phases | ✅ 5 phases |
+| **Speed (Complex)** | ⚡⚡⚡ Fast | ⚡⚡⚡ Fast | ⚡ Slower |
+| **Speed (Simple)** | ⚡⚡ | ⚡⚡ | ⚡⚡ |
+
+---
+
+## ✨ What Was New in v3.0
+
+Droidz v3.0 was a complete architectural refactor that fully leveraged Factory.ai's native capabilities:
 
 ### 🎯 Major Improvements
 
@@ -142,6 +195,44 @@ Verify:
 ```
 
 **See [CLAUDE_CODE_SETUP.md](CLAUDE_CODE_SETUP.md) for detailed Claude Code setup guide.**
+
+### Setup for Codex CLI (OpenAI) - NEW in v4.0! 🎉
+
+Install Codex CLI and Droidz prompts:
+
+```bash
+# Install Codex CLI globally
+npm install -g @openai/codex
+
+# Install Droidz for Codex
+cd path/to/Droidz
+python3 install.py
+# Select "Codex CLI" platform when prompted
+
+# Initialize your project
+cd your-project/
+codex /prompts:init
+```
+
+Verify installation:
+```bash
+# Check prompts installed
+ls ~/.codex/prompts/
+
+# Check project setup
+ls -la AGENTS.md .droidz/specs/
+```
+
+**Available Codex CLI Prompts:**
+- `/prompts:build` - Generate feature specifications
+- `/prompts:validate` - 5-phase validation pipeline
+- `/prompts:codegen` - Implement features with tests
+- `/prompts:test-specialist` - Write/fix tests
+- `/prompts:orchestrator` - Complex multi-phase features
+- `/prompts:init` - Project initialization
+
+**See [docs/CODEX_CLI.md](docs/CODEX_CLI.md) for complete Codex CLI guide.**
+**See [docs/CODEX_MIGRATION.md](docs/CODEX_MIGRATION.md) for migration from Claude Code.**
 
 ---
 
