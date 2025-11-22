@@ -2,6 +2,28 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.1] - 2025-11-22
+
+### 🔧 Hotfix
+
+**Installation URL CDN Cache Bypass**
+- ✅ Created v3.1.1 tag to force GitHub CDN cache invalidation
+- ✅ Updated README to use tagged URL (`v3.1.1` instead of `main`)
+- ✅ Ensures users get correct installer with v3.1.0 version and migration option
+- ✅ No functional changes - just tag creation for reliable installation
+
+**Why this matters:**
+GitHub's `raw.githubusercontent.com` CDN aggressively caches files for 5-10 minutes.
+Using a tagged version (`v3.1.1`) instead of branch (`main`) creates a new URL path
+that bypasses all caching, ensuring users always get the updated installer.
+
+**Updated installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.1/install.sh | bash
+```
+
+---
+
 ## [3.1.0] - 2025-11-22
 
 ### ✨ Enhanced Features
