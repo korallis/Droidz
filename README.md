@@ -91,19 +91,25 @@ Droidz v3.0 is a complete architectural refactor that fully leverages Factory.ai
 
 ### Installation
 
+The installer now supports **both Droid CLI and Claude Code**!
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.6/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
+
+**When prompted, select:**
+- **Option 1**: Droid CLI (Factory.ai)
+- **Option 2**: Claude Code (Anthropic)
 
 Or download first:
 
 ```bash
-wget https://raw.githubusercontent.com/korallis/Droidz/v3.1.6/install.sh
+wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh
 chmod +x install.sh
 ./install.sh
 ```
 
-### Enable in Factory.ai
+### Setup for Droid CLI (Factory.ai)
 
 ```bash
 droid
@@ -114,12 +120,28 @@ droid
 
 Restart: `Ctrl+C` and run `droid` again.
 
-### Verify
-
+Verify:
 ```bash
 /droids           # See all 15 specialist droids
 /skills           # Manage skills
 ```
+
+### Setup for Claude Code (Anthropic)
+
+After installation completes, restart Claude Code:
+
+```bash
+exit           # Exit current session
+claude        # Start new session
+```
+
+Verify:
+```bash
+/agents       # See all 15 specialist agents
+# CLAUDE.md is automatically loaded
+```
+
+**See [CLAUDE_CODE_SETUP.md](CLAUDE_CODE_SETUP.md) for detailed Claude Code setup guide.**
 
 ---
 

@@ -25,9 +25,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.1.6"
+DROIDZ_VERSION="3.2.0"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
+
+# Installation mode (will be set by user choice)
+INSTALL_MODE="" # "droid-cli" or "claude-code"
 
 # Error logging
 ERROR_LOG_FILE=".droidz-install-$(date +%Y%m%d_%H%M%S).log"
@@ -406,10 +409,69 @@ error_exit() {
 # Display welcome banner
 echo ""
 echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}${BOLD}║   Droidz Factory.ai Installer v${DROIDZ_VERSION}            ║${NC}"
-echo -e "${CYAN}${BOLD}║   Smart Update with Auto-Dependency Installation    ║${NC}"
+echo -e "${CYAN}${BOLD}║   Droidz Framework Installer v${DROIDZ_VERSION}             ║${NC}"
+echo -e "${CYAN}${BOLD}║   Production-Grade AI Development Framework         ║${NC}"
 echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
+
+# ============================================================================
+# INSTALLATION MODE SELECTION
+# ============================================================================
+
+# Check if this is an update (existing installation)
+EXISTING_INSTALL=false
+if [[ -d ".factory" ]] || [[ -d ".claude" ]]; then
+    EXISTING_INSTALL=true
+fi
+
+# Only ask for mode if this is a fresh install
+if [[ "$EXISTING_INSTALL" == "false" ]]; then
+    log_step "Select Installation Mode"
+    echo ""
+    echo "Choose your AI development tool:"
+    echo ""
+    echo -e "  ${GREEN}1)${NC} ${BOLD}Droid CLI${NC} (Factory.ai)"
+    echo "     └─ Best for: Factory.ai Droid CLI users"
+    echo "     └─ Folder: .factory/"
+    echo ""
+    echo -e "  ${GREEN}2)${NC} ${BOLD}Claude Code${NC} (Anthropic)"
+    echo "     └─ Best for: Claude Code CLI users"
+    echo "     └─ Folder: .claude/"
+    echo ""
+    
+    # Read mode choice with validation
+    mode_choice=""
+    while [[ -z "$mode_choice" ]]; do
+        read -r -p "Enter your choice (1-2): " mode_choice < /dev/tty
+        
+        # Validate input
+        if [[ ! "$mode_choice" =~ ^[1-2]$ ]]; then
+            log_error "Invalid choice '$mode_choice'. Please enter 1 or 2."
+            mode_choice=""
+        fi
+    done
+    echo ""
+    
+    case $mode_choice in
+        1)
+            INSTALL_MODE="droid-cli"
+            log_info "Installing for Droid CLI (Factory.ai)"
+            ;;
+        2)
+            INSTALL_MODE="claude-code"
+            log_info "Installing for Claude Code (Anthropic)"
+            ;;
+    esac
+else
+    # Detect existing installation type
+    if [[ -d ".factory" ]]; then
+        INSTALL_MODE="droid-cli"
+        log_info "Detected existing Droid CLI installation"
+    elif [[ -d ".claude" ]]; then
+        INSTALL_MODE="claude-code"
+        log_info "Detected existing Claude Code installation"
+    fi
+fi
 
 # ============================================================================
 # DEPENDENCY CHECKS
