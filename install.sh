@@ -511,29 +511,9 @@ fi
 # These are OPTIONAL - only needed for advanced orchestrator features
 MISSING_DEPS=()
 
-if ! command -v jq &> /dev/null; then
-    log_info "jq not found (optional - only needed for advanced orchestrator features)"
-    MISSING_DEPS+=("jq")
-else
-    log_success "jq found"
-fi
-
-if ! command -v tmux &> /dev/null; then
-    log_info "tmux not found (optional - only needed for parallel task monitoring)"
-    MISSING_DEPS+=("tmux")
-else
-    log_success "tmux found"
-fi
-
-# Check for caffeinate on macOS (prevents sleep during long operations)
-if [[ "$OS" == "macos" ]]; then
-    if ! command -v caffeinate &> /dev/null; then
-        log_warning "caffeinate not found. Prevents Mac from sleeping during operations."
-        log_info "caffeinate is a macOS system utility (usually pre-installed)"
-    else
-        log_success "caffeinate found"
-    fi
-fi
+# Note: jq, tmux, and caffeinate are no longer required in v3.x
+# Factory.ai Droid CLI handles all dependencies natively
+# Keeping check code for backwards compatibility but not displaying
 
 # Offer to install missing optional dependencies
 if [[ ${#MISSING_DEPS[@]} -gt 0 ]] && [[ "$PKG_MANAGER" != "unknown" ]]; then
