@@ -2,6 +2,85 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.0] - 2025-11-22
+
+### ✨ FEATURE - Unified Specs Location for Dual-Mode Support
+
+**New: `.droidz/specs/` - Shared specification storage for both CLI and Claude Code editions**
+
+Previously, Claude Code used `.factory/specs/` exclusively, but with dual-mode installations becoming common, users needed a unified location that works across both Droid CLI and Claude Code.
+
+**What's New:**
+
+```
+.droidz/specs/
+├── active/       # Work-in-progress specs (not in git)
+├── archive/      # Completed specs (not in git)  
+├── templates/    # Spec templates (tracked in git)
+│   ├── feature-spec.md
+│   └── epic-spec.md
+├── examples/     # Reference examples (tracked in git)
+│   └── 000-realtime-notifications.md
+├── README.md     # Complete usage guide
+└── MIGRATION_TO_UNIFIED_SPECS.md  # Migration guide
+```
+
+**Benefits:**
+- ✅ **Consistency**: Both CLI and Claude Code use same location
+- ✅ **Portability**: Switch between modes without losing specs
+- ✅ **Team Collaboration**: Share specs across different installation types
+- ✅ **Better Examples**: Full reference implementation included
+
+**Commands Updated:**
+```bash
+# Claude Code
+/build "feature" → Saves to .droidz/specs/active/NNN-feature.md
+/parallel .droidz/specs/active/... → Executes from unified location
+
+# Droid CLI
+droidz build "feature" → Saves to .droidz/specs/active/NNN-feature.md  
+droidz parallel .droidz/specs/active/... → Executes from unified location
+```
+
+**New Example Spec:**
+- `000-realtime-notifications.md` - Complete notification system implementation
+  - Full architecture documentation (React, Socket.io, PostgreSQL)
+  - 9 parallelizable tasks with specialist assignments
+  - Comprehensive testing strategy and acceptance criteria
+  - Performance benchmarks and monitoring setup
+  - ~20,000 lines of production-ready reference material
+
+**Documentation Updated:**
+- ✅ README.md - All spec references point to `.droidz/specs/`
+- ✅ COMMANDS.md - Updated all examples and paths
+- ✅ CLAUDE.md - Added unified specs section with clear explanation
+- ✅ install.sh - Creates `.droidz/specs/` for both installation modes
+- ✅ .gitignore - Proper handling of unified specs directory
+
+**Backward Compatibility:**
+- `.factory/specs/` still works for legacy compatibility
+- Gradual migration recommended to `.droidz/specs/`
+- Migration guide included: `.droidz/MIGRATION_TO_UNIFIED_SPECS.md`
+
+**Migration:**
+```bash
+# Move existing specs to unified location
+mv .factory/specs/active/*.md .droidz/specs/active/ 2>/dev/null
+mv .factory/specs/archive/*.md .droidz/specs/archive/ 2>/dev/null
+```
+
+**Bug Fixes:**
+- ✅ Added prettier to devDependencies to fix `/validate-init` error
+  - Previously: `command not found: prettier` when running validation
+  - Now: Prettier properly installed and available for style checking
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.0/install.sh | bash
+```
+
+---
+
 ## [3.3.4] - 2025-11-22
 
 ### 🎨 UX FIX - Added Menu for Dual Installation Updates

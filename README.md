@@ -157,7 +157,7 @@ Verify:
 # Step 3: Build something
 /build "add user authentication with JWT"
 # → Asks clarifying questions
-# → Generates .factory/specs/active/001-auth.md
+# → Generates .droidz/specs/active/001-auth.md
 # → Offers: Execute now?
 
 # Step 4: Execute in parallel (optional)
@@ -284,7 +284,7 @@ Droidz asks:
 - Password requirements? → 8+ chars, letters+numbers
 - Social providers? → No
 
-Generates: .factory/specs/active/001-auth.md
+Generates: .droidz/specs/active/001-auth.md
 
 Contains:
 ✓ 6 parallelizable tasks
@@ -501,8 +501,8 @@ v3.0 includes automatic migration:
 # Run migration script
 .factory/scripts/migrate-v3.sh
 
-✅ Moves .droidz/specs/ → .factory/specs/archived/
-✅ Removes .droidz/ folder
+✅ Creates unified .droidz/specs/ for both CLI and Claude Code
+✅ Migrates .factory/specs/ → .droidz/specs/ (if exists)
 ✅ Generates validation workflow
 ✅ Updates .gitignore
 

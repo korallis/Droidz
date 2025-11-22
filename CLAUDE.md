@@ -177,6 +177,23 @@ Date: 2025-11-22
 
 ---
 
+## 📋 Unified Specs Location
+
+**All specifications** are stored in `.droidz/specs/` (shared between CLI and Claude Code):
+
+```
+.droidz/specs/
+├── active/       # Work-in-progress specs (not in git)
+├── archive/      # Completed specs (not in git)
+├── templates/    # Spec templates
+└── examples/     # Reference examples
+    └── 000-realtime-notifications.md
+```
+
+**Commands default to this location:**
+- `/build` → Creates `.droidz/specs/active/NNN-feature.md`
+- `/parallel .droidz/specs/active/...` → Executes spec
+
 ## 🎨 Standards Enforcement
 
 Project standards in `.factory/standards/templates/`:

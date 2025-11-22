@@ -3,7 +3,16 @@
 # User-specific directories (never commit!)
 # .claude/  # Commented out - keeping template in repo for dual-mode support
 
-# Active work (never commit)
+# Unified specs directory (shared between CLI and Claude Code)
+# Keep templates and examples, ignore active/archive work
+.droidz/specs/active/*.md
+.droidz/specs/active/*.json
+!.droidz/specs/active/.gitkeep
+.droidz/specs/archive/*.md
+.droidz/specs/archive/*.json
+!.droidz/specs/archive/.gitkeep
+
+# Legacy: Factory-specific specs (deprecated in favor of unified .droidz/specs/)
 .factory/specs/active/*.md
 .factory/specs/active/*.json
 

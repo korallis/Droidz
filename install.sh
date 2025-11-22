@@ -927,6 +927,13 @@ if [[ "$INSTALL_MODE" == "droid-cli" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
     mkdir -p .factory/memory/user
     mkdir -p .factory/memory/org
     mkdir -p .factory/skills
+    # Create unified specs directory (shared between CLI and Claude Code)
+    mkdir -p .droidz/specs/active
+    mkdir -p .droidz/specs/archive
+    mkdir -p .droidz/specs/templates
+    mkdir -p .droidz/specs/examples
+    
+    # Legacy .factory/specs for backward compatibility
     mkdir -p .factory/specs/active
     mkdir -p .factory/specs/archive
     mkdir -p .factory/specs/templates
@@ -1431,18 +1438,28 @@ for skill in "${SKILL_NAMES[@]}"; do
     fi
 done
 
-# Download spec templates
-log_step "Downloading spec templates..."
-curl -fsSL "${GITHUB_RAW}/.factory/specs/README.md${CACHE_BUST}" -o ".factory/specs/README.md"
-log_success "Downloaded specs README"
+# Download spec templates to unified location (.droidz/specs/)
+log_step "Downloading unified spec templates..."
+curl -fsSL "${GITHUB_RAW}/.droidz/specs/README.md${CACHE_BUST}" -o ".droidz/specs/README.md" 2>/dev/null || \
+    log_warning "Could not download unified specs README (using local)"
 
-curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/feature-spec.md${CACHE_BUST}" -o ".factory/specs/templates/feature-spec.md"
+curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/feature-spec.md${CACHE_BUST}" -o ".droidz/specs/templates/feature-spec.md"
 log_success "Downloaded feature-spec template"
 
-curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/epic-spec.md${CACHE_BUST}" -o ".factory/specs/templates/epic-spec.md"
+curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/epic-spec.md${CACHE_BUST}" -o ".droidz/specs/templates/epic-spec.md"
 log_success "Downloaded epic-spec template"
 
+curl -fsSL "${GITHUB_RAW}/.droidz/specs/examples/000-realtime-notifications.md${CACHE_BUST}" -o ".droidz/specs/examples/000-realtime-notifications.md" 2>/dev/null || \
+    log_warning "Could not download example spec (using local)"
+log_success "Downloaded example spec"
+
 # Create .gitkeep files for empty directories
+touch .droidz/specs/active/.gitkeep
+touch .droidz/specs/archive/.gitkeep
+
+# Legacy .factory/specs/ for backward compatibility
+curl -fsSL "${GITHUB_RAW}/.factory/specs/README.md${CACHE_BUST}" -o ".factory/specs/README.md" 2>/dev/null
+cp .droidz/specs/templates/*.md .factory/specs/templates/ 2>/dev/null || true
 touch .factory/specs/active/.gitkeep
 touch .factory/specs/archive/.gitkeep
 

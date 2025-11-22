@@ -139,7 +139,7 @@ Droidz has **6 powerful commands** built on Factory.ai's native capabilities:
 - Open questions & risk analysis
 
 **💾 Output:**
-- Saves to `.factory/specs/active/NNN-feature-name.md`
+- Saves to `.droidz/specs/active/NNN-feature-name.md`
 - Offers execution options (parallel, sequential, review, modify)
 
 **📚 Documentation:**
@@ -170,7 +170,7 @@ You: [Answers...]
 AI: [Research + Multi-Perspective Generation + Self-Verification]
 Quality Score: 19/20 ✅
 
-Spec saved to: .factory/specs/active/042-real-time-notifications.md
+Spec saved to: .droidz/specs/active/042-real-time-notifications.md
 
 What would you like to do?
 1️⃣  Review spec
@@ -193,14 +193,14 @@ What would you like to do?
 ```
 /parallel "task description"
 # OR
-/parallel .factory/specs/active/NNN-feature-name.md
+/parallel .droidz/specs/active/NNN-feature-name.md
 ```
 
 **Examples:**
 ```
 /parallel "build REST API for todos"
 /parallel "add payment integration"
-/parallel .factory/specs/active/042-real-time-notifications.md
+/parallel .droidz/specs/active/042-real-time-notifications.md
 ```
 
 **What it does:**
@@ -352,7 +352,7 @@ AI: Scanning project for tools...
 1. /init                              # Analyze project, set up Droidz
 2. /validate-init                     # Generate validation workflow
 3. /build "first feature"             # Generate comprehensive spec
-4. /parallel .factory/specs/...       # Execute in parallel
+4. /parallel .droidz/specs/...        # Execute in parallel
 5. /validate                          # Validate before committing
 ```
 
@@ -363,7 +363,7 @@ AI: Scanning project for tools...
 2. /validate-init                     # Set up validation (if not done)
 3. /build "new feature"               # Meta-prompted spec generation
 4. Review spec (AI asks clarifying questions)
-5. /parallel .factory/specs/...       # Execute with specialist droids
+5. /parallel .droidz/specs/...        # Execute with specialist droids
 6. /validate                          # Run all quality checks
 7. Commit with confidence!
 ```
@@ -494,7 +494,7 @@ These commands no longer exist (removed in v0.1.3):
 These commands are planned but not yet implemented:
 
 - `/droidz-status` - Resume conversations with state tracking
-- Spec execution tracking in `.factory/specs/active/`
+- Spec execution tracking in `.droidz/specs/active/`
 
 ---
 
@@ -514,7 +514,7 @@ These commands are planned but not yet implemented:
 ## 📚 More Information
 
 - **Full Documentation:** [README.md](README.md)
-- **Example Specs:** `.factory/specs/archived/000-example-contact-form.md`
+- **Example Specs:** `.droidz/specs/examples/000-realtime-notifications.md`
 - **CHANGELOG:** [CHANGELOG.md](CHANGELOG.md) (v0.2.0 section)
 - **Skills Guide:** [SKILLS.md](SKILLS.md)
 
