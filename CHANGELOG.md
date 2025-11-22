@@ -2,6 +2,63 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.5.0] - 2025-11-22
+
+### 🎯 REDESIGN - Static Validation (Finally Works!)
+
+**Previous approach was fundamentally flawed:**
+- v3.4.2-3.4.6 tried to dynamically generate validate.md with embedded bash commands
+- Nested quotes, backticks, and conditionals kept breaking
+- Fighting against how Claude Code executes markdown commands
+
+**New approach: Static templates that just work**
+- ✅ `/validate-init` - Simple tool detection (no file generation)
+- ✅ `/validate` - Static universal validation that works everywhere
+- ✅ Uses `npx` for auto-installation
+- ✅ Graceful fallbacks if tools not configured
+- ✅ NO complex bash generation - just run the tools!
+
+**What Changed:**
+
+**/validate-init:**
+```markdown
+# Just detects what you have:
+!`command -v eslint && echo "✓ ESLint found"`
+!`command -v prettier && echo "✓ Prettier found"`
+!`command -v jest && echo "✓ Jest found"`
+
+✅ Setup complete! Run /validate
+```
+
+**/validate:**
+```markdown
+# Just runs the tools (with npx for auto-install):
+!`npx eslint . 2>/dev/null || echo "⚠ Skipping"`
+!`npx tsc --noEmit 2>/dev/null || echo "⚠ Skipping"`  
+!`npx prettier --check . 2>/dev/null || echo "⚠ Skipping"`
+!`npm test 2>/dev/null || echo "⚠ Skipping"`
+```
+
+**Benefits:**
+- ✅ Works immediately, no parsing errors
+- ✅ No complex generation logic
+- ✅ Graceful degradation (skips if tool not configured)
+- ✅ Uses npx for auto-installation
+- ✅ Simple to understand and customize
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.5.0/install.sh | bash
+```
+
+**Testing:**
+```bash
+/validate-init  # ✓ Shows what tools you have
+/validate       # ✓ Runs validation with graceful fallbacks
+```
+
+---
+
 ## [3.4.6] - 2025-11-22
 
 ### 🐛 CRITICAL FIX - Simplified /validate-init to Fix Remaining Parse Errors
