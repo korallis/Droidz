@@ -1,6 +1,6 @@
 ---
 name: docker-containerization
-description: Auto-activates when user mentions Docker, containerize, Dockerfile, docker-compose, or container setup. Creates optimized Docker configurations for applications.
+description: Use when user mentions Docker, containerize, Dockerfile, docker-compose, or container setup. Creates optimized Docker configurations for applications.
 category: devops
 ---
 

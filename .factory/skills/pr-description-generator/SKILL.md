@@ -1,6 +1,6 @@
 ---
 name: pr-description-generator
-description: Auto-activates when user mentions creating pull request, PR description, or merge request. Generates comprehensive PR descriptions from git diff and commit history.
+description: Use when user mentions creating pull request, PR description, or merge request. Generates comprehensive PR descriptions from git diff and commit history.
 category: workflow
 ---
 

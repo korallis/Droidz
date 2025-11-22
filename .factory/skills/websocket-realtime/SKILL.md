@@ -1,6 +1,6 @@
 ---
 name: websocket-realtime
-description: Auto-activates when user mentions WebSocket, Socket.io, real-time, SSE, Server-Sent Events, or live updates. Expert in implementing real-time bidirectional communication.
+description: Use when user mentions WebSocket, Socket.io, real-time, SSE, Server-Sent Events, or live updates. Expert in implementing real-time bidirectional communication.
 category: backend
 ---
 

@@ -1,15 +1,21 @@
-# Droidz worktrees
-.runs/
+# Droidz Framework for Factory.ai v3.0
 
 # User-specific directories (never commit!)
-.droidz/
 .claude/
+
+# Active work (never commit)
+.factory/specs/active/*.md
+.factory/specs/active/*.json
+
+# Validation cache (never commit)
+.factory/validation/.validation-cache/
 
 # User memory and active work
 .factory/memory/user/
 .factory/memory/org/*.json
-.factory/specs/active/*.md
-.factory/specs/active/*.json
+
+# Generated validation (commit template, not instances)
+# Note: .factory/commands/validate.md is auto-generated per project
 
 # Configuration with API keys (NEVER commit!)
 config.yml
@@ -24,6 +30,7 @@ bun.lockb
 *-backup-*/
 *-tasks.json
 .droidz-install-*.log
+README.md.v2-backup
 
 # OS files
 .DS_Store

@@ -1,11 +1,11 @@
 # 🤖 Droidz
 
-> **Simple AI development framework for Factory.ai Droid CLI**
+> **Production-grade AI development framework for Factory.ai Droid CLI**
 
-Transform vague ideas into production code with AI-powered spec generation and parallel execution.
+Transform vague ideas into production code with AI-powered validation, native skills, and intelligent parallel execution.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.7.6-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/korallis/Droidz)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
 [![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 
@@ -31,20 +31,63 @@ Your support helps maintain and improve this framework! 🙏
 
 ---
 
-## What is Droidz?
+## ✨ What's New in v3.0
 
-**Droidz makes Factory.ai's Droid CLI more powerful with 4 simple commands:**
+Droidz v3.0 is a complete architectural refactor that fully leverages Factory.ai's native capabilities:
 
-1. **`/droidz-init`** - Analyze your project
-2. **`/droidz-build`** - Generate production specs from vague ideas
-3. **`/auto-parallel`** - Execute tasks 3-5x faster with parallel agents
-4. **`/gh-helper`** - Manage GitHub PRs
+### 🎯 Major Improvements
 
-**That's it. Simple, powerful, fast.**
+**1. Native Factory.ai Skills System** ✨
+- **Skills auto-activate** based on your code context
+- No manual skill selection needed
+- Uses Factory.ai's official Skills system (v0.26.0)
+- Skills are **model-invoked** - CLI reports when used
+- Manage with `/skills` command
+
+**2. Perfect Model Inheritance** 🎨
+- All 15 specialist droids use `model: inherit`
+- **Your model choice is always respected**
+- Switch models → all droids switch automatically
+- No more conflicting models
+
+**3. Comprehensive Validation** ✅
+- **`/validate-init`** - Auto-generates project-specific validation
+- **`/validate`** - Runs 5-phase validation pipeline
+  - Phase 1: Linting (ESLint, ruff, etc.)
+  - Phase 2: Type checking (TypeScript, mypy)
+  - Phase 3: Style checking (Prettier, black)
+  - Phase 4: Unit tests
+  - Phase 5: E2E tests (workflow-based)
+- **One command to validate everything**
+
+**4. Live Progress Tracking** 📊
+- Real-time TodoWrite updates during parallel execution
+- See exactly what each droid is doing
+- No more guessing if work is stuck
+- Built on Factory.ai's native TodoWrite tool
+
+**5. Clean Architecture** 🏗️
+- **100% `.factory/`-based** - no external folders
+- Eliminated `.droidz/` folder confusion
+- Standard Factory.ai conventions
+- Proper gitignore patterns
+
+**6. Enhanced Hooks System** 🪝
+- All 7 Factory.ai hook types supported
+- Auto-lint after file edits
+- Block dangerous commands (rm -rf, dd, etc.)
+- Session summaries on exit
+- Subagent completion tracking
+
+**7. Simplified Installation** ⚡
+- < 30 second installation
+- No git worktree setup needed
+- No tmux installation required
+- Just Factory.ai CLI + Droidz
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Installation
 
@@ -69,227 +112,309 @@ droid
 # Toggle "Hooks" ON
 ```
 
-Then restart: `Ctrl+C` and run `droid` again.
+Restart: `Ctrl+C` and run `droid` again.
 
 ### Verify
 
 ```bash
-/droids
-# Should show: droidz-orchestrator, codegen, test, refactor, etc.
+/droids           # See all 15 specialist droids
+/skills           # Manage skills
 ```
 
 ---
 
-## Usage
-
-### The Simple Workflow
+## 💡 The Simple Workflow
 
 ```bash
-# Step 1: Analyze your project (one-time)
-/droidz-init
+# Step 1: Initialize your project
+/init
 
-# Step 2: Generate a spec from your idea
-/droidz-build "add user authentication"
+# Step 2: Generate validation workflow (auto-runs on /init)
+/validate-init
+
+# Step 3: Build something
+/build "add user authentication with JWT"
 # → Asks clarifying questions
-# → Generates .droidz/specs/001-authentication.md
-# → Asks: "Execute in parallel?"
+# → Generates .factory/specs/active/001-auth.md
+# → Offers: Execute now?
 
-# Step 3: Choose "Yes" → Done!
-# → Spawns 3 agents in parallel
-# → Live progress every 60 seconds
+# Step 4: Execute in parallel (optional)
+/parallel
+# → Spawns specialist droids
+# → Live progress via TodoWrite
 # → 3-5x faster than sequential
+
+# Step 5: Validate everything
+/validate
+# → Runs all 5 phases
+# → Shows pass/fail
+# → Ready for deployment
 ```
 
-### Or Skip the Spec
+---
+## 🎯 Core Features
+
+### 1. Native Skills System (NEW in v3.0)
+
+**Skills automatically activate based on your code:**
 
 ```bash
-# Direct execution
-/auto-parallel "build REST API for todos"
-# → Analyzes, decomposes, spawns agents
-# → Live progress updates
+You: "Add TypeScript types to auth.ts"
+# → TypeScript skill auto-activates
+# → CLI reports: "Using skill: typescript"
+# → No manual selection needed
 ```
 
-### GitHub Management
+**61 Auto-Activating Skills:**
+- **TypeScript** - Types, interfaces, generics
+- **React** - Hooks, components, performance
+- **Next.js** - App router, caching, PPR
+- **Prisma** - Schema, migrations, queries
+- **TailwindCSS** - Modern utilities
+- **GraphQL** - Schemas, resolvers
+- **WebSocket** - Real-time features
+- **Security** - OWASP, GDPR compliance
+- **Performance** - Profiling, optimization
+- And 52 more...
 
+**Manage skills:**
 ```bash
-/gh-helper pr-status 10
-/gh-helper pr-checks 10
-/gh-helper pr-list
+/skills           # View all skills
+/skills create    # Create new skill
+/skills import    # Import from Claude Code
 ```
 
 ---
 
-## The 4 Commands
+### 2. 15 Specialist Droids (All Use Your Model)
 
-### 1. `/droidz-init` - Smart Onboarding
+**Every droid respects your model choice:**
 
-- Verifies installation
-- Analyzes your project (tech stack, architecture)
-- Generates `.droidz/architecture.md`
+| Droid | Purpose | Model |
+|-------|---------|-------|
+| **droidz-orchestrator** | Coordinate parallel work | inherit |
+| **droidz-codegen** | Implement features | inherit |
+| **droidz-test** | Write & fix tests | inherit |
+| **droidz-refactor** | Code improvements | inherit |
+| **droidz-infra** | CI/CD & deployment | inherit |
+| **droidz-integration** | External APIs | inherit |
+| **droidz-ui-designer** | UI components | inherit |
+| **droidz-ux-designer** | User flows | inherit |
+| **droidz-database-architect** | Schema design | inherit |
+| **droidz-api-designer** | API design | inherit |
+| **droidz-security-auditor** | Security reviews | inherit |
+| **droidz-performance-optimizer** | Performance tuning | inherit |
+| **droidz-accessibility-specialist** | WCAG compliance | inherit |
+| **droidz-generalist** | General tasks | inherit |
 
-**When to use:** First time setup, onboarding new team members
+**What `model: inherit` means:**
+- You select GPT-4o → all droids use GPT-4o
+- You switch to Claude Sonnet → all droids switch too
+- **Consistent model across entire workflow**
 
 ---
 
-### 2. `/droidz-build` - AI Spec Generator ⭐
+### 3. Comprehensive Validation (NEW in v3.0)
 
-**Turn vague ideas into production-ready specifications.**
+**`/validate-init` - Smart Generation**
 
-**Input:**
+Analyzes your project and generates custom validation:
+
 ```bash
-/droidz-build "add authentication"
+/validate-init
+
+# Detects:
+✓ Linter: ESLint
+✓ Type checker: TypeScript
+✓ Formatter: Prettier
+✓ Tests: Jest + Playwright
+✓ Framework: React + Next.js
+
+# Generates: .factory/commands/validate.md
+# Configured for YOUR project
 ```
 
-**Output:** `.droidz/specs/001-authentication.md`
-
-**Contains:**
-- Task decomposition (what to build, in what order)
-- Security requirements (OWASP, GDPR)
-- Edge cases (what could go wrong)
-- Testing strategy (unit, integration, e2e)
-- Ready-to-execute prompts for parallel agents
-
-**Features:**
-- Asks clarifying questions for vague requests
-- Researches best practices (security, frameworks)
-- Generates specs in 1-5 minutes
-- Offers: Execute now? (Parallel/Sequential/Review/Save)
-
-**Benefits:**
-- 80% less time writing specs
-- 70% fewer forgotten requirements
-- Zero missing security requirements
-
----
-
-### 3. `/auto-parallel` - Parallel Execution
-
-**Execute tasks 3-5x faster with live progress tracking.**
-
-**How it works:**
-1. Analyzes your task
-2. Breaks into independent subtasks
-3. Spawns specialist agents (codegen, test, refactor, etc.)
-4. Reports progress every 60 seconds via TodoWrite
-5. Synthesizes results when complete
-
-**Example:**
-```bash
-/auto-parallel "build payment integration"
-
-# You'll see:
-✅ Database schema created (3 files)
-⏳ API endpoints (implementing Stripe webhook...)
-⏳ Frontend UI (building checkout form...)
-⏸ Tests (pending)
-
-# Then:
-✅ API endpoints complete (5 files, all tests passing)
-⏳ Frontend UI (adding error handling...)
-⏳ Tests (writing integration tests...)
-
-# Finally:
-✅ All tasks complete! Review: .droidz/results/payment-integration.md
-```
-
-**Speedup:**
-- Sequential: 10 hours
-- Parallel: 3 hours (3.3x faster!)
-
----
-
-### 4. `/gh-helper` - GitHub Operations
-
-Simple GitHub CLI helpers with correct JSON fields.
+**`/validate` - One Command, Full Validation**
 
 ```bash
-/gh-helper pr-status 10    # Comprehensive PR status
-/gh-helper pr-checks 10    # Show check status
-/gh-helper pr-list         # List all PRs
+/validate
+
+Phase 1: Linting ✅
+Phase 2: Type Checking ✅
+Phase 3: Style Checking ✅
+Phase 4: Unit Tests ✅ (24 passed)
+Phase 5: E2E Tests ✅ (12 workflows tested)
+
+All validation passed! Ready for deployment.
 ```
 
 ---
 
-## What You Get
+### 4. Intelligent Spec Generation
 
-### 15 Specialist Droids
-
-| Droid | Purpose |
-|-------|---------|
-| **droidz-orchestrator** | Coordinate parallel work |
-| **droidz-codegen** | Implement features & bugfixes |
-| **droidz-test** | Write & fix tests |
-| **droidz-refactor** | Code improvements |
-| **droidz-infra** | CI/CD & deployment |
-| **droidz-integration** | External API integrations |
-| **droidz-ui-designer** | UI design & components |
-| **droidz-ux-designer** | User experience & flows |
-| **droidz-database-architect** | Database schema & optimization |
-| **droidz-api-designer** | API design & documentation |
-| **droidz-security-auditor** | Security reviews & OWASP |
-| **droidz-performance-optimizer** | Performance profiling & tuning |
-| **droidz-accessibility-specialist** | WCAG compliance & a11y |
-| **droidz-generalist** | General tasks |
-
-### 61 Auto-Activated Skills
-
-Skills automatically load based on your code:
-
-- **TypeScript** (871 lines) - Best practices, types
-- **React** (2,232 lines) - Hooks, patterns, performance
-- **Next.js 16** (1,053 lines) - App router, caching, PPR
-- **Tailwind v4** (963 lines) - Modern utilities
-- **Prisma** (2,072 lines) - Schema, migrations, queries
-- **GraphQL API Design** (650 lines) - Apollo Server, resolvers, DataLoader
-- **WebSocket Real-time** (680 lines) - Socket.io, SSE, presence
-- **Monitoring & Observability** (620 lines) - Prometheus, Grafana, tracing
-- **Load Testing** (580 lines) - k6, Artillery, benchmarking
-- **Security** - OWASP, GDPR, input validation
-- **TDD** - RED-GREEN-REFACTOR workflow
-- And 50 more...
-
-### Persistent Memory
-
-Save architectural decisions, patterns, and context:
+**`/build` - From Vague Ideas to Production Specs**
 
 ```bash
-/save-decision "Why we chose PostgreSQL over MongoDB"
-/load-memory    # Loads saved context
+/build "add authentication"
+
+Droidz asks:
+- JWT or sessions? → JWT
+- Password requirements? → 8+ chars, letters+numbers
+- Social providers? → No
+
+Generates: .factory/specs/active/001-auth.md
+
+Contains:
+✓ 6 parallelizable tasks
+✓ Security requirements (OWASP)
+✓ Edge cases covered
+✓ Testing strategy
+✓ Ready-to-execute plan
+
+Execute now? [Yes/Review/Save]
 ```
 
 ---
 
-## Installation Options
+## 📁 Project Structure (v3.0)
 
-### New Projects
-
-```bash
-./install.sh
-# Choose: 3) Fresh Install
-# Choose package manager: npm/yarn/pnpm/bun
+```
+.factory/                    # Everything lives here
+├── commands/                # Slash commands
+│   ├── init.md             # /init
+│   ├── build.md            # /build
+│   ├── validate-init.md    # /validate-init (NEW)
+│   ├── validate.md         # /validate (auto-generated)
+│   └── parallel.md         # /parallel
+├── droids/                  # 15 specialists
+│   ├── droidz-orchestrator.md
+│   ├── droidz-codegen.md
+│   └── ... (all use model: inherit)
+├── skills/                  # 61 auto-activating skills
+│   ├── typescript/SKILL.md
+│   ├── react/SKILL.md
+│   └── ...
+├── hooks/                   # Lifecycle hooks
+│   ├── scripts/
+│   │   ├── auto-lint.sh
+│   │   ├── block-dangerous.sh
+│   │   └── validate-on-edit.sh
+│   └── settings.json
+├── specs/                   # Generated specs
+│   ├── active/             # Current (gitignored)
+│   └── archived/           # Completed
+├── validation/             # Validation framework (NEW)
+│   ├── .validation-cache/
+│   └── test-helpers/
+└── memory/                  # Persistent context
+    ├── org/                # Team decisions
+    └── user/               # Your notes
 ```
 
-### Existing Projects (Update)
+**No `.droidz/` folder** - everything standardized in `.factory/`
+
+---
+
+## 🎬 Real-World Examples
+
+### Example 1: Build Auth (v3.0 workflow)
 
 ```bash
-./install.sh
-# Choose: 1) Update
-# Your custom commands are backed up automatically
-```
+# Step 1: Initialize
+/init
+✓ Project analyzed
+✓ Validation generated
+✓ Ready to build
 
-### Uninstall
+# Step 2: Build auth
+/build "add JWT authentication"
 
-```bash
-./install.sh
-# Choose: 2) Uninstall
-# Removes .factory/ directory
+Droidz clarifies:
+- Sessions or JWT? → JWT
+- Requirements? → 8+ chars
+- Social? → No
+
+Generates spec:
+✓ 6 tasks (3 parallel Phase 1, 3 parallel Phase 2)
+✓ Security checklist
+✓ Test strategy
+
+# Step 3: Execute
+Choose "Execute in parallel"
+
+TodoWrite shows progress:
+✅ Database schema
+⏳ API endpoints...
+⏳ JWT utilities...
+
+15 minutes later:
+✅ All complete! 12 files, 24 tests passing
+
+# Step 4: Validate
+/validate
+
+Phase 1-5: All ✅
+Ready for deployment!
 ```
 
 ---
 
-## Configuration (Optional)
+### Example 2: Skills Auto-Activation
 
-Create `config.yml` (optional - Droidz works without it):
+```bash
+# No manual skill selection needed!
+
+You: "Add Prisma schema for users"
+→ Prisma skill auto-activates
+→ CLI: "Using skill: prisma"
+→ Applies Prisma best practices
+
+You: "Create React component"
+→ React skill auto-activates
+→ CLI: "Using skill: react"
+→ Follows React 19 patterns
+
+You: "Optimize database queries"
+→ Performance skill auto-activates
+→ CLI: "Using skill: performance-optimizer"
+→ Analyzes and optimizes
+```
+
+---
+
+## 🆚 v2.x vs v3.0 Comparison
+
+| Feature | v2.x | v3.0 |
+|---------|------|------|
+| **Skills** | Manual descriptions | ✅ Native Factory.ai (auto-activate) |
+| **Model Inheritance** | Mixed | ✅ All droids use `model: inherit` |
+| **Folder Structure** | `.droidz/` + `.factory/` | ✅ 100% `.factory/` |
+| **Validation** | None | ✅ 5-phase pipeline |
+| **Progress Tracking** | None | ✅ Live TodoWrite updates |
+| **Hooks System** | Partial (4 types) | ✅ Full (7 types) |
+| **Installation** | Complex (tmux, worktrees) | ✅ Simple (< 30s) |
+| **CLI Integration** | Manual | ✅ `/skills` command |
+| **Skill Reporting** | No | ✅ CLI reports usage |
+
+---
+
+## 📚 Documentation
+
+- **Quick Start:** [This README]
+- **Commands Guide:** [COMMANDS.md](COMMANDS.md)
+- **Skills Guide:** [SKILLS.md](SKILLS.md) (NEW)
+- **Validation Guide:** [VALIDATION.md](VALIDATION.md) (NEW)
+- **Droids Guide:** [DROIDS.md](DROIDS.md) (NEW)
+- **Migration Guide:** [MIGRATION_V3.md](MIGRATION_V3.md) (NEW)
+- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+
+---
+
+## 🔧 Configuration (Optional)
+
+Droidz works out-of-the-box, but you can customize:
+
+### config.yml (optional)
 
 ```yaml
 # Linear Integration (optional)
@@ -302,201 +427,109 @@ orchestrator:
   enable_monitoring: true
 ```
 
----
+### Custom Skills
 
-## Project Structure
-
-After installation:
-
-```
-.factory/
-├── commands/           # 4 slash commands
-│   ├── droidz-init.md
-│   ├── droidz-build.md
-│   ├── auto-parallel.md
-│   └── gh-helper.md
-├── droids/             # 15 specialist droids
-│   ├── droidz-orchestrator.md
-│   ├── codegen.md
-│   ├── test.md
-│   └── ...
-├── skills/             # 61 auto-skills
-│   ├── typescript/
-│   ├── react/
-│   └── ...
-└── memory/             # Persistent context
-    ├── org/           # Team decisions
-    └── user/          # Your notes
-
-.droidz/
-└── specs/              # Generated specs
-    ├── 001-authentication.md
-    └── 002-payment-integration.md
-
-config.yml              # Your config (gitignored)
+```bash
+/skills create    # Create new skill
+/skills import    # Import from Claude Code
+/skills list      # View all skills
 ```
 
 ---
 
-## Examples
-
-### Example 1: Build Auth (15 minutes)
-
-```bash
-# Generate spec
-/droidz-build "add email/password authentication with JWT"
-
-# Droidz asks:
-# - Sessions or JWT? → JWT
-# - Password requirements? → 8+ chars, letters+numbers
-# - Social providers? → No
-
-# Generates spec → .droidz/specs/001-auth.md
-# Contains: 6 tasks (3 parallel Phase 1, 3 parallel Phase 2)
-
-# Execute
-Choose "Yes - Execute in parallel"
-
-# Progress (every 60s):
-✅ Database schema (User model, migrations)
-⏳ API endpoints (POST /register, POST /login...)
-⏳ JWT utilities (sign, verify, refresh...)
-
-# 15 minutes later:
-✅ All complete! 12 files created, 24 tests passing
-```
-
-### Example 2: Direct Execution (No Spec)
-
-```bash
-/auto-parallel "refactor payment module to use strategy pattern"
-
-# Analyzes → 2 parallel tasks
-# Task 1: Create strategy interfaces
-# Task 2: Write tests for new structure
-
-# Then sequential:
-# Task 3: Migrate existing code
-# Task 4: Update documentation
-
-# Done in 20 minutes vs 60 sequential
-```
-
-### Example 3: Analyze First
-
-```bash
-# Onboarding to new project
-/droidz-init
-
-# Output: .droidz/architecture.md
-# - Tech stack: Next.js 14, Prisma, PostgreSQL
-# - File structure: App router, /src layout
-# - Patterns: Server components, Tailwind
-# - Next steps: Suggestions for getting started
-```
-
----
-
-## Troubleshooting
+## 🐛 Troubleshooting
 
 ### Droids not showing?
 
 ```bash
 /settings
-# Ensure "Custom Droids" and "Hooks" are ON
+# Ensure "Custom Droids" ON
+# Ensure "Hooks" ON
 # Restart: Ctrl+C then `droid`
-/droids  # Should show all 7 droids
+
+/droids  # Should show all 15
 ```
 
-### Installation failed?
+### Skills not activating?
 
 ```bash
-# Check logs
-cat .droidz-install-*.log
-
-# Common fixes:
-# 1. Workspace restrictions? Add 'yaml' to root package.json
-# 2. npm errors? Run: npm install yaml --save
-# 3. Re-run installer: ./install.sh
+/skills list
+# Ensure skills are present
+# Skills auto-activate - no action needed
+# CLI reports: "Using skill: <name>"
 ```
 
-### Commands not working?
+### Validation not generating?
 
 ```bash
-/commands  # Should show 4 commands
-# If missing, re-run: ./install.sh → Choose "1) Update"
+# Run manually
+/validate-init
+
+# Check output
+ls .factory/commands/validate.md
 ```
 
 ---
 
-## What's New in v2.7.2
+## 🚀 Migration from v2.x
 
-**🚀 Major Skills Expansion + CLI Auto-Activation!**
+v3.0 includes automatic migration:
 
-### New Skills (4 Added)
+```bash
+# Run migration script
+.factory/scripts/migrate-v3.sh
 
-- ✅ **GraphQL API Design** (650 lines) - Apollo Server, DataLoader, cursor pagination
-- ✅ **WebSocket Real-time** (680 lines) - Socket.io, SSE, presence systems
-- ✅ **Monitoring & Observability** (620 lines) - Prometheus, Grafana, OpenTelemetry
-- ✅ **Load Testing** (580 lines) - k6, Artillery, performance benchmarking
+✅ Moves .droidz/specs/ → .factory/specs/archived/
+✅ Removes .droidz/ folder
+✅ Generates validation workflow
+✅ Updates .gitignore
 
-### CLI Auto-Activation
+# Verify
+droid
+/init
+/droids   # All droids present
+/skills   # All skills present
+```
 
-- ✅ **All 61 skills now auto-activate** based on your context!
-- ✅ Added trigger keywords to 18 skills (React, TypeScript, Next.js, Prisma, etc.)
-- ✅ Skills load automatically when mentioned - just like magic ✨
+**See [MIGRATION_V3.md](MIGRATION_V3.md) for detailed migration guide.**
 
-### Installer Improvements
-
-- ✅ Updated skill list from 45 → 61 skills
-- ✅ Fixed missing skills in installer
-- ✅ Better consistency and error handling
-
-### Complete Coverage
-
-Now includes complete support for:
-- Modern API development (REST + GraphQL)
-- Real-time features (WebSocket + SSE)
-- Production monitoring and observability
-- Performance testing and validation
-- Full-stack development from dev to production
-
-**See [CHANGELOG.md](CHANGELOG.md) or [Release v2.7.2](https://github.com/korallis/Droidz/releases/tag/v2.7.2) for full details.**
+**Breaking Changes:**
+- `.droidz/` folder removed (auto-migrated)
+- Commands renamed (old names aliased)
+- All droids now use `model: inherit`
 
 ---
 
-## Documentation
+## 🤝 Contributing
 
-- **Commands Guide:** [COMMANDS.md](COMMANDS.md) - Comprehensive 4-command reference
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md) - Version history
-- **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
-
----
-
-## Support & Community
-
-- **Issues:** [GitHub Issues](https://github.com/korallis/Droidz/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/korallis/Droidz/discussions)
-- **Discord:** [Ray Fernando's Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
-- **Donate:** [PayPal @gideonapp](https://www.paypal.com/paypalme/gideonapp)
-
----
-
-## Contributing
-
-Contributions welcome! Please:
+Contributions welcome!
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+2. Create feature branch
+3. Make changes
+4. Submit pull request
 
 ---
 
-## License
+## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE)
 
 ---
 
-**Built for Factory.ai Droid CLI** | **v2.7.6** | **Created by the community** 🚀
+## 🙏 Credits
+
+**Built for Factory.ai Droid CLI** | **v3.0.0**
+
+**Factory.ai Features Used:**
+- Skills System (v0.26.0)
+- Custom Droids with model inheritance
+- Hooks System (v0.25.0)
+- TodoWrite for progress
+- Native CLI integration
+
+**Created by the Droidz community** 🚀
+
+---
+
+**Transform vague ideas into production code - powered by Factory.ai** ✨

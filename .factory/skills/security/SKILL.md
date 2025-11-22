@@ -1,6 +1,6 @@
 ---
 name: security
-description: Auto-activates when user mentions security, vulnerabilities, OWASP, or secure coding. Expert in web security including OWASP Top 10, authentication, authorization, and secure coding practices.
+description: Use when user mentions security, vulnerabilities, OWASP, or secure coding. Expert in web security including OWASP Top 10, authentication, authorization, and secure coding practices.
 category: security
 ---
 

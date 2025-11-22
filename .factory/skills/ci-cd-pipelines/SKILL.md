@@ -1,6 +1,6 @@
 ---
 name: ci-cd-pipelines
-description: Auto-activates when user mentions CI/CD, GitHub Actions, pipeline, continuous integration, deployment automation, or workflow files. Creates automated testing and deployment pipelines.
+description: Use when user mentions CI/CD, GitHub Actions, pipeline, continuous integration, deployment automation, or workflow files. Creates automated testing and deployment pipelines.
 category: devops
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: environment-management
-description: Auto-activates when user mentions environment variables, .env files, secrets management, configuration, or multi-environment setup. Manages environment configs securely.
+description: Use when user mentions environment variables, .env files, secrets management, configuration, or multi-environment setup. Manages environment configs securely.
 category: devops
 ---
 

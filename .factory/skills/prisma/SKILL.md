@@ -1,6 +1,6 @@
 ---
 name: prisma
-description: Auto-activates when user mentions Prisma, schema.prisma, database models, or Prisma migrations. Expert in Prisma ORM including schema design, migrations, query optimization, and relations.
+description: Use when user mentions Prisma, schema.prisma, database models, or Prisma migrations. Expert in Prisma ORM including schema design, migrations, query optimization, and relations.
 category: database
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: security-audit-checklist
-description: Auto-activates when user mentions security audit, security review, vulnerabilities, or OWASP. Comprehensive security checklist based on OWASP Top 10.
+description: Use when user mentions security audit, security review, vulnerabilities, or OWASP. Comprehensive security checklist based on OWASP Top 10.
 category: security
 ---
 

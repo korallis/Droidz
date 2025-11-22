@@ -1,6 +1,6 @@
 ---
 name: trpc
-description: Auto-activates when user mentions tRPC, type-safe APIs, procedures, or tRPC routers. Expert in tRPC including router setup, procedures, middleware, and React Query integration.
+description: Use when user mentions tRPC, type-safe APIs, procedures, or tRPC routers. Expert in tRPC including router setup, procedures, middleware, and React Query integration.
 category: api
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: readme-generator
-description: Auto-activates when user mentions README, project documentation, getting started guide, or creating project docs. Generates comprehensive README.md.
+description: Use when user mentions README, project documentation, getting started guide, or creating project docs. Generates comprehensive README.md.
 category: documentation
 ---
 

@@ -2,6 +2,293 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.0.0] - 2025-11-22
+
+### 🎉 MAJOR RELEASE: Factory.ai-Native Architecture
+
+**Complete architectural refactor** to fully leverage Factory.ai's native capabilities. This is a **breaking release** with significant improvements across the board.
+
+---
+
+### ✨ New Features
+
+#### 1. Native Factory.ai Skills System (v0.26.0)
+- ✅ **Skills auto-activate** based on code context (no manual selection!)
+- ✅ Updated all 61 skills to official Factory.ai SKILL.md format
+- ✅ Changed descriptions from "Auto-activates when" → "Use when" (official format)
+- ✅ CLI reports which skills are active during sessions
+- ✅ Manage skills with `/skills` command
+- ✅ Skills are **model-invoked** by Factory.ai automatically
+
+**Skills updated:** typescript, react, nextjs-16, prisma, tailwind-v4, graphql-api-design, websocket-realtime, security, and 53 more
+
+#### 2. Perfect Model Inheritance
+- ✅ **All 15 droids use `model: inherit`** (respects user's model choice)
+- ✅ Switch models → all droids switch automatically
+- ✅ No more conflicting models across droids
+- ✅ Consistent code style throughout entire workflow
+
+**Droids verified:** orchestrator, codegen, test, refactor, infra, integration, ui-designer, ux-designer, database-architect, api-designer, security-auditor, performance-optimizer, accessibility-specialist, generalist (14 total)
+
+#### 3. Comprehensive Validation System
+- ✅ **`/validate-init`** command - Auto-generates project-specific validation
+- ✅ **`/validate`** command - Runs 5-phase validation pipeline:
+  - Phase 1: Linting (ESLint, Ruff, etc.)
+  - Phase 2: Type checking (TypeScript, Mypy)
+  - Phase 3: Style checking (Prettier, Black)
+  - Phase 4: Unit tests (Jest, Pytest)
+  - Phase 5: E2E tests (Playwright, Cypress)
+- ✅ Detects project tools automatically
+- ✅ Generates `.factory/commands/validate.md` tailored to YOUR project
+- ✅ One command validates everything!
+
+**New files:** `.factory/commands/validate-init.md`, `.factory/commands/validate.md` (template)
+
+#### 4. Enhanced Hooks System (All 7 Types)
+- ✅ **SessionStart** - Load context, suggest validation init
+- ✅ **SessionEnd** - Session cleanup hooks
+- ✅ **PreToolUse** - Block dangerous commands (rm -rf, dd, etc.)
+- ✅ **PostToolUse** - Auto-lint after edits, quick validation
+- ✅ **UserPromptSubmit** - Pre-prompt processing
+- ✅ **Stop** - Session summaries, save decisions
+- ✅ **SubagentStop** - Track subagent completion
+
+**New files:** `.factory/hooks/settings.json`, `block-dangerous.sh`, `validate-on-edit.sh`
+
+#### 5. Live Progress Tracking
+- ✅ Real-time TodoWrite updates during parallel execution
+- ✅ See exactly what each droid is doing
+- ✅ No more guessing if work is stuck
+- ✅ Built on Factory.ai's native TodoWrite tool
+
+---
+
+### 🏗️ Architecture Changes
+
+#### Clean 100% `.factory/` Structure
+- ✅ **Eliminated `.droidz/` folder** - everything now in `.factory/`
+- ✅ Standard Factory.ai conventions
+- ✅ No more confusion about folder structure
+- ✅ Cleaner, more maintainable organization
+
+**Structure:**
+```
+.factory/
+├── commands/        # 5 commands (added validate-init, validate)
+├── droids/          # 15 droids (all model: inherit)
+├── skills/          # 61 skills (Use when... format)
+├── hooks/           # 7 hook types + scripts
+├── specs/
+│   ├── active/      # Current work (gitignored)
+│   └── archived/    # Completed specs
+├── validation/      # NEW - validation framework
+│   ├── .validation-cache/
+│   └── test-helpers/
+└── memory/
+    ├── org/
+    └── user/
+```
+
+#### Updated Commands
+- ✅ `/init` (primary, `/droidz-init` aliased for compatibility)
+- ✅ `/build` (primary, `/droidz-build` aliased)
+- ✅ `/parallel` (primary, `/auto-parallel` aliased)
+- ✅ `/validate-init` (NEW)
+- ✅ `/validate` (NEW, auto-generated)
+
+---
+
+### 📚 New Documentation
+
+#### Comprehensive Guides
+- ✅ **VALIDATION.md** - Complete validation system guide
+- ✅ **SKILLS.md** - Skills system, writing custom skills
+- ✅ **DROIDS.md** - Custom droids, model inheritance
+- ✅ **MIGRATION_V3.md** - v2.x → v3.0 migration guide
+- ✅ **README.md** - Complete refactor aligned with v3.0
+
+**Documentation stats:**
+- VALIDATION.md: ~800 lines
+- SKILLS.md: ~900 lines
+- DROIDS.md: ~850 lines
+- MIGRATION_V3.md: ~500 lines
+- README.md: ~550 lines (refactored)
+
+---
+
+### 🔧 Infrastructure Updates
+
+#### Installation
+- ✅ Simplified installer (< 30 second setup)
+- ✅ Removed git worktree requirement
+- ✅ Removed tmux requirement
+- ✅ Just Factory.ai CLI + Droidz = ready to go
+
+#### Gitignore
+- ✅ Updated for v3.0 structure
+- ✅ Added `.factory/specs/active/` (work-in-progress)
+- ✅ Added `.factory/validation/.validation-cache/` (generated)
+- ✅ Removed `.droidz/` references
+
+#### Migration
+- ✅ **Automatic migration script:** `.factory/scripts/migrate-v3.sh`
+- ✅ Backs up v2.x configuration
+- ✅ Moves `.droidz/specs/` → `.factory/specs/archived/`
+- ✅ Removes `.droidz/` folder
+- ✅ Updates `.gitignore`
+- ✅ Verifies installation (6 checks)
+- ✅ Rollback instructions if needed
+
+---
+
+### ⚠️ Breaking Changes
+
+#### 1. Folder Structure
+**Before (v2.x):**
+```
+.droidz/              # Some things here
+.factory/             # Other things here
+```
+
+**After (v3.0):**
+```
+.factory/             # Everything here!
+```
+
+**Migration:** Automatic via `migrate-v3.sh`
+
+#### 2. Skills Format
+**Before (v2.x):**
+```yaml
+description: Auto-activates when user mentions...
+```
+
+**After (v3.0):**
+```yaml
+description: Use when user mentions...
+```
+
+**Impact:** Skills still auto-activate the same way. Just updated wording to match Factory.ai official docs.
+
+**Migration:** Automatic during update
+
+#### 3. Droid Models
+**Before (v2.x):** Some droids had explicit models (e.g., `model: claude-sonnet-4`)
+
+**After (v3.0):** All droids use `model: inherit`
+
+**Impact:** Your model choice is now respected consistently across ALL droids.
+
+**Migration:** Already fixed in v3.0 droids
+
+#### 4. Commands
+**Before (v2.x):** `/droidz-init`, `/droidz-build`, `/auto-parallel`
+
+**After (v3.0):** `/init`, `/build`, `/parallel` (old names aliased)
+
+**Impact:** None if using old names. Recommended to update.
+
+**Migration:** Optional (aliases work)
+
+---
+
+### 📊 Comparison: v2.x vs v3.0
+
+| Feature | v2.x | v3.0 |
+|---------|------|------|
+| **Skills** | Manual descriptions | ✅ Native Factory.ai (auto-activate) |
+| **Model Inheritance** | Mixed | ✅ All droids use `model: inherit` |
+| **Folder Structure** | `.droidz/` + `.factory/` | ✅ 100% `.factory/` |
+| **Validation** | None | ✅ 5-phase pipeline |
+| **Progress Tracking** | None | ✅ Live TodoWrite updates |
+| **Hooks System** | Partial (4 types) | ✅ Full (7 types) |
+| **Installation** | Complex (tmux, worktrees) | ✅ Simple (< 30s) |
+| **CLI Integration** | Manual | ✅ `/skills` command |
+| **Skill Reporting** | No | ✅ CLI reports usage |
+
+---
+
+### 🚀 Migration Guide
+
+**Automatic Migration (Recommended):**
+```bash
+./.factory/scripts/migrate-v3.sh
+```
+
+**What it does:**
+1. ✅ Backs up your v2.x configuration
+2. ✅ Moves specs to `.factory/specs/archived/`
+3. ✅ Removes `.droidz/` folder
+4. ✅ Updates `.gitignore`
+5. ✅ Verifies installation
+6. ✅ Provides rollback instructions
+
+**Manual Migration:**
+See [MIGRATION_V3.md](MIGRATION_V3.md) for detailed step-by-step guide.
+
+---
+
+### 📦 Files Changed
+
+**Modified:**
+- `README.md` - Complete v3.0 refactor (preserved Discord/PayPal section)
+- `package.json` - Version bump to 3.0.0
+- `.gitignore` - Updated for v3.0 structure
+- All 61 SKILL.md files - "Use when..." format
+- All 14 droid files - Verified `model: inherit`
+
+**Added:**
+- `VALIDATION.md` - Validation system guide
+- `SKILLS.md` - Skills system guide
+- `DROIDS.md` - Custom droids guide
+- `MIGRATION_V3.md` - Migration guide
+- `.factory/commands/validate-init.md` - Validation generator command
+- `.factory/commands/validate.md` - Validation executor (template)
+- `.factory/hooks/settings.json` - 7 hook types configuration
+- `.factory/hooks/block-dangerous.sh` - Dangerous command blocker
+- `.factory/hooks/validate-on-edit.sh` - Quick validation on edits
+- `.factory/scripts/migrate-v3.sh` - Automatic migration script
+
+**Removed:**
+- `.droidz/` folder references (moved to `.factory/specs/archived/`)
+
+---
+
+### 🎯 Benefits Summary
+
+✅ **Native Skills** - Auto-activate, no manual selection  
+✅ **Model Consistency** - All droids respect your choice  
+✅ **Comprehensive Validation** - One command, full validation  
+✅ **Live Progress** - See what's happening in real-time  
+✅ **Clean Architecture** - 100% `.factory/`, standard conventions  
+✅ **Enhanced Hooks** - All 7 Factory.ai hook types  
+✅ **Simplified Install** - < 30 second setup  
+✅ **Better Documentation** - 4 new comprehensive guides  
+
+---
+
+### 📚 Resources
+
+- **README.md** - Overview and quick start
+- **VALIDATION.md** - Validation system guide
+- **SKILLS.md** - Skills system guide
+- **DROIDS.md** - Custom droids guide
+- **MIGRATION_V3.md** - v2.x → v3.0 migration
+- **COMMANDS.md** - All commands reference
+- **CHANGELOG.md** - This file
+
+---
+
+### 🙏 Thank You
+
+**Special thanks to Ray Fernando's Discord community for feedback and support!**
+
+Join us: https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW
+
+Support development: https://www.paypal.com/paypalme/gideonapp
+
+---
+
 ## [2.7.6] - 2025-11-20
 
 ### ✅ Compliance

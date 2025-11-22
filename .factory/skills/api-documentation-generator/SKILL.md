@@ -1,6 +1,6 @@
 ---
 name: api-documentation-generator
-description: Auto-activates when user mentions API documentation, endpoint docs, API reference, or OpenAPI spec. Generates comprehensive API documentation from code.
+description: Use when user mentions API documentation, endpoint docs, API reference, or OpenAPI spec. Generates comprehensive API documentation from code.
 category: documentation
 ---
 

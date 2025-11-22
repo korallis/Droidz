@@ -1,6 +1,6 @@
 ---
 name: nextjs-16
-description: Auto-activates when user mentions Next.js, App Router, server components, or Next.js routing. Expert in Next.js 16 best practices including App Router, React Server Components, and caching strategies.
+description: Use when user mentions Next.js, App Router, server components, or Next.js routing. Expert in Next.js 16 best practices including App Router, React Server Components, and caching strategies.
 category: framework
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: monitoring-observability
-description: Auto-activates when user mentions monitoring, observability, Prometheus, Grafana, metrics, logging, tracing, or APM. Expert in implementing comprehensive monitoring and observability solutions.
+description: Use when user mentions monitoring, observability, Prometheus, Grafana, metrics, logging, tracing, or APM. Expert in implementing comprehensive monitoring and observability solutions.
 category: devops
 ---
 

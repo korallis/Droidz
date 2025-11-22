@@ -1,6 +1,6 @@
 ---
 name: design
-description: Auto-activates when user mentions UI design, design systems, or component design. Expert in design principles, accessibility, and component architecture.
+description: Use when user mentions UI design, design systems, or component design. Expert in design principles, accessibility, and component architecture.
 category: design
 ---
 

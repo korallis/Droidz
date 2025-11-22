@@ -1,6 +1,6 @@
 ---
 name: typescript
-description: Auto-activates when user mentions TypeScript, types, interfaces, generics, or type safety. Expert in TypeScript best practices including advanced types, utility types, and strict mode configuration.
+description: Use when user mentions TypeScript, types, interfaces, generics, or type safety. Expert in TypeScript best practices including advanced types, utility types, and strict mode configuration.
 category: language
 ---
 

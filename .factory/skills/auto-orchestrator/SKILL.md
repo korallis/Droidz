@@ -1,6 +1,6 @@
 ---
 name: auto-orchestrator
-description: Automatically activates when detecting complex, multi-task requests that would benefit from parallel execution. Activates when user mentions "build [system]", "implement [feature] with multiple components", requests involving 3+ distinct tasks, or explicitly requests orchestration/parallel work. PROACTIVELY analyzes complexity and recommends orchestration when beneficial.
+description: Use when detecting complex, multi-task requests that would benefit from parallel execution. Activates when user mentions "build [system]", "implement [feature] with multiple components", requests involving 3+ distinct tasks, or explicitly requests orchestration/parallel work. PROACTIVELY analyzes complexity and recommends orchestration when beneficial.
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, Task, TodoWrite
 ---
 

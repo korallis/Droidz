@@ -1,6 +1,6 @@
 ---
 name: stripe
-description: Auto-activates when user mentions Stripe, payments, subscriptions, or payment processing. Expert in Stripe integration including checkout, subscriptions, webhooks, and security best practices.
+description: Use when user mentions Stripe, payments, subscriptions, or payment processing. Expert in Stripe integration including checkout, subscriptions, webhooks, and security best practices.
 category: payments
 ---
 

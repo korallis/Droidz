@@ -1,6 +1,6 @@
 ---
 name: clerk
-description: Auto-activates when user mentions Clerk, authentication, user management, or auth flows. Expert in Clerk authentication including Next.js integration, user management, and session handling.
+description: Use when user mentions Clerk, authentication, user management, or auth flows. Expert in Clerk authentication including Next.js integration, user management, and session handling.
 category: auth
 ---
 

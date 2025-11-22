@@ -1,6 +1,6 @@
 ---
 name: spec-shaper
-description: Automatically activates when user has fuzzy ideas or incomplete requirements that need to be shaped into clear specifications. Helps transform vague requests into structured, actionable specs. Activates when user mentions "build", "create", "add feature" without clear details.
+description: Use when user has fuzzy ideas or incomplete requirements that need to be shaped into clear specifications. Helps transform vague requests into structured, actionable specs. Activates when user mentions "build", "create", "add feature" without clear details.
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

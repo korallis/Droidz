@@ -1,6 +1,6 @@
 ---
 name: graphql-api-design
-description: Auto-activates when user mentions GraphQL, schema design, resolvers, queries, mutations, or Apollo. Expert in designing scalable GraphQL APIs with best practices.
+description: Use when user mentions GraphQL, schema design, resolvers, queries, mutations, or Apollo. Expert in designing scalable GraphQL APIs with best practices.
 category: backend
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: neon
-description: Auto-activates when user mentions Neon, serverless Postgres, or database branching. Expert in Neon Postgres including branching, connection pooling, and performance optimization.
+description: Use when user mentions Neon, serverless Postgres, or database branching. Expert in Neon Postgres including branching, connection pooling, and performance optimization.
 category: database
 ---
 

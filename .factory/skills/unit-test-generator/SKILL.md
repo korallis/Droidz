@@ -1,6 +1,6 @@
 ---
 name: unit-test-generator
-description: Auto-activates when user mentions writing tests, unit tests, test generation, or testing code. Generates comprehensive unit tests from existing code.
+description: Use when user mentions writing tests, unit tests, test generation, or testing code. Generates comprehensive unit tests from existing code.
 category: testing
 ---
 

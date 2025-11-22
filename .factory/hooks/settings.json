@@ -1,0 +1,69 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "name": "auto-validate-init",
+        "type": "prompt",
+        "prompt": "On first session: Check if .factory/commands/validate.md contains auto-generated content. If it's still a placeholder, suggest running /validate-init to generate project-specific validation."
+      },
+      {
+        "name": "load-project-context",
+        "type": "prompt",
+        "prompt": "Load project context from .factory/memory/ to understand project conventions, decisions, and ongoing work."
+      }
+    ],
+    "SessionEnd": [],
+    "PreToolUse": [
+      {
+        "matcher": "Execute",
+        "hooks": [
+          {
+            "name": "block-dangerous",
+            "type": "command",
+            "command": ".factory/hooks/block-dangerous.sh",
+            "description": "Block dangerous commands like rm -rf /, dd, mkfs, etc."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Create",
+        "hooks": [
+          {
+            "name": "auto-lint",
+            "type": "command",
+            "command": ".factory/hooks/auto-lint.sh",
+            "description": "Auto-lint files after edits"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Create",
+        "hooks": [
+          {
+            "name": "validate-on-edit",
+            "type": "command",
+            "command": ".factory/hooks/validate-on-edit.sh",
+            "description": "Run quick validation checks on edited files"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [],
+    "Stop": [
+      {
+        "name": "session-summary",
+        "type": "prompt",
+        "prompt": "Before ending session: Summarize work completed, note any incomplete tasks, and save important decisions to .factory/memory/."
+      }
+    ],
+    "SubagentStop": [
+      {
+        "name": "update-todos",
+        "type": "prompt",
+        "prompt": "After subagent completes: Update TodoWrite with completion status and any issues encountered."
+      }
+    ]
+  }
+}

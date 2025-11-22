@@ -1,6 +1,6 @@
 ---
 name: supabase
-description: Auto-activates when user mentions Supabase, Row Level Security, realtime, or Supabase auth. Expert in Supabase including RLS policies, realtime subscriptions, auth, storage, and edge functions.
+description: Use when user mentions Supabase, Row Level Security, realtime, or Supabase auth. Expert in Supabase including RLS policies, realtime subscriptions, auth, storage, and edge functions.
 category: backend
 ---
 

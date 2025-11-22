@@ -1,6 +1,6 @@
 ---
 name: changelog-generator
-description: Auto-activates when user mentions changelog, release notes, version history, or updating CHANGELOG.md. Generates changelog from git commits.
+description: Use when user mentions changelog, release notes, version history, or updating CHANGELOG.md. Generates changelog from git commits.
 category: documentation
 ---
 

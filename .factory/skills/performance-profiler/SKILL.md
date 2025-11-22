@@ -1,6 +1,6 @@
 ---
 name: performance-profiler
-description: Auto-activates when user mentions performance, profiling, optimization, slow code, or bottlenecks. Profiles and optimizes code performance.
+description: Use when user mentions performance, profiling, optimization, slow code, or bottlenecks. Profiles and optimizes code performance.
 category: performance
 ---
 

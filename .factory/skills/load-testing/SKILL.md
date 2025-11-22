@@ -1,6 +1,6 @@
 ---
 name: load-testing
-description: Auto-activates when user mentions load test, performance test, stress test, k6, Artillery, benchmark, or scalability testing. Expert in designing and executing performance tests.
+description: Use when user mentions load test, performance test, stress test, k6, Artillery, benchmark, or scalability testing. Expert in designing and executing performance tests.
 category: testing
 ---
 

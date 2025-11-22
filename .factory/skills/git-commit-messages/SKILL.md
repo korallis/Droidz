@@ -1,6 +1,6 @@
 ---
 name: git-commit-messages
-description: Auto-activates when user mentions committing changes, creating commits, or needs commit messages. Generates conventional commit messages following best practices based on git diff.
+description: Use when user mentions committing changes, creating commits, or needs commit messages. Generates conventional commit messages following best practices based on git diff.
 category: workflow
 ---
 

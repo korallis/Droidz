@@ -1,6 +1,6 @@
 ---
 name: code-review-checklist
-description: Auto-activates when user mentions code review, reviewing code, PR review, or checking code quality. Provides systematic code review process with TodoWrite checklist.
+description: Use when user mentions code review, reviewing code, PR review, or checking code quality. Provides systematic code review process with TodoWrite checklist.
 category: workflow
 ---
 

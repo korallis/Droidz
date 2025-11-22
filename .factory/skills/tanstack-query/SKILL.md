@@ -1,6 +1,6 @@
 ---
 name: tanstack-query
-description: Auto-activates when user mentions TanStack Query, React Query, useQuery, useMutation, or server state management. Expert in TanStack Query v5 including caching strategies, optimistic updates, and infinite queries.
+description: Use when user mentions TanStack Query, React Query, useQuery, useMutation, or server state management. Expert in TanStack Query v5 including caching strategies, optimistic updates, and infinite queries.
 category: state-management
 ---
 

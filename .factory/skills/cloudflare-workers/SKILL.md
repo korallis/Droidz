@@ -1,6 +1,6 @@
 ---
 name: cloudflare-workers
-description: Auto-activates when user mentions Cloudflare Workers, edge functions, or serverless deployment. Expert in Cloudflare Workers including deployment, KV storage, and Durable Objects.
+description: Use when user mentions Cloudflare Workers, edge functions, or serverless deployment. Expert in Cloudflare Workers including deployment, KV storage, and Durable Objects.
 category: serverless
 ---
 
