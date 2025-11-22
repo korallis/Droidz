@@ -1,202 +1,100 @@
 ---
-description: Generate project-specific validation workflow by analyzing your codebase and creating a comprehensive /validate command
+description: Generate project-specific validation workflow by detecting available tools
 ---
 
-# /validate-init - Generate Project Validation Workflow
+# /validate-init - Smart Validation Setup
 
-## Purpose
+Detects available tools in your project and generates a custom validation workflow.
 
-Analyzes your project to detect available tools (linters, type checkers, formatters, test frameworks) and generates a custom `.factory/commands/validate.md` file with a 5-phase validation pipeline tailored to your project.
+## Detection Phase
 
-## When to Use
+Checking for available tools...
 
-- **First time setup**: Run this once per project after `/init`
-- **Tool changes**: Rerun when you add new linters, test frameworks, or validation tools
-- **New team members**: Generate validation workflow for contributors
+### Linters
+!`command -v eslint >/dev/null 2>&1 && echo "✓ ESLint detected" || echo "⚠ ESLint not found"`
 
-**Auto-runs during first `/init`** if `/validate` command doesn't exist.
+### Type Checkers  
+!`command -v tsc >/dev/null 2>&1 && echo "✓ TypeScript detected" || echo "⚠ TypeScript not found"`
 
-## What It Does
+### Formatters
+!`command -v prettier >/dev/null 2>&1 && echo "✓ Prettier detected" || true`
+!`test -f .prettierrc -o -f .prettierrc.json -o -f prettier.config.js && echo "✓ Prettier config found" || true`
 
-### Phase 1: Detection
-
-Scans your project for:
-
-**Linters**
-- ESLint (JavaScript/TypeScript)
-- Ruff, Pylint, Flake8 (Python)
-- RuboCop (Ruby)
-- Golangci-lint (Go)
-
-**Type Checkers**
-- TypeScript compiler (`tsc`)
-- Mypy (Python)
-- Flow (JavaScript)
-
-**Formatters**
-- Prettier (JavaScript/TypeScript/CSS)
-- Black (Python)
-- Rustfmt (Rust)
-- Gofmt (Go)
-
-**Test Frameworks**
-- Jest, Vitest (JavaScript/TypeScript)
-- Pytest (Python)
-- RSpec (Ruby)
-- Playwright, Cypress (E2E)
-
-**Build Tools**
-- Detect if project uses npm, yarn, pnpm, bun, cargo, go, etc.
-
-### Phase 2: Generate Validation Command
-
-Creates `.factory/commands/validate.md` with:
-
-```markdown
----
-description: Run comprehensive validation (lint, type, style, unit, E2E)
----
-
-# Project Validation - 5 Phases
-
-## Phase 1: Linting ✓
-!`npm run lint`
-
-## Phase 2: Type Checking ✓
-!`tsc --noEmit`
-
-## Phase 3: Style Checking ✓
-!`prettier --check .`
-
-## Phase 4: Unit Tests ✓
-!`npm test -- --coverage`
-
-## Phase 5: E2E Tests ✓
-
-### Setup Test Environment
-!`docker-compose -f docker-compose.test.yml up -d`
-
-### Run E2E Workflows
-!`npx playwright test`
-
-### Cleanup
-!`docker-compose -f docker-compose.test.yml down -v`
+### Test Frameworks
+!`command -v jest >/dev/null 2>&1 && echo "✓ Jest detected" || echo "⚠ Jest not found"`
+!`command -v vitest >/dev/null 2>&1 && echo "✓ Vitest detected" || true`
+!`command -v playwright >/dev/null 2>&1 && echo "✓ Playwright detected" || true`
 
 ---
 
-✅ All validation passed! Ready for deployment.
+## Generating Validation Workflow
+
+Based on detected tools, creating `.factory/commands/validate.md`...
+
+### Phase 1: Linting
+!`if command -v eslint >/dev/null 2>&1; then
+  echo "## Phase 1: Linting ✓" >> .factory/commands/validate.md
+  echo '!`npm run lint`' >> .factory/commands/validate.md
+  echo "✓ Added ESLint validation"
+else
+  echo "⚠ No linter detected - skipping Phase 1"
+fi`
+
+### Phase 2: Type Checking  
+!`if command -v tsc >/dev/null 2>&1; then
+  echo "## Phase 2: Type Checking ✓" >> .factory/commands/validate.md  
+  echo '!`npx tsc --noEmit`' >> .factory/commands/validate.md
+  echo "✓ Added TypeScript validation"
+else
+  echo "⚠ No type checker detected - skipping Phase 2"
+fi`
+
+### Phase 3: Style Checking
+!`if command -v prettier >/dev/null 2>&1 || test -f .prettierrc -o -f .prettierrc.json; then
+  echo "## Phase 3: Style Checking ✓" >> .factory/commands/validate.md
+  echo '!`npx prettier --check .`' >> .factory/commands/validate.md
+  echo "✓ Added Prettier validation (using npx)"
+else
+  echo "⚠ No formatter detected - skipping Phase 3"  
+fi`
+
+### Phase 4: Unit Tests
+!`if command -v jest >/dev/null 2>&1 || command -v vitest >/dev/null 2>&1; then
+  echo "## Phase 4: Unit Tests ✓" >> .factory/commands/validate.md
+  echo '!`npm test`' >> .factory/commands/validate.md
+  echo "✓ Added test validation"
+else
+  echo "⚠ No test framework detected - skipping Phase 4"
+fi`
+
+### Phase 5: E2E Tests (Optional)
+!`if command -v playwright >/dev/null 2>&1; then
+  echo "## Phase 5: E2E Tests ✓" >> .factory/commands/validate.md
+  echo '!`npx playwright test`' >> .factory/commands/validate.md
+  echo "✓ Added E2E validation"  
+else
+  echo "⚠ No E2E framework detected - skipping Phase 5"
+fi`
+
+---
+
+## Finalize
+
+!`echo "---
+
+✅ Validation workflow complete!
+
+Run /validate to execute all checks." >> .factory/commands/validate.md`
+
+✅ **Validation workflow created!**
+
+Your custom `.factory/commands/validate.md` has been generated based on your project's tools.
+
+**Usage:**
 ```
-
-### Phase 3: Create Test Helpers
-
-For E2E tests, generates:
-- Docker Compose test configurations
-- Database seed scripts
-- Mock service setups
-- Test environment helpers
-
-Saves to: `.factory/validation/test-helpers/`
-
-## Usage
-
-```bash
-# Generate validation workflow
-/validate-init
-
-# Then run validation anytime
 /validate
 ```
 
-## Example Output
+**To customize:** Edit `.factory/commands/validate.md` directly.
 
-```
-🔍 Analyzing project for validation tools...
-
-✓ Detected: ESLint (JavaScript/TypeScript)
-✓ Detected: TypeScript compiler
-✓ Detected: Prettier (formatter)
-✓ Detected: Jest (unit tests)
-✓ Detected: Playwright (E2E tests)
-✓ Detected: Docker Compose (test environment)
-
-📝 Generating validation workflow...
-
-Created: .factory/commands/validate.md
-Created: .factory/validation/test-helpers/docker-compose.test.yml
-Created: .factory/validation/test-helpers/seed-test-db.sh
-
-✅ Validation workflow ready!
-
-Usage:
-  /validate   Run all 5 phases
-```
-
-## Smart Detection
-
-**Monorepo Support**
-- Detects Nx, Turborepo, Lerna, pnpm workspaces
-- Generates validation for each package
-- Creates root-level `/validate` that runs all
-
-**CI/CD Integration**
-- Adds `.github/workflows/validate.yml` if GitHub Actions detected
-- Configures for your detected tools
-- Sets up caching for dependencies
-
-**Docker/Kubernetes**
-- Detects if project uses containers
-- Generates Dockerized test environments
-- Handles service dependencies (database, Redis, etc.)
-
-## Customization
-
-After generation, edit `.factory/commands/validate.md` to:
-- Add custom validation steps
-- Skip certain phases
-- Add security scanning (e.g., `npm audit`)
-- Add performance benchmarks
-- Customize failure handling
-
-## Phase Descriptions
-
-### Phase 1: Linting
-- Catches code quality issues
-- Enforces style conventions
-- Identifies potential bugs
-
-### Phase 2: Type Checking
-- Validates type safety (TypeScript, Python, etc.)
-- Catches type errors before runtime
-
-### Phase 3: Style Checking
-- Ensures consistent formatting
-- No manual formatting needed
-
-### Phase 4: Unit Tests
-- Tests individual functions/components
-- Fast feedback on functionality
-- Generates coverage reports
-
-### Phase 5: E2E Tests
-- Tests complete user workflows
-- Validates external integrations
-- Tests production-like scenarios
-
-## Benefits
-
-✅ **One command validation** - All checks in one place
-✅ **CI/CD ready** - Same validation locally and in CI
-✅ **Team consistency** - Everyone runs same checks
-✅ **Fast feedback** - Catch issues before review
-✅ **Project-specific** - Tailored to YOUR tools
-
-## Notes
-
-- Re-run if you add new tools (e.g., install ESLint)
-- Commit `.factory/commands/validate.md` to version control
-- `.factory/validation/.validation-cache/` is gitignored
-- E2E test helpers are generated but optional to use
-
----
-
-**Pro Tip**: Add `/validate` to your git pre-push hook for automatic validation!
+**Note:** All formatters and type checkers use `npx` to auto-install if needed.

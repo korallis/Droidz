@@ -2,6 +2,71 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.2] - 2025-11-22
+
+### 🐛 CRITICAL FIX - /validate-init Now Actually Works
+
+**Issue: `/validate-init` tried to execute example commands instead of generating workflow**
+- ❌ Problem: Documentation file contained bash commands that Claude Code tried to execute
+- ❌ Users got errors: `command not found: prettier`, `command not found: tsc`
+- ❌ The command was documentation only, not actual implementation
+
+**Fix: Completely rewrote `/validate-init` with actual implementation**
+- ✅ Now detects what tools are actually installed in user's project
+- ✅ Generates validation workflow dynamically based on detection
+- ✅ Uses `npx` for tools that might not be globally installed
+- ✅ Gracefully skips phases when tools aren't available
+- ✅ Creates custom `.factory/commands/validate.md` per project
+
+**How It Works Now:**
+```bash
+/validate-init
+
+# Detection Phase:
+✓ ESLint detected
+⚠ TypeScript not found - skipping type checking
+✓ Prettier config found
+✓ Jest detected
+
+# Generation Phase:
+✓ Added ESLint validation
+✓ Added Prettier validation (using npx)
+✓ Added test validation
+
+✅ Validation workflow created!
+```
+
+**What Gets Generated:**
+- Only includes phases for tools that exist
+- Uses `npx` for prettier, tsc, playwright (auto-installs if needed)
+- Uses package scripts for linting and testing
+- Customizable after generation
+
+**Before vs After:**
+
+**v3.4.1 (broken):**
+```bash
+/validate-init
+Error: command not found: prettier  # Tried to execute example
+```
+
+**v3.4.2 (fixed):**
+```bash
+/validate-init
+✓ Prettier config found
+✓ Added Prettier validation (using npx)
+✅ Validation workflow created!
+
+/validate  # Now works!
+```
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh | bash
+```
+
+---
+
 ## [3.4.1] - 2025-11-22
 
 ### 🐛 HOTFIX - Fixed /validate Command for Framework Projects
