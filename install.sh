@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.4/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.4/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.3.3"
+DROIDZ_VERSION="3.3.4"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -488,9 +488,47 @@ else
     
     # Determine mode based on what exists
     if [[ "$HAS_FACTORY" == "true" ]] && [[ "$HAS_CLAUDE" == "true" ]]; then
-        INSTALL_MODE="both"
-        MODE="update"
-        log_info "Detected both Droid CLI and Claude Code installations"
+        # Show options for updating both installations
+        echo ""
+        echo -e "${CYAN}${BOLD}🔍 Existing Installation Detected${NC}"
+        echo ""
+        echo "  Current: Both Droid CLI (.factory/) and Claude Code (.claude/)"
+        echo ""
+        echo "Would you like to:"
+        echo ""
+        echo -e "  ${GREEN}1)${NC} Update both installations"
+        echo -e "  ${GREEN}2)${NC} Update Droid CLI only"
+        echo -e "  ${GREEN}3)${NC} Update Claude Code only"
+        echo ""
+        
+        existing_choice=""
+        while [[ -z "$existing_choice" ]]; do
+            read -r -p "Enter your choice (1-3): " existing_choice < /dev/tty
+            
+            if [[ ! "$existing_choice" =~ ^[1-3]$ ]]; then
+                log_error "Invalid choice '$existing_choice'. Please enter 1, 2, or 3."
+                existing_choice=""
+            fi
+        done
+        echo ""
+        
+        case $existing_choice in
+            1)
+                INSTALL_MODE="both"
+                MODE="update"
+                log_info "Updating both Droid CLI and Claude Code installations"
+                ;;
+            2)
+                INSTALL_MODE="droid-cli"
+                MODE="update"
+                log_info "Updating Droid CLI only"
+                ;;
+            3)
+                INSTALL_MODE="claude-code"
+                MODE="update"
+                log_info "Updating Claude Code only"
+                ;;
+        esac
     elif [[ "$HAS_FACTORY" == "true" ]]; then
         # Show option to add Claude Code
         echo ""
@@ -734,7 +772,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.4/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"

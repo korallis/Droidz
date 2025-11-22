@@ -2,6 +2,44 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.3.4] - 2025-11-22
+
+### 🎨 UX FIX - Added Menu for Dual Installation Updates
+
+**Issue: No menu shown when both Droid CLI and Claude Code are installed**
+- ❌ Problem: When both `.factory/` and `.claude/` exist, installer just updated both without asking
+- ❌ User had no choice to update only one mode
+- ❌ Proceeded automatically assuming user wants to update both
+- ✅ Fixed: Added menu with 3 options when both exist
+- ✅ User can now choose: update both, update Droid CLI only, or update Claude Code only
+
+**What Changed:**
+```bash
+# OLD (v3.3.3): No menu, just updated both
+Detected both installations → Updates both automatically
+
+# NEW (v3.3.4): Shows menu with choices
+Detected both installations
+
+Would you like to:
+  1) Update both installations
+  2) Update Droid CLI only
+  3) Update Claude Code only
+```
+
+**User Scenarios Now Covered:**
+1. **Fresh install:** Choose Droid CLI, Claude Code, or Both ✓
+2. **Have Droid CLI:** Choose to update it or add Claude Code ✓  
+3. **Have Claude Code:** Choose to update it or add Droid CLI ✓
+4. **Have both:** Choose to update both, or just one ✓ (NEW!)
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.4/install.sh | bash
+```
+
+---
+
 ## [3.3.3] - 2025-11-22
 
 ### 🔧 HOTFIX - Fixed Missing Claude Code Hook Files (404 Error)
