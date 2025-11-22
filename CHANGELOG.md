@@ -2,6 +2,48 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.4] - 2025-11-22
+
+### 🐛 HOTFIX - Fixed Installer Version + Curl Write Errors
+
+**Issue 1: Version mismatch**
+- ❌ Problem: Installer showed "v3.3.4" instead of "v3.4.3"
+- ❌ `DROIDZ_VERSION` variable not updated  
+- ✅ Fixed: Updated to "3.4.4"
+
+**Issue 2: Curl exit code 56 - File write errors**
+- ❌ Problem: `curl: (56) Failure writing output to destination`
+- ❌ Error when downloading `.droidz/specs/README.md`
+- ❌ Directories created earlier but still failed
+- ✅ Fixed: Added explicit directory creation before downloads
+- ✅ Fixed: Better error handling (continues on failure instead of crashing)
+
+**Issue 3: Package manager detection confusion**
+- ℹ️  Note: If you use bun but see "Using yarn", it means no `bun.lockb` exists
+- ℹ️  The installer correctly checks lock files first, then falls back to PATH
+- ℹ️  Solution: Run `bun install` once to generate `bun.lockb`, then re-run installer
+
+**Changes:**
+```bash
+# Better directory creation
+mkdir -p ".droidz/specs/templates" ".droidz/specs/examples" \\
+         ".droidz/specs/active" ".droidz/specs/archive"
+
+# Better error handling (non-fatal)
+if curl -fsSL "..." -o ".droidz/specs/README.md" 2>&1; then
+    log_success "Downloaded"
+else
+    log_warning "Could not download (will use default)"
+fi
+```
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.4/install.sh | bash
+```
+
+---
+
 ## [3.4.3] - 2025-11-22
 
 ### 🔧 CRITICAL FIX - Installer Now Handles All Dependencies + Claude Code Command Sync

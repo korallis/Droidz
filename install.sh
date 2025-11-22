@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.3.4"
+DROIDZ_VERSION="3.4.3"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -1440,8 +1440,19 @@ done
 
 # Download spec templates to unified location (.droidz/specs/)
 log_step "Downloading unified spec templates..."
-curl -fsSL "${GITHUB_RAW}/.droidz/specs/README.md${CACHE_BUST}" -o ".droidz/specs/README.md" 2>/dev/null || \
-    log_warning "Could not download unified specs README (using local)"
+
+# Ensure directories exist and are writable
+mkdir -p ".droidz/specs/templates" ".droidz/specs/examples" ".droidz/specs/active" ".droidz/specs/archive" 2>/dev/null || {
+    log_error "Failed to create .droidz/specs directories"
+    exit 1
+}
+
+# Download with better error handling
+if curl -fsSL "${GITHUB_RAW}/.droidz/specs/README.md${CACHE_BUST}" -o ".droidz/specs/README.md" 2>&1; then
+    log_success "Downloaded specs README"
+else
+    log_warning "Could not download unified specs README (will use default)"
+fi
 
 curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/feature-spec.md${CACHE_BUST}" -o ".droidz/specs/templates/feature-spec.md"
 log_success "Downloaded feature-spec template"
@@ -1449,9 +1460,11 @@ log_success "Downloaded feature-spec template"
 curl -fsSL "${GITHUB_RAW}/.factory/specs/templates/epic-spec.md${CACHE_BUST}" -o ".droidz/specs/templates/epic-spec.md"
 log_success "Downloaded epic-spec template"
 
-curl -fsSL "${GITHUB_RAW}/.droidz/specs/examples/000-realtime-notifications.md${CACHE_BUST}" -o ".droidz/specs/examples/000-realtime-notifications.md" 2>/dev/null || \
-    log_warning "Could not download example spec (using local)"
-log_success "Downloaded example spec"
+if curl -fsSL "${GITHUB_RAW}/.droidz/specs/examples/000-realtime-notifications.md${CACHE_BUST}" -o ".droidz/specs/examples/000-realtime-notifications.md" 2>&1; then
+    log_success "Downloaded example spec"
+else
+    log_warning "Could not download example spec (will use default)"
+fi
 
 # Create .gitkeep files for empty directories
 touch .droidz/specs/active/.gitkeep
