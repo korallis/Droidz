@@ -2,6 +2,24 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.2] - 2025-11-22
+
+### 🔧 Hotfix
+
+**Clean Installer - All Versions Synchronized**
+- ✅ Removed tmux/jq/caffeinate dependency checks (not needed in v3.x)
+- ✅ All version numbers synchronized: install.sh, package.json, README, tag
+- ✅ Clean installation output without unnecessary dependency messages
+- ✅ Tagged URL bypasses GitHub CDN cache
+- ✅ Migration option available for v2.x users
+
+**Installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.2/install.sh | bash
+```
+
+---
+
 ## [3.1.1] - 2025-11-22
 
 ### 🔧 Hotfix
