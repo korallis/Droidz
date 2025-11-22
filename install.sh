@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.3.0"
+DROIDZ_VERSION="3.3.1"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -489,6 +489,7 @@ else
     # Determine mode based on what exists
     if [[ "$HAS_FACTORY" == "true" ]] && [[ "$HAS_CLAUDE" == "true" ]]; then
         INSTALL_MODE="both"
+        MODE="update"
         log_info "Detected both Droid CLI and Claude Code installations"
     elif [[ "$HAS_FACTORY" == "true" ]]; then
         # Show option to add Claude Code
@@ -516,9 +517,11 @@ else
         
         if [[ "$existing_choice" == "1" ]]; then
             INSTALL_MODE="droid-cli"
+            MODE="update"
             log_info "Updating Droid CLI installation"
         else
             INSTALL_MODE="both"
+            MODE="update"
             log_info "Adding Claude Code installation (keeping Droid CLI)"
         fi
     elif [[ "$HAS_CLAUDE" == "true" ]]; then
@@ -547,9 +550,11 @@ else
         
         if [[ "$existing_choice" == "1" ]]; then
             INSTALL_MODE="claude-code"
+            MODE="update"
             log_info "Updating Claude Code installation"
         else
             INSTALL_MODE="both"
+            MODE="update"
             log_info "Adding Droid CLI installation (keeping Claude Code)"
         fi
     fi
@@ -729,7 +734,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"
@@ -739,12 +744,13 @@ uninstall_droidz() {
 
 # Detect if this is an install or update (check for .factory directory)
 # Also detect v2.x installations (.droidz folder)
+# Skip this menu if MODE was already set in the first menu
 V2_DETECTED=false
 if [[ -d ".droidz" ]]; then
     V2_DETECTED=true
 fi
 
-if [[ -d ".factory" ]] || [[ "$V2_DETECTED" == "true" ]]; then
+if [[ -z "$MODE" ]] && ([[ -d ".factory" ]] || [[ "$V2_DETECTED" == "true" ]]); then
     echo ""
     if [[ "$V2_DETECTED" == "true" ]]; then
         log_warning "Droidz v2.x installation detected (.droidz/ folder found)"

@@ -2,6 +2,54 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.3.1] - 2025-11-22
+
+### 🔧 HOTFIX - Fixed Duplicate Menu Bug
+
+**Issue: Installer showed duplicate menu when adding second mode**
+- ❌ Problem: When selecting "Add Claude Code" to existing Droid CLI, installer showed menu twice
+- ❌ User had to answer "existing installation" question twice
+- ❌ Confusing UX and unclear flow
+- ✅ Fixed: Set `MODE` variable when user selects add second mode
+- ✅ Added check to skip second menu if `MODE` already set
+- ✅ Clean, single-prompt experience
+
+**What Changed:**
+```bash
+# OLD (v3.3.0): Showed menu twice
+1. First menu: "Add Claude Code installation"
+2. Second menu: "What would you like to do? 1) Update 2) Fresh..."
+
+# NEW (v3.3.1): Single menu, direct to installation
+1. First menu: "Add Claude Code installation"
+2. → Proceeds directly to installation (no duplicate menu)
+```
+
+**Technical Fix:**
+- Set `MODE="update"` when user selects add second mode
+- Added condition: `if [[ -z "$MODE" ]] && ...` to skip second menu
+- Applied to all three scenarios:
+  - Adding Claude Code to Droid CLI
+  - Adding Droid CLI to Claude Code
+  - Updating both when both exist
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh | bash
+```
+
+**Validation:**
+```bash
+# Test scenario: Have Droid CLI, add Claude Code
+1. Run installer
+2. Shows: "Current: Droid CLI (.factory/)"
+3. Select: "2) Add Claude Code installation"
+4. ✅ Proceeds directly to installation
+5. ✅ No duplicate menu!
+```
+
+---
+
 ## [3.3.0] - 2025-11-22
 
 ### 🚀 MAJOR RELEASE - Full Automated Dual-Mode Installation
