@@ -94,7 +94,7 @@ Droidz v3.0 is a complete architectural refactor that fully leverages Factory.ai
 The installer now supports **both Droid CLI and Claude Code**!
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.3/install.sh | bash
 ```
 
 **When prompted, select:**
@@ -104,7 +104,7 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh |
 Or download first:
 
 ```bash
-wget https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh
+wget https://raw.githubusercontent.com/korallis/Droidz/v3.4.3/install.sh
 chmod +x install.sh
 ./install.sh
 ```
@@ -541,7 +541,7 @@ MIT License - see [LICENSE](LICENSE)
 
 ## 🙏 Credits
 
-**Built for Factory.ai Droid CLI** | **v3.4.2**
+**Built for Factory.ai Droid CLI** | **v3.4.3**
 
 **Factory.ai Features Used:**
 - Skills System (v0.26.0)

@@ -73,7 +73,7 @@ git commit -m "backup: save v2.x state before migration"
 git pull origin main
 
 # Or download fresh
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.3/install.sh | bash
 ```
 
 #### Step 3: Migrate Specs
@@ -407,7 +407,7 @@ ls .factory/skills/
 # If empty, re-clone skills
 git pull origin main
 # Or re-run installer
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.2/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.3/install.sh | bash
 ```
 
 ### Issue: Droids Using Wrong Model
