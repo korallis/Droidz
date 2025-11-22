@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.3.1"
+DROIDZ_VERSION="3.3.2"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -734,7 +734,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.1/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"
@@ -877,22 +877,35 @@ fi
 
 echo ""
 
-# Create directories (Droid CLI only for now)
+# Create directories based on installation mode
 log_step "Creating directories..."
-mkdir -p .factory/droids
-mkdir -p .factory/commands
-mkdir -p .factory/orchestrator
-mkdir -p .factory/hooks
-mkdir -p .factory/memory/user
-mkdir -p .factory/memory/org
-mkdir -p .factory/skills
-mkdir -p .factory/specs/active
-mkdir -p .factory/specs/archive
-mkdir -p .factory/specs/templates
-mkdir -p .factory/product
-mkdir -p .factory/scripts
-mkdir -p .factory/standards/templates
-log_success "Directories created"
+
+# Create Droid CLI directories if needed
+if [[ "$INSTALL_MODE" == "droid-cli" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    mkdir -p .factory/droids
+    mkdir -p .factory/commands
+    mkdir -p .factory/orchestrator
+    mkdir -p .factory/hooks
+    mkdir -p .factory/memory/user
+    mkdir -p .factory/memory/org
+    mkdir -p .factory/skills
+    mkdir -p .factory/specs/active
+    mkdir -p .factory/specs/archive
+    mkdir -p .factory/specs/templates
+    mkdir -p .factory/product
+    mkdir -p .factory/scripts
+    mkdir -p .factory/standards/templates
+    log_success "Droid CLI directories created"
+fi
+
+# Create Claude Code directories if needed
+if [[ "$INSTALL_MODE" == "claude-code" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    mkdir -p .claude/agents
+    mkdir -p .claude/commands
+    mkdir -p .claude/hooks/scripts
+    mkdir -p .claude/skills
+    log_success "Claude Code directories created"
+fi
 
 # Handle package.json based on installation mode
 if [[ "$MODE" == "update" ]]; then

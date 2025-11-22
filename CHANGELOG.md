@@ -2,6 +2,64 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.3.2] - 2025-11-22
+
+### 🔧 HOTFIX - Fixed Directory Creation for Dual-Mode Installation
+
+**Issue: `.claude/` directories not created when adding Claude Code to existing Droid CLI**
+- ❌ Problem: Installer created Droid CLI directories but skipped Claude Code directories
+- ❌ curl failed with "Failure writing output to destination" when downloading agents
+- ❌ Installation failed halfway through
+- ✅ Fixed: Added conditional directory creation based on `INSTALL_MODE`
+- ✅ Creates `.claude/` directories when needed
+- ✅ Both modes now install correctly
+
+**What Changed:**
+```bash
+# OLD (v3.3.1): Only created .factory/ directories
+mkdir -p .factory/droids
+mkdir -p .factory/commands
+...
+
+# NEW (v3.3.2): Creates directories based on mode
+if [[ "$INSTALL_MODE" == "droid-cli" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    mkdir -p .factory/droids
+    mkdir -p .factory/commands
+    ...
+fi
+
+if [[ "$INSTALL_MODE" == "claude-code" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    mkdir -p .claude/agents
+    mkdir -p .claude/commands
+    mkdir -p .claude/hooks/scripts
+    mkdir -p .claude/skills
+fi
+```
+
+**Root Cause:**
+- v3.3.0 added Claude Code installation logic but incorrectly reverted directory creation
+- Comment said "Droid CLI only for now" but should have been conditional
+- curl couldn't write files because destination directories didn't exist
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh | bash
+```
+
+**Validation:**
+```bash
+# Test: Add Claude Code to existing Droid CLI
+1. Run installer
+2. Select: "2) Add Claude Code installation"
+3. ✅ Creates .claude/ directories
+4. ✅ Downloads all Claude Code files successfully
+5. ✅ Installation completes!
+```
+
+**Apologies for the issue!** The installer now works correctly for all modes. Thank you for your patience and for testing!
+
+---
+
 ## [3.3.1] - 2025-11-22
 
 ### 🔧 HOTFIX - Fixed Duplicate Menu Bug
