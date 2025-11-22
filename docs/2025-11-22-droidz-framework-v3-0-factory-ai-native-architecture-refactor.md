@@ -510,13 +510,13 @@ Droidz v3.0 is a complete architectural refactor that fully leverages Factory.ai
 ### Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.4/install.sh | bash
 ```
 
 Or download first:
 
 ```bash
-wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh
+wget https://raw.githubusercontent.com/korallis/Droidz/v3.1.4/install.sh
 chmod +x install.sh
 ./install.sh
 ```

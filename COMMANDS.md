@@ -1,6 +1,6 @@
 # Droidz Commands Reference
 
-**Current Version:** v3.1.0  
+**Current Version:** v3.1.4  
 **Last Updated:** 2025-11-22
 
 ---
@@ -446,7 +446,7 @@ v3.x uses shorter command names, but old names still work:
 ### Workflow 1: First Time Setup → Build
 ```
 1. /droidz-init                      # Verify & analyze
-2. Review .droidz/architecture.md    # Understand project
+2. Review .factory/architecture.md    # Understand project
 3. /droidz-build "add authentication" # Generate spec
 4. Choose "Execute in parallel"       # Build it
 ```
@@ -494,7 +494,7 @@ These commands no longer exist (removed in v0.1.3):
 These commands are planned but not yet implemented:
 
 - `/droidz-status` - Resume conversations with state tracking
-- Spec execution tracking in `.droidz/tasks/`
+- Spec execution tracking in `.factory/specs/active/`
 
 ---
 
@@ -514,7 +514,7 @@ These commands are planned but not yet implemented:
 ## 📚 More Information
 
 - **Full Documentation:** [README.md](README.md)
-- **Example Specs:** `.droidz/specs/000-example-contact-form.md`
+- **Example Specs:** `.factory/specs/archived/000-example-contact-form.md`
 - **CHANGELOG:** [CHANGELOG.md](CHANGELOG.md) (v0.2.0 section)
 - **Skills Guide:** [SKILLS.md](SKILLS.md)
 

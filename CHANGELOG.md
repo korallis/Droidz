@@ -2,6 +2,31 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.4] - 2025-11-22
+
+### 🔧 Documentation & Consistency Fixes
+
+**Full Alignment Across All Documentation**
+- ✅ Fixed COMMANDS.md version (was v3.1.0, now v3.1.4)
+- ✅ Updated all .droidz/ references to .factory/ in COMMANDS.md
+- ✅ Updated MIGRATION_V3.md install URLs to use tagged version (v3.1.4)
+- ✅ Updated docs/2025-11-22*.md install URLs to use tagged version
+- ✅ All version numbers synchronized across all files
+- ✅ Deep analysis completed - no bugs, installer fully functional
+
+**Verified Working:**
+- All installer downloads return HTTP 200
+- No 404 errors
+- All files exist and accessible
+- Migration system works perfectly
+
+**Installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.4/install.sh | bash
+```
+
+---
+
 ## [3.1.3] - 2025-11-22
 
 ### 🔧 Hotfix
