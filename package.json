@@ -1,6 +1,6 @@
 {
   "name": "droidz",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "description": "Production-grade AI development framework for Factory.ai Droid CLI with native skills, comprehensive validation, and intelligent parallel execution",
   "type": "module",
   "keywords": [

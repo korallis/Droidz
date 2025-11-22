@@ -2,6 +2,41 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.5] - 2025-11-22
+
+### 🐛 CRITICAL FIX - Fixed /validate-init Quote/Backtick Parsing Errors
+
+**Issue: Nested quotes and backticks causing bash parsing errors in Claude Code**
+- ❌ Problem: `echo '!`npm run lint`'` causing "(eval):3: unmatched '" errors  
+- ❌ Complex quoting with nested single quotes and backticks failed to parse
+- ❌ Commands like `/validate-init` crashed immediately
+
+**Fix: Rewrote to use heredocs instead of echo**
+- ✅ Changed from `echo '!`cmd`'` to `cat >> file << 'EOF'`
+- ✅ Heredocs handle backticks and quotes cleanly without escaping issues
+- ✅ Works reliably in both bash and zsh
+
+**Before (v3.4.4 - broken):**
+```bash
+echo '!`npm run lint`' >> .factory/commands/validate.md
+# Error: unmatched ' in bash parsing
+```
+
+**After (v3.4.5 - fixed):**
+```bash
+cat >> .factory/commands/validate.md << 'EOF'
+!\`npm run lint\`
+EOF
+# ✓ Works perfectly!
+```
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.5/install.sh | bash
+```
+
+---
+
 ## [3.4.4] - 2025-11-22
 
 ### 🐛 HOTFIX - Fixed Installer Version + Curl Write Errors
