@@ -2,6 +2,42 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.6] - 2025-11-22
+
+### 🐛 CRITICAL FIX - Simplified /validate-init to Fix Remaining Parse Errors
+
+**Issue: Complex conditional tests still causing parse errors**
+- ❌ Problem: `test -f .prettierrc -o -f .prettierrc.json` on one line too complex
+- ❌ Multi-condition OR tests causing "(eval):3: unmatched '" errors
+- ❌ Still failing in Claude Code despite heredoc fix
+
+**Fix: Simplified to single commands per line**
+- ✅ Broke complex conditionals into separate simple commands
+- ✅ Each tool check is now one command with `&&` chains
+- ✅ Format: `command -v tool && cat >> file << 'EOF' && echo "✓ Added"`
+- ✅ No more complex `-o` OR conditions that confuse the parser
+
+**Changes:**
+```bash
+# Before (v3.4.5 - still broken):
+!`if command -v prettier || test -f .prettierrc -o -f .prettierrc.json; then
+  cat >> validate.md << 'EOF'
+  ...`
+
+# After (v3.4.6 - fixed):
+!`command -v prettier >/dev/null 2>&1 && cat >> validate.md << 'EOF' && echo "✓ Added"
+...
+EOF
+`
+```
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.6/install.sh | bash
+```
+
+---
+
 ## [3.4.5] - 2025-11-22
 
 ### 🐛 CRITICAL FIX - Fixed /validate-init Quote/Backtick Parsing Errors
