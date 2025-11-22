@@ -2,6 +2,24 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.3] - 2025-11-22
+
+### 🔧 Hotfix
+
+**Fixed Installer 404 Error**
+- ✅ Fixed installer trying to download `droidz-build.md` (now `build.md`)
+- ✅ Added missing validation commands to installer (`validate-init.md`, `validate.md`)
+- ✅ All version numbers synchronized: install.sh, package.json, README, tag
+- ✅ Installer now downloads all correct command files
+- ✅ v2.x migration works properly
+
+**Installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.3/install.sh | bash
+```
+
+---
+
 ## [3.1.2] - 2025-11-22
 
 ### 🔧 Hotfix
