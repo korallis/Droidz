@@ -2,11 +2,14 @@
 #
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
-# Install with:
+# Install with (latest stable version):
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash
+#
+# Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/main/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -25,8 +28,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.2.0"
-GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
+DROIDZ_VERSION="3.2.1"
+GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
 # Installation mode (will be set by user choice)
@@ -647,7 +650,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"

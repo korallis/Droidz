@@ -2,6 +2,51 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.2.1] - 2025-11-22
+
+### 🔥 CRITICAL HOTFIX - Cache-Busting Installer Fix
+
+**Issue: GitHub CDN caching prevents users from getting latest version**
+- ❌ Problem: Installer used `/main` branch URL which gets cached by GitHub CDN
+- ❌ Users running installer would get old cached version instead of v3.2.0
+- ❌ Breaking changes and new features wouldn't be delivered properly
+- ✅ Fixed: Installer now uses **tag-specific URLs** (`/v3.2.1` instead of `/main`)
+- ✅ Added timestamp-based cache busting parameter
+- ✅ Updated all documentation to recommend versioned URLs
+
+**What Changed:**
+```bash
+# OLD (v3.2.0): Used /main branch (cached by GitHub)
+GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
+
+# NEW (v3.2.1): Uses specific version tag (bypasses cache)
+GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
+```
+
+**Why This Matters:**
+- ✅ Users always get the exact version they request
+- ✅ No more stale cached content from GitHub CDN
+- ✅ Installer downloads files from immutable tag refs
+- ✅ Consistent installations across all environments
+
+**Recommended Installation:**
+```bash
+# Always use versioned URL for stable releases
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash
+
+# Or use /main for cutting-edge (but may be cached)
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+**If you installed v3.2.0 and had issues:**
+```bash
+# Run the new installer with version-specific URL
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash
+# Choose: 1) Update
+```
+
+---
+
 ## [3.2.0] - 2025-11-22
 
 ### 🚀 MAJOR FEATURE - Dual-Mode Installation Support
