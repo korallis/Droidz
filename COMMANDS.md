@@ -1,6 +1,6 @@
 # Droidz Commands Reference
 
-**Current Version:** v3.1.4  
+**Current Version:** v3.1.5  
 **Last Updated:** 2025-11-22
 
 ---

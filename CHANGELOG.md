@@ -2,6 +2,60 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.5] - 2025-11-22
+
+### 🔧 Critical Fixes - Command Files & Update System
+
+**Command File Naming (Breaking Fix)**
+- ✅ Renamed `droidz-init.md` → `init.md` (primary command name)
+- ✅ Renamed `auto-parallel.md` → `parallel.md` (primary command name)
+- ✅ `build.md` already correct (was fixed in v3.1.0)
+- ✅ Updated installer to download correct filenames
+- ✅ Commands now match documentation exactly
+
+**Enhanced Migration System**
+- ✅ Migration script now renames old command files to new names
+- ✅ Automatically handles `droidz-init.md` → `init.md`
+- ✅ Automatically handles `auto-parallel.md` → `parallel.md`
+- ✅ Automatically handles `droidz-build.md` → `build.md`
+- ✅ Cleans up deprecated `.v2-backup` files
+
+**Proper Update & Cleanup System**
+- ✅ Update process now detects existing v3.x installations
+- ✅ Automatically renames old command files during updates
+- ✅ Removes deprecated files (old backups, unused scripts)
+- ✅ Replaces all Droidz framework files (commands, droids, skills, hooks)
+- ✅ **Preserves user data** (specs in `.factory/specs/active/`, configs)
+- ✅ Prevents file accumulation over multiple updates
+
+**What This Means for Users**
+
+*New Installations:*
+- Commands installed with correct primary names from the start
+
+*Existing v2.x Users:*
+- Migration script handles everything automatically
+- Old files renamed to new names
+- Deprecated files cleaned up
+
+*Existing v3.0-v3.1.4 Users:*
+- Update automatically renames command files
+- Old command files removed
+- System cleaned up and aligned
+
+**Installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.5/install.sh | bash
+```
+
+**Why This Matters:**
+- Commands now work exactly as documented (`/init`, `/build`, `/parallel`)
+- No confusion between old and new command names
+- Clean system without duplicate or deprecated files
+- Proper update system that maintains a clean installation
+
+---
+
 ## [3.1.4] - 2025-11-22
 
 ### 🔧 Documentation & Consistency Fixes

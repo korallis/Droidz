@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.1.4"
+DROIDZ_VERSION="3.1.5"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -1030,9 +1030,9 @@ fi
 log_step "Downloading custom slash commands..."
 
 COMMANDS=(
-    "droidz-init.md"
+    "init.md"
     "build.md"
-    "auto-parallel.md"
+    "parallel.md"
     "gh-helper.md"
     "validate-init.md"
     "validate.md"

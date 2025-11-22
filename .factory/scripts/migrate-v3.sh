@@ -161,6 +161,40 @@ else
   echo "Backup saved to: $BACKUP_DIR/"
 fi
 
+# Step 6: Rename command files to new primary names
+echo ""
+echo "🔄 Step 6: Renaming commands to primary names..."
+
+FACTORY_DIR=".factory"
+
+if [ -f "$FACTORY_DIR/commands/droidz-init.md" ]; then
+    mv "$FACTORY_DIR/commands/droidz-init.md" "$FACTORY_DIR/commands/init.md" 2>/dev/null || true
+    echo "   ✓ Renamed droidz-init.md → init.md"
+fi
+
+if [ -f "$FACTORY_DIR/commands/auto-parallel.md" ]; then
+    mv "$FACTORY_DIR/commands/auto-parallel.md" "$FACTORY_DIR/commands/parallel.md" 2>/dev/null || true
+    echo "   ✓ Renamed auto-parallel.md → parallel.md"
+fi
+
+if [ -f "$FACTORY_DIR/commands/droidz-build.md" ]; then
+    mv "$FACTORY_DIR/commands/droidz-build.md" "$FACTORY_DIR/commands/build.md" 2>/dev/null || true
+    echo "   ✓ Renamed droidz-build.md → build.md"
+fi
+
+# Step 7: Clean up deprecated files
+echo ""
+echo "🗑️  Step 7: Cleaning up deprecated files..."
+
+# Remove old backup files
+rm -f "$FACTORY_DIR/commands/"*.v2-backup 2>/dev/null || true
+rm -f "$FACTORY_DIR/droids/"*.v2-backup 2>/dev/null || true
+
+# Remove old installer scripts if present
+rm -f "$FACTORY_DIR/scripts/installer.sh" 2>/dev/null || true
+
+echo "   ✓ Cleaned up deprecated files"
+
 echo ""
 echo "📚 Documentation:"
 echo "  - README.md - Overview and quick start"
