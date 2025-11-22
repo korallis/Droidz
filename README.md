@@ -5,7 +5,7 @@
 Transform vague ideas into production code with AI-powered validation, native skills, and intelligent parallel execution.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.1.6-blue.svg)](https://github.com/korallis/Droidz)
+[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](https://github.com/korallis/Droidz)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
 [![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
 

@@ -2,6 +2,54 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.2.0] - 2025-11-22
+
+### 🚀 MAJOR FEATURE - Dual-Mode Installation Support
+
+**Claude Code Support Added!** 🎉
+
+Droidz now supports **both Factory.ai Droid CLI and Anthropic Claude Code** with completely independent installations.
+
+**What's New:**
+- ✅ **Dual-mode installer** - Choose between Droid CLI or Claude Code at install
+- ✅ **Complete Claude Code integration** - Full `.claude/` folder structure with 15 agents, 61 skills, 4 commands
+- ✅ **Zero breaking changes** - Existing Droid CLI users unaffected
+- ✅ **Independent operation** - Both modes can coexist without conflicts
+- ✅ **Smart detection** - Installer auto-detects existing mode on updates
+- ✅ **Full feature parity** - All Droidz capabilities available in both modes
+
+**New Files:**
+- `.claude/agents/*.md` - 15 specialist agents (converted from droids)
+- `.claude/commands/*.md` - 4 slash commands (/init, /build, /parallel, /validate)
+- `.claude/skills/*/SKILL.md` - 61 auto-activating skills
+- `.claude/hooks/scripts/*.sh` - Event-driven hooks
+- `.claude/settings.json` - Claude Code configuration
+- `CLAUDE.md` - Root instructions for Claude Code
+- `CLAUDE_CODE_SETUP.md` - Setup guide for Claude Code users
+
+**Installation:**
+```bash
+# Fresh install - choose your mode
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.0/install.sh | bash
+# Select: 1) Droid CLI or 2) Claude Code
+
+# Update existing installation (auto-detects mode)
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.0/install.sh | bash
+```
+
+**Benefits:**
+- 🎯 Use Droidz with **either** Factory.ai or Claude Code
+- 🔄 Switch between tools without conflicts
+- 📚 Consistent workflows across both platforms
+- ⚡ Full parallel execution in both modes
+- 🛡️ Same validation pipeline everywhere
+
+**See Also:**
+- [CLAUDE_CODE_SETUP.md](CLAUDE_CODE_SETUP.md) - Claude Code installation guide
+- [docs/DUAL_MODE_IMPLEMENTATION_SUMMARY.md](docs/DUAL_MODE_IMPLEMENTATION_SUMMARY.md) - Technical details
+
+---
+
 ## [3.1.6] - 2025-11-22
 
 ### 🔥 CRITICAL HOTFIX - Update System Actually Works Now
