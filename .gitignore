@@ -1,7 +1,7 @@
 # Droidz Framework for Factory.ai v3.0
 
 # User-specific directories (never commit!)
-.claude/
+# .claude/  # Commented out - keeping template in repo for dual-mode support
 
 # Active work (never commit)
 .factory/specs/active/*.md

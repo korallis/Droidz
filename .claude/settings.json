@@ -1,0 +1,43 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "script": ".claude/hooks/scripts/block-dangerous.sh",
+        "enabled": true
+      }
+    ],
+    "PostToolUse": [
+      {
+        "script": ".claude/hooks/scripts/auto-lint.sh",
+        "enabled": true,
+        "tools": ["Edit", "Create"]
+      }
+    ],
+    "Stop": [
+      {
+        "script": ".claude/hooks/scripts/session-summary.sh",
+        "enabled": true
+      }
+    ]
+  },
+  "tools": {
+    "Execute": {
+      "autoRun": {
+        "allow": [],
+        "deny": [
+          "rm -rf",
+          "dd if=",
+          "mkfs",
+          "format",
+          "> /dev/",
+          "sudo rm",
+          "sudo dd"
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaultModel": "inherit",
+    "allowCustomAgents": true
+  }
+}
