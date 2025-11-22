@@ -2,6 +2,44 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.1] - 2025-11-22
+
+### 🐛 HOTFIX - Fixed /validate Command for Framework Projects
+
+**Issue: `/validate-init` was generating validation for tools not used in the project**
+- ❌ Problem: Generated validation tried to run `tsc --noEmit` even though no TypeScript source files exist
+- ❌ Caused error: `command not found: tsc` when running `/validate`
+- ❌ Auto-detection was too aggressive (found TypeScript in devDeps, assumed TypeScript project)
+
+**Fix: Created appropriate validation workflow for Droidz framework**
+- ✅ Replaced generic auto-generated validation with framework-specific checks
+- ✅ Phase 1: Shell script linting (optional shellcheck)
+- ✅ Phase 2: File structure validation (verify required framework files)
+- ✅ Phase 3: Style checking (prettier for markdown/YAML only)
+- ✅ Phase 4: Documentation link validation
+- ✅ Phase 5: Installation test (verify install.sh is accessible)
+
+**What Changed:**
+```bash
+# OLD (v3.4.0): Tried to validate TypeScript
+!`tsc --noEmit`  # ✗ Failed - no TypeScript source files
+
+# NEW (v3.4.1): Validates what actually exists
+npx prettier --check "*.md" ".factory/**/*.md" "*.yml"  # ✓ Works
+```
+
+**Notes:**
+- TypeScript and prettier are still in devDependencies (needed for ESLint tooling)
+- Validation now appropriate for shell/markdown-based framework
+- User projects should still run `/validate-init` to generate project-specific validation
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.1/install.sh | bash
+```
+
+---
+
 ## [3.4.0] - 2025-11-22
 
 ### ✨ FEATURE - Unified Specs Location for Dual-Mode Support
