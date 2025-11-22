@@ -2,6 +2,66 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.1.6] - 2025-11-22
+
+### 🔥 CRITICAL HOTFIX - Update System Actually Works Now
+
+**Issue 1: /init command mentioned removed dependencies**
+- ❌ Problem: /init still described checking for `git`, `jq`, `tmux`, `bun`
+- ✅ Fixed: Removed all mentions of deprecated dependency checks from init.md
+- ✅ Updated validation steps to be dependency-agnostic
+- ✅ Updated example commands to use new names (`/build` not `/droidz-build`)
+
+**Issue 2: Update command didn't actually update files** ⚠️ CRITICAL
+- ❌ Problem: Running update kept old command files (droidz-init.md, auto-parallel.md)
+- ❌ User still had old commands even after "updating"
+- ❌ Cleanup logic existed but wasn't removing old files before downloads
+- ✅ Fixed: Added explicit cleanup RIGHT BEFORE downloading commands (line 1033)
+- ✅ Removes: `droidz-init.md`, `auto-parallel.md`, `droidz-build.md`
+- ✅ Removes: `*.v2-backup` files
+- ✅ Only runs during `MODE=update` to preserve clean installs
+- ✅ **Update now ACTUALLY replaces old files with new ones**
+
+**What Changed:**
+```bash
+# OLD (v3.1.5): Downloaded over old files, never deleted renamed files
+for command in "${COMMANDS[@]}"; do
+    curl ... -o ".factory/commands/${command}"
+done
+
+# NEW (v3.1.6): Explicitly removes old files FIRST
+if [[ "$MODE" == "update" ]]; then
+    rm -f .factory/commands/droidz-init.md
+    rm -f .factory/commands/auto-parallel.md
+    rm -f .factory/commands/droidz-build.md
+    rm -f .factory/commands/*.v2-backup
+fi
+for command in "${COMMANDS[@]}"; do
+    curl ... -o ".factory/commands/${command}"
+done
+```
+
+**Why This Matters:**
+- **Users who updated from v3.0-v3.1.5**: Had BOTH old and new command files
+- **Confusion**: `/init` worked but docs said `/droidz-init`
+- **Bloat**: Old files accumulated with each update
+- **Now**: Update actually cleans and replaces files properly
+
+**Installation command:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.6/install.sh | bash
+```
+
+**If you updated to v3.1.5 and still have issues:**
+```bash
+cd your-project
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.1.6/install.sh | bash
+# Choose: 1) Update
+# This will NOW actually clean and replace your old files
+```
+
+---
+
 ## [3.1.5] - 2025-11-22
 
 ### 🔧 Critical Fixes - Command Files & Update System

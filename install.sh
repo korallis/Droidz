@@ -25,7 +25,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.1.5"
+DROIDZ_VERSION="3.1.6"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/main"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -1028,6 +1028,16 @@ fi
 
 # Download custom commands
 log_step "Downloading custom slash commands..."
+
+# Remove old command files with deprecated names (during updates)
+if [[ "$MODE" == "update" ]]; then
+    log_info "Removing old command files..."
+    rm -f .factory/commands/droidz-init.md 2>/dev/null || true
+    rm -f .factory/commands/auto-parallel.md 2>/dev/null || true
+    rm -f .factory/commands/droidz-build.md 2>/dev/null || true
+    rm -f .factory/commands/*.v2-backup 2>/dev/null || true
+    log_success "Old command files removed"
+fi
 
 COMMANDS=(
     "init.md"

@@ -11,9 +11,8 @@ Initialize the Droidz development framework in this project with the following s
 
 1. **Environment Check:**
    - Verify Git repository exists
-   - Check for dependencies: git, jq, tmux, bun
-   - Validate disk space for worktrees
    - Verify Factory.ai CLI is installed (`droid --version`)
+   - Check basic project structure
 
 2. **Directory Structure:**
    - Create `.factory/memory/` for tech stack and preferences
@@ -34,8 +33,8 @@ Initialize the Droidz development framework in this project with the following s
 
 5. **Validation:**
    - Test orchestrator script exists
-   - Verify tmux and git worktree support
    - Check all droids are enabled
+   - Verify git repository setup
 
 ## Options
 
@@ -58,8 +57,8 @@ After successful initialization, display:
 🚀 Next Steps:
 1. Review tech stack detection: .factory/memory/org/tech-stack.json
 2. Check example spec: .factory/specs/examples/
-3. Try: /droidz-build "your feature idea"
-4. Or use: /auto-parallel "build authentication system"
+3. Try: /build "your feature idea"
+4. Or use: /parallel "build authentication system"
 
 💡 Ready for Parallel Execution!
 ```
