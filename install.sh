@@ -614,9 +614,29 @@ uninstall_droidz() {
 }
 
 # Detect if this is an install or update (check for .factory directory)
-if [[ -d ".factory" ]]; then
+# Also detect v2.x installations (.droidz folder)
+V2_DETECTED=false
+if [[ -d ".droidz" ]]; then
+    V2_DETECTED=true
+fi
+
+if [[ -d ".factory" ]] || [[ "$V2_DETECTED" == "true" ]]; then
     echo ""
-    log_warning "Existing Droidz installation detected"
+    if [[ "$V2_DETECTED" == "true" ]]; then
+        log_warning "Droidz v2.x installation detected (.droidz/ folder found)"
+        echo ""
+        echo -e "${YELLOW}${BOLD}🔄 MIGRATION AVAILABLE: v2.x → v3.x${NC}"
+        echo ""
+        echo "  Droidz v3.0+ uses .factory/ instead of .droidz/"
+        echo "  Migration will:"
+        echo "    • Move specs from .droidz/specs/ → .factory/specs/active/"
+        echo "    • Update .gitignore patterns"
+        echo "    • Preserve all your work"
+        echo "    • Remove old .droidz/ folder"
+        echo ""
+    else
+        log_warning "Existing Droidz installation detected"
+    fi
     
     # Always show menu and wait for user input
     echo ""
@@ -625,17 +645,24 @@ if [[ -d ".factory" ]]; then
     echo "  1) Update (keep existing configuration and memory)"
     echo "  2) Fresh Install (remove old installation and start clean)"
     echo "  3) Uninstall (completely remove Droidz)"
-    echo "  4) Cancel"
+    if [[ "$V2_DETECTED" == "true" ]]; then
+        echo "  4) Migrate from v2.x to v3.x (recommended for v2.x users)"
+        echo "  5) Cancel"
+        MAX_CHOICE=5
+    else
+        echo "  4) Cancel"
+        MAX_CHOICE=4
+    fi
     echo ""
     
     # Read user choice with validation (force read from terminal, not script stdin)
     choice=""
     while [[ -z "$choice" ]]; do
-        read -r -p "Enter your choice (1-4): " choice < /dev/tty
+        read -r -p "Enter your choice (1-${MAX_CHOICE}): " choice < /dev/tty
         
         # Validate input
-        if [[ ! "$choice" =~ ^[1-4]$ ]]; then
-            log_error "Invalid choice '$choice'. Please enter 1, 2, 3, or 4."
+        if [[ ! "$choice" =~ ^[1-${MAX_CHOICE}]$ ]]; then
+            log_error "Invalid choice '$choice'. Please enter 1-${MAX_CHOICE}."
             choice=""
         fi
     done
@@ -660,6 +687,7 @@ if [[ -d ".factory" ]]; then
             # Remove old installation
             log_info "Removing old Droidz installation..."
             rm -rf .factory
+            rm -rf .droidz  # Also remove v2.x folder if present
             log_success "Old installation removed"
             
             # Restore config.yml
@@ -674,6 +702,40 @@ if [[ -d ".factory" ]]; then
             uninstall_droidz
             ;;
         4)
+            if [[ "$V2_DETECTED" == "true" ]]; then
+                # Run migration
+                log_info "Starting migration from v2.x to v3.x..."
+                echo ""
+                
+                # Download migration script
+                MIGRATE_SCRIPT=".factory/scripts/migrate-v3.sh"
+                mkdir -p .factory/scripts
+                
+                log_step "Downloading migration script..."
+                if curl -fsSL "${GITHUB_RAW}/.factory/scripts/migrate-v3.sh${CACHE_BUST}" -o "${MIGRATE_SCRIPT}"; then
+                    chmod +x "${MIGRATE_SCRIPT}"
+                    log_success "Migration script downloaded"
+                    echo ""
+                    
+                    # Run migration
+                    log_info "Running migration..."
+                    bash "${MIGRATE_SCRIPT}"
+                    
+                    # Continue with update installation
+                    MODE="update"
+                    log_info "Continuing with Droidz v${DROIDZ_VERSION} installation..."
+                else
+                    log_error "Failed to download migration script"
+                    log_info "You can manually run migration later with:"
+                    echo "  .factory/scripts/migrate-v3.sh"
+                    exit 1
+                fi
+            else
+                log_info "Installation cancelled"
+                exit 0
+            fi
+            ;;
+        5)
             log_info "Installation cancelled"
             exit 0
             ;;
