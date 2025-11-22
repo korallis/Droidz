@@ -2,6 +2,71 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.2.2] - 2025-11-22
+
+### 🎨 UX IMPROVEMENT - Enhanced Installation Menu (Dual-Mode Support Coming)
+
+**Issue: Users with one mode installed can't easily add the other mode**
+- ❌ Problem: Installer didn't offer options to add Claude Code when Droid CLI exists (or vice versa)
+- ❌ No "install both" option for new users
+- ❌ Confusing UX when trying to use both tools
+- ✅ Fixed: Enhanced installer menu system with clear options
+- ✅ Detects existing installations (Droid CLI, Claude Code, or both)
+- ✅ Offers to add second mode when one exists  
+- ⏳ Note: Full automated dual-installation coming in v3.3.0
+
+**What Changed:**
+
+**New Installation Menu:**
+```
+Select installation:
+  1) Droid CLI (Factory.ai) - Folder: .factory/
+  2) Claude Code (Anthropic) - Folder: .claude/
+  3) Both (Install both modes) - Folders: .factory/ + .claude/
+```
+
+**Existing Installation Detection:**
+```
+🔍 Existing Installation Detected
+
+Current: Droid CLI (.factory/)
+
+Would you like to:
+  1) Update Droid CLI only
+  2) Add Claude Code installation (keep Droid CLI)
+```
+
+**Limitations in v3.2.2:**
+- Options 2 and 3 show "coming in v3.3.0" message
+- Currently only Droid CLI fully automated
+- Claude Code requires manual setup (see CLAUDE_CODE_SETUP.md)
+- Dual-mode installation framework implemented, automation pending
+
+**Why This Matters:**
+- ✅ Clear menu system ready for v3.3.0
+- ✅ Users can plan to use both tools
+- ✅ Improved installer UX and clarity
+- ✅ Foundation for full dual-mode support
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash
+```
+
+**Coming in v3.3.0:**
+- Full automated Claude Code installation
+- Dual-mode (both) installation in one command
+- Add second mode to existing installation
+- Update both modes simultaneously
+
+**Current Workaround (until v3.3.0):**
+For now, to use both modes:
+1. Install Droid CLI (option 1)
+2. Follow manual Claude Code setup guide:
+   https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md
+
+---
+
 ## [3.2.1] - 2025-11-22
 
 ### 🔥 CRITICAL HOTFIX - Cache-Busting Installer Fix

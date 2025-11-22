@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,12 +28,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.2.1"
+DROIDZ_VERSION="3.2.2"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
 # Installation mode (will be set by user choice)
-INSTALL_MODE="" # "droid-cli" or "claude-code"
+INSTALL_MODE="" # "droid-cli", "claude-code", or "both"
 
 # Error logging
 ERROR_LOG_FILE=".droidz-install-$(date +%Y%m%d_%H%M%S).log"
@@ -441,15 +441,19 @@ if [[ "$EXISTING_INSTALL" == "false" ]]; then
     echo "     └─ Best for: Claude Code CLI users"
     echo "     └─ Folder: .claude/"
     echo ""
+    echo -e "  ${GREEN}3)${NC} ${BOLD}Both${NC} (Install both modes)"
+    echo "     └─ Best for: Using both tools"
+    echo "     └─ Folders: .factory/ + .claude/"
+    echo ""
     
     # Read mode choice with validation
     mode_choice=""
     while [[ -z "$mode_choice" ]]; do
-        read -r -p "Enter your choice (1-2): " mode_choice < /dev/tty
+        read -r -p "Enter your choice (1-3): " mode_choice < /dev/tty
         
         # Validate input
-        if [[ ! "$mode_choice" =~ ^[1-2]$ ]]; then
-            log_error "Invalid choice '$mode_choice'. Please enter 1 or 2."
+        if [[ ! "$mode_choice" =~ ^[1-3]$ ]]; then
+            log_error "Invalid choice '$mode_choice'. Please enter 1, 2, or 3."
             mode_choice=""
         fi
     done
@@ -461,18 +465,122 @@ if [[ "$EXISTING_INSTALL" == "false" ]]; then
             log_info "Installing for Droid CLI (Factory.ai)"
             ;;
         2)
-            INSTALL_MODE="claude-code"
-            log_info "Installing for Claude Code (Anthropic)"
+            log_warning "Claude Code installation not yet fully automated!"
+            echo ""
+            echo "Claude Code support coming in v3.3.0 with full automation."
+            echo ""
+            echo "For now, you can:"
+            echo "  1) Install Droid CLI (option 1)"
+            echo "  2) Follow manual setup guide:"
+            echo "     https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
+            echo ""
+            read -r -p "Press Enter to return to menu..." < /dev/tty
+            exit 0
+            ;;
+        3)
+            log_warning "Dual installation coming soon in v3.3.0!"
+            echo ""
+            echo "For now, you can:"
+            echo "  1) Install Droid CLI first (choose option 1)"
+            echo "  2) Then manually copy .factory/ to .claude/ and rename files"
+            echo "  3) Or wait for v3.3.0 with full dual-install support"
+            echo ""
+            read -r -p "Press Enter to return to menu..." < /dev/tty
+            exit 0
             ;;
     esac
 else
     # Detect existing installation type
+    HAS_FACTORY=false
+    HAS_CLAUDE=false
+    
     if [[ -d ".factory" ]]; then
-        INSTALL_MODE="droid-cli"
-        log_info "Detected existing Droid CLI installation"
-    elif [[ -d ".claude" ]]; then
-        INSTALL_MODE="claude-code"
-        log_info "Detected existing Claude Code installation"
+        HAS_FACTORY=true
+    fi
+    
+    if [[ -d ".claude" ]]; then
+        HAS_CLAUDE=true
+    fi
+    
+    # Determine mode based on what exists
+    if [[ "$HAS_FACTORY" == "true" ]] && [[ "$HAS_CLAUDE" == "true" ]]; then
+        INSTALL_MODE="both"
+        log_info "Detected both Droid CLI and Claude Code installations"
+    elif [[ "$HAS_FACTORY" == "true" ]]; then
+        # Show option to add Claude Code
+        echo ""
+        echo -e "${CYAN}${BOLD}🔍 Existing Installation Detected${NC}"
+        echo ""
+        echo "  Current: Droid CLI (.factory/)"
+        echo ""
+        echo "Would you like to:"
+        echo ""
+        echo -e "  ${GREEN}1)${NC} Update Droid CLI only"
+        echo -e "  ${GREEN}2)${NC} Add Claude Code installation (keep Droid CLI)"
+        echo ""
+        
+        existing_choice=""
+        while [[ -z "$existing_choice" ]]; do
+            read -r -p "Enter your choice (1-2): " existing_choice < /dev/tty
+            
+            if [[ ! "$existing_choice" =~ ^[1-2]$ ]]; then
+                log_error "Invalid choice '$existing_choice'. Please enter 1 or 2."
+                existing_choice=""
+            fi
+        done
+        echo ""
+        
+        if [[ "$existing_choice" == "1" ]]; then
+            INSTALL_MODE="droid-cli"
+            log_info "Updating Droid CLI installation"
+        else
+            log_warning "Adding Claude Code to existing Droid CLI coming in v3.3.0!"
+            echo ""
+            echo "For now, manually copy .factory/ to .claude/ after installation."
+            echo "See: https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
+            echo ""
+            read -r -p "Press Enter to continue with Droid CLI update only..." < /dev/tty
+            INSTALL_MODE="droid-cli"
+            log_info "Continuing with Droid CLI update"
+        fi
+    elif [[ "$HAS_CLAUDE" == "true" ]]; then
+        # Show option to add Droid CLI
+        echo ""
+        echo -e "${CYAN}${BOLD}🔍 Existing Installation Detected${NC}"
+        echo ""
+        echo "  Current: Claude Code (.claude/)"
+        echo ""
+        echo "Would you like to:"
+        echo ""
+        echo -e "  ${GREEN}1)${NC} Update Claude Code only"
+        echo -e "  ${GREEN}2)${NC} Add Droid CLI installation (keep Claude Code)"
+        echo ""
+        
+        existing_choice=""
+        while [[ -z "$existing_choice" ]]; do
+            read -r -p "Enter your choice (1-2): " existing_choice < /dev/tty
+            
+            if [[ ! "$existing_choice" =~ ^[1-2]$ ]]; then
+                log_error "Invalid choice '$existing_choice'. Please enter 1 or 2."
+                existing_choice=""
+            fi
+        done
+        echo ""
+        
+        if [[ "$existing_choice" == "1" ]]; then
+            log_warning "Claude Code installation not yet supported!"
+            echo ""
+            echo "Claude Code support requires manual setup currently."
+            echo "Please see: https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
+            echo ""
+            echo "Coming in v3.3.0: Full automated Claude Code installation"
+            exit 1
+        else
+            log_warning "Adding Droid CLI to existing Claude Code coming in v3.3.0!"
+            echo ""
+            echo "For now, install Droid CLI separately in a different project."
+            exit 1
+        fi
     fi
 fi
 
@@ -650,7 +758,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.1/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"
@@ -792,7 +900,7 @@ fi
 
 echo ""
 
-# Create directories
+# Create directories (Droid CLI only for now)
 log_step "Creating directories..."
 mkdir -p .factory/droids
 mkdir -p .factory/commands
