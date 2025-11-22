@@ -1121,9 +1121,9 @@ case "$NODE_PKG_MANAGER" in
             fi
         fi
         
-        log_info "Installing development dependencies for linting and types"
-        if npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
+        log_info "Installing development dependencies for linting, types, and validation"
+        if npm install --save-dev @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint prettier typescript 2>/dev/null; then
+            log_success "Installed development dependencies (prettier, typescript, eslint)"
         else
             log_warning "Could not install dev dependencies (might be workspace restrictions)"
         fi
@@ -1145,9 +1145,9 @@ case "$NODE_PKG_MANAGER" in
             fi
         fi
         
-        log_info "Installing development dependencies for linting and types"
-        if yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
+        log_info "Installing development dependencies for linting, types, and validation"
+        if yarn add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint prettier typescript 2>/dev/null; then
+            log_success "Installed development dependencies (prettier, typescript, eslint)"
         else
             log_warning "Could not install dev dependencies (might be workspace restrictions)"
         fi
@@ -1169,9 +1169,9 @@ case "$NODE_PKG_MANAGER" in
             fi
         fi
         
-        log_info "Installing development dependencies for linting and types"
-        if pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
+        log_info "Installing development dependencies for linting, types, and validation"
+        if pnpm add -D @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint prettier typescript 2>/dev/null; then
+            log_success "Installed development dependencies (prettier, typescript, eslint)"
         else
             log_warning "Could not install dev dependencies (might be workspace restrictions)"
         fi
@@ -1193,9 +1193,9 @@ case "$NODE_PKG_MANAGER" in
             fi
         fi
         
-        log_info "Installing development dependencies for linting and types"
-        if bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint 2>/dev/null; then
-            log_success "Installed development dependencies"
+        log_info "Installing development dependencies for linting, types, and validation"
+        if bun add -d @types/bun @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint typescript-eslint prettier typescript 2>/dev/null; then
+            log_success "Installed development dependencies (prettier, typescript, eslint)"
         else
             log_warning "Could not install dev dependencies (might be workspace restrictions)"
         fi

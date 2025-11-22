@@ -2,6 +2,71 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.4.3] - 2025-11-22
+
+### 🔧 CRITICAL FIX - Installer Now Handles All Dependencies + Claude Code Command Sync
+
+**Issue 1: Commands not synced between .factory and .claude directories**
+- ❌ Problem: `.claude/commands/validate-init.md` had old broken version
+- ❌ Installer downloaded to `.claude/commands/` but latest fix was only in `.factory/commands/`
+- ❌ Users still got "command not found: prettier" error in Claude Code
+
+**Issue 2: Dependencies not installed automatically**
+- ❌ Problem: prettier and typescript weren't being installed by installer
+- ❌ Users had to manually install dependencies
+- ❌ validation commands failed due to missing tools
+
+**Fix: Complete installer overhaul**
+- ✅ Installer now installs **all required dependencies** automatically:
+  - prettier (for style checking)
+  - typescript (for type checking) 
+  - eslint + plugins (for linting)
+  - All @types packages
+- ✅ Works with ALL package managers: npm, yarn, pnpm, bun
+- ✅ Synced `.claude/commands/` with latest fixed versions
+- ✅ Both fresh install AND updates now install dependencies
+
+**What Gets Installed:**
+```bash
+npm install --save-dev \\
+  @types/node \\
+  @typescript-eslint/eslint-plugin \\
+  @typescript-eslint/parser \\
+  eslint \\
+  typescript-eslint \\
+  prettier \\
+  typescript
+```
+
+**Before vs After:**
+
+**v3.4.2 (broken in Claude Code):**
+```bash
+curl -fsSL .../v3.4.2/install.sh | bash
+/validate-init
+Error: command not found: prettier  # Still failed!
+```
+
+**v3.4.3 (fixed everywhere):**
+```bash
+curl -fsSL .../v3.4.3/install.sh | bash
+# Installer output:
+Installing development dependencies for linting, types, and validation
+✓ Installed development dependencies (prettier, typescript, eslint)
+
+/validate-init
+✓ Prettier detected
+✓ Added Prettier validation (using npx)
+✅ Validation workflow created!  # ✓ Works!
+```
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.4.3/install.sh | bash
+```
+
+---
+
 ## [3.4.2] - 2025-11-22
 
 ### 🐛 CRITICAL FIX - /validate-init Now Actually Works
