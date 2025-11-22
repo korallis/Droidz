@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.3.2"
+DROIDZ_VERSION="3.3.3"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -734,7 +734,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.2/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"
@@ -1525,7 +1525,14 @@ if [[ "$INSTALL_MODE" == "claude-code" ]] || [[ "$INSTALL_MODE" == "both" ]]; th
     CLAUDE_HOOKS=(
         "auto-lint.sh"
         "block-dangerous.sh"
-        "session-summary.sh"
+        "inject-file-skills.sh"
+        "inject-skills.sh"
+        "load-project-skills.sh"
+        "monitor-context.sh"
+        "parallel-agent-monitor.sh"
+        "start-parallel-monitor.sh"
+        "stop-parallel-monitor.sh"
+        "validate-on-edit.sh"
     )
     
     for hook in "${CLAUDE_HOOKS[@]}"; do

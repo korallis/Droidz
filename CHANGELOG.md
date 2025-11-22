@@ -2,6 +2,57 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.3.3] - 2025-11-22
+
+### 🔧 HOTFIX - Fixed Missing Claude Code Hook Files (404 Error)
+
+**Issue: Installation failed with 404 error when downloading Claude Code hooks**
+- ❌ Problem: Installer tried to download `session-summary.sh` which doesn't exist
+- ❌ curl returned 404: "The requested URL returned error: 404"
+- ❌ Installation failed after successfully downloading skills
+- ✅ Fixed: Updated hook list to match actual files in `.claude/hooks/scripts/`
+- ✅ Removed non-existent `session-summary.sh`
+- ✅ Added 8 missing hooks that actually exist
+
+**What Changed:**
+```bash
+# OLD (v3.3.2): Wrong list of hooks
+CLAUDE_HOOKS=(
+    "auto-lint.sh"
+    "block-dangerous.sh"
+    "session-summary.sh"  # ← DOESN'T EXIST! 404 error
+)
+
+# NEW (v3.3.3): Correct list matching actual files
+CLAUDE_HOOKS=(
+    "auto-lint.sh"
+    "block-dangerous.sh"
+    "inject-file-skills.sh"
+    "inject-skills.sh"
+    "load-project-skills.sh"
+    "monitor-context.sh"
+    "parallel-agent-monitor.sh"
+    "start-parallel-monitor.sh"
+    "stop-parallel-monitor.sh"
+    "validate-on-edit.sh"
+)
+```
+
+**Root Cause:**
+- Installer was based on Droid CLI hooks (which has `session-summary.sh`)
+- Claude Code has different hooks in `.claude/hooks/scripts/`
+- Didn't verify actual files before adding to installer
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.3/install.sh | bash
+```
+
+**Verified Files:**
+All 10 hook files now correctly match what exists in the repository.
+
+---
+
 ## [3.3.2] - 2025-11-22
 
 ### 🔧 HOTFIX - Fixed Directory Creation for Dual-Mode Installation
