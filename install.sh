@@ -3,13 +3,13 @@
 # Droidz Installer (Factory.ai Droid CLI Edition) - Smart Installer with Auto-Dependency Installation
 #
 # Install with (latest stable version):
-#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash
 #
 # Or install from main branch (cutting edge):
 #   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 #
 # Or download and run:
-#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh
+#   wget https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh
 #   chmod +x install.sh
 #   ./install.sh
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DROIDZ_VERSION="3.2.2"
+DROIDZ_VERSION="3.3.0"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/v${DROIDZ_VERSION}"
 CACHE_BUST="?v=${DROIDZ_VERSION}&t=$(date +%s)"
 
@@ -465,28 +465,12 @@ if [[ "$EXISTING_INSTALL" == "false" ]]; then
             log_info "Installing for Droid CLI (Factory.ai)"
             ;;
         2)
-            log_warning "Claude Code installation not yet fully automated!"
-            echo ""
-            echo "Claude Code support coming in v3.3.0 with full automation."
-            echo ""
-            echo "For now, you can:"
-            echo "  1) Install Droid CLI (option 1)"
-            echo "  2) Follow manual setup guide:"
-            echo "     https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
-            echo ""
-            read -r -p "Press Enter to return to menu..." < /dev/tty
-            exit 0
+            INSTALL_MODE="claude-code"
+            log_info "Installing for Claude Code (Anthropic)"
             ;;
         3)
-            log_warning "Dual installation coming soon in v3.3.0!"
-            echo ""
-            echo "For now, you can:"
-            echo "  1) Install Droid CLI first (choose option 1)"
-            echo "  2) Then manually copy .factory/ to .claude/ and rename files"
-            echo "  3) Or wait for v3.3.0 with full dual-install support"
-            echo ""
-            read -r -p "Press Enter to return to menu..." < /dev/tty
-            exit 0
+            INSTALL_MODE="both"
+            log_info "Installing for both Droid CLI and Claude Code"
             ;;
     esac
 else
@@ -534,14 +518,8 @@ else
             INSTALL_MODE="droid-cli"
             log_info "Updating Droid CLI installation"
         else
-            log_warning "Adding Claude Code to existing Droid CLI coming in v3.3.0!"
-            echo ""
-            echo "For now, manually copy .factory/ to .claude/ after installation."
-            echo "See: https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
-            echo ""
-            read -r -p "Press Enter to continue with Droid CLI update only..." < /dev/tty
-            INSTALL_MODE="droid-cli"
-            log_info "Continuing with Droid CLI update"
+            INSTALL_MODE="both"
+            log_info "Adding Claude Code installation (keeping Droid CLI)"
         fi
     elif [[ "$HAS_CLAUDE" == "true" ]]; then
         # Show option to add Droid CLI
@@ -568,18 +546,11 @@ else
         echo ""
         
         if [[ "$existing_choice" == "1" ]]; then
-            log_warning "Claude Code installation not yet supported!"
-            echo ""
-            echo "Claude Code support requires manual setup currently."
-            echo "Please see: https://github.com/korallis/Droidz/blob/main/CLAUDE_CODE_SETUP.md"
-            echo ""
-            echo "Coming in v3.3.0: Full automated Claude Code installation"
-            exit 1
+            INSTALL_MODE="claude-code"
+            log_info "Updating Claude Code installation"
         else
-            log_warning "Adding Droid CLI to existing Claude Code coming in v3.3.0!"
-            echo ""
-            echo "For now, install Droid CLI separately in a different project."
-            exit 1
+            INSTALL_MODE="both"
+            log_info "Adding Droid CLI installation (keeping Claude Code)"
         fi
     fi
 fi
@@ -758,7 +729,7 @@ uninstall_droidz() {
         log_success "Droidz has been completely uninstalled"
         echo ""
         echo "To reinstall later, run:"
-        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash"
+        echo "  curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash"
         exit 0
     else
         log_info "Uninstall cancelled"
@@ -1468,6 +1439,108 @@ else
 fi
 
 # Documentation is maintained in the repository
+# ============================================================================
+# CLAUDE CODE INSTALLATION (if needed)
+# ============================================================================
+
+if [[ "$INSTALL_MODE" == "claude-code" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    echo ""
+    log_step "Installing Claude Code files..."
+    
+    # Download Claude Code agents
+    log_step "Downloading Claude Code agents..."
+    
+    AGENTS=(
+        "accessibility-specialist.md"
+        "api-designer.md"
+        "codegen.md"
+        "database-architect.md"
+        "generalist.md"
+        "infra.md"
+        "integration.md"
+        "orchestrator.md"
+        "performance-optimizer.md"
+        "refactor.md"
+        "security-auditor.md"
+        "test.md"
+        "ui-designer.md"
+        "ux-designer.md"
+    )
+    
+    for agent in "${AGENTS[@]}"; do
+        curl -fsSL "${GITHUB_RAW}/.claude/agents/${agent}${CACHE_BUST}" -o ".claude/agents/${agent}"
+        log_success "Downloaded ${agent}"
+    done
+    
+    # Download Claude Code commands
+    log_step "Downloading Claude Code commands..."
+    
+    CLAUDE_COMMANDS=(
+        "init.md"
+        "build.md"
+        "parallel.md"
+        "gh-helper.md"
+        "validate-init.md"
+        "validate.md"
+    )
+    
+    for command in "${CLAUDE_COMMANDS[@]}"; do
+        curl -fsSL "${GITHUB_RAW}/.claude/commands/${command}${CACHE_BUST}" -o ".claude/commands/${command}"
+        log_success "Downloaded ${command}"
+    done
+    
+    # Download Claude Code skills (same as Droid CLI)
+    log_step "Downloading Claude Code skills..."
+    
+    # Use the same SKILL_NAMES array defined earlier
+    for skill in "${SKILL_NAMES[@]}"; do
+        skill_dir=".claude/skills/${skill}"
+        mkdir -p "$skill_dir"
+        curl -fsSL "${GITHUB_RAW}/.claude/skills/${skill}/SKILL.md${CACHE_BUST}" -o "${skill_dir}/SKILL.md"
+        log_success "Downloaded ${skill}/SKILL.md"
+    done
+    
+    # Download Claude Code hooks
+    log_step "Downloading Claude Code hooks..."
+    
+    CLAUDE_HOOKS=(
+        "auto-lint.sh"
+        "block-dangerous.sh"
+        "session-summary.sh"
+    )
+    
+    for hook in "${CLAUDE_HOOKS[@]}"; do
+        curl -fsSL "${GITHUB_RAW}/.claude/hooks/scripts/${hook}${CACHE_BUST}" -o ".claude/hooks/scripts/${hook}"
+        chmod +x ".claude/hooks/scripts/${hook}"
+        log_success "Downloaded ${hook}"
+    done
+    
+    # Download Claude Code settings.json
+    log_step "Downloading Claude Code settings..."
+    curl -fsSL "${GITHUB_RAW}/.claude/settings.json${CACHE_BUST}" -o ".claude/settings.json"
+    log_success "Downloaded settings.json"
+    
+    # Download CLAUDE.md (root configuration)
+    log_step "Downloading CLAUDE.md configuration..."
+    curl -fsSL "${GITHUB_RAW}/CLAUDE.md${CACHE_BUST}" -o "CLAUDE.md"
+    log_success "Downloaded CLAUDE.md"
+    
+    log_success "Claude Code installation complete!"
+fi
+
+# ============================================================================
+# DROID CLI CONFIGURATION (if needed)
+# ============================================================================
+
+if [[ "$INSTALL_MODE" == "droid-cli" ]] || [[ "$INSTALL_MODE" == "both" ]]; then
+    # Download plugin.json for Droid CLI
+    if [[ ! -f "plugin.json" ]] || [[ "$MODE" == "update" ]]; then
+        log_step "Downloading plugin.json..."
+        curl -fsSL "${GITHUB_RAW}/plugin.json${CACHE_BUST}" -o "plugin.json"
+        log_success "Downloaded plugin.json"
+    fi
+fi
+
 # Users should reference GitHub for CHANGELOG and updates
 log_step "Framework files installed successfully"
 

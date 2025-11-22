@@ -21,7 +21,7 @@ Droidz provides Claude Code with:
 ### Fresh Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.2.2/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash
 ```
 
 When prompted, select:

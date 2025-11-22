@@ -2,6 +2,123 @@
 
 All notable changes to Droidz will be documented in this file.
 
+## [3.3.0] - 2025-11-22
+
+### 🚀 MAJOR RELEASE - Full Automated Dual-Mode Installation
+
+**What You Asked For: Fully Automated Claude Code Installation!**
+
+No more manual setup! Install Droid CLI, Claude Code, or both with complete automation.
+
+**The Complete Solution:**
+- ✅ **Full Claude Code automated installation** - Agents, commands, skills, hooks all downloaded automatically
+- ✅ **Dual-mode (both) installation** - Install Droid CLI + Claude Code in one command
+- ✅ **Add second mode anytime** - Have Droid CLI? Add Claude Code instantly (and vice versa)
+- ✅ **Update both simultaneously** - When both installed, updates both modes together
+- ✅ **Zero manual steps** - Everything automated from start to finish
+
+**What Changed:**
+
+**New Installation Capabilities:**
+```bash
+# Fresh install - all 3 options fully automated now!
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash
+
+Select installation:
+  1) Droid CLI (Factory.ai) ✓ AUTOMATED
+  2) Claude Code (Anthropic) ✓ AUTOMATED (NEW!)
+  3) Both (Install both modes) ✓ AUTOMATED (NEW!)
+```
+
+**Smart Existing Installation Detection:**
+```bash
+# If you have Droid CLI only:
+Current: Droid CLI (.factory/)
+
+Would you like to:
+  1) Update Droid CLI only
+  2) Add Claude Code installation ✓ AUTOMATED (NEW!)
+
+# If you have Claude Code only:
+Current: Claude Code (.claude/)
+
+Would you like to:
+  1) Update Claude Code only
+  2) Add Droid CLI installation ✓ AUTOMATED (NEW!)
+
+# If you have both:
+Current: Both Droid CLI and Claude Code
+
+Updates both installations automatically!
+```
+
+**What Gets Installed for Claude Code:**
+- `.claude/agents/` - 15 specialist agents (orchestrator, codegen, test, etc.)
+- `.claude/commands/` - 6 slash commands (/init, /build, /parallel, /validate)
+- `.claude/skills/` - 61 auto-activating skills (same as Droid CLI)
+- `.claude/hooks/scripts/` - Event-driven hooks (auto-lint, session-summary, etc.)
+- `.claude/settings.json` - Claude Code configuration
+- `CLAUDE.md` - Root instructions for Claude Code
+
+**Installation:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.3.0/install.sh | bash
+```
+
+**Use Cases:**
+
+1. **Fresh Claude Code Installation:**
+   ```bash
+   # Select option 2
+   # Creates: .claude/ folder + CLAUDE.md
+   # Ready to use with Claude Code immediately!
+   ```
+
+2. **Add Claude Code to Existing Droid CLI:**
+   ```bash
+   # Detects .factory/ exists
+   # Select "Add Claude Code installation"
+   # Keeps .factory/, adds .claude/
+   # Both work independently!
+   ```
+
+3. **Install Both from Scratch:**
+   ```bash
+   # Select option 3
+   # Creates: .factory/ + .claude/ + plugin.json + CLAUDE.md
+   # Use either tool, switch anytime!
+   ```
+
+4. **Update Both Modes:**
+   ```bash
+   # If both installed, updates both automatically
+   # Preserves your configs and memory
+   # Latest files for both modes!
+   ```
+
+**Why This Matters:**
+- ✅ **True flexibility** - Use Factory.ai, Claude Code, or both
+- ✅ **Zero friction** - No more manual file copying or setup guides
+- ✅ **Same great features** - 15 agents, 61 skills, 4 commands in both modes
+- ✅ **Independent operation** - Both modes coexist without conflicts
+- ✅ **Easy switching** - Work in Droid CLI, switch to Claude Code, or use both
+
+**Breaking Changes:**
+- None! Existing installations work exactly as before
+
+**Technical Details:**
+- Installer automatically downloads all Claude Code files from `.claude/` folder in repo
+- Smart detection of existing installations (checks for `.factory/` and/or `.claude/`)
+- Conditional installation based on mode selection
+- Same 61 skills available in both modes
+- plugin.json for Droid CLI, CLAUDE.md for Claude Code
+
+**Coming Next:**
+- v3.4.0: Enhanced skill discovery and management
+- v3.5.0: Cross-mode memory sharing (optional)
+
+---
+
 ## [3.2.2] - 2025-11-22
 
 ### 🎨 UX IMPROVEMENT - Enhanced Installation Menu (Dual-Mode Support Coming)
