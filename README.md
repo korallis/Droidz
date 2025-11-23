@@ -27,6 +27,15 @@ If Droidz saves you time, consider supporting its development!
 
 Your support helps maintain and improve this framework! 🙏
 
+### With Gratitude
+We’re deeply thankful for the generosity of friends who keep this instruction stack alive:
+
+- **Sorennza**
+- **Ray Fernando**
+- **Douwe de Vries**
+
+Every contribution—large or small—directly fuels new payloads, validation helpers, and continued open distribution. Thank you for believing in Droidz.
+
 ## Install Python 3.11+ (macOS)
 1. Check whether an acceptable version already exists:
    ```bash
