@@ -223,7 +223,7 @@ restore_user_files() {
 download_framework() {
   local temp_dir="$1"
   
-  print_info "Downloading Droidz framework v${VERSION}..."
+  print_info "Downloading Droidz framework v${VERSION}..." >&2
   
   local tarball_url="${REPO_URL}/archive/refs/heads/${BRANCH}.tar.gz"
   
@@ -232,20 +232,20 @@ download_framework() {
   elif command -v wget &> /dev/null; then
     wget -q -O "$temp_dir/droidz.tar.gz" "$tarball_url"
   else
-    print_error "Neither curl nor wget found. Please install one of them."
+    print_error "Neither curl nor wget found. Please install one of them." >&2
     exit 1
   fi
   
-  print_success "Downloaded framework"
+  print_success "Downloaded framework" >&2
   
-  print_info "Extracting files..."
+  print_info "Extracting files..." >&2
   tar -xzf "$temp_dir/droidz.tar.gz" -C "$temp_dir"
   
   # Find extracted directory (it will be named Droidz-main or similar)
   local extracted_dir=$(find "$temp_dir" -maxdepth 1 -type d -name "Droidz-*" | head -n 1)
   
   if [[ -z "$extracted_dir" ]]; then
-    print_error "Failed to extract framework"
+    print_error "Failed to extract framework" >&2
     exit 1
   fi
   
@@ -298,10 +298,6 @@ install_platform() {
       platform_payload_dir="$source_dir/droidz_installer/payloads/${platform_slug}/default"
       ;;
   esac
-  
-  print_info "DEBUG: Source directory: $source_dir"
-  print_info "DEBUG: Looking for: $platform_payload_dir"
-  print_info "DEBUG: Directory exists? $(if [[ -d "$platform_payload_dir" ]]; then echo 'YES'; else echo 'NO'; fi)"
   
   if [[ -d "$platform_payload_dir" ]]; then
     print_info "Installing $platform_slug droids and commands..."
