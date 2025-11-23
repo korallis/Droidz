@@ -299,6 +299,10 @@ install_platform() {
       ;;
   esac
   
+  print_info "DEBUG: Source directory: $source_dir"
+  print_info "DEBUG: Looking for: $platform_payload_dir"
+  print_info "DEBUG: Directory exists? $(if [[ -d "$platform_payload_dir" ]]; then echo 'YES'; else echo 'NO'; fi)"
+  
   if [[ -d "$platform_payload_dir" ]]; then
     print_info "Installing $platform_slug droids and commands..."
     
@@ -445,24 +449,24 @@ main() {
       echo ""
       echo "  Next steps:"
       echo "  1. Restart your droid session"
-      echo "  2. Run ${CYAN}/droids${NC} to see available custom droids"
-      echo "  3. Run ${CYAN}/commands${NC} to see available slash commands"
+      echo -e "  2. Run ${CYAN}/droids${NC} to see available custom droids"
+      echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo "  Your droids: ${BLUE}$platform_path/droids/${NC}"
-      echo "  Your commands: ${BLUE}$platform_path/commands/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your droids: ${BLUE}$platform_path/droids/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     claude)
       print_info "Claude Code is now configured!"
       echo ""
       echo "  Next steps:"
       echo "  1. Restart Claude Code"
-      echo "  2. Run ${CYAN}/agents${NC} to see available subagents"
-      echo "  3. Run ${CYAN}/commands${NC} to see available slash commands"
+      echo -e "  2. Run ${CYAN}/agents${NC} to see available subagents"
+      echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo "  Your agents: ${BLUE}$platform_path/agents/${NC}"
-      echo "  Your commands: ${BLUE}$platform_path/commands/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your agents: ${BLUE}$platform_path/agents/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cursor)
       print_info "Cursor is now configured!"
@@ -471,8 +475,8 @@ main() {
       echo "  1. Restart Cursor"
       echo "  2. Access workflows from the Cursor menu"
       echo ""
-      echo "  Your workflows: ${BLUE}$platform_path/workflows/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your workflows: ${BLUE}$platform_path/workflows/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cline)
       print_info "Cline is now configured!"
@@ -481,8 +485,8 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access prompts from the Cline extension"
       echo ""
-      echo "  Your prompts: ${BLUE}$platform_path/prompts/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your prompts: ${BLUE}$platform_path/prompts/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     codex)
       print_info "Codex CLI is now configured!"
@@ -491,8 +495,8 @@ main() {
       echo "  1. Run codex CLI"
       echo "  2. Access available playbooks"
       echo ""
-      echo "  Your playbooks: ${BLUE}$platform_path/playbooks/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your playbooks: ${BLUE}$platform_path/playbooks/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     vscode)
       print_info "VS Code is now configured!"
@@ -501,14 +505,14 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access snippets from the editor"
       echo ""
-      echo "  Your snippets: ${BLUE}$platform_path/snippets/${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Your snippets: ${BLUE}$platform_path/snippets/${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     *)
       print_info "$platform_name is now configured!"
       echo ""
-      echo "  Install location: ${BLUE}$platform_path${NC}"
-      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      echo -e "  Install location: ${BLUE}$platform_path${NC}"
+      echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
   esac
   
