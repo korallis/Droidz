@@ -1,13 +1,15 @@
-# 🤖 Droidz Instruction Platform
+# 🤖 Droidz Framework
 
-Agent-aware instruction framework with a two-tier architecture: shared standards in `~/.droidz` plus platform-specific commands and agents for your favorite AI coding tools (Factory AI, Claude Code, Cursor, Cline, Codex CLI, and VS Code).
+A complete spec-driven development framework for AI coding agents. Get 8 specialized agents, 20+ workflow commands, and comprehensive coding standards—all installed with one command.
 
 ## What You Get
-- **8 Specialized Agents/Droids** – implementer, spec-writer, product-planner, verifier, and more
-- **20+ Workflow Commands** – plan-product, shape-spec, implement-tasks, create-tasks, etc.
+
+- **8 Specialized Agents/Droids** – implementer, spec-writer, product-planner, spec-verifier, and more
+- **20+ Workflow Commands** – plan-product, shape-spec, implement-tasks, create-tasks, orchestrate-tasks
 - **Comprehensive Standards** – organized by domain (global, backend, frontend, testing)
 - **Safe Updates** – preserves your custom standards and specs during framework upgrades
-- **One-Command Install** – interactive installer guides you through setup
+- **Multi-Platform** – works with Factory AI, Claude Code, Cursor, Cline, Codex CLI, and VS Code
+
 ## 💬 Join Our Discord Community
 
 **Built specifically for Ray Fernando's Discord members!** 🎯
@@ -27,7 +29,7 @@ If Droidz saves you time, consider supporting its development!
 Your support helps maintain and improve this framework! 🙏
 
 ### With Gratitude
-We’re deeply thankful for the generosity of friends who keep this instruction stack alive:
+We're deeply thankful for the generosity of friends who keep this instruction stack alive:
 
 - **Sorennza**
 - **Ray Fernando**
@@ -35,78 +37,25 @@ We’re deeply thankful for the generosity of friends who keep this instruction 
 
 Every contribution—large or small—directly fuels new payloads, validation helpers, and continued open distribution. Thank you for believing in Droidz.
 
-## Install Python 3.11+ (macOS)
-1. Check whether an acceptable version already exists:
-   ```bash
-   python3 --version
-   ```
-   Continue only if the major/minor version is lower than 3.11.
-2. **Homebrew path** (fastest for most Macs):
-   ```bash
-   brew update
-   brew install python@3.11
-   brew link --overwrite python@3.11
-   echo 'export PATH="$(brew --prefix)/opt/python@3.11/bin:$PATH"' >> ~/.zshrc
-   source ~/.zshrc
-   python3.11 --version
-   pip3.11 --version
-   ```
-3. **Installer path** (when Homebrew isn’t available): download the latest universal2 `.pkg` installer for Python 3.11 from the official Python downloads page, double-click it, and accept the defaults. When it finishes, open `/Applications/Python 3.11/Install Certificates.command` to register SSL certificates, then verify with `python3.11 --version`.
+---
 
-## Install Python 3.11+ (Windows)
-1. Open an elevated PowerShell window and see if Python is already new enough:
-   ```powershell
-   python --version
-   ```
-2. **Winget path** (auto-manages PATH entries):
-   ```powershell
-   winget install --id Python.Python.3.11 -e --source winget
-   python --version
-   ```
-3. **Manual installer path** (for offline or scripted setups):
-   ```powershell
-   $Version = "3.11.8"
-   $Installer = "$env:TEMP\python-$Version-amd64.exe"
-   Invoke-WebRequest -Uri "https://www.python.org/ftp/python/$Version/python-$Version-amd64.exe" -OutFile $Installer
-   Start-Process -FilePath $Installer -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
-   Remove-Item $Installer
-   python --version
-   ```
-   Update `$Version` whenever a newer 3.11 maintenance release ships.
+## Installation
 
-## Run the Installer with One Command
-Use the bootstrap script to download the latest release, extract it to a temporary directory, and invoke `install.py` in a single shot. Pick the command that matches your tool:
+Run this one command and choose your platform from the interactive menu:
 
 ```bash
-# Claude Code
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude --install-to-project
-
-# Factory.ai Droid CLI (can also use: --platform droid_cli)
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform factory --install-to-project
-
-# Cursor
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cursor --install-to-project
-
-# Cline
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cline --install-to-project
-
-# Codex CLI (can also use: --platform codex_cli)
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex --install-to-project
-
-# VS Code
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform vscode --install-to-project
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
+The installer will:
+1. Show you a menu with all supported platforms
+2. Let you select your AI tool (Claude Code, Factory AI, Cursor, Cline, Codex CLI, or VS Code)
+3. Install everything to the correct location
+4. Preserve your existing customizations if updating
 
-- The `--install-to-project` flag installs the entire framework (shared + agent-specific) to your current directory for a self-contained project setup.
-- Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
-- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--force`) pass straight through after the `--` separator.
-- To install to platform-specific defaults instead (e.g., `~/.factory`, `~/.claude`), remove `--install-to-project` and add `--use-platform-defaults`.
-- Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
+That's it! No arguments, no complex flags, just one command.
 
-### What Gets Installed
-
-After installation, you'll have:
+## What Gets Installed
 
 **For Factory AI:**
 - `~/.factory/droids/` - 8 custom droids (implementer, spec-writer, product-planner, etc.)
@@ -123,6 +72,7 @@ After installation, you'll have:
 - `~/droidz/standards/` - Shared standards library
 
 ## Platform Reference
+
 | Platform | Install Location | Content |
 |----------|-----------------|---------|
 | Claude Code | `~/.claude/` | 8 agents, 20+ commands in flat structure |
@@ -133,37 +83,207 @@ After installation, you'll have:
 | VS Code | `~/Library/Application Support/Code/User/droidz/` | Snippets and task recipes |
 | **Shared** | `~/droidz/standards/` | Global, backend, frontend, testing standards |
 
-Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
+## Framework Overview
 
-## Tool-Agnostic Subagent Guidance
-- Prompts and command briefs only refer to “sub agents” generically; whichever IDE or CLI you install handles how many assistants can run at once.
-- When a host supports multiple concurrent agents (e.g., orchestrator + specialists), follow the same instructions; tools that lack that feature simply execute the listed tasks one at a time without violating the script.
-- Codex CLI and other single-agent runtimes still honor the same prompts—they execute every subtask sequentially while preserving the Validation Gate requirements.
+### Agents/Droids
 
-## Custom Profiles
-1. Copy an existing profile folder, e.g. `cp -R droidz_installer/payloads/claude/default droidz_installer/payloads/claude/nextjs`.
-2. Update the files inside with your custom standards and prompts.
-3. Run `python install.py --platform claude --profile nextjs`.
-4. The installer attempts profile-specific payloads first, then falls back to the default profile when none exist.
+Each agent is a specialized AI assistant for specific tasks:
 
-## Validation Gate (Mandatory)
-All payloads instruct their host tools to run the same gate:
-```bash
-ruff check .
-pytest
+- **implementer** - Implements features by following task lists and specs
+- **spec-writer** - Creates detailed specifications from requirements
+- **spec-shaper** - Researches and shapes specifications with requirements
+- **spec-verifier** - Reviews and validates specifications
+- **spec-initializer** - Creates initial spec folder structure
+- **product-planner** - Creates product documentation, mission, and roadmap
+- **tasks-list-creator** - Breaks down specs into actionable task lists
+- **implementation-verifier** - Verifies implementations and runs tests
+
+### Commands
+
+Workflow commands for common development tasks:
+
+- **plan-product** - Create product mission, roadmap, and tech stack
+- **shape-spec** - Initialize and research a specification
+- **write-spec** - Write a complete specification
+- **create-tasks** - Generate task lists from specs
+- **implement-tasks** - Implement features from task lists
+- **orchestrate-tasks** - Coordinate multi-agent task execution
+- **improve-skills** - Enhance and customize agent skills
+
+### Standards
+
+Comprehensive coding standards organized by domain:
+
+**Global Standards:**
+- Coding style and conventions
+- Error handling patterns
+- Code commenting guidelines
+- Tech stack documentation
+- Validation requirements
+
+**Backend Standards:**
+- API design patterns
+- Database models and migrations
+- Query optimization
+- Data layer best practices
+
+**Frontend Standards:**
+- Component architecture
+- CSS organization
+- Responsive design
+- Accessibility requirements
+
+**Testing Standards:**
+- Test writing guidelines
+- Coverage requirements
+- Testing patterns
+
+## Using the Framework
+
+### For Factory AI
+
+After installation:
+1. Restart your droid session
+2. Run `/droids` to see available custom droids
+3. Run `/commands` to see available slash commands
+
+Example usage:
 ```
-Never summarize work or claim success before both commands pass. Tests rely on this gate as well.
+> Use the spec-writer droid to create a spec for user authentication
+> /plan-product to start product planning
+> /implement-tasks for the login feature
+```
+
+### For Claude Code
+
+After installation:
+1. Restart Claude Code
+2. Run `/agents` to see available subagents
+3. Run `/commands` to see available slash commands
+
+Example usage:
+```
+> Use the implementer agent to build the authentication module
+> /shape-spec to research and plan a new feature
+> /create-tasks for the user profile spec
+```
+
+## Customization
+
+**Modify Standards:** Edit files in `~/droidz/standards/` to match your team's coding conventions. The installer preserves your modifications during updates.
+
+**Create Custom Droids/Agents:** Add your own `.md` files to the platform-specific directories:
+- Factory: `~/.factory/droids/`
+- Claude: `~/.claude/agents/`
+
+**Create Custom Commands:** Add command files to:
+- Factory: `~/.factory/commands/`
+- Claude: `~/.claude/commands/`
+
+**Customize Product Docs:** Add your product documentation:
+- `~/droidz/product/mission.md` - Product vision and strategy
+- `~/droidz/product/roadmap.md` - Development roadmap
+- `~/droidz/product/tech-stack.md` - Technology choices
+
+**Create Specs:** Store your specifications:
+- `~/droidz/specs/[spec-name]/spec.md` - Main specification
+- `~/droidz/specs/[spec-name]/tasks.md` - Task breakdown
+- `~/droidz/specs/[spec-name]/planning/` - Requirements and research
+
+## Workflow Example
+
+Here's how to use Droidz for a complete feature development cycle:
+
+1. **Plan the Product** (if starting new)
+   ```
+   /plan-product
+   ```
+   Creates mission, roadmap, and tech stack documentation.
+
+2. **Shape the Specification**
+   ```
+   /shape-spec
+   ```
+   Initializes spec folder and researches requirements.
+
+3. **Write the Specification**
+   ```
+   /write-spec
+   ```
+   Creates a detailed, implementable specification.
+
+4. **Create Task List**
+   ```
+   /create-tasks
+   ```
+   Breaks down the spec into concrete implementation tasks.
+
+5. **Implement the Feature**
+   ```
+   /implement-tasks
+   ```
+   Implements the tasks, following the spec and standards.
+
+6. **Verify Implementation**
+   The implementation-verifier agent runs tests and creates verification reports.
 
 ## Troubleshooting
-- **Existing instructions were replaced** – re-run the installer without `--force`; it creates timestamped backups (e.g., `.factory.backup-20251122-153000`).
-- **Need a dry preview** – add `--dry-run` to inspect planned destinations and payloads.
-- **Different install locations per platform** – run the installer separately, passing `--destination` each time for agent-specific content.
-- **Add another IDE** – update `droidz_installer/manifests/platforms.json` with a new entry and create a payload folder under `droidz_installer/payloads/<platform>/default/`.
 
-## Developing the Installer
+**Want to reinstall?** Just run the installer again. It will detect the existing installation and offer to update while preserving your data.
+
+**Lost your customizations?** The installer backs up to a temp directory during updates. Check `/tmp/` for recent backup folders.
+
+**Commands not working?** Make sure you've restarted your AI tool after installation. Run `/droids` or `/agents` to verify installation.
+
+**Need support?** Open an issue on [GitHub](https://github.com/korallis/Droidz/issues) or join the Discord community.
+
+## Development
+
+For contributors working on the installer or framework:
+
 ```bash
-pip install -e .
-ruff check .
-pytest
+# Clone the repository
+git clone https://github.com/korallis/Droidz.git
+cd Droidz
+
+# Test the installer locally
+bash install.sh
+
+# Framework files are in
+# - droidz_installer/payloads/droid_cli/default/ (Factory AI)
+# - droidz_installer/payloads/claude/default/ (Claude Code)
+# - droidz_installer/payloads/shared/default/ (Shared standards)
 ```
-Tests mock filesystem operations to guarantee backups, dry-runs, and copy plans behave consistently.
+
+### Project Structure
+
+```
+Droidz/
+├── install.sh                    # Interactive bash installer
+├── droidz_installer/
+│   ├── payloads/
+│   │   ├── droid_cli/default/   # Factory AI content
+│   │   │   ├── droids/          # Agent definitions
+│   │   │   └── commands/        # Slash commands
+│   │   ├── claude/default/      # Claude Code content
+│   │   │   ├── agents/          # Subagent definitions
+│   │   │   └── commands/        # Slash commands
+│   │   └── shared/default/      # Shared standards
+│   │       ├── global/
+│   │       ├── backend/
+│   │       ├── frontend/
+│   │       └── testing/
+│   └── manifests/
+│       └── platforms.json       # Platform configurations
+└── README.md
+```
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Credits
+
+Created by the Droidz community with special thanks to Ray Fernando and all our supporters.
+
+Built on the foundation of spec-driven development principles, adapted for modern AI coding agents.
