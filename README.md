@@ -105,27 +105,34 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 - To install to platform-specific defaults instead (e.g., `~/.factory`, `~/.claude`), remove `--install-to-project` and add `--use-platform-defaults`.
 - Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
 
-### Common Flags
-| Flag | Purpose |
-|------|---------|
-| `--install-to-project` | Install entire framework (shared + agent-specific) to current directory (recommended). |
-| `--profile <name>` | Loads alternative payload variants (defaults to `default`). |
-| `--destination <path>` | Overrides agent-specific install location (only applies without `--install-to-project`). |
-| `--use-platform-defaults` | Install to platform-specific defaults like `~/.factory`, `~/.claude` (instead of current dir). |
-| `--dry-run` | Prints the copy plan without touching disk. |
-| `--force` | Replaces existing destination folders instead of backing them up. |
-| `--quiet` | Suppresses verbose progress + completion summaries (default is verbose). |
-| `--payload-source <dir>` | Points to custom payloads you have authored. |
+### What Gets Installed
+
+After installation, you'll have:
+
+**For Factory AI:**
+- `~/.factory/droids/` - 8 custom droids (implementer, spec-writer, product-planner, etc.)
+- `~/.factory/commands/` - 20+ slash commands for workflows
+- `~/droidz/standards/` - Shared coding standards organized by domain
+
+**For Claude Code:**
+- `~/.claude/agents/` - 8 subagents for specialized tasks
+- `~/.claude/commands/` - 20+ slash commands
+- `~/droidz/standards/` - Shared standards (global, backend, frontend, testing)
+
+**For Other Platforms:**
+- Platform-specific directory with agents/commands
+- `~/droidz/standards/` - Shared standards library
 
 ## Platform Reference
-| Platform | Default (with `--install-to-project`) | With `--use-platform-defaults` | Payload Contents |
-|----------|--------------------------------------|--------------------------------|------------------|
-| Claude Code | Current directory (all files) | Agent: `~/.claude`, Shared: `~/.droidz` | Commands, agents, Claude-specific standards. |
-| Factory/Droid CLI | Current directory (all files) | Agent: `~/.factory`, Shared: `~/.droidz` | Factory command prompts, specialist agents, CLI standards. |
-| Cursor | Current directory (all files) | Agent: `~/Library/Application Support/Cursor/droidz`, Shared: `~/.droidz` | Workflow cards and standards. |
-| Cline | Current directory (all files) | Agent: `~/.cline`, Shared: `~/.droidz` | Prompt packs for spec-first execution. |
-| Codex CLI | Current directory (all files) | Agent: `~/.codex`, Shared: `~/.droidz` | Sequential playbooks for spec-first flow. |
-| VS Code | Current directory (all files) | Agent: `~/Library/Application Support/Code/User/droidz`, Shared: `~/.droidz` | Snippets and task recipes. |
+| Platform | Install Location | Content |
+|----------|-----------------|---------|
+| Claude Code | `~/.claude/` | 8 agents, 20+ commands in flat structure |
+| Factory AI | `~/.factory/` | 8 droids (`.factory/droids/`), 20+ commands (`.factory/commands/`) |
+| Cursor | `~/Library/Application Support/Cursor/droidz/` | Workflow cards and standards |
+| Cline | `~/.cline/` | Prompt packs for spec-first execution |
+| Codex CLI | `~/.codex/` | Sequential playbooks for spec-first flow |
+| VS Code | `~/Library/Application Support/Code/User/droidz/` | Snippets and task recipes |
+| **Shared** | `~/droidz/standards/` | Global, backend, frontend, testing standards |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
 
