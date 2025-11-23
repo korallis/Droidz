@@ -42,7 +42,7 @@ Slim, instruction-only distribution of the Droidz workflow. A single Python inst
 | Droid CLI | `~/.factory/droidz` | Factory command prompts, specialist briefs, CLI standards. |
 | Cursor | `~/Library/Application Support/Cursor/droidz` | Workflow cards that instruct Cursor to follow the Validation Gate. |
 | Cline | `~/.cline/droidz` | Prompt packs guiding Cline through spec-first execution. |
-| Codex CLI | `~/.codex/droidz` | Sequential playbooks mirroring Agent OS behavior. |
+| Codex CLI | `~/.codex/droidz` | Sequential playbooks guiding Codex CLI through the same spec-first flow. |
 | VS Code | `~/Library/Application Support/Code/User/droidz` | Snippets and task recipes for validation-first development. |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
