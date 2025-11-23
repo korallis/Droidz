@@ -300,19 +300,35 @@ install_platform() {
   esac
   
   if [[ -d "$platform_payload_dir" ]]; then
-    print_info "Installing $platform_slug droids and commands..."
+    print_info "Installing $platform_slug components..."
     
-    # Copy all content
-    local file_count=$(find "$platform_payload_dir" -type f | wc -l | tr -d ' ')
-    if cp -R "$platform_payload_dir/"* "$expanded_path/" 2>/dev/null; then
+    local file_count=0
+    
+    # Copy each subdirectory into a namespaced 'droidz' folder
+    # This mimics how agent-os creates .claude/agents/agent-os/ structure
+    for subdir in "$platform_payload_dir"/*; do
+      if [[ -d "$subdir" ]]; then
+        local subdir_name=$(basename "$subdir")
+        local dest_dir="$expanded_path/$subdir_name/droidz"
+        
+        mkdir -p "$dest_dir"
+        
+        if cp -R "$subdir/"* "$dest_dir/" 2>/dev/null; then
+          local count=$(find "$subdir" -type f | wc -l | tr -d ' ')
+          file_count=$((file_count + count))
+        fi
+      fi
+    done
+    
+    if [[ $file_count -gt 0 ]]; then
       print_success "Installed $file_count files"
     else
-      print_warning "Some files may not have copied"
+      print_warning "No files were copied"
     fi
     
     # Make commands executable if they have shebangs
-    if [[ -d "$expanded_path/commands" ]]; then
-      find "$expanded_path/commands" -type f -exec grep -l '^#!' {} \; 2>/dev/null | while read file; do
+    if [[ -d "$expanded_path/commands/droidz" ]]; then
+      find "$expanded_path/commands/droidz" -type f -exec grep -l '^#!' {} \; 2>/dev/null | while read file; do
         chmod +x "$file"
       done
     fi
@@ -448,8 +464,8 @@ main() {
       echo -e "  2. Run ${CYAN}/droids${NC} to see available custom droids"
       echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo -e "  Your droids: ${BLUE}$platform_path/droids/${NC}"
-      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
+      echo -e "  Your droids: ${BLUE}$platform_path/droids/droidz/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     claude)
@@ -460,8 +476,8 @@ main() {
       echo -e "  2. Run ${CYAN}/agents${NC} to see available subagents"
       echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo -e "  Your agents: ${BLUE}$platform_path/agents/${NC}"
-      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
+      echo -e "  Your agents: ${BLUE}$platform_path/agents/droidz/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cursor)
@@ -471,7 +487,7 @@ main() {
       echo "  1. Restart Cursor"
       echo "  2. Access workflows from the Cursor menu"
       echo ""
-      echo -e "  Your workflows: ${BLUE}$platform_path/workflows/${NC}"
+      echo -e "  Your workflows: ${BLUE}$platform_path/workflows/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cline)
@@ -481,7 +497,7 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access prompts from the Cline extension"
       echo ""
-      echo -e "  Your prompts: ${BLUE}$platform_path/prompts/${NC}"
+      echo -e "  Your prompts: ${BLUE}$platform_path/prompts/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     codex)
@@ -491,7 +507,7 @@ main() {
       echo "  1. Run codex CLI"
       echo "  2. Access available playbooks"
       echo ""
-      echo -e "  Your playbooks: ${BLUE}$platform_path/playbooks/${NC}"
+      echo -e "  Your playbooks: ${BLUE}$platform_path/playbooks/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     vscode)
@@ -501,7 +517,7 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access snippets from the editor"
       echo ""
-      echo -e "  Your snippets: ${BLUE}$platform_path/snippets/${NC}"
+      echo -e "  Your snippets: ${BLUE}$platform_path/snippets/droidz/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     *)

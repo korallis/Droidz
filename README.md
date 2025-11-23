@@ -61,30 +61,32 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 
 ### How It Works
 
-The installer installs everything to your **current project directory** based on your chosen platform:
+The installer installs everything to your **current project directory** in a **namespaced structure** (just like agent-os):
 
 **Factory AI:**
-- `./.factory/droids/` - Custom droids
-- `./.factory/commands/` - Slash commands
+- `./.factory/droids/droidz/` - Custom droids (namespaced)
+- `./.factory/commands/droidz/` - Slash commands (namespaced)
 
 **Claude Code:**
-- `./.claude/agents/` - Subagents
-- `./.claude/commands/` - Slash commands
+- `./.claude/agents/droidz/` - Subagents (namespaced)
+- `./.claude/commands/droidz/` - Slash commands (namespaced)
 
 **Cursor:**
-- `./.cursor/workflows/` - Workflows
+- `./.cursor/workflows/droidz/` - Workflows (namespaced)
 
 **Cline:**
-- `./.cline/prompts/` - Custom prompts
+- `./.cline/prompts/droidz/` - Custom prompts (namespaced)
 
 **Codex CLI:**
-- `./.codex/playbooks/` - Playbooks
+- `./.codex/playbooks/droidz/` - Playbooks (namespaced)
 
 **VS Code:**
-- `./.vscode/droidz/snippets/` - Code snippets
+- `./.vscode/droidz/snippets/droidz/` - Code snippets (namespaced)
 
 **All platforms also install:**
 - `./droidz/standards/` - Shared coding standards (backend, frontend, testing, global)
+
+The namespaced structure prevents conflicts with other tools and keeps everything organized!
 
 Everything is **checked into git** and **shared with your team**.
 
