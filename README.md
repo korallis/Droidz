@@ -80,51 +80,52 @@ Use the bootstrap script to download the latest release, extract it to a tempora
 
 ```bash
 # Claude Code
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude --install-to-project
 
 # Factory.ai Droid CLI (can also use: --platform droid_cli)
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform factory
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform factory --install-to-project
 
 # Cursor
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cursor
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cursor --install-to-project
 
 # Cline
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cline
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cline --install-to-project
 
 # Codex CLI (can also use: --platform codex_cli)
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex --install-to-project
 
 # VS Code
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform vscode
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform vscode --install-to-project
 ```
 
 
+- The `--install-to-project` flag installs the entire framework (shared + agent-specific) to your current directory for a self-contained project setup.
 - Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
-- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination "$PWD"`) pass straight through after the `--` separator.
-- By default, agent-specific instructions land in your current directory, while the shared framework installs to `~/.droidz`. Add `--use-platform-defaults` to install agent-specific content to platform defaults (e.g., `~/.factory`, `~/.claude`).
+- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--force`) pass straight through after the `--` separator.
+- To install to platform-specific defaults instead (e.g., `~/.factory`, `~/.claude`), remove `--install-to-project` and add `--use-platform-defaults`.
 - Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
-- After the script completes, you'll have both shared framework standards in `~/.droidz` and agent-specific content in your chosen location.
 
 ### Common Flags
 | Flag | Purpose |
 |------|---------|
+| `--install-to-project` | Install entire framework (shared + agent-specific) to current directory (recommended). |
 | `--profile <name>` | Loads alternative payload variants (defaults to `default`). |
-| `--destination <path>` | Overrides agent-specific install location (defaults to current directory). Shared framework always installs to `~/.droidz`. |
-| `--use-platform-defaults` | Install agent-specific content into platform defaults (e.g., `~/.factory`, `~/.claude`). |
+| `--destination <path>` | Overrides agent-specific install location (only applies without `--install-to-project`). |
+| `--use-platform-defaults` | Install to platform-specific defaults like `~/.factory`, `~/.claude` (instead of current dir). |
 | `--dry-run` | Prints the copy plan without touching disk. |
 | `--force` | Replaces existing destination folders instead of backing them up. |
 | `--quiet` | Suppresses verbose progress + completion summaries (default is verbose). |
 | `--payload-source <dir>` | Points to custom payloads you have authored. |
 
 ## Platform Reference
-| Platform | Agent-Specific Target | Shared Framework | Payload Contents |
-|----------|----------------------|------------------|------------------|
-| Claude Code | Current directory (or `~/.claude` with `--use-platform-defaults`) | `~/.droidz` | Commands, agents, Claude-specific standards. |
-| Factory/Droid CLI | Current directory (or `~/.factory` with `--use-platform-defaults`) | `~/.droidz` | Factory command prompts, specialist agents, CLI standards. |
-| Cursor | Current directory (or `~/Library/Application Support/Cursor/droidz` with `--use-platform-defaults`) | `~/.droidz` | Workflow cards and standards. |
-| Cline | Current directory (or `~/.cline` with `--use-platform-defaults`) | `~/.droidz` | Prompt packs for spec-first execution. |
-| Codex CLI | Current directory (or `~/.codex` with `--use-platform-defaults`) | `~/.droidz` | Sequential playbooks for spec-first flow. |
-| VS Code | Current directory (or `~/Library/Application Support/Code/User/droidz` with `--use-platform-defaults`) | `~/.droidz` | Snippets and task recipes. |
+| Platform | Default (with `--install-to-project`) | With `--use-platform-defaults` | Payload Contents |
+|----------|--------------------------------------|--------------------------------|------------------|
+| Claude Code | Current directory (all files) | Agent: `~/.claude`, Shared: `~/.droidz` | Commands, agents, Claude-specific standards. |
+| Factory/Droid CLI | Current directory (all files) | Agent: `~/.factory`, Shared: `~/.droidz` | Factory command prompts, specialist agents, CLI standards. |
+| Cursor | Current directory (all files) | Agent: `~/Library/Application Support/Cursor/droidz`, Shared: `~/.droidz` | Workflow cards and standards. |
+| Cline | Current directory (all files) | Agent: `~/.cline`, Shared: `~/.droidz` | Prompt packs for spec-first execution. |
+| Codex CLI | Current directory (all files) | Agent: `~/.codex`, Shared: `~/.droidz` | Sequential playbooks for spec-first flow. |
+| VS Code | Current directory (all files) | Agent: `~/Library/Application Support/Code/User/droidz`, Shared: `~/.droidz` | Snippets and task recipes. |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
 
