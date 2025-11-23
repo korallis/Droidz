@@ -119,7 +119,13 @@ def install(options: InstallOptions) -> List[InstallResult]:
 
         # Resolve current directory ONCE before any destination preparation
         # to avoid issues if force=True deletes the cwd
-        current_dir = Path.cwd()
+        try:
+            current_dir = Path.cwd().resolve()
+        except (FileNotFoundError, OSError):
+            # If cwd was deleted by a previous operation, try to recover
+            import os
+            # This will raise if we truly can't determine where we are
+            current_dir = Path(os.environ.get('PWD', '.')).resolve()
 
         # Track which destinations have been prepared to avoid removing files
         # when multiple targets install to the same location

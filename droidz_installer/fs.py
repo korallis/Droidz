@@ -27,8 +27,23 @@ def prepare_destination(path: Path, *, force: bool, dry_run: bool) -> Optional[P
     if force:
         if dry_run:
             return None
-        rmtree(path)
-        path.mkdir(parents=True, exist_ok=True)
+        # Check if path is the current working directory to avoid deleting it
+        try:
+            is_cwd = path.samefile(Path.cwd())
+        except (FileNotFoundError, OSError):
+            is_cwd = False
+        
+        if is_cwd:
+            # Clear contents without removing the directory itself
+            for item in path.iterdir():
+                if item.is_dir():
+                    rmtree(item)
+                else:
+                    item.unlink()
+        else:
+            # Safe to remove and recreate
+            rmtree(path)
+            path.mkdir(parents=True, exist_ok=True)
         return None
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
