@@ -117,6 +117,10 @@ def install(options: InstallOptions) -> List[InstallResult]:
             print(f"\nInstalling {spec.label} (full framework)")
             print(f"  {len(spec.install_targets)} target(s) to install")
 
+        # Resolve current directory ONCE before any destination preparation
+        # to avoid issues if force=True deletes the cwd
+        current_dir = Path.cwd()
+
         # Track which destinations have been prepared to avoid removing files
         # when multiple targets install to the same location
         prepared_destinations: Dict[Path, Optional[Path]] = {}
@@ -125,7 +129,7 @@ def install(options: InstallOptions) -> List[InstallResult]:
             # Resolve destination path
             if options.install_to_project:
                 # Install everything to current directory for self-contained project
-                destination = Path.cwd()
+                destination = current_dir
             elif options.destination_override:
                 # Override applies to agent-specific targets only, not shared
                 if target.type == "agent":
@@ -137,7 +141,7 @@ def install(options: InstallOptions) -> List[InstallResult]:
             else:
                 # Current directory mode: only applies to agent-specific
                 if target.type == "agent":
-                    destination = Path.cwd()
+                    destination = current_dir
                 else:
                     destination = fs.expand_path(target.destination)
 
