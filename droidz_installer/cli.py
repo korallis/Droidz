@@ -10,7 +10,7 @@ from typing import Sequence
 from .core import InstallOptions, install, list_platforms
 from .exceptions import InstallerError
 
-DEFAULT_MANIFEST = Path(__file__).resolve().parent / "manifests" / "platforms.yml"
+DEFAULT_MANIFEST = Path(__file__).resolve().parent / "manifests" / "platforms.json"
 DEFAULT_PAYLOADS = Path(__file__).resolve().parent / "payloads"
 
 
@@ -39,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--manifest",
         default=DEFAULT_MANIFEST,
         type=Path,
-        help="Path to the installer manifest (YAML).",
+        help="Path to the installer manifest (JSON).",
     )
     parser.add_argument(
         "--payload-source",

@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
-
-import yaml
 
 from . import fs, payloads
 from .exceptions import InstallerError
@@ -68,7 +67,7 @@ def load_manifest(path: Path) -> Dict:
         raise InstallerError(f"Manifest file '{path}' does not exist.")
 
     with path.open("r", encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
+        data = json.load(handle)
 
     if "platforms" not in data:
         raise InstallerError("Manifest is missing a 'platforms' section.")

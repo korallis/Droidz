@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
-
-import yaml
 
 from droidz_installer.core import InstallOptions, install, list_platforms
 
@@ -22,8 +21,8 @@ def _write_manifest(base: Path) -> Path:
         },
     }
 
-    manifest_path = base / "platforms.yml"
-    manifest_path.write_text(yaml.safe_dump(manifest), encoding="utf-8")
+    manifest_path = base / "platforms.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     return manifest_path
 
 
