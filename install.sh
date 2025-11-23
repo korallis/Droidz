@@ -137,6 +137,38 @@ get_platform_choice() {
   done
 }
 
+# Get installation scope (project or personal)
+get_installation_scope() {
+  echo ""
+  echo -e "${BOLD}Choose installation scope:${NC}"
+  echo ""
+  echo -e "  ${CYAN}[1]${NC} ${BOLD}Project-specific${NC} (current directory)"
+  echo -e "      Installs to ${BLUE}./.factory/${NC} - checked into git, shared with team"
+  echo ""
+  echo -e "  ${CYAN}[2]${NC} ${BOLD}Personal${NC} (home directory)"
+  echo -e "      Installs to ${BLUE}~/.factory/${NC} - available in all your projects"
+  echo ""
+  
+  local scope
+  while true; do
+    safe_read "$(echo -e "${BOLD}Enter your choice [1-2]:${NC} ")" scope
+    
+    case "$scope" in
+      1)
+        echo "project"
+        return 0
+        ;;
+      2)
+        echo "personal"
+        return 0
+        ;;
+      *)
+        print_error "Invalid choice. Please enter 1 or 2."
+        ;;
+    esac
+  done
+}
+
 # Check if installation exists
 check_existing_install() {
   local platform_path="$1"
@@ -257,8 +289,17 @@ install_platform() {
   local platform_path="$2"
   local source_dir="$3"
   local is_update="$4"
+  local install_scope="$5"
   
   local expanded_path="${platform_path/#\~/$HOME}"
+  
+  # Determine standards path based on scope
+  local standards_path
+  if [[ "$install_scope" == "project" ]]; then
+    standards_path="./droidz/standards"
+  else
+    standards_path="$HOME/droidz/standards"
+  fi
   
   if [[ "$is_update" == "true" ]]; then
     print_info "Updating $platform_slug installation..."
@@ -268,11 +309,11 @@ install_platform() {
   
   # Create directories
   mkdir -p "$expanded_path"
-  mkdir -p "$HOME/droidz/standards"
+  mkdir -p "$standards_path"
   
   # Copy shared standards
   print_info "Installing shared standards..."
-  cp -R "$source_dir/droidz_installer/payloads/shared/default/"* "$HOME/droidz/standards/" 2>/dev/null || true
+  cp -R "$source_dir/droidz_installer/payloads/shared/default/"* "$standards_path/" 2>/dev/null || true
   
   # Copy platform-specific content
   # Handle platform-specific directory names
@@ -313,7 +354,14 @@ install_platform() {
   
   # Write version file
   echo "$VERSION" > "$expanded_path/.droidz-version"
-  echo "$VERSION" > "$HOME/droidz/.droidz-version"
+  local standards_parent_dir
+  if [[ "$install_scope" == "project" ]]; then
+    standards_parent_dir="./droidz"
+  else
+    standards_parent_dir="$HOME/droidz"
+  fi
+  mkdir -p "$standards_parent_dir"
+  echo "$VERSION" > "$standards_parent_dir/.droidz-version"
   
   print_success "Installation complete!"
 }
@@ -332,8 +380,17 @@ main() {
   local platform_info=$(get_platform_info "$choice")
   IFS='|' read -r platform_slug platform_name platform_path platform_desc <<< "$platform_info"
   
+  # Get installation scope
+  local install_scope=$(get_installation_scope)
+  
+  # Adjust path based on scope
+  if [[ "$install_scope" == "project" ]]; then
+    platform_path="./.factory"
+  fi
+  
   echo ""
   print_info "Selected: ${BOLD}$platform_name${NC}"
+  print_info "Scope: ${BOLD}${install_scope}${NC}"
   print_info "Install location: ${BLUE}$platform_path${NC}"
   echo ""
   
@@ -395,7 +452,7 @@ main() {
   echo ""
   
   # Install
-  install_platform "$platform_slug" "$platform_path" "$source_dir" "$is_update"
+  install_platform "$platform_slug" "$platform_path" "$source_dir" "$is_update" "$install_scope"
   echo ""
   
   # Restore user files if updating
@@ -410,6 +467,14 @@ main() {
   echo -e "${GREEN}╚════════════════════════════════════════════════════════╝${NC}"
   echo ""
   
+  # Determine standards display path
+  local standards_display_path
+  if [[ "$install_scope" == "project" ]]; then
+    standards_display_path="./droidz/standards/"
+  else
+    standards_display_path="~/droidz/standards/"
+  fi
+  
   # Platform-specific next steps
   case "$platform_slug" in
     factory|droid_cli)
@@ -422,7 +487,7 @@ main() {
       echo ""
       echo "  Your droids: ${BLUE}$platform_path/droids/${NC}"
       echo "  Your commands: ${BLUE}$platform_path/commands/${NC}"
-      echo "  Shared standards: ${BLUE}~/droidz/standards/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     claude)
       print_info "Claude Code is now configured!"
@@ -434,13 +499,13 @@ main() {
       echo ""
       echo "  Your agents: ${BLUE}$platform_path/agents/${NC}"
       echo "  Your commands: ${BLUE}$platform_path/commands/${NC}"
-      echo "  Shared standards: ${BLUE}~/droidz/standards/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     *)
       print_info "$platform_name is now configured!"
       echo ""
       echo "  Install location: ${BLUE}$platform_path${NC}"
-      echo "  Shared standards: ${BLUE}~/droidz/standards/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
   esac
   
