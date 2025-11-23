@@ -4,6 +4,9 @@ set -euo pipefail
 # Droidz Interactive Installer
 # One-line install: curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 
+# Ensure we can read from terminal even when piped
+exec < /dev/tty
+
 VERSION="2.1.1"
 REPO_URL="https://github.com/korallis/Droidz"
 BRANCH="${DROIDZ_BRANCH:-main}"
@@ -264,11 +267,11 @@ install_platform() {
   
   if [[ -d "$platform_payload_dir" ]]; then
     print_info "Installing $platform_slug droids and commands..."
-    print_info "Source: $platform_payload_dir"
     
     # Copy all content
-    if cp -R "$platform_payload_dir/"* "$expanded_path/" 2>&1; then
-      print_success "Copied platform content"
+    local file_count=$(find "$platform_payload_dir" -type f | wc -l | tr -d ' ')
+    if cp -R "$platform_payload_dir/"* "$expanded_path/" 2>/dev/null; then
+      print_success "Installed $file_count files"
     else
       print_warning "Some files may not have copied"
     fi
