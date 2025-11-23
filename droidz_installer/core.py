@@ -134,8 +134,15 @@ def install(options: InstallOptions) -> List[InstallResult]:
         for idx, target in enumerate(spec.install_targets, 1):
             # Resolve destination path
             if options.install_to_project:
-                # Install everything to current directory for self-contained project
-                destination = current_dir
+                # Install to project subdirectories: .droidz for shared, .{platform} for agent
+                if target.type == "shared":
+                    destination = current_dir / ".droidz"
+                else:
+                    # Extract the folder name from the original destination (e.g., ~/.factory -> .factory)
+                    agent_folder = Path(target.destination).name
+                    if not agent_folder.startswith('.'):
+                        agent_folder = f".{agent_folder}"
+                    destination = current_dir / agent_folder
             elif options.destination_override:
                 # Override applies to agent-specific targets only, not shared
                 if target.type == "agent":
