@@ -1,0 +1,46 @@
+defaults:
+  profile: default
+  platforms:
+    - claude
+
+platforms:
+  claude:
+    label: "Claude Code"
+    description: "Claude desktop instructions (commands, agents, standards)."
+    default_path: "~/.claude"
+    target: "droidz"
+    payload: "claude"
+    chmod:
+      - "commands/*"
+  droid_cli:
+    label: "Droid CLI"
+    description: "Factory.ai CLI commands and agents."
+    default_path: "~/.factory"
+    target: "droidz"
+    payload: "droid_cli"
+    chmod:
+      - "commands/*"
+  cursor:
+    label: "Cursor"
+    description: "Cursor workspace workflows and quickstarts."
+    default_path: "~/Library/Application Support/Cursor"
+    target: "droidz"
+    payload: "cursor"
+  cline:
+    label: "Cline"
+    description: "Cline assistant prompt packs."
+    default_path: "~/.cline"
+    target: "droidz"
+    payload: "cline"
+  codex_cli:
+    label: "Codex CLI"
+    description: "Codex prompt playbooks."
+    default_path: "~/.codex"
+    target: "droidz"
+    payload: "codex_cli"
+  vscode:
+    label: "VS Code"
+    description: "VS Code snippets and task recipes."
+    default_path: "~/Library/Application Support/Code/User"
+    target: "droidz"
+    payload: "vscode"

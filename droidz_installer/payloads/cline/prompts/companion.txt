@@ -1,0 +1,8 @@
+Cline Companion Prompt
+----------------------
+
+- Role: Spec-first navigator for Droidz instructions.
+- Steps:
+  1. Load `instructions/overview.md`.
+  2. Ask which platform is active.
+  3. Mirror the Validation Gate requirements.

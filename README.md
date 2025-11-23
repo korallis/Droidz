@@ -1,17 +1,79 @@
-# 🤖 Droidz
+# 🤖 Droidz Instruction Platform
 
-> **Production-grade AI development framework for Droid CLI, Claude Code, and Codex CLI**
+Slim, instruction-only distribution of the Droidz workflow. A single Python installer copies curated command, agent, and prompt bundles straight into the folders expected by your favorite AI coding surfaces (Claude Code, Droid CLI, Cursor, Cline, Codex CLI, and VS Code) so `/commands` and agents are immediately usable.
 
-Transform vague ideas into production code with AI-powered validation, native skills, and intelligent parallel execution.
+## What You Get
+- `install.py` – zero-interaction CLI that maps payload bundles to each platform’s required directories.
+- `droidz_installer/` – manifest-driven engine plus payloads containing the actual instructions.
+- `instructions/overview.md` – canonical operating guide mirrored inside every payload.
+- `tests/` – pytest coverage for manifest parsing, dry-run safety, and filesystem handling.
+- `pyproject.toml` – lightweight toolchain with Ruff + pytest ready to run the Validation Gate.
 
-**Now supports 3 platforms:** Factory.ai Droid CLI, Anthropic Claude Code, and OpenAI Codex CLI! 🎉
+## Quick Start
+1. Ensure Python 3.11+ is available.
+2. Clone this repository and stay at the root.
+3. Preview targets:
+   ```bash
+   python install.py --list-platforms
+   ```
+4. Install for one or more platforms:
+   ```bash
+   python install.py --platform claude --platform droid_cli --verbose
+   ```
+5. Or install everything at once:
+   ```bash
+   python install.py --platform all
+   ```
+6. Inside each tool, point to the new `droidz` folder (e.g., `~/.claude/droidz/commands`).
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-4.0.0--beta-blue.svg)](https://github.com/korallis/Droidz)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)
-[![Donate](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/gideonapp)
+### Common Flags
+| Flag | Purpose |
+|------|---------|
+| `--profile <name>` | Loads alternative payload variants (defaults to `default`). |
+| `--destination <path>` | Overrides the default root folder for every selected platform. |
+| `--dry-run` | Prints the copy plan without touching disk. |
+| `--force` | Replaces existing destination folders instead of backing them up. |
+| `--payload-source <dir>` | Points to custom payloads you have authored. |
 
----
+## Platform Reference
+| Platform | Default Target | Payload Contents |
+|----------|----------------|------------------|
+| Claude Code | `~/.claude/droidz` | `/build`, `/parallel`, orchestrator agent briefs, Claude-specific standards. |
+| Droid CLI | `~/.factory/droidz` | Factory command prompts, specialist briefs, CLI standards. |
+| Cursor | `~/Library/Application Support/Cursor/droidz` | Workflow cards that instruct Cursor to follow the Validation Gate. |
+| Cline | `~/.cline/droidz` | Prompt packs guiding Cline through spec-first execution. |
+| Codex CLI | `~/.codex/droidz` | Sequential playbooks mirroring Agent OS behavior. |
+| VS Code | `~/Library/Application Support/Code/User/droidz` | Snippets and task recipes for validation-first development. |
+
+Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
+
+## Custom Profiles
+1. Copy an existing payload folder, e.g. `cp -R droidz_installer/payloads/claude droidz_installer/payloads/claude/nextjs`.
+2. Update the files inside with your custom standards and prompts.
+3. Run `python install.py --platform claude --profile nextjs`.
+4. The installer attempts profile-specific payloads first, then falls back to the base folder when none exist.
+
+## Validation Gate (Mandatory)
+All payloads instruct their host tools to run the same gate:
+```bash
+ruff check .
+pytest
+```
+Never summarize work or claim success before both commands pass. Tests rely on this gate as well.
+
+## Troubleshooting
+- **Existing instructions were replaced** – re-run the installer without `--force`; it creates timestamped backups such as `droidz.backup-20251122-153000`.
+- **Need a dry preview** – add `--dry-run` to inspect planned destinations and payloads.
+- **Different install roots per platform** – run the installer separately, passing `--destination` each time.
+- **Add another IDE** – update `droidz_installer/manifests/platforms.yml` with a new entry and drop a payload folder with the same name.
+
+## Developing the Installer
+```bash
+pip install -e .
+ruff check .
+pytest
+```
+Tests mock filesystem operations to guarantee backups, dry-runs, and copy plans behave consistently.
 
 ## 💬 Join Our Discord Community
 
@@ -30,619 +92,3 @@ If Droidz saves you time, consider supporting its development!
 **[→ Donate via PayPal](https://www.paypal.com/paypalme/gideonapp)** (@gideonapp)
 
 Your support helps maintain and improve this framework! 🙏
-
----
-
-## ✨ What's New in v4.0
-
-Droidz v4.0 brings **Codex CLI support** with a Python-based installer!
-
-### 🎯 v4.0 Highlights
-
-**1. Codex CLI Support** 🎉
-- **6 production-ready prompts** optimized for Codex CLI
-- Sequential workflow with comprehensive validation
-- Project-aware via `AGENTS.md` configuration
-- Unified specs system (`.droidz/specs/`) shared with Claude Code
-- See [docs/CODEX_CLI.md](docs/CODEX_CLI.md) for full guide
-
-**2. Python Installer** ⚡
-- Interactive TUI with platform selection
-- Component compatibility checking
-- Smart dependency validation
-- Beautiful terminal output with progress indicators
-- Replaces buggy bash installer
-
-**3. Conversion Engine** 🔄
-- Converts Claude Code agents to Codex CLI prompts
-- Shell command → instruction conversion
-- Frontmatter validation and rebuilding
-- Batch processing with error tracking
-
-**4. Unified Specs** 📝
-- `.droidz/specs/` works across all 3 platforms
-- Shared active/archive/templates structure
-- Platform-agnostic specifications
-- Seamless collaboration across tools
-
-**5. Comprehensive Documentation** 📚
-- Complete Codex CLI usage guide
-- Migration guide from Claude Code
-- Architecture research and compatibility analysis
-- Examples and troubleshooting
-
-### Platform Support Matrix
-
-| Feature | Droid CLI | Claude Code | Codex CLI |
-|---------|-----------|-------------|-----------|
-| **Parallel Execution** | ✅ Yes | ✅ Yes | ❌ Sequential |
-| **Skills System** | ✅ Auto | ✅ Auto | ⚠️ Via AGENTS.md |
-| **Specs** | ✅ .droidz/specs/ | ✅ .droidz/specs/ | ✅ .droidz/specs/ |
-| **Validation** | ✅ 5 phases | ✅ 5 phases | ✅ 5 phases |
-| **Speed (Complex)** | ⚡⚡⚡ Fast | ⚡⚡⚡ Fast | ⚡ Slower |
-| **Speed (Simple)** | ⚡⚡ | ⚡⚡ | ⚡⚡ |
-
----
-
-## ✨ What Was New in v3.0
-
-Droidz v3.0 was a complete architectural refactor that fully leveraged Factory.ai's native capabilities:
-
-### 🎯 Major Improvements
-
-**1. Native Factory.ai Skills System** ✨
-- **Skills auto-activate** based on your code context
-- No manual skill selection needed
-- Uses Factory.ai's official Skills system (v0.26.0)
-- Skills are **model-invoked** - CLI reports when used
-- Manage with `/skills` command
-
-**2. Perfect Model Inheritance** 🎨
-- All 15 specialist droids use `model: inherit`
-- **Your model choice is always respected**
-- Switch models → all droids switch automatically
-- No more conflicting models
-
-**3. Comprehensive Validation** ✅
-- **`/validate-init`** - Auto-generates project-specific validation
-- **`/validate`** - Runs 5-phase validation pipeline
-  - Phase 1: Linting (ESLint, ruff, etc.)
-  - Phase 2: Type checking (TypeScript, mypy)
-  - Phase 3: Style checking (Prettier, black)
-  - Phase 4: Unit tests
-  - Phase 5: E2E tests (workflow-based)
-- **One command to validate everything**
-
-**4. Live Progress Tracking** 📊
-- Real-time TodoWrite updates during parallel execution
-- See exactly what each droid is doing
-- No more guessing if work is stuck
-- Built on Factory.ai's native TodoWrite tool
-
-**5. Clean Architecture** 🏗️
-- **100% `.factory/`-based** - no external folders
-- Eliminated `.droidz/` folder confusion
-- Standard Factory.ai conventions
-- Proper gitignore patterns
-
-**6. Enhanced Hooks System** 🪝
-- All 7 Factory.ai hook types supported
-- Auto-lint after file edits
-- Block dangerous commands (rm -rf, dd, etc.)
-- Session summaries on exit
-- Subagent completion tracking
-
-**7. Simplified Installation** ⚡
-- < 30 second installation
-- No git worktree setup needed
-- No tmux installation required
-- Just Factory.ai CLI + Droidz
-
----
-
-## 🚀 Quick Start
-
-### Installation
-
-The installer now supports **both Droid CLI and Claude Code**!
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/v3.5.0/install.sh | bash
-```
-
-**When prompted, select:**
-- **Option 1**: Droid CLI (Factory.ai)
-- **Option 2**: Claude Code (Anthropic)
-
-Or download first:
-
-```bash
-wget https://raw.githubusercontent.com/korallis/Droidz/v3.5.0/install.sh
-chmod +x install.sh
-./install.sh
-```
-
-### Setup for Droid CLI (Factory.ai)
-
-```bash
-droid
-/settings
-# Toggle "Custom Droids" ON
-# Toggle "Hooks" ON
-```
-
-Restart: `Ctrl+C` and run `droid` again.
-
-Verify:
-```bash
-/droids           # See all 15 specialist droids
-/skills           # Manage skills
-```
-
-### Setup for Claude Code (Anthropic)
-
-After installation completes, restart Claude Code:
-
-```bash
-exit           # Exit current session
-claude        # Start new session
-```
-
-Verify:
-```bash
-/agents       # See all 15 specialist agents
-# CLAUDE.md is automatically loaded
-```
-
-**See [CLAUDE_CODE_SETUP.md](CLAUDE_CODE_SETUP.md) for detailed Claude Code setup guide.**
-
-### Setup for Codex CLI (OpenAI) - NEW in v4.0! 🎉
-
-Install Codex CLI and Droidz prompts:
-
-```bash
-# Install Codex CLI globally
-npm install -g @openai/codex
-
-# Install Droidz for Codex
-cd path/to/Droidz
-python3 install.py
-# Select "Codex CLI" platform when prompted
-
-# Initialize your project
-cd your-project/
-codex /prompts:init
-```
-
-Verify installation:
-```bash
-# Check prompts installed
-ls ~/.codex/prompts/
-
-# Check project setup
-ls -la AGENTS.md .droidz/specs/
-```
-
-**Available Codex CLI Prompts:**
-- `/prompts:build` - Generate feature specifications
-- `/prompts:validate` - 5-phase validation pipeline
-- `/prompts:codegen` - Implement features with tests
-- `/prompts:test-specialist` - Write/fix tests
-- `/prompts:orchestrator` - Complex multi-phase features
-- `/prompts:init` - Project initialization
-
-**See [docs/CODEX_CLI.md](docs/CODEX_CLI.md) for complete Codex CLI guide.**
-**See [docs/CODEX_MIGRATION.md](docs/CODEX_MIGRATION.md) for migration from Claude Code.**
-
----
-
-## 💡 The Simple Workflow
-
-```bash
-# Step 1: Initialize your project
-/init
-
-# Step 2: Generate validation workflow (auto-runs on /init)
-/validate-init
-
-# Step 3: Build something
-/build "add user authentication with JWT"
-# → Asks clarifying questions
-# → Generates .droidz/specs/active/001-auth.md
-# → Offers: Execute now?
-
-# Step 4: Execute in parallel (optional)
-/parallel
-# → Spawns specialist droids
-# → Live progress via TodoWrite
-# → 3-5x faster than sequential
-
-# Step 5: Validate everything
-/validate
-# → Runs all 5 phases
-# → Shows pass/fail
-# → Ready for deployment
-```
-
----
-## 🎯 Core Features
-
-### 1. Native Skills System (NEW in v3.0)
-
-**Skills automatically activate based on your code:**
-
-```bash
-You: "Add TypeScript types to auth.ts"
-# → TypeScript skill auto-activates
-# → CLI reports: "Using skill: typescript"
-# → No manual selection needed
-```
-
-**61 Auto-Activating Skills:**
-- **TypeScript** - Types, interfaces, generics
-- **React** - Hooks, components, performance
-- **Next.js** - App router, caching, PPR
-- **Prisma** - Schema, migrations, queries
-- **TailwindCSS** - Modern utilities
-- **GraphQL** - Schemas, resolvers
-- **WebSocket** - Real-time features
-- **Security** - OWASP, GDPR compliance
-- **Performance** - Profiling, optimization
-- And 52 more...
-
-**Manage skills:**
-```bash
-/skills           # View all skills
-/skills create    # Create new skill
-/skills import    # Import from Claude Code
-```
-
----
-
-### 2. 15 Specialist Droids (All Use Your Model)
-
-**Every droid respects your model choice:**
-
-| Droid | Purpose | Model |
-|-------|---------|-------|
-| **droidz-orchestrator** | Coordinate parallel work | inherit |
-| **droidz-codegen** | Implement features | inherit |
-| **droidz-test** | Write & fix tests | inherit |
-| **droidz-refactor** | Code improvements | inherit |
-| **droidz-infra** | CI/CD & deployment | inherit |
-| **droidz-integration** | External APIs | inherit |
-| **droidz-ui-designer** | UI components | inherit |
-| **droidz-ux-designer** | User flows | inherit |
-| **droidz-database-architect** | Schema design | inherit |
-| **droidz-api-designer** | API design | inherit |
-| **droidz-security-auditor** | Security reviews | inherit |
-| **droidz-performance-optimizer** | Performance tuning | inherit |
-| **droidz-accessibility-specialist** | WCAG compliance | inherit |
-| **droidz-generalist** | General tasks | inherit |
-
-**What `model: inherit` means:**
-- You select GPT-4o → all droids use GPT-4o
-- You switch to Claude Sonnet → all droids switch too
-- **Consistent model across entire workflow**
-
----
-
-### 3. Comprehensive Validation (NEW in v3.0)
-
-**`/validate-init` - Smart Generation**
-
-Analyzes your project and generates custom validation:
-
-```bash
-/validate-init
-
-# Detects:
-✓ Linter: ESLint
-✓ Type checker: TypeScript
-✓ Formatter: Prettier
-✓ Tests: Jest + Playwright
-✓ Framework: React + Next.js
-
-# Generates: .factory/commands/validate.md
-# Configured for YOUR project
-```
-
-**`/validate` - One Command, Full Validation**
-
-```bash
-/validate
-
-Phase 1: Linting ✅
-Phase 2: Type Checking ✅
-Phase 3: Style Checking ✅
-Phase 4: Unit Tests ✅ (24 passed)
-Phase 5: E2E Tests ✅ (12 workflows tested)
-
-All validation passed! Ready for deployment.
-```
-
----
-
-### 4. Intelligent Spec Generation
-
-**`/build` - From Vague Ideas to Production Specs**
-
-```bash
-/build "add authentication"
-
-Droidz asks:
-- JWT or sessions? → JWT
-- Password requirements? → 8+ chars, letters+numbers
-- Social providers? → No
-
-Generates: .droidz/specs/active/001-auth.md
-
-Contains:
-✓ 6 parallelizable tasks
-✓ Security requirements (OWASP)
-✓ Edge cases covered
-✓ Testing strategy
-✓ Ready-to-execute plan
-
-Execute now? [Yes/Review/Save]
-```
-
----
-
-## 📁 Project Structure (v3.0)
-
-```
-.factory/                    # Everything lives here
-├── commands/                # Slash commands
-│   ├── init.md             # /init
-│   ├── build.md            # /build
-│   ├── validate-init.md    # /validate-init (NEW)
-│   ├── validate.md         # /validate (auto-generated)
-│   └── parallel.md         # /parallel
-├── droids/                  # 15 specialists
-│   ├── droidz-orchestrator.md
-│   ├── droidz-codegen.md
-│   └── ... (all use model: inherit)
-├── skills/                  # 61 auto-activating skills
-│   ├── typescript/SKILL.md
-│   ├── react/SKILL.md
-│   └── ...
-├── hooks/                   # Lifecycle hooks
-│   ├── scripts/
-│   │   ├── auto-lint.sh
-│   │   ├── block-dangerous.sh
-│   │   └── validate-on-edit.sh
-│   └── settings.json
-├── specs/                   # Generated specs
-│   ├── active/             # Current (gitignored)
-│   └── archived/           # Completed
-├── validation/             # Validation framework (NEW)
-│   ├── .validation-cache/
-│   └── test-helpers/
-└── memory/                  # Persistent context
-    ├── org/                # Team decisions
-    └── user/               # Your notes
-```
-
-**No `.droidz/` folder** - everything standardized in `.factory/`
-
----
-
-## 🎬 Real-World Examples
-
-### Example 1: Build Auth (v3.0 workflow)
-
-```bash
-# Step 1: Initialize
-/init
-✓ Project analyzed
-✓ Validation generated
-✓ Ready to build
-
-# Step 2: Build auth
-/build "add JWT authentication"
-
-Droidz clarifies:
-- Sessions or JWT? → JWT
-- Requirements? → 8+ chars
-- Social? → No
-
-Generates spec:
-✓ 6 tasks (3 parallel Phase 1, 3 parallel Phase 2)
-✓ Security checklist
-✓ Test strategy
-
-# Step 3: Execute
-Choose "Execute in parallel"
-
-TodoWrite shows progress:
-✅ Database schema
-⏳ API endpoints...
-⏳ JWT utilities...
-
-15 minutes later:
-✅ All complete! 12 files, 24 tests passing
-
-# Step 4: Validate
-/validate
-
-Phase 1-5: All ✅
-Ready for deployment!
-```
-
----
-
-### Example 2: Skills Auto-Activation
-
-```bash
-# No manual skill selection needed!
-
-You: "Add Prisma schema for users"
-→ Prisma skill auto-activates
-→ CLI: "Using skill: prisma"
-→ Applies Prisma best practices
-
-You: "Create React component"
-→ React skill auto-activates
-→ CLI: "Using skill: react"
-→ Follows React 19 patterns
-
-You: "Optimize database queries"
-→ Performance skill auto-activates
-→ CLI: "Using skill: performance-optimizer"
-→ Analyzes and optimizes
-```
-
----
-
-## 🆚 v2.x vs v3.0 Comparison
-
-| Feature | v2.x | v3.0 |
-|---------|------|------|
-| **Skills** | Manual descriptions | ✅ Native Factory.ai (auto-activate) |
-| **Model Inheritance** | Mixed | ✅ All droids use `model: inherit` |
-| **Folder Structure** | `.droidz/` + `.factory/` | ✅ 100% `.factory/` |
-| **Validation** | None | ✅ 5-phase pipeline |
-| **Progress Tracking** | None | ✅ Live TodoWrite updates |
-| **Hooks System** | Partial (4 types) | ✅ Full (7 types) |
-| **Installation** | Complex (tmux, worktrees) | ✅ Simple (< 30s) |
-| **CLI Integration** | Manual | ✅ `/skills` command |
-| **Skill Reporting** | No | ✅ CLI reports usage |
-
----
-
-## 📚 Documentation
-
-- **Quick Start:** [This README]
-- **Commands Guide:** [COMMANDS.md](COMMANDS.md)
-- **Skills Guide:** [SKILLS.md](SKILLS.md) (NEW)
-- **Validation Guide:** [VALIDATION.md](VALIDATION.md) (NEW)
-- **Droids Guide:** [DROIDS.md](DROIDS.md) (NEW)
-- **Migration Guide:** [MIGRATION_V3.md](MIGRATION_V3.md) (NEW)
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
-
----
-
-## 🔧 Configuration (Optional)
-
-Droidz works out-of-the-box, but you can customize:
-
-### config.yml (optional)
-
-```yaml
-# Linear Integration (optional)
-linear:
-  project_name: "MyProject"
-
-# Orchestrator Settings (optional)
-orchestrator:
-  max_parallel_streams: 5
-  enable_monitoring: true
-```
-
-### Custom Skills
-
-```bash
-/skills create    # Create new skill
-/skills import    # Import from Claude Code
-/skills list      # View all skills
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Droids not showing?
-
-```bash
-/settings
-# Ensure "Custom Droids" ON
-# Ensure "Hooks" ON
-# Restart: Ctrl+C then `droid`
-
-/droids  # Should show all 15
-```
-
-### Skills not activating?
-
-```bash
-/skills list
-# Ensure skills are present
-# Skills auto-activate - no action needed
-# CLI reports: "Using skill: <name>"
-```
-
-### Validation not generating?
-
-```bash
-# Run manually
-/validate-init
-
-# Check output
-ls .factory/commands/validate.md
-```
-
----
-
-## 🚀 Migration from v2.x
-
-v3.0 includes automatic migration:
-
-```bash
-# Run migration script
-.factory/scripts/migrate-v3.sh
-
-✅ Creates unified .droidz/specs/ for both CLI and Claude Code
-✅ Migrates .factory/specs/ → .droidz/specs/ (if exists)
-✅ Generates validation workflow
-✅ Updates .gitignore
-
-# Verify
-droid
-/init
-/droids   # All droids present
-/skills   # All skills present
-```
-
-**See [MIGRATION_V3.md](MIGRATION_V3.md) for detailed migration guide.**
-
-**Breaking Changes:**
-- `.droidz/` folder removed (auto-migrated)
-- Commands renamed (old names aliased)
-- All droids now use `model: inherit`
-
----
-
-## 🤝 Contributing
-
-Contributions welcome!
-
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Submit pull request
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE)
-
----
-
-## 🙏 Credits
-
-**Built for Factory.ai Droid CLI** | **v3.5.0**
-
-**Factory.ai Features Used:**
-- Skills System (v0.26.0)
-- Custom Droids with model inheritance
-- Hooks System (v0.25.0)
-- TodoWrite for progress
-- Native CLI integration
-
-**Created by the Droidz community** 🚀
-
----
-
-**Transform vague ideas into production code - powered by Factory.ai** ✨

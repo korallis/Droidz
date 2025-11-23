@@ -1,0 +1,11 @@
+{
+  "Droidz Validation Gate": {
+    "prefix": "droidz-validate",
+    "body": [
+      "# Droidz Validation Gate",
+      "ruff check .",
+      "pytest"
+    ],
+    "description": "Run the mandatory ruff+pytest gate before summarizing work."
+  }
+}
