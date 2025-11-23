@@ -137,38 +137,6 @@ get_platform_choice() {
   done
 }
 
-# Get installation scope (project or personal)
-get_installation_scope() {
-  echo ""
-  echo -e "${BOLD}Choose installation scope:${NC}"
-  echo ""
-  echo -e "  ${CYAN}[1]${NC} ${BOLD}Project-specific${NC} (current directory)"
-  echo -e "      Installs to ${BLUE}./.factory/${NC} - checked into git, shared with team"
-  echo ""
-  echo -e "  ${CYAN}[2]${NC} ${BOLD}Personal${NC} (home directory)"
-  echo -e "      Installs to ${BLUE}~/.factory/${NC} - available in all your projects"
-  echo ""
-  
-  local scope
-  while true; do
-    safe_read "$(echo -e "${BOLD}Enter your choice [1-2]:${NC} ")" scope
-    
-    case "$scope" in
-      1)
-        echo "project"
-        return 0
-        ;;
-      2)
-        echo "personal"
-        return 0
-        ;;
-      *)
-        print_error "Invalid choice. Please enter 1 or 2."
-        ;;
-    esac
-  done
-}
-
 # Check if installation exists
 check_existing_install() {
   local platform_path="$1"
@@ -380,18 +348,13 @@ main() {
   local platform_info=$(get_platform_info "$choice")
   IFS='|' read -r platform_slug platform_name platform_path platform_desc <<< "$platform_info"
   
-  # Get installation scope
-  local install_scope=$(get_installation_scope)
-  
-  # Adjust path based on scope
-  if [[ "$install_scope" == "project" ]]; then
-    platform_path="./.factory"
-  fi
+  # Always install to current project directory
+  local install_scope="project"
+  platform_path="./.factory"
   
   echo ""
   print_info "Selected: ${BOLD}$platform_name${NC}"
-  print_info "Scope: ${BOLD}${install_scope}${NC}"
-  print_info "Install location: ${BLUE}$platform_path${NC}"
+  print_info "Install location: ${BLUE}$(pwd)/.factory/${NC}"
   echo ""
   
   # Check for existing installation

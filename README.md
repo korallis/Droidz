@@ -41,7 +41,13 @@ Every contribution—large or small—directly fuels new payloads, validation he
 
 ## Installation
 
-Run one of these commands and choose your platform from the interactive menu:
+**Important:** Navigate to your project directory first!
+
+```bash
+cd /path/to/your/project
+```
+
+Then run one of these commands:
 
 **Recommended (most reliable):**
 ```bash
@@ -53,21 +59,16 @@ bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-The installer will prompt you to choose:
+### How It Works
 
-### Installation Scope
+The installer installs everything to your **current project directory**:
+- `./.factory/droids/` - Custom droids for your project
+- `./.factory/commands/` - Slash commands  
+- `./droidz/standards/` - Coding standards
 
-1. **Project-specific** (recommended for teams)
-   - Installs to `./.factory/` in your current directory
-   - Checked into git and shared with your team
-   - Each project has its own droids/commands/standards
-   
-2. **Personal** (recommended for individual use)
-   - Installs to `~/.factory/` in your home directory
-   - Available across all your projects
-   - Your droids follow you everywhere
+Everything is **checked into git** and **shared with your team**.
 
-The installer will then:
+The installer will:
 1. Show you a menu with all supported platforms
 2. Let you select your AI tool (Claude Code, Factory AI, Cursor, Cline, Codex CLI, or VS Code)
 3. Install everything to the correct location
