@@ -12,32 +12,54 @@ from .exceptions import InstallerError
 
 
 @dataclass
+class InstallTarget:
+    """Represents a single installation target (shared or agent-specific)."""
+
+    type: str
+    source: str
+    destination: str
+    description: str
+    chmod: List[str]
+
+    @classmethod
+    def from_dict(cls, data: Dict) -> "InstallTarget":
+        required = ["type", "source", "destination"]
+        for field in required:
+            if field not in data:
+                raise InstallerError(f"Install target is missing required field '{field}'.")
+
+        return cls(
+            type=data["type"],
+            source=data["source"],
+            destination=data["destination"],
+            description=data.get("description", ""),
+            chmod=data.get("chmod", []),
+        )
+
+
+@dataclass
 class PlatformSpec:
     """Represents the configuration of a single platform install target."""
 
     name: str
     label: str
     description: str
-    default_path: str
-    payload: str
-    target: Optional[str]
-    chmod: List[str]
+    install_targets: List[InstallTarget]
 
     @classmethod
     def from_dict(cls, name: str, data: Dict) -> "PlatformSpec":
-        required = ["default_path", "payload"]
+        required = ["install_targets"]
         for field in required:
             if field not in data:
                 raise InstallerError(f"Platform '{name}' is missing required field '{field}'.")
+
+        targets = [InstallTarget.from_dict(t) for t in data["install_targets"]]
 
         return cls(
             name=name,
             label=data.get("label", name.title()),
             description=data.get("description", ""),
-            default_path=data["default_path"],
-            payload=data["payload"],
-            target=data.get("target"),
-            chmod=data.get("chmod", []),
+            install_targets=targets,
         )
 
 
@@ -57,6 +79,7 @@ class InstallOptions:
 @dataclass
 class InstallResult:
     platform: str
+    target_type: str
     destination: Path
     payload: Path
     backup_path: Optional[Path]
@@ -89,40 +112,62 @@ def install(options: InstallOptions) -> List[InstallResult]:
     for platform_name in requested:
         spec = PlatformSpec.from_dict(platform_name, manifest["platforms"][platform_name])
 
-        if options.destination_override:
-            destination_root = fs.expand_path(options.destination_override)
-        elif options.use_platform_defaults:
-            destination_root = fs.expand_path(spec.default_path)
-        else:
-            destination_root = Path.cwd()
-
-        target_dir = destination_root / spec.target if spec.target else destination_root
-        payload_dir = payloads.resolve_payload_dir(
-            options.payload_source, spec.payload, options.profile
-        )
-
         if options.verbose:
-            print(f"Installing {spec.label} → {target_dir}")
-            print(f"  Using payload: {payload_dir}")
+            print(f"\nInstalling {spec.label} (full framework)")
+            print(f"  {len(spec.install_targets)} target(s) to install")
 
-        backup = fs.prepare_destination(target_dir, force=options.force, dry_run=options.dry_run)
+        for idx, target in enumerate(spec.install_targets, 1):
+            # Resolve destination path
+            if options.destination_override:
+                # Override applies to agent-specific targets only, not shared
+                if target.type == "agent":
+                    destination = fs.expand_path(options.destination_override)
+                else:
+                    destination = fs.expand_path(target.destination)
+            elif options.use_platform_defaults:
+                destination = fs.expand_path(target.destination)
+            else:
+                # Current directory mode: only applies to agent-specific
+                if target.type == "agent":
+                    destination = Path.cwd()
+                else:
+                    destination = fs.expand_path(target.destination)
 
-        if options.verbose and backup is not None:
-            print(f"  Existing instructions moved to {backup}")
-
-        fs.copy_tree(payload_dir, target_dir, dry_run=options.dry_run)
-        if spec.chmod:
-            fs.chmod_targets(target_dir, spec.chmod, dry_run=options.dry_run)
-
-        results.append(
-            InstallResult(
-                platform=platform_name,
-                destination=target_dir,
-                payload=payload_dir,
-                backup_path=backup,
-                dry_run=options.dry_run,
+            # Resolve payload directory
+            payload_dir = payloads.resolve_payload_dir(
+                options.payload_source, target.source, options.profile
             )
-        )
+
+            if options.verbose:
+                print(f"\n  [{idx}/{len(spec.install_targets)}] {target.description}")
+                print(f"      Source: {payload_dir}")
+                print(f"      Destination: {destination}")
+
+            # Prepare destination (backup if needed)
+            backup = fs.prepare_destination(
+                destination, force=options.force, dry_run=options.dry_run
+            )
+
+            if options.verbose and backup is not None:
+                print(f"      Backup: {backup}")
+
+            # Copy files
+            fs.copy_tree(payload_dir, destination, dry_run=options.dry_run)
+
+            # Set permissions
+            if target.chmod:
+                fs.chmod_targets(destination, target.chmod, dry_run=options.dry_run)
+
+            results.append(
+                InstallResult(
+                    platform=platform_name,
+                    target_type=target.type,
+                    destination=destination,
+                    payload=payload_dir,
+                    backup_path=backup,
+                    dry_run=options.dry_run,
+                )
+            )
 
     return results
 
@@ -150,6 +195,7 @@ def _determine_platforms(requested: Iterable[str], manifest: Dict) -> List[str]:
 __all__ = [
     "InstallOptions",
     "InstallResult",
+    "InstallTarget",
     "PlatformSpec",
     "install",
     "list_platforms",

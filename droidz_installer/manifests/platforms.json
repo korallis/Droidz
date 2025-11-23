@@ -1,56 +1,128 @@
 {
   "defaults": {
     "profile": "default",
-    "platforms": ["claude"]
+    "platforms": ["factory"]
   },
   "platforms": {
+    "factory": {
+      "label": "Factory AI",
+      "description": "Factory.ai CLI - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "droid_cli",
+          "destination": "~/.factory",
+          "description": "Factory-specific commands and agents",
+          "chmod": ["commands/*"]
+        }
+      ]
+    },
     "claude": {
       "label": "Claude Code",
-      "description": "Claude desktop instructions (commands, agents, standards).",
-      "default_path": "~/.claude",
-      "target": "droidz",
-      "payload": "claude",
-      "chmod": ["commands/*"]
-    },
-    "droid_cli": {
-      "label": "Droid CLI",
-      "description": "Factory.ai CLI commands and agents.",
-      "default_path": "~/.factory",
-      "target": "droidz",
-      "payload": "droid_cli",
-      "chmod": ["commands/*"]
+      "description": "Claude desktop - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "claude",
+          "destination": "~/.claude",
+          "description": "Claude-specific commands and agents",
+          "chmod": ["commands/*"]
+        }
+      ]
     },
     "cursor": {
       "label": "Cursor",
-      "description": "Cursor workspace workflows and quickstarts.",
-      "default_path": "~/Library/Application Support/Cursor",
-      "target": "droidz",
-      "payload": "cursor",
-      "chmod": []
+      "description": "Cursor workspace - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "cursor",
+          "destination": "~/Library/Application Support/Cursor/droidz",
+          "description": "Cursor-specific workflows",
+          "chmod": []
+        }
+      ]
     },
     "cline": {
       "label": "Cline",
-      "description": "Cline assistant prompt packs.",
-      "default_path": "~/.cline",
-      "target": "droidz",
-      "payload": "cline",
-      "chmod": []
+      "description": "Cline assistant - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "cline",
+          "destination": "~/.cline",
+          "description": "Cline-specific prompts",
+          "chmod": []
+        }
+      ]
     },
-    "codex_cli": {
+    "codex": {
       "label": "Codex CLI",
-      "description": "Codex prompt playbooks.",
-      "default_path": "~/.codex",
-      "target": "droidz",
-      "payload": "codex_cli",
-      "chmod": []
+      "description": "Codex CLI - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "codex_cli",
+          "destination": "~/.codex",
+          "description": "Codex-specific playbooks",
+          "chmod": []
+        }
+      ]
     },
     "vscode": {
       "label": "VS Code",
-      "description": "VS Code snippets and task recipes.",
-      "default_path": "~/Library/Application Support/Code/User",
-      "target": "droidz",
-      "payload": "vscode",
-      "chmod": []
+      "description": "VS Code - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "vscode",
+          "destination": "~/Library/Application Support/Code/User/droidz",
+          "description": "VS Code-specific snippets",
+          "chmod": []
+        }
+      ]
     }
   }
 }

@@ -24,7 +24,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--platform",
         dest="platforms",
         action="append",
-        help="Platform(s) to install (repeatable). Use --platform all to install everything.",
+        help=(
+            "Agent platform(s) to install (repeatable). "
+            "Examples: factory, claude, cursor. "
+            "Use --platform all to install for all agents."
+        ),
     )
     parser.add_argument(
         "--profile",
@@ -33,14 +37,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--destination",
-        help="Override the destination root path (applies to every selected platform).",
+        help=(
+            "Override the destination path for agent-specific content only. "
+            "Shared framework (~/.droidz) always installs to its default location."
+        ),
     )
     parser.add_argument(
         "--use-platform-defaults",
         action="store_true",
         help=(
-            "Install into each platform's default folder (e.g., ~/.claude/droidz) instead of "
-            "the current directory."
+            "Install into each agent's default directories (e.g., ~/.droidz, ~/.factory, ~/.claude) "
+            "instead of the current directory."
         ),
     )
     parser.add_argument(
@@ -99,11 +106,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     except InstallerError as exc:
         parser.error(str(exc))
 
-    if not args.quiet:
-        for result in results:
-            scope = "dry run" if result.dry_run else "installed"
-            payload_name = result.payload.name if result.payload else "payload"
-            print(f"[{scope}] {result.platform} → {result.destination} ({payload_name})")
+    if not args.quiet and not options.verbose:
+        # Simple summary if not in verbose mode
+        print("\nInstallation complete!")
+        platforms_installed = set(r.platform for r in results)
+        for platform in platforms_installed:
+            platform_results = [r for r in results if r.platform == platform]
+            print(f"\n{platform}:")
+            for result in platform_results:
+                scope = " (dry run)" if result.dry_run else ""
+                print(f"  [{result.target_type}] → {result.destination}{scope}")
 
     return 0
 
