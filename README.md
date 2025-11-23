@@ -1,14 +1,14 @@
 # 🤖 Droidz Instruction Platform
 
-Slim, instruction-only distribution of the Droidz workflow. A single Python installer copies curated command, agent, and prompt bundles straight into the folders expected by your favorite AI coding surfaces (Claude Code, Droid CLI, Cursor, Cline, Codex CLI, and VS Code) so `/commands` and agents are immediately usable.
+Agent-aware instruction framework with a two-tier architecture: shared standards in `~/.droidz` plus platform-specific commands and agents for your favorite AI coding tools (Factory AI, Claude Code, Cursor, Cline, Codex CLI, and VS Code).
 
 ## What You Get
-- `install.py` – zero-interaction CLI that maps payload bundles to each platform’s required directories.
-- `droidz_installer/` – manifest-driven engine plus payloads containing the actual instructions.
-- `instructions/overview.md` – canonical operating guide mirrored inside every payload.
-- `tests/` – pytest coverage for manifest parsing, dry-run safety, and filesystem handling.
+- `install.py` – zero-interaction CLI that installs both shared framework and agent-specific payloads.
+- `droidz_installer/` – manifest-driven engine with profile support for custom workflows.
+- **Shared Framework** (`~/.droidz`) – universal standards, validation rules, and version tracking.
+- **Agent-Specific Payloads** – commands, agents, and platform-tailored instructions.
+- `tests/` – pytest coverage for multi-target installation, backups, and dry-run safety.
 - `pyproject.toml` – lightweight toolchain with Ruff + pytest ready to run the Validation Gate.
-
 ## 💬 Join Our Discord Community
 
 **Built specifically for Ray Fernando's Discord members!** 🎯
@@ -82,8 +82,8 @@ Use the bootstrap script to download the latest release, extract it to a tempora
 # Claude Code
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude
 
-# Factory.ai Droid CLI
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform droid_cli
+# Factory.ai Droid CLI (can also use: --platform droid_cli)
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform factory
 
 # Cursor
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cursor
@@ -91,39 +91,40 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 # Cline
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cline
 
-# Codex CLI
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex_cli
+# Codex CLI (can also use: --platform codex_cli)
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex
 
 # VS Code
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform vscode
 ```
 
+
 - Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
-- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination "$PWD/droidz"`) pass straight through after the `--` separator.
-- By default, instructions land inside `./droidz` (or the platform’s `target` folder) relative to your current directory—perfect for dropping payloads straight into a repo. Add `--use-platform-defaults` if you prefer the original locations such as `~/.claude/droidz`.
+- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination "$PWD"`) pass straight through after the `--` separator.
+- By default, agent-specific instructions land in your current directory, while the shared framework installs to `~/.droidz`. Add `--use-platform-defaults` to install agent-specific content to platform defaults (e.g., `~/.factory`, `~/.claude`).
 - Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
-- After the script completes, the requested instructions live in the path you chose (current directory by default).
+- After the script completes, you'll have both shared framework standards in `~/.droidz` and agent-specific content in your chosen location.
 
 ### Common Flags
 | Flag | Purpose |
 |------|---------|
 | `--profile <name>` | Loads alternative payload variants (defaults to `default`). |
-| `--destination <path>` | Overrides the root folder (defaults to the current directory). |
-| `--use-platform-defaults` | Install into platform-specific defaults (e.g., `~/.claude/droidz`). |
+| `--destination <path>` | Overrides agent-specific install location (defaults to current directory). Shared framework always installs to `~/.droidz`. |
+| `--use-platform-defaults` | Install agent-specific content into platform defaults (e.g., `~/.factory`, `~/.claude`). |
 | `--dry-run` | Prints the copy plan without touching disk. |
 | `--force` | Replaces existing destination folders instead of backing them up. |
 | `--quiet` | Suppresses verbose progress + completion summaries (default is verbose). |
 | `--payload-source <dir>` | Points to custom payloads you have authored. |
 
 ## Platform Reference
-| Platform | Default Target | Payload Contents |
-|----------|----------------|------------------|
-| Claude Code | `droidz/` in your current directory (or `~/.claude/droidz` with `--use-platform-defaults`) | `/build`, `/parallel`, orchestrator agent briefs, Claude-specific standards. |
-| Droid CLI | `droidz/` in your current directory (or `~/.factory/droidz`) | Factory command prompts, specialist briefs, CLI standards. |
-| Cursor | `droidz/` in your current directory (or `~/Library/Application Support/Cursor/droidz`) | Workflow cards that instruct Cursor to follow the Validation Gate. |
-| Cline | `droidz/` in your current directory (or `~/.cline/droidz`) | Prompt packs guiding Cline through spec-first execution. |
-| Codex CLI | `droidz/` in your current directory (or `~/.codex/droidz`) | Sequential playbooks guiding Codex CLI through the same spec-first flow. |
-| VS Code | `droidz/` in your current directory (or `~/Library/Application Support/Code/User/droidz`) | Snippets and task recipes for validation-first development. |
+| Platform | Agent-Specific Target | Shared Framework | Payload Contents |
+|----------|----------------------|------------------|------------------|
+| Claude Code | Current directory (or `~/.claude` with `--use-platform-defaults`) | `~/.droidz` | Commands, agents, Claude-specific standards. |
+| Factory/Droid CLI | Current directory (or `~/.factory` with `--use-platform-defaults`) | `~/.droidz` | Factory command prompts, specialist agents, CLI standards. |
+| Cursor | Current directory (or `~/Library/Application Support/Cursor/droidz` with `--use-platform-defaults`) | `~/.droidz` | Workflow cards and standards. |
+| Cline | Current directory (or `~/.cline` with `--use-platform-defaults`) | `~/.droidz` | Prompt packs for spec-first execution. |
+| Codex CLI | Current directory (or `~/.codex` with `--use-platform-defaults`) | `~/.droidz` | Sequential playbooks for spec-first flow. |
+| VS Code | Current directory (or `~/Library/Application Support/Code/User/droidz` with `--use-platform-defaults`) | `~/.droidz` | Snippets and task recipes. |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
 
@@ -133,10 +134,10 @@ Every payload ships instructions only—no remote downloads, external URLs, or o
 - Codex CLI and other single-agent runtimes still honor the same prompts—they execute every subtask sequentially while preserving the Validation Gate requirements.
 
 ## Custom Profiles
-1. Copy an existing payload folder, e.g. `cp -R droidz_installer/payloads/claude droidz_installer/payloads/claude/nextjs`.
+1. Copy an existing profile folder, e.g. `cp -R droidz_installer/payloads/claude/default droidz_installer/payloads/claude/nextjs`.
 2. Update the files inside with your custom standards and prompts.
 3. Run `python install.py --platform claude --profile nextjs`.
-4. The installer attempts profile-specific payloads first, then falls back to the base folder when none exist.
+4. The installer attempts profile-specific payloads first, then falls back to the default profile when none exist.
 
 ## Validation Gate (Mandatory)
 All payloads instruct their host tools to run the same gate:
@@ -147,10 +148,10 @@ pytest
 Never summarize work or claim success before both commands pass. Tests rely on this gate as well.
 
 ## Troubleshooting
-- **Existing instructions were replaced** – re-run the installer without `--force`; it creates timestamped backups such as `droidz.backup-20251122-153000`.
+- **Existing instructions were replaced** – re-run the installer without `--force`; it creates timestamped backups (e.g., `.factory.backup-20251122-153000`).
 - **Need a dry preview** – add `--dry-run` to inspect planned destinations and payloads.
-- **Different install roots per platform** – run the installer separately, passing `--destination` each time.
-- **Add another IDE** – update `droidz_installer/manifests/platforms.yml` with a new entry and drop a payload folder with the same name.
+- **Different install locations per platform** – run the installer separately, passing `--destination` each time for agent-specific content.
+- **Add another IDE** – update `droidz_installer/manifests/platforms.json` with a new entry and create a payload folder under `droidz_installer/payloads/<platform>/default/`.
 
 ## Developing the Installer
 ```bash
