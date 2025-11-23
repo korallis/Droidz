@@ -313,9 +313,23 @@ install_platform() {
         
         mkdir -p "$dest_dir"
         
-        if cp -R "$subdir/"* "$dest_dir/" 2>/dev/null; then
-          local count=$(find "$subdir" -type f | wc -l | tr -d ' ')
-          file_count=$((file_count + count))
+        # For commands directory, only copy non-numbered files (like agent-os)
+        if [[ "$subdir_name" == "commands" ]]; then
+          for file in "$subdir"/*; do
+            local filename=$(basename "$file")
+            # Skip files that start with numbers (1-*, 2-*, etc.)
+            if [[ ! "$filename" =~ ^[0-9]- ]]; then
+              if cp "$file" "$dest_dir/" 2>/dev/null; then
+                ((file_count++)) || true
+              fi
+            fi
+          done
+        else
+          # For other directories (droids, agents, etc.), copy all files
+          if cp -R "$subdir/"* "$dest_dir/" 2>/dev/null; then
+            local count=$(find "$subdir" -type f | wc -l | tr -d ' ')
+            file_count=$((file_count + count))
+          fi
         fi
       fi
     done
