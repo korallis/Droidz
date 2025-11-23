@@ -3,12 +3,11 @@
 Agent-aware instruction framework with a two-tier architecture: shared standards in `~/.droidz` plus platform-specific commands and agents for your favorite AI coding tools (Factory AI, Claude Code, Cursor, Cline, Codex CLI, and VS Code).
 
 ## What You Get
-- `install.py` – zero-interaction CLI that installs both shared framework and agent-specific payloads.
-- `droidz_installer/` – manifest-driven engine with profile support for custom workflows.
-- **Shared Framework** (`~/.droidz`) – universal standards, validation rules, and version tracking.
-- **Agent-Specific Payloads** – commands, agents, and platform-tailored instructions.
-- `tests/` – pytest coverage for multi-target installation, backups, and dry-run safety.
-- `pyproject.toml` – lightweight toolchain with Ruff + pytest ready to run the Validation Gate.
+- **8 Specialized Agents/Droids** – implementer, spec-writer, product-planner, verifier, and more
+- **20+ Workflow Commands** – plan-product, shape-spec, implement-tasks, create-tasks, etc.
+- **Comprehensive Standards** – organized by domain (global, backend, frontend, testing)
+- **Safe Updates** – preserves your custom standards and specs during framework upgrades
+- **One-Command Install** – interactive installer guides you through setup
 ## 💬 Join Our Discord Community
 
 **Built specifically for Ray Fernando's Discord members!** 🎯
