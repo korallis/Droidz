@@ -67,14 +67,30 @@ Your support helps maintain and improve this framework! 🙏
    Update `$Version` whenever a newer 3.11 maintenance release ships.
 
 ## Run the Installer with One Command
-Use the bootstrap script to download the latest release, extract it to a temporary directory, and invoke `install.py` in a single shot:
+Use the bootstrap script to download the latest release, extract it to a temporary directory, and invoke `install.py` in a single shot. Pick the command that matches your tool:
 
 ```bash
+# Claude Code
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude
+
+# Factory.ai Droid CLI
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform droid_cli
+
+# Cursor
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cursor
+
+# Cline
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform cline
+
+# Codex CLI
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform codex_cli
+
+# VS Code
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform vscode
 ```
 
-- Replace `--platform claude` with any target (repeat the flag to install multiple platforms or use `--platform all`).
-- All additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination ~/tmp/droidz`) are passed straight through after the `--` separator.
+- Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
+- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination ~/tmp/droidz`) pass straight through after the `--` separator.
 - After the script completes, the requested instructions live in the appropriate directories (e.g., `~/.claude/droidz/commands`).
 
 ### Common Flags
