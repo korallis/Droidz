@@ -4,7 +4,7 @@ First, check if the user has already provided instructions about which task grou
 
 **If the user has NOT provided instructions:**
 
-Read `agent-os/specs/[this-spec]/tasks.md` to review the available task groups, then output the following message to the user and WAIT for their response:
+Read `droidz/specs/[this-spec]/tasks.md` to review the available task groups, then output the following message to the user and WAIT for their response:
 
 ```
 Should we proceed with implementation of all task groups in tasks.md?

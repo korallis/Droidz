@@ -1,4 +1,4 @@
-The final part of our product planning process is to document this product's tech stack in `agent-os/product/tech-stack.md`.  Follow these instructions to do so:
+The final part of our product planning process is to document this product's tech stack in `droidz/product/tech-stack.md`.  Follow these instructions to do so:
 
 {{workflows/planning/create-product-tech-stack}}
 
@@ -7,7 +7,7 @@ The final part of our product planning process is to document this product's tec
 Once you've created tech-stack.md, output the following message:
 
 ```
-✅ I have documented the product's tech stack at `agent-os/product/tech-stack.md`.
+✅ I have documented the product's tech stack at `droidz/product/tech-stack.md`.
 
 Review it to ensure all of the tech stack details are correct for this product.
 

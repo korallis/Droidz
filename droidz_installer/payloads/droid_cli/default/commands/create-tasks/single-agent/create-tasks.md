@@ -4,6 +4,6 @@ Carefully read and execute the instructions in the following files IN SEQUENCE, 
 
 Instructions to follow in sequence:
 
-{{PHASE 1: @agent-os/commands/create-tasks/1-get-spec-requirements.md}}
+{{PHASE 1: @droidz/commands/create-tasks/1-get-spec-requirements.md}}
 
-{{PHASE 2: @agent-os/commands/create-tasks/2-create-tasks-list.md}}
+{{PHASE 2: @droidz/commands/create-tasks/2-create-tasks-list.md}}

@@ -1,4 +1,4 @@
-Now that you've gathered information about this product, use that info to create the mission document in `agent-os/product/mission.md` by following these instructions:
+Now that you've gathered information about this product, use that info to create the mission document in `droidz/product/mission.md` by following these instructions:
 
 {{workflows/planning/create-product-mission}}
 
@@ -8,7 +8,7 @@ Now that you've gathered information about this product, use that info to create
 Once you've created mission.md, output the following message:
 
 ```
-✅ I have documented the product mission at `agent-os/product/mission.md`.
+✅ I have documented the product mission at `droidz/product/mission.md`.
 
 Review it to ensure it matches your vision and strategic goals for this product.
 

@@ -7,7 +7,7 @@ Now that we've initiated and planned the details for a new spec, we will now pro
 Display the following message to the user:
 
 ```
-The spec has been created at `agent-os/specs/[this-spec]/spec.md`.
+The spec has been created at `droidz/specs/[this-spec]/spec.md`.
 
 Review it closely to ensure everything aligns with your vision and requirements.
 

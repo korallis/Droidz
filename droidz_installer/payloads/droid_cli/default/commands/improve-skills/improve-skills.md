@@ -23,7 +23,7 @@ If not, then please specify which Skills I should include or exclude.
 Analyze and read the skill file to understand what it is, what it should be used for, and when it should be used. The specific best practices are described and linked within it. Look to these places to read and understand each skill:
 
 - The Skill's name and file name.
-- The Skill.md contains a link that points to `agent_os/standards/...` — Follow that link and read its contents.
+- The Skill.md contains a link that points to `droidz/standards/...` — Follow that link and read its contents.
 
 ### Step 3: Rewrite the Skill description
 
@@ -66,7 +66,7 @@ RECOMMENDATION 👉 Review and revise them further using these tips:
 - Make Skills as descriptive as possible
 - Use their 'description' frontmatter to tell Claude Code when it should proactively use this skill.
 - Include all relevant instructions, details and directives within the content of the Skill.
-- You can link to other files (like your Agent OS standards files) using markdown links.
+- You can link to other files (like your Droidz standards files) using markdown links.
 - You can consolidate multiple similar skills into single skills where it makes sense for Claude to find and use them together.
 
 For more best practices, refer to the official Claude Code documentation on Skills:

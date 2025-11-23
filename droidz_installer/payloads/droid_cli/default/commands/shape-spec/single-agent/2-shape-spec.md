@@ -9,7 +9,7 @@ Follow these instructions for researching this spec's requirements:
 Once you've completed your research and documented it, output the following message:
 
 ```
-✅ I have documented this spec's research and requirements in `agent-os/specs/[this-spec]/planning`.
+✅ I have documented this spec's research and requirements in `droidz/specs/[this-spec]/planning`.
 
 Next step: Run the command, `1-create-spec.md`.
 ```

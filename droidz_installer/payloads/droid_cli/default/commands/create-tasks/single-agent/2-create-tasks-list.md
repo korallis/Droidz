@@ -7,7 +7,7 @@ Now that you have the spec.md AND/OR requirements.md, please break those down in
 Display the following message to the user:
 
 ```
-The tasks list has created at `agent-os/specs/[this-spec]/tasks.md`.
+The tasks list has created at `droidz/specs/[this-spec]/tasks.md`.
 
 Review it closely to make sure it all looks good.
 

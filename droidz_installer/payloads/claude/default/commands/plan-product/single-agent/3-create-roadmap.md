@@ -1,4 +1,4 @@
-Now that you've created this product's mission.md, use that to guide your creation of the roadmap in `agent-os/product/roadmap.md` by following these instructions:
+Now that you've created this product's mission.md, use that to guide your creation of the roadmap in `droidz/product/roadmap.md` by following these instructions:
 
 {{workflows/planning/create-product-roadmap}}
 
@@ -8,7 +8,7 @@ Now that you've created this product's mission.md, use that to guide your creati
 Once you've created roadmap.md, output the following message:
 
 ```
-✅ I have documented the product roadmap at `agent-os/product/roadmap.md`.
+✅ I have documented the product roadmap at `droidz/product/roadmap.md`.
 
 Review it to ensure it aligns with how you see this product roadmap going forward.
 

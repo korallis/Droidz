@@ -8,8 +8,8 @@ Carefully read and execute the instructions in the following files IN SEQUENCE, 
 
 Instructions to follow in sequence:
 
-{{PHASE 1: @agent-os/commands/implement-tasks/1-determine-tasks.md}}
+{{PHASE 1: @droidz/commands/implement-tasks/1-determine-tasks.md}}
 
-{{PHASE 2: @agent-os/commands/implement-tasks/2-implement-tasks.md}}
+{{PHASE 2: @droidz/commands/implement-tasks/2-implement-tasks.md}}
 
-{{PHASE 3: @agent-os/commands/implement-tasks/3-verify-implementation.md}}
+{{PHASE 3: @droidz/commands/implement-tasks/3-verify-implementation.md}}

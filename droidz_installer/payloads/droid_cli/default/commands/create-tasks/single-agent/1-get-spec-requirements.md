@@ -1,6 +1,6 @@
 The FIRST STEP is to make sure you have ONE OR BOTH of these files to inform your tasks breakdown:
-- `agent-os/specs/[this-spec]/spec.md`
-- `agent-os/specs/[this-spec]/planning/requirements.md`
+- `droidz/specs/[this-spec]/spec.md`
+- `droidz/specs/[this-spec]/planning/requirements.md`
 
 IF you don't have ONE OR BOTH of those files in your current conversation context, then ask user to provide direction on where to you can find them by outputting the following request then wait for user's response:
 

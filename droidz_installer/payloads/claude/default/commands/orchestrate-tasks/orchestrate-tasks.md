@@ -23,7 +23,7 @@ If you don't have one yet, then run any of these commands first:
 
 ### NEXT: Create orchestration.yml to serve as a roadmap for orchestration of task groups
 
-In this spec's folder, create this file: `agent-os/specs/[this-spec]/orchestration.yml`.
+In this spec's folder, create this file: `droidz/specs/[this-spec]/orchestration.yml`.
 
 Populate this file with with the names of each task group found in this spec's `tasks.md` and use this EXACT structure for the content of `orchestration.yml`:
 
@@ -141,14 +141,14 @@ Note: If the `use_claude_code_subagents` flag is enabled, the final `orchestrati
 {{IF use_claude_code_subagents}}
 ### NEXT: Delegate task groups implementations to assigned subagents
 
-Loop through each task group in `agent-os/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned subagent specified in `orchestration.yml`.
+Loop through each task group in `droidz/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned subagent specified in `orchestration.yml`.
 
 For each delegation, provide the subagent with:
 - The task group (including the parent task and all sub-tasks)
-- The spec file: `agent-os/specs/[this-spec]/spec.md`
+- The spec file: `droidz/specs/[this-spec]/spec.md`
 - Instruct subagent to:
   - Perform their implementation
-  - Check off the task and sub-task(s) in `agent-os/specs/[this-spec]/tasks.md`
+  - Check off the task and sub-task(s) in `droidz/specs/[this-spec]/tasks.md`
 {{UNLESS standards_as_claude_code_skills}}
 
 In addition to the above items, also instruct the subagent to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the subagent, follow these instructions:
@@ -164,14 +164,14 @@ Provide all of the above to the subagent when delegating tasks for it to impleme
 
 Now we must generate an ordered series of prompt texts, which will be used to direct the implementation of each task group listed in `orchestration.yml`.
 
-Follow these steps to generate this spec's ordered series of prompts texts, each in its own .md file located in `agent-os/specs/[this-spec]/implementation/prompts/`.
+Follow these steps to generate this spec's ordered series of prompts texts, each in its own .md file located in `droidz/specs/[this-spec]/implementation/prompts/`.
 
-LOOP through EACH task group in `agent-os/specs/[this-spec]/tasks.md` and for each, use the following workflow to generate a markdown file with prompt text for each task group:
+LOOP through EACH task group in `droidz/specs/[this-spec]/tasks.md` and for each, use the following workflow to generate a markdown file with prompt text for each task group:
 
 #### Step 1. Create the prompt markdown file
 
 Create the prompt markdown file using this naming convention:
-`agent-os/specs/[this-spec]/implementation/prompts/[task-group-number]-[task-group-title].md`.
+`droidz/specs/[this-spec]/implementation/prompts/[task-group-number]-[task-group-title].md`.
 
 For example, if the 3rd task group in tasks.md is named "Comment System" then create `3-comment-system.md`.
 
@@ -200,11 +200,11 @@ We're continuing our implementation of [spec-title] by implementing task group n
 
 ## Understand the context
 
-Read @agent-os/specs/[this-spec]/spec.md to understand the context for this spec and where the current task fits into it.
+Read @droidz/specs/[this-spec]/spec.md to understand the context for this spec and where the current task fits into it.
 
 Also read these further context and reference:
-- @agent-os/specs/[this-spec/]/planning/requirements.md
-- @agent-os/specs/[this-spec/]/planning/visuals
+- @droidz/specs/[this-spec/]/planning/requirements.md
+- @droidz/specs/[this-spec/]/planning/visuals
 
 ## Perform the implementation
 
@@ -232,6 +232,6 @@ Use the following list of prompts to direct the implementation of each task grou
 
 Input those prompts into this chat one-by-one or queue them to run in order.
 
-Progress will be tracked in `agent-os/specs/[this-spec]/tasks.md`
+Progress will be tracked in `droidz/specs/[this-spec]/tasks.md`
 ```
 {{ENDUNLESS use_claude_code_subagents}}

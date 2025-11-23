@@ -9,7 +9,7 @@ Display a summary of what was implemented.
 IF all tasks are now marked as done (with `- [x]`) in tasks.md, display this message to user:
 
 ```
-All tasks have been implemented: `agent-os/specs/[this-spec]/tasks.md`.
+All tasks have been implemented: `droidz/specs/[this-spec]/tasks.md`.
 
 NEXT STEP 👉 Run `3-verify-implementation.md` to verify the implementation.
 ```
