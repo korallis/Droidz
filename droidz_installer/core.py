@@ -69,6 +69,7 @@ class InstallOptions:
     profile: str
     destination_override: Optional[str]
     use_platform_defaults: bool
+    install_to_project: bool
     dry_run: bool
     force: bool
     manifest_path: Path
@@ -116,9 +117,16 @@ def install(options: InstallOptions) -> List[InstallResult]:
             print(f"\nInstalling {spec.label} (full framework)")
             print(f"  {len(spec.install_targets)} target(s) to install")
 
+        # Track which destinations have been prepared to avoid removing files
+        # when multiple targets install to the same location
+        prepared_destinations: Dict[Path, Optional[Path]] = {}
+
         for idx, target in enumerate(spec.install_targets, 1):
             # Resolve destination path
-            if options.destination_override:
+            if options.install_to_project:
+                # Install everything to current directory for self-contained project
+                destination = Path.cwd()
+            elif options.destination_override:
                 # Override applies to agent-specific targets only, not shared
                 if target.type == "agent":
                     destination = fs.expand_path(options.destination_override)
@@ -143,10 +151,14 @@ def install(options: InstallOptions) -> List[InstallResult]:
                 print(f"      Source: {payload_dir}")
                 print(f"      Destination: {destination}")
 
-            # Prepare destination (backup if needed)
-            backup = fs.prepare_destination(
-                destination, force=options.force, dry_run=options.dry_run
-            )
+            # Prepare destination (backup if needed) - only once per unique destination
+            if destination not in prepared_destinations:
+                backup = fs.prepare_destination(
+                    destination, force=options.force, dry_run=options.dry_run
+                )
+                prepared_destinations[destination] = backup
+            else:
+                backup = prepared_destinations[destination]
 
             if options.verbose and backup is not None:
                 print(f"      Backup: {backup}")

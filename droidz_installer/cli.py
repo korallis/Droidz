@@ -39,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--destination",
         help=(
             "Override the destination path for agent-specific content only. "
-            "Shared framework (~/.droidz) always installs to its default location."
+            "Shared framework (~/.droidz) always installs to its default location unless --install-to-project is used."
         ),
     )
     parser.add_argument(
@@ -48,6 +48,14 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Install into each agent's default directories (e.g., ~/.droidz, ~/.factory, ~/.claude) "
             "instead of the current directory."
+        ),
+    )
+    parser.add_argument(
+        "--install-to-project",
+        action="store_true",
+        help=(
+            "Install EVERYTHING (shared framework + agent-specific) to the current directory "
+            "for a self-contained project setup."
         ),
     )
     parser.add_argument(
@@ -94,6 +102,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         profile=args.profile,
         destination_override=args.destination,
         use_platform_defaults=args.use_platform_defaults,
+        install_to_project=args.install_to_project,
         dry_run=args.dry_run,
         force=args.force,
         manifest_path=manifest_path,

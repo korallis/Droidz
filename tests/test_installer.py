@@ -65,6 +65,7 @@ def test_install_copies_payload_and_creates_backup(tmp_path: Path) -> None:
         profile="default",
         destination_override=str(destination),
         use_platform_defaults=False,
+        install_to_project=False,
         dry_run=False,
         force=False,
         manifest_path=manifest_path,
@@ -92,6 +93,7 @@ def test_install_honors_dry_run(tmp_path: Path) -> None:
         profile="default",
         destination_override=str(destination),
         use_platform_defaults=False,
+        install_to_project=False,
         dry_run=True,
         force=False,
         manifest_path=manifest_path,
@@ -102,6 +104,39 @@ def test_install_honors_dry_run(tmp_path: Path) -> None:
     install(options)
 
     assert not destination.exists()
+
+
+def test_install_to_project_installs_everything_to_cwd(tmp_path: Path, monkeypatch) -> None:
+    manifest_path = _write_manifest(tmp_path)
+    payload_source = _write_payload(tmp_path / "payloads")
+    project_dir = tmp_path / "project"
+    project_dir.mkdir(parents=True)
+
+    # Mock Path.cwd() to return project_dir without actually changing directories
+    monkeypatch.setattr(Path, "cwd", lambda: project_dir)
+
+    options = InstallOptions(
+        platforms=["demo"],
+        profile="default",
+        destination_override=None,
+        use_platform_defaults=False,
+        install_to_project=True,
+        dry_run=False,
+        force=True,
+        manifest_path=manifest_path,
+        payload_source=payload_source,
+        verbose=False,
+    )
+
+    results = install(options)
+
+    # Both shared and agent-specific should be in project directory
+    assert len(results) == 2
+    assert (project_dir / "note.txt").exists()  # Agent-specific
+    assert (project_dir / "framework.txt").exists()  # Shared framework
+    assert (project_dir / "scripts" / "run.sh").exists()  # Agent-specific scripts
+    # Both should point to same destination
+    assert all(r.destination == project_dir for r in results)
 
 
 def test_list_platforms_reads_manifest(tmp_path: Path) -> None:
