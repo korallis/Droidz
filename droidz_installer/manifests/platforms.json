@@ -18,8 +18,8 @@
         {
           "type": "agent",
           "source": "droid_cli",
-          "destination": "~/.factory/droids",
-          "description": "Factory-specific commands and agents",
+          "destination": "~/.factory",
+          "description": "Factory-specific droids and commands",
           "chmod": ["commands/*"]
         }
       ]
@@ -39,7 +39,7 @@
           "type": "agent",
           "source": "droid_cli",
           "destination": "~/.factory",
-          "description": "Factory-specific commands and agents",
+          "description": "Factory-specific droids and commands",
           "chmod": ["commands/*"]
         }
       ]
