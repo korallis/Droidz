@@ -99,15 +99,17 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 ```
 
 - Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
-- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination ~/tmp/droidz`) pass straight through after the `--` separator.
+- Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination "$PWD/droidz"`) pass straight through after the `--` separator.
+- By default, instructions land inside `./droidz` (or the platform’s `target` folder) relative to your current directory—perfect for dropping payloads straight into a repo. Add `--use-platform-defaults` if you prefer the original locations such as `~/.claude/droidz`.
 - Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
-- After the script completes, the requested instructions live in the appropriate directories (e.g., `~/.claude/droidz/commands`).
+- After the script completes, the requested instructions live in the path you chose (current directory by default).
 
 ### Common Flags
 | Flag | Purpose |
 |------|---------|
 | `--profile <name>` | Loads alternative payload variants (defaults to `default`). |
-| `--destination <path>` | Overrides the default root folder for every selected platform. |
+| `--destination <path>` | Overrides the root folder (defaults to the current directory). |
+| `--use-platform-defaults` | Install into platform-specific defaults (e.g., `~/.claude/droidz`). |
 | `--dry-run` | Prints the copy plan without touching disk. |
 | `--force` | Replaces existing destination folders instead of backing them up. |
 | `--quiet` | Suppresses verbose progress + completion summaries (default is verbose). |
@@ -116,12 +118,12 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 ## Platform Reference
 | Platform | Default Target | Payload Contents |
 |----------|----------------|------------------|
-| Claude Code | `~/.claude/droidz` | `/build`, `/parallel`, orchestrator agent briefs, Claude-specific standards. |
-| Droid CLI | `~/.factory/droidz` | Factory command prompts, specialist briefs, CLI standards. |
-| Cursor | `~/Library/Application Support/Cursor/droidz` | Workflow cards that instruct Cursor to follow the Validation Gate. |
-| Cline | `~/.cline/droidz` | Prompt packs guiding Cline through spec-first execution. |
-| Codex CLI | `~/.codex/droidz` | Sequential playbooks guiding Codex CLI through the same spec-first flow. |
-| VS Code | `~/Library/Application Support/Code/User/droidz` | Snippets and task recipes for validation-first development. |
+| Claude Code | `droidz/` in your current directory (or `~/.claude/droidz` with `--use-platform-defaults`) | `/build`, `/parallel`, orchestrator agent briefs, Claude-specific standards. |
+| Droid CLI | `droidz/` in your current directory (or `~/.factory/droidz`) | Factory command prompts, specialist briefs, CLI standards. |
+| Cursor | `droidz/` in your current directory (or `~/Library/Application Support/Cursor/droidz`) | Workflow cards that instruct Cursor to follow the Validation Gate. |
+| Cline | `droidz/` in your current directory (or `~/.cline/droidz`) | Prompt packs guiding Cline through spec-first execution. |
+| Codex CLI | `droidz/` in your current directory (or `~/.codex/droidz`) | Sequential playbooks guiding Codex CLI through the same spec-first flow. |
+| VS Code | `droidz/` in your current directory (or `~/Library/Application Support/Code/User/droidz`) | Snippets and task recipes for validation-first development. |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
 

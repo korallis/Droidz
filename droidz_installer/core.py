@@ -46,6 +46,7 @@ class InstallOptions:
     platforms: List[str]
     profile: str
     destination_override: Optional[str]
+    use_platform_defaults: bool
     dry_run: bool
     force: bool
     manifest_path: Path
@@ -87,7 +88,14 @@ def install(options: InstallOptions) -> List[InstallResult]:
 
     for platform_name in requested:
         spec = PlatformSpec.from_dict(platform_name, manifest["platforms"][platform_name])
-        destination_root = fs.expand_path(options.destination_override or spec.default_path)
+
+        if options.destination_override:
+            destination_root = fs.expand_path(options.destination_override)
+        elif options.use_platform_defaults:
+            destination_root = fs.expand_path(spec.default_path)
+        else:
+            destination_root = Path.cwd()
+
         target_dir = destination_root / spec.target if spec.target else destination_root
         payload_dir = payloads.resolve_payload_dir(
             options.payload_source, spec.payload, options.profile

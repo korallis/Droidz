@@ -36,6 +36,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Override the destination root path (applies to every selected platform).",
     )
     parser.add_argument(
+        "--use-platform-defaults",
+        action="store_true",
+        help=(
+            "Install into each platform's default folder (e.g., ~/.claude/droidz) instead of "
+            "the current directory."
+        ),
+    )
+    parser.add_argument(
         "--manifest",
         default=DEFAULT_MANIFEST,
         type=Path,
@@ -78,6 +86,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         platforms=args.platforms or [],
         profile=args.profile,
         destination_override=args.destination,
+        use_platform_defaults=args.use_platform_defaults,
         dry_run=args.dry_run,
         force=args.force,
         manifest_path=manifest_path,
