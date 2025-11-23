@@ -41,8 +41,14 @@ Every contribution—large or small—directly fuels new payloads, validation he
 
 ## Installation
 
-Run this one command and choose your platform from the interactive menu:
+Run one of these commands and choose your platform from the interactive menu:
 
+**Recommended (most reliable):**
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
+```
+
+**Alternative (if above doesn't work):**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```

@@ -2,10 +2,34 @@
 set -euo pipefail
 
 # Droidz Interactive Installer
-# One-line install: curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+# One-line install (recommended):
+#   bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
+# 
+# Alternative (works on most systems):
+#   curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 
-# Ensure we can read from terminal even when piped
-exec < /dev/tty
+# Safe read function that handles piped input
+safe_read() {
+  local prompt="$1"
+  local var_name="$2"
+  
+  if [[ ! -t 0 ]] && [[ -r /dev/tty ]]; then
+    # Piped input but /dev/tty is available - read from terminal
+    read -p "$prompt" "$var_name" < /dev/tty
+  elif [[ -t 0 ]]; then
+    # Normal interactive terminal
+    read -p "$prompt" "$var_name"
+  else
+    # No terminal available
+    echo ""
+    echo "ERROR: This installer requires an interactive terminal."
+    echo "Please run it directly in your terminal instead of piping:"
+    echo ""
+    echo "  bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)"
+    echo ""
+    exit 1
+  fi
+}
 
 VERSION="2.1.1"
 REPO_URL="https://github.com/korallis/Droidz"
@@ -95,7 +119,7 @@ show_platform_menu() {
 get_platform_choice() {
   local choice
   while true; do
-    read -p "$(echo -e "${BOLD}Enter your choice [0-6]:${NC} ")" choice
+    safe_read "$(echo -e "${BOLD}Enter your choice [0-6]:${NC} ")" choice
     
     if [[ "$choice" == "0" ]]; then
       echo ""
@@ -334,14 +358,14 @@ main() {
     echo "  • Your specs (droidz/specs/)"
     echo ""
     
-    read -p "$(echo -e "${BOLD}Continue with update? [y/N]:${NC} ")" confirm
+    safe_read "$(echo -e "${BOLD}Continue with update? [y/N]:${NC} ")" confirm
     
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
       print_info "Update cancelled."
       exit 0
     fi
   else
-    read -p "$(echo -e "${BOLD}Proceed with installation? [Y/n]:${NC} ")" confirm
+    safe_read "$(echo -e "${BOLD}Proceed with installation? [Y/n]:${NC} ")" confirm
     
     if [[ "$confirm" =~ ^[Nn]$ ]]; then
       print_info "Installation cancelled."
