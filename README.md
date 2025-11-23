@@ -9,6 +9,24 @@ Slim, instruction-only distribution of the Droidz workflow. A single Python inst
 - `tests/` – pytest coverage for manifest parsing, dry-run safety, and filesystem handling.
 - `pyproject.toml` – lightweight toolchain with Ruff + pytest ready to run the Validation Gate.
 
+## 💬 Join Our Discord Community
+
+**Built specifically for Ray Fernando's Discord members!** 🎯
+
+Get early access, share tips, connect with contributors, and influence future development.
+
+**[→ Join Discord Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
+
+---
+
+## 💝 Support This Project
+
+If Droidz saves you time, consider supporting its development!
+
+**[→ Donate via PayPal](https://www.paypal.com/paypalme/gideonapp)** (@gideonapp)
+
+Your support helps maintain and improve this framework! 🙏
+
 ## Install Python 3.11+ (macOS)
 1. Check whether an acceptable version already exists:
    ```bash
@@ -48,22 +66,16 @@ Slim, instruction-only distribution of the Droidz workflow. A single Python inst
    ```
    Update `$Version` whenever a newer 3.11 maintenance release ships.
 
-## Quick Start
-1. Ensure Python 3.11+ is available.
-2. Clone this repository and stay at the root.
-3. Preview targets:
-   ```bash
-   python install.py --list-platforms
-   ```
-4. Install for one or more platforms:
-   ```bash
-   python install.py --platform claude --platform droid_cli --verbose
-   ```
-5. Or install everything at once:
-   ```bash
-   python install.py --platform all
-   ```
-6. Inside each tool, point to the new `droidz` folder (e.g., `~/.claude/droidz/commands`).
+## Run the Installer with One Command
+Use the bootstrap script to download the latest release, extract it to a temporary directory, and invoke `install.py` in a single shot:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh | bash -s -- --platform claude
+```
+
+- Replace `--platform claude` with any target (repeat the flag to install multiple platforms or use `--platform all`).
+- All additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination ~/tmp/droidz`) are passed straight through after the `--` separator.
+- After the script completes, the requested instructions live in the appropriate directories (e.g., `~/.claude/droidz/commands`).
 
 ### Common Flags
 | Flag | Purpose |
@@ -118,21 +130,3 @@ ruff check .
 pytest
 ```
 Tests mock filesystem operations to guarantee backups, dry-runs, and copy plans behave consistently.
-
-## 💬 Join Our Discord Community
-
-**Built specifically for Ray Fernando's Discord members!** 🎯
-
-Get early access, share tips, connect with contributors, and influence future development.
-
-**[→ Join Discord Community](https://polar.sh/checkout/polar_c_Pse3hFdgwFUqomhsOL8wIN5ETXT6UsxNWTvx11BdyFW)**
-
----
-
-## 💝 Support This Project
-
-If Droidz saves you time, consider supporting its development!
-
-**[→ Donate via PayPal](https://www.paypal.com/paypalme/gideonapp)** (@gideonapp)
-
-Your support helps maintain and improve this framework! 🙏
