@@ -100,6 +100,7 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 
 - Repeat the `--platform` flag or swap in `--platform all` to install multiple targets in one pass.
 - Additional arguments (e.g., `--profile nextjs`, `--dry-run`, `--destination ~/tmp/droidz`) pass straight through after the `--` separator.
+- Verbose progress + a completion summary are enabled by default; add `--quiet` after `--` to suppress them.
 - After the script completes, the requested instructions live in the appropriate directories (e.g., `~/.claude/droidz/commands`).
 
 ### Common Flags
@@ -109,6 +110,7 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/bootstrap.sh |
 | `--destination <path>` | Overrides the default root folder for every selected platform. |
 | `--dry-run` | Prints the copy plan without touching disk. |
 | `--force` | Replaces existing destination folders instead of backing them up. |
+| `--quiet` | Suppresses verbose progress + completion summaries (default is verbose). |
 | `--payload-source <dir>` | Points to custom payloads you have authored. |
 
 ## Platform Reference

@@ -49,7 +49,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--dry-run", action="store_true", help="Preview actions without writing.")
     parser.add_argument("--force", action="store_true", help="Overwrite any existing instructions.")
-    parser.add_argument("--verbose", action="store_true", help="Show detailed progress logs.")
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Suppress progress output (default shows verbose progress).",
+    )
     parser.add_argument(
         "--list-platforms",
         action="store_true",
@@ -78,13 +82,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         force=args.force,
         manifest_path=manifest_path,
         payload_source=payload_source,
-        verbose=args.verbose,
+        verbose=not args.quiet,
     )
 
     try:
-        install(options)
+        results = install(options)
     except InstallerError as exc:
         parser.error(str(exc))
+
+    if not args.quiet:
+        for result in results:
+            scope = "dry run" if result.dry_run else "installed"
+            payload_name = result.payload.name if result.payload else "payload"
+            print(f"[{scope}] {result.platform} → {result.destination} ({payload_name})")
 
     return 0
 
