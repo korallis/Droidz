@@ -11,14 +11,14 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
         {
           "type": "agent",
           "source": "droid_cli",
-          "destination": "~/.factory",
+          "destination": "~/.factory/droids",
           "description": "Factory-specific commands and agents",
           "chmod": ["commands/*"]
         }
@@ -31,7 +31,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -51,7 +51,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -71,7 +71,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -91,7 +91,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -111,7 +111,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -131,7 +131,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },
@@ -151,7 +151,7 @@
         {
           "type": "shared",
           "source": "shared",
-          "destination": "~/.droidz",
+          "destination": "~/droidz/standards",
           "description": "Shared framework standards and configs",
           "chmod": []
         },

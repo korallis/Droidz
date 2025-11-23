@@ -134,15 +134,25 @@ def install(options: InstallOptions) -> List[InstallResult]:
         for idx, target in enumerate(spec.install_targets, 1):
             # Resolve destination path
             if options.install_to_project:
-                # Install to project subdirectories: .droidz for shared, .{platform} for agent
+                # Install to project subdirectories
                 if target.type == "shared":
-                    destination = current_dir / ".droidz"
+                    # Shared always goes to droidz/standards/
+                    destination = current_dir / "droidz" / "standards"
                 else:
-                    # Extract the folder name from the original destination (e.g., ~/.factory -> .factory)
-                    agent_folder = Path(target.destination).name
-                    if not agent_folder.startswith('.'):
-                        agent_folder = f".{agent_folder}"
-                    destination = current_dir / agent_folder
+                    # Agent-specific goes to .factory/droids/, .claude/, etc.
+                    dest_path = Path(target.destination)
+                    # Find the part that starts with . or is a known dir
+                    parts = dest_path.parts
+                    # Get everything from the last dir that starts with . onwards
+                    agent_dir = None
+                    for i, part in enumerate(parts):
+                        if part.startswith('.'):
+                            agent_dir = Path(*parts[i:])
+                            break
+                    if not agent_dir:
+                        # Fallback: use the last part with a dot prefix
+                        agent_dir = Path(f".{parts[-1]}")
+                    destination = current_dir / agent_dir
             elif options.destination_override:
                 # Override applies to agent-specific targets only, not shared
                 if target.type == "agent":

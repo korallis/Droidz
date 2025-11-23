@@ -132,11 +132,11 @@ def test_install_to_project_installs_everything_to_cwd(tmp_path: Path, monkeypat
 
     # Both shared and agent-specific should be in project subdirectories
     assert len(results) == 2
-    assert (project_dir / ".droidz" / "framework.txt").exists()  # Shared framework
+    assert (project_dir / "droidz" / "standards" / "framework.txt").exists()  # Shared framework
     assert (project_dir / ".demo" / "note.txt").exists()  # Agent-specific
     assert (project_dir / ".demo" / "scripts" / "run.sh").exists()  # Agent-specific scripts
     # Verify correct destinations
-    assert results[0].destination == project_dir / ".droidz"  # Shared
+    assert results[0].destination == project_dir / "droidz" / "standards"  # Shared
     assert results[1].destination == project_dir / ".demo"  # Agent
 
 
