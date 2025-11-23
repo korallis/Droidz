@@ -24,6 +24,26 @@
         }
       ]
     },
+    "droid_cli": {
+      "label": "Factory AI",
+      "description": "Factory.ai CLI - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "droid_cli",
+          "destination": "~/.factory",
+          "description": "Factory-specific commands and agents",
+          "chmod": ["commands/*"]
+        }
+      ]
+    },
     "claude": {
       "label": "Claude Code",
       "description": "Claude desktop - full framework installation (shared + agent-specific).",
@@ -85,6 +105,26 @@
       ]
     },
     "codex": {
+      "label": "Codex CLI",
+      "description": "Codex CLI - full framework installation (shared + agent-specific).",
+      "install_targets": [
+        {
+          "type": "shared",
+          "source": "shared",
+          "destination": "~/.droidz",
+          "description": "Shared framework standards and configs",
+          "chmod": []
+        },
+        {
+          "type": "agent",
+          "source": "codex_cli",
+          "destination": "~/.codex",
+          "description": "Codex-specific playbooks",
+          "chmod": []
+        }
+      ]
+    },
+    "codex_cli": {
       "label": "Codex CLI",
       "description": "Codex CLI - full framework installation (shared + agent-specific).",
       "install_targets": [
