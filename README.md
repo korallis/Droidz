@@ -53,7 +53,21 @@ bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install
 curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
 ```
 
-The installer will:
+The installer will prompt you to choose:
+
+### Installation Scope
+
+1. **Project-specific** (recommended for teams)
+   - Installs to `./.factory/` in your current directory
+   - Checked into git and shared with your team
+   - Each project has its own droids/commands/standards
+   
+2. **Personal** (recommended for individual use)
+   - Installs to `~/.factory/` in your home directory
+   - Available across all your projects
+   - Your droids follow you everywhere
+
+The installer will then:
 1. Show you a menu with all supported platforms
 2. Let you select your AI tool (Claude Code, Factory AI, Cursor, Cline, Codex CLI, or VS Code)
 3. Install everything to the correct location
