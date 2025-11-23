@@ -46,14 +46,15 @@ NC='\033[0m' # No Color
 BOLD='\033[1m'
 
 # Platform configuration (format: key|slug|name|path|description)
+# All paths are PROJECT-LOCAL (relative to current directory)
 get_platform_info() {
   case "$1" in
-    1) echo "claude|Claude Code|~/.claude|Claude desktop AI assistant" ;;
-    2) echo "factory|Factory AI|~/.factory|Factory.ai Droid CLI" ;;
-    3) echo "cursor|Cursor|~/Library/Application Support/Cursor/droidz|Cursor AI editor" ;;
-    4) echo "cline|Cline|~/.cline|Cline VS Code extension" ;;
-    5) echo "codex|Codex CLI|~/.codex|Codex command-line interface" ;;
-    6) echo "vscode|VS Code|~/Library/Application Support/Code/User/droidz|VS Code editor" ;;
+    1) echo "claude|Claude Code|./.claude|Claude desktop AI assistant" ;;
+    2) echo "factory|Factory AI|./.factory|Factory.ai Droid CLI" ;;
+    3) echo "cursor|Cursor|./.cursor|Cursor AI editor" ;;
+    4) echo "cline|Cline|./.cline|Cline VS Code extension" ;;
+    5) echo "codex|Codex CLI|./.codex|Codex command-line interface" ;;
+    6) echo "vscode|VS Code|./.vscode/droidz|VS Code editor" ;;
     *) echo "" ;;
   esac
 }
@@ -348,13 +349,12 @@ main() {
   local platform_info=$(get_platform_info "$choice")
   IFS='|' read -r platform_slug platform_name platform_path platform_desc <<< "$platform_info"
   
-  # Always install to current project directory
+  # All platforms install to project directory (platform_path is already project-local)
   local install_scope="project"
-  platform_path="./.factory"
   
   echo ""
   print_info "Selected: ${BOLD}$platform_name${NC}"
-  print_info "Install location: ${BLUE}$(pwd)/.factory/${NC}"
+  print_info "Install location: ${BLUE}$(pwd)/$platform_path/${NC}"
   echo ""
   
   # Check for existing installation
@@ -440,7 +440,7 @@ main() {
   
   # Platform-specific next steps
   case "$platform_slug" in
-    factory|droid_cli)
+    factory)
       print_info "Factory AI is now configured!"
       echo ""
       echo "  Next steps:"
@@ -462,6 +462,46 @@ main() {
       echo ""
       echo "  Your agents: ${BLUE}$platform_path/agents/${NC}"
       echo "  Your commands: ${BLUE}$platform_path/commands/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      ;;
+    cursor)
+      print_info "Cursor is now configured!"
+      echo ""
+      echo "  Next steps:"
+      echo "  1. Restart Cursor"
+      echo "  2. Access workflows from the Cursor menu"
+      echo ""
+      echo "  Your workflows: ${BLUE}$platform_path/workflows/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      ;;
+    cline)
+      print_info "Cline is now configured!"
+      echo ""
+      echo "  Next steps:"
+      echo "  1. Restart VS Code"
+      echo "  2. Access prompts from the Cline extension"
+      echo ""
+      echo "  Your prompts: ${BLUE}$platform_path/prompts/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      ;;
+    codex)
+      print_info "Codex CLI is now configured!"
+      echo ""
+      echo "  Next steps:"
+      echo "  1. Run codex CLI"
+      echo "  2. Access available playbooks"
+      echo ""
+      echo "  Your playbooks: ${BLUE}$platform_path/playbooks/${NC}"
+      echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
+      ;;
+    vscode)
+      print_info "VS Code is now configured!"
+      echo ""
+      echo "  Next steps:"
+      echo "  1. Restart VS Code"
+      echo "  2. Access snippets from the editor"
+      echo ""
+      echo "  Your snippets: ${BLUE}$platform_path/snippets/${NC}"
       echo "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     *)

@@ -61,10 +61,30 @@ curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | b
 
 ### How It Works
 
-The installer installs everything to your **current project directory**:
-- `./.factory/droids/` - Custom droids for your project
-- `./.factory/commands/` - Slash commands  
-- `./droidz/standards/` - Coding standards
+The installer installs everything to your **current project directory** based on your chosen platform:
+
+**Factory AI:**
+- `./.factory/droids/` - Custom droids
+- `./.factory/commands/` - Slash commands
+
+**Claude Code:**
+- `./.claude/agents/` - Subagents
+- `./.claude/commands/` - Slash commands
+
+**Cursor:**
+- `./.cursor/workflows/` - Workflows
+
+**Cline:**
+- `./.cline/prompts/` - Custom prompts
+
+**Codex CLI:**
+- `./.codex/playbooks/` - Playbooks
+
+**VS Code:**
+- `./.vscode/droidz/snippets/` - Code snippets
+
+**All platforms also install:**
+- `./droidz/standards/` - Shared coding standards (backend, frontend, testing, global)
 
 Everything is **checked into git** and **shared with your team**.
 
