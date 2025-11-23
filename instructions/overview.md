@@ -12,3 +12,5 @@
    - All guidance lives in this repository; update payload text files to evolve your workflow.
 5. **Top platforms**
    - Claude Code, Droid CLI, Cursor, Cline, Codex CLI, and VS Code receive curated payloads covering commands, agents, prompts, and snippets.
+6. **Tool-agnostic sub agents**
+   - Prompts only mention “sub agents” in generic terms so each IDE or CLI can decide whether to fan out to multiple helpers or execute the steps sequentially without breaking the instructions.

@@ -9,6 +9,45 @@ Slim, instruction-only distribution of the Droidz workflow. A single Python inst
 - `tests/` – pytest coverage for manifest parsing, dry-run safety, and filesystem handling.
 - `pyproject.toml` – lightweight toolchain with Ruff + pytest ready to run the Validation Gate.
 
+## Install Python 3.11+ (macOS)
+1. Check whether an acceptable version already exists:
+   ```bash
+   python3 --version
+   ```
+   Continue only if the major/minor version is lower than 3.11.
+2. **Homebrew path** (fastest for most Macs):
+   ```bash
+   brew update
+   brew install python@3.11
+   brew link --overwrite python@3.11
+   echo 'export PATH="$(brew --prefix)/opt/python@3.11/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   python3.11 --version
+   pip3.11 --version
+   ```
+3. **Installer path** (when Homebrew isn’t available): download the latest universal2 `.pkg` installer for Python 3.11 from the official Python downloads page, double-click it, and accept the defaults. When it finishes, open `/Applications/Python 3.11/Install Certificates.command` to register SSL certificates, then verify with `python3.11 --version`.
+
+## Install Python 3.11+ (Windows)
+1. Open an elevated PowerShell window and see if Python is already new enough:
+   ```powershell
+   python --version
+   ```
+2. **Winget path** (auto-manages PATH entries):
+   ```powershell
+   winget install --id Python.Python.3.11 -e --source winget
+   python --version
+   ```
+3. **Manual installer path** (for offline or scripted setups):
+   ```powershell
+   $Version = "3.11.8"
+   $Installer = "$env:TEMP\python-$Version-amd64.exe"
+   Invoke-WebRequest -Uri "https://www.python.org/ftp/python/$Version/python-$Version-amd64.exe" -OutFile $Installer
+   Start-Process -FilePath $Installer -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
+   Remove-Item $Installer
+   python --version
+   ```
+   Update `$Version` whenever a newer 3.11 maintenance release ships.
+
 ## Quick Start
 1. Ensure Python 3.11+ is available.
 2. Clone this repository and stay at the root.
@@ -46,6 +85,11 @@ Slim, instruction-only distribution of the Droidz workflow. A single Python inst
 | VS Code | `~/Library/Application Support/Code/User/droidz` | Snippets and task recipes for validation-first development. |
 
 Every payload ships instructions only—no remote downloads, external URLs, or opaque binaries. Duplicate any payload folder to author your own variants and point the installer to them via `--payload-source`.
+
+## Tool-Agnostic Subagent Guidance
+- Prompts and command briefs only refer to “sub agents” generically; whichever IDE or CLI you install handles how many assistants can run at once.
+- When a host supports multiple concurrent agents (e.g., orchestrator + specialists), follow the same instructions; tools that lack that feature simply execute the listed tasks one at a time without violating the script.
+- Codex CLI and other single-agent runtimes still honor the same prompts—they execute every subtask sequentially while preserving the Validation Gate requirements.
 
 ## Custom Profiles
 1. Copy an existing payload folder, e.g. `cp -R droidz_installer/payloads/claude droidz_installer/payloads/claude/nextjs`.
