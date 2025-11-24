@@ -514,39 +514,74 @@ You:
 
 #### `/implement-tasks`
 
-**Purpose**: Execute implementation
+**Purpose**: Execute implementation with **parallel execution support**
 
 **When to use**: After tasks are created
 
-**What it does**:
-- Loads spec and tasks
-- Follows standards
-- Implements systematically
-- Updates tasks.md progress
+**Three Execution Modes**:
 
-**Two modes**:
+**A) Parallel Execution (FAST)** 🚀
+- Uses Factory's **Droid Exec** (headless mode) for true concurrent processing
+- Runs all task groups simultaneously
+- Best for: Multi-group implementations
+- Requirements: `FACTORY_API_KEY` environment variable
+- Features:
+  - Bounded concurrency (max 4 simultaneous)
+  - Robust error handling (if one fails, others continue)
+  - All droids update same tasks.md file
+  - Real-time output from all executions
 
-**A. Automated (with subagents)**:
-```
-> /orchestrate-tasks
-AI: [Spawns specialized subagents]
-AI: [Each implements their task group in parallel]
-✅ All tasks completed
-```
+**B) Interactive with Live Progress** 📊
+- Uses Task tool + TodoWrite for real-time updates
+- Sequential execution with live progress tracking visible in session
+- Best for: Following along, learning, debugging
+- Features:
+  - Live TodoWrite updates
+  - See tool calls and results as they happen
+  - Track progress as each task group completes
 
-**B. Manual (using prompts)**:
-```
-> /orchestrate-tasks
-AI: [Generates implementation prompts]
+**C) Sequential Delegation (SIMPLE)** 🔄
+- Traditional one-at-a-time implementation
+- Best for: Single task group, simple implementations
 
-# Copy each prompt into chat:
-[Contents of 1-database-setup.md]
-> Implement Task Group 1
+**Example (Parallel Mode)**:
+```bash
+> /implement-tasks
 
-[Contents of 2-oauth-integration.md]
-> Implement Task Group 2
+How would you like to execute implementation?
+A) Parallel Execution (FAST) - Using Droid Exec
+B) Interactive with Live Progress - Using TodoWrite
+C) Sequential Delegation (SIMPLE)
 
-...
+Enter A, B, or C: A
+
+✅ Created parallel execution setup
+
+PROMPTS: droidz/specs/2024-11-24/implementation/prompts/
+├── 1-database-setup.md
+├── 2-api-endpoints.md
+├── 3-frontend-ui.md
+└── 4-testing.md
+
+SCRIPT: run-parallel.sh
+
+TO EXECUTE:
+$ export FACTORY_API_KEY=fk-your-key
+$ bash droidz/specs/2024-11-24/implementation/run-parallel.sh
+
+🚀 Starting parallel implementation...
+📋 Processing 4 task groups concurrently
+
+▶️  Starting: 1-database-setup.md
+▶️  Starting: 2-api-endpoints.md
+▶️  Starting: 3-frontend-ui.md
+▶️  Starting: 4-testing.md
+✅ Completed: 1-database-setup.md
+✅ Completed: 2-api-endpoints.md
+✅ Completed: 3-frontend-ui.md
+✅ Completed: 4-testing.md
+
+🎉 All task groups completed!
 ```
 
 ---
