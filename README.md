@@ -1,14 +1,17 @@
-# 🤖 Droidz Framework
+# 🤖 Droidz - Spec-Driven Development for AI
 
-A complete spec-driven development framework for AI coding agents. Get 8 specialized agents, 20+ workflow commands, and comprehensive coding standards—all installed with one command.
+**Transform how you build software with AI agents**. Droidz is a complete framework that brings structure, standards, and systematic workflows to AI-assisted development.
 
-## What You Get
+Instead of ad-hoc prompting and context loss, Droidz gives you:
+- 📋 **Spec-driven workflow** - Plan → Spec → Tasks → Implementation
+- 🤖 **8 specialized agents** - Each expert in their domain
+- 📚 **50+ production skills** - From TDD to Next.js to security patterns
+- 📏 **Team standards** - Consistent code across all features
+- 🔄 **Repeatable process** - Same quality, every time
 
-- **8 Specialized Agents/Droids** – implementer, spec-writer, product-planner, spec-verifier, and more
-- **20+ Workflow Commands** – plan-product, shape-spec, implement-tasks, create-tasks, orchestrate-tasks
-- **Comprehensive Standards** – organized by domain (global, backend, frontend, testing)
-- **Safe Updates** – preserves your custom standards and specs during framework upgrades
-- **Multi-Platform** – works with Factory AI, Claude Code, Cursor, Cline, Codex CLI, and VS Code
+**Stop reinventing workflows. Start shipping faster.**
+
+---
 
 ## 💬 Join Our Discord Community
 
@@ -29,526 +32,1188 @@ If Droidz saves you time, consider supporting its development!
 Your support helps maintain and improve this framework! 🙏
 
 ### With Gratitude
-We're deeply thankful for the generosity of friends who keep this instruction stack alive:
+We're deeply thankful for the generosity of friends who keep this framework alive:
 
 - **Sorennza**
 - **Ray Fernando**
 - **Douwe de Vries**
 
-Every contribution—large or small—directly fuels new payloads, validation helpers, and continued open distribution. Thank you for believing in Droidz.
+Every contribution—large or small—directly fuels new features, improvements, and continued open distribution. Thank you for believing in Droidz.
 
 ---
 
-## Installation
-
-**Important:** Navigate to your project directory first!
+## Quick Start
 
 ```bash
+# 1. Navigate to your project
 cd /path/to/your/project
-```
 
-Then run one of these commands:
-
-**Recommended (most reliable):**
-```bash
+# 2. Install Droidz (one command!)
 bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
+
+# 3. Follow the interactive menu to choose your AI platform
+# (Factory AI, Claude Code, Cursor, etc.)
+
+# 4. Restart your AI tool
+
+# 5. Start using workflows!
+> /standards-shaper  # Set up your project standards
+> /plan-product      # Plan your product
+> /shape-spec        # Design a feature
 ```
 
-**Alternative (if above doesn't work):**
-```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+---
+
+## Table of Contents
+
+- [Why Droidz?](#why-droidz)
+- [The Droidz Workflow](#the-droidz-workflow)
+- [Installation](#installation)
+- [Commands Reference](#commands-reference)
+- [Specialized Agents](#specialized-agents)
+- [Best Practices](#best-practices)
+- [Customization](#customization)
+- [Examples](#examples)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## Why Droidz?
+
+### The Problem with AI Development
+
+Without structure, AI-assisted development leads to:
+- ❌ Inconsistent code quality
+- ❌ Lost context between sessions
+- ❌ Vague requirements → Rework
+- ❌ No team alignment
+- ❌ Hard to onboard new devs
+
+### The Droidz Solution
+
+Droidz brings **systematic workflows** to AI development:
+
+```
+Planning → Specification → Task Breakdown → Implementation
+   ↓            ↓               ↓                ↓
+Product      Detailed       Actionable     Guided execution
+ docs         spec.md        tasks.md      with standards
 ```
 
-### How It Works
+**Result**: Predictable, high-quality output every time.
 
-The installer installs everything to your **current project directory** in a **flat structure** (as required by Factory.ai and Claude Code):
+---
 
-**Factory AI:**
-- `./.factory/droids/` - Custom droids (top-level only, nested folders ignored)
-- `./.factory/commands/` - Slash commands (top-level only, nested folders ignored)
+## The Droidz Workflow
 
-**Claude Code:**
-- `./.claude/agents/` - Subagents (top-level recommended)
-- `./.claude/commands/` - Slash commands (top-level recommended)
-
-**Cursor:**
-- `./.cursor/workflows/` - Workflows
-
-**Cline:**
-- `./.cline/prompts/` - Custom prompts
-
-**Codex CLI:**
-- `./.codex/playbooks/` - Playbooks
-
-**VS Code:**
-- `./.vscode/droidz/snippets/` - Code snippets
-
-**All platforms also install:**
-- `./droidz/standards/` - Shared coding standards (backend, frontend, testing, global)
-
-This flat structure complies with official platform requirements and ensures proper discovery of all agents, commands, and workflows!
-
-Everything is **checked into git** and **shared with your team**.
-
-The installer will:
-1. Show you a menu with all supported platforms
-2. Let you select your AI tool (Claude Code, Factory AI, Cursor, Cline, Codex CLI, or VS Code)
-3. Install everything to the correct location
-4. Preserve your existing customizations if updating
-
-That's it! No arguments, no complex flags, just one command.
-
-## What Gets Installed
-
-**For Factory AI:**
-- `~/.factory/droids/` - 8 custom droids (implementer, spec-writer, product-planner, etc.)
-- `~/.factory/commands/` - 20+ slash commands for workflows
-- `~/droidz/standards/` - Shared coding standards organized by domain
-
-**For Claude Code:**
-- `~/.claude/agents/` - 8 subagents for specialized tasks
-- `~/.claude/commands/` - 20+ slash commands
-- `~/droidz/standards/` - Shared standards (global, backend, frontend, testing)
-
-**For Other Platforms:**
-- Platform-specific directory with agents/commands
-- `~/droidz/standards/` - Shared standards library
-
-## Platform Reference
-
-| Platform | Install Location | Content |
-|----------|-----------------|---------|
-| Claude Code | `~/.claude/` | 8 agents, 20+ commands in flat structure |
-| Factory AI | `~/.factory/` | 8 droids (`.factory/droids/`), 20+ commands (`.factory/commands/`) |
-| Cursor | `~/Library/Application Support/Cursor/droidz/` | Workflow cards and standards |
-| Cline | `~/.cline/` | Prompt packs for spec-first execution |
-| Codex CLI | `~/.codex/` | Sequential playbooks for spec-first flow |
-| VS Code | `~/Library/Application Support/Code/User/droidz/` | Snippets and task recipes |
-| **Shared** | `~/droidz/standards/` | Global, backend, frontend, testing standards |
-
-## Framework Overview
-
-### Agents/Droids
-
-Each agent is a specialized AI assistant for specific tasks:
-
-- **implementer** - Implements features by following task lists and specs
-- **spec-writer** - Creates detailed specifications from requirements
-- **spec-shaper** - Researches and shapes specifications with requirements
-- **spec-verifier** - Reviews and validates specifications
-- **spec-initializer** - Creates initial spec folder structure
-- **product-planner** - Creates product documentation, mission, and roadmap
-- **tasks-list-creator** - Breaks down specs into actionable task lists
-- **implementation-verifier** - Verifies implementations and runs tests
-
-### Commands
-
-Workflow commands for common development tasks:
-
-- **plan-product** - Create product mission, roadmap, and tech stack
-- **shape-spec** - Initialize and research a specification
-- **write-spec** - Write a complete specification
-- **create-tasks** - Generate task lists from specs
-- **implement-tasks** - Implement features from task lists
-- **orchestrate-tasks** - Coordinate multi-agent task execution
-- **improve-skills** - Enhance and customize agent skills
-
-### Standards
-
-Comprehensive coding standards organized by domain:
-
-**Global Standards:**
-- Coding style and conventions
-- Error handling patterns
-- Code commenting guidelines
-- Tech stack documentation
-- Validation requirements
-
-**Backend Standards:**
-- API design patterns
-- Database models and migrations
-- Query optimization
-- Data layer best practices
-
-**Frontend Standards:**
-- Component architecture
-- CSS organization
-- Responsive design
-- Accessibility requirements
-
-**Testing Standards:**
-- Test writing guidelines
-- Coverage requirements
-- Testing patterns
-
-## Using the Framework
-
-### For Factory AI
-
-After installation:
-1. Restart your droid session
-2. Run `/droids` to see available custom droids
-3. Run `/commands` to see available slash commands
-
-Example usage:
-```
-> Use the spec-writer droid to create a spec for user authentication
-> /plan-product to start product planning
-> /implement-tasks for the login feature
-```
-
-### For Claude Code
-
-After installation:
-1. Restart Claude Code
-2. Run `/agents` to see available subagents
-3. Run `/commands` to see available slash commands
-
-Example usage:
-```
-> Use the implementer agent to build the authentication module
-> /shape-spec to research and plan a new feature
-> /create-tasks for the user profile spec
-```
-
-## Customization
-
-**Modify Standards:** Edit files in `~/droidz/standards/` to match your team's coding conventions. The installer preserves your modifications during updates.
-
-**Create Custom Droids/Agents:** Add your own `.md` files to the platform-specific directories:
-- Factory: `~/.factory/droids/`
-- Claude: `~/.claude/agents/`
-
-**Create Custom Commands:** Add command files to:
-- Factory: `~/.factory/commands/`
-- Claude: `~/.claude/commands/`
-
-**Customize Product Docs:** Add your product documentation:
-- `~/droidz/product/mission.md` - Product vision and strategy
-- `~/droidz/product/roadmap.md` - Development roadmap
-- `~/droidz/product/tech-stack.md` - Technology choices
-
-**Create Specs:** Store your specifications:
-- `~/droidz/specs/[spec-name]/spec.md` - Main specification
-- `~/droidz/specs/[spec-name]/tasks.md` - Task breakdown
-- `~/droidz/specs/[spec-name]/planning/` - Requirements and research
-
-## Complete Development Workflow
-
-Droidz provides a systematic, 8-phase workflow for AI-assisted development:
+Droidz follows a proven 8-phase cycle for building features:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    DROIDZ WORKFLOW                          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Phase 0: SETUP STANDARDS        → /standards-shaper       │
+│  Phase 0: Setup Standards        → /standards-shaper       │
 │           ↓                                                 │
-│  Phase 1: PRODUCT PLANNING       → /plan-product           │
+│  Phase 1: Product Planning       → /plan-product           │
 │           ↓                                                 │
-│  Phase 2: SPEC SHAPING           → /shape-spec             │
+│  Phase 2: Spec Shaping           → /shape-spec             │
 │           ↓                                                 │
-│  Phase 3: SPEC WRITING           → /write-spec             │
+│  Phase 3: Spec Writing           → /write-spec             │
 │           ↓                                                 │
-│  Phase 4: TASK CREATION          → /create-tasks           │
+│  Phase 4: Task Creation          → /create-tasks           │
 │           ↓                                                 │
-│  Phase 5: TASK ORCHESTRATION     → /orchestrate-tasks      │
+│  Phase 5: Task Orchestration     → /orchestrate-tasks      │
 │           ↓                                                 │
-│  Phase 6: IMPLEMENTATION         → /implement-tasks        │
+│  Phase 6: Implementation         → /implement-tasks        │
 │           ↓                                                 │
-│  Phase 7: CONTINUOUS IMPROVEMENT → iterate & refine        │
+│  Phase 7: Continuous Improvement → iterate & refine        │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Phase 0: Setup Standards (One-Time)
+### Why This Works
 
-**Before starting development, establish your project standards.**
+1. **Context Persists** - Specs and standards live in your repo
+2. **Clear Handoffs** - Each phase produces artifacts for the next
+3. **Team Alignment** - Everyone works from the same spec
+4. **Quality Gates** - Standards enforced automatically
+5. **Scalable** - Same process for small features or large systems
+
+---
+
+## Installation
+
+### Prerequisites
+
+- One of these AI tools:
+  - Factory AI
+  - Claude Code
+  - Cursor
+  - Cline
+  - Codex CLI
+  - VS Code with AI extension
+
+### Install Command
 
 ```bash
-> /standards-shaper
+# Navigate to your project first!
+cd /path/to/your/project
+
+# Run the installer
+bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
 ```
 
-Creates comprehensive project standards:
+### What Gets Installed
+
+The installer creates these directories in your project:
+
+```
+your-project/
+├── .factory/          # Factory AI droids & commands (if selected)
+│   ├── droids/        # 8 specialized droids
+│   └── commands/      # 20+ workflow commands
+├── .claude/           # Claude Code agents & commands (if selected)
+│   ├── agents/        # 8 specialized agents
+│   └── commands/      # 20+ workflow commands
+└── droidz/            # Shared across all platforms
+    ├── standards/     # Your team's coding standards
+    │   ├── global/    # Global conventions
+    │   ├── backend/   # API, database patterns
+    │   ├── frontend/  # Components, styling
+    │   └── testing/   # Test patterns
+    ├── product/       # Product documentation
+    │   ├── mission.md
+    │   ├── roadmap.md
+    │   └── tech-stack.md
+    └── specs/         # Feature specifications
+        └── [feature]/
+            ├── spec.md
+            ├── tasks.md
+            └── planning/
+```
+
+Everything is **checked into git** and **shared with your team**.
+
+### Post-Installation
+
+1. **Restart your AI tool** - Required for new commands/agents to load
+2. **Verify installation**:
+   ```
+   > /commands     # See available commands
+   > /droids       # See available droids (Factory AI)
+   > /agents       # See available agents (Claude Code)
+   ```
+
+---
+
+## Commands Reference
+
+Droidz provides 20+ commands organized by phase. Here are the essential ones:
+
+### Setup & Planning Commands
+
+#### `/standards-shaper` ⭐ START HERE
+
+**Purpose**: Create project-wide coding standards
+
+**When to use**: Once per project, before any development
+
+**What it does**:
+- Detects your tech stack (React, Next.js, TypeScript, etc.)
+- Creates standards for global, backend, frontend, testing
+- Generates dos/don'ts for consistency
+
+**Output**:
 ```
 droidz/standards/
-├── global/          # Coding principles, error handling, security
-├── frontend/        # Components, styling, state management
-├── backend/         # API design, database, authentication
-└── testing/         # Test patterns, coverage requirements
+├── global/
+│   ├── coding-principles.md
+│   ├── error-handling.md
+│   └── security.md
+├── backend/
+│   ├── api-design.md
+│   └── database.md
+├── frontend/
+│   ├── components.md
+│   └── styling.md
+└── testing/
+    └── testing-patterns.md
 ```
 
-**Why this matters**: Ensures consistency, quality, and maintainability across all features.
+**Example**:
+```
+> /standards-shaper
+
+AI: I'll analyze your project and create standards...
+AI: Detected: Next.js 14, TypeScript, Tailwind, Prisma
+AI: Creating standards with framework-specific examples...
+
+✅ Created 12 standards files
+✅ All standards include your actual tech stack
+```
 
 ---
 
-### Phase 1: Product Planning
+#### `/plan-product`
 
-**Define your product vision, mission, and roadmap.**
+**Purpose**: Define product vision and roadmap
 
-```bash
-> /plan-product
-```
+**When to use**: Starting new products, major milestones, team onboarding
 
-Creates:
+**What it does**:
+- Asks questions about your product
+- Creates mission statement
+- Builds phased roadmap
+- Documents tech stack decisions
+
+**Output**:
 ```
 droidz/product/
-├── mission.md        # Vision, goals, target users
-├── roadmap.md        # Phased development plan
-└── tech-stack.md     # Technology decisions
+├── mission.md        # Vision, goals, success metrics
+├── roadmap.md        # Phases, features, timeline
+└── tech-stack.md     # Technologies and rationale
 ```
 
-**When to use**: Starting new products, major pivots, team onboarding, quarterly planning.
+**Example**:
+```
+> /plan-product
+
+AI: What problem does your product solve?
+You: Task management for remote teams
+
+AI: Who are your target users?
+You: Remote engineering teams of 5-50 people
+
+[More questions...]
+
+✅ Created mission.md
+✅ Created roadmap.md (4 phases)
+✅ Created tech-stack.md
+```
 
 ---
 
-### Phase 2: Spec Shaping
+### Specification Commands
 
-**Shape the scope and design of a specific feature.**
+#### `/shape-spec`
 
-```bash
+**Purpose**: Shape requirements for a new feature
+
+**When to use**: Before building anything new
+
+**What it does**:
+- Asks clarifying questions
+- Researches similar implementations (if Exa/Ref available)
+- Saves requirements and decisions
+- Creates spec folder structure
+
+**Output**:
+```
+droidz/specs/2024-11-24-user-authentication/
+├── planning/
+│   ├── requirements.md   # What you need
+│   ├── decisions.md      # Key choices made
+│   └── visuals/          # Wireframes, screenshots
+└── README.md             # Overview
+```
+
+**Example**:
+```
 > /shape-spec
-```
 
-Creates:
-```
-droidz/specs/YYYY-MM-DD-feature-name/
-├── planning/
-│   ├── requirements.md   # Gathered requirements
-│   ├── decisions.md      # Key design decisions
-│   └── visuals/          # Screenshots, wireframes
-└── README.md
-```
+AI: What feature are you planning?
+You: User authentication with OAuth
 
-**When to use**: Before building any new feature, when requirements are fuzzy, for collaborative design.
+AI: Which OAuth providers?
+You: Google and GitHub
+
+AI: What user data do you need to store?
+You: Email, name, profile picture
+
+[More questions...]
+
+✅ Saved requirements.md
+✅ Saved decisions.md
+✅ Created spec folder
+```
 
 ---
 
-### Phase 3: Spec Writing
+#### `/write-spec`
 
-**Transform shaped requirements into detailed specification.**
+**Purpose**: Create detailed specification from shaped requirements
 
-```bash
+**When to use**: After shaping (Phase 2 complete)
+
+**What it does**:
+- Reads shaped requirements
+- Generates comprehensive spec document
+- Includes architecture, APIs, data models, UI, security, testing
+
+**Output**:
+```
+droidz/specs/2024-11-24-user-authentication/
+├── spec.md              # ⭐ THE SPEC
+├── planning/
+│   └── requirements.md
+└── README.md
+```
+
+**spec.md structure**:
+```markdown
+# User Authentication Specification
+
+## 1. Overview
+## 2. User Stories
+## 3. Technical Architecture
+## 4. Data Models
+## 5. API Endpoints
+## 6. UI/UX Flow
+## 7. Security Considerations
+## 8. Testing Strategy
+## 9. Success Metrics
+```
+
+**Example**:
+```
 > /write-spec
-```
 
-Creates:
-```
-droidz/specs/YYYY-MM-DD-feature-name/
-├── spec.md              # ⭐ Complete specification
-├── planning/
-└── README.md
-```
+AI: Reading shaped requirements...
+AI: Generating specification...
 
-**spec.md contains**: Feature overview, user stories, technical architecture, API contracts, database schemas, UI/UX specifications, security considerations, testing strategy, success metrics.
+✅ Created spec.md (2,400 lines)
+✅ Includes:
+   - 5 user stories
+   - Database schema
+   - 8 API endpoints
+   - Security checklist
+   - 12 test scenarios
+```
 
 ---
 
-### Phase 4: Task Creation
+### Implementation Commands
 
-**Break down the spec into implementable tasks.**
+#### `/create-tasks`
 
-```bash
-> /create-tasks
+**Purpose**: Break spec into implementable tasks
+
+**When to use**: After spec is written
+
+**What it does**:
+- Reads spec.md
+- Breaks into logical task groups
+- Creates tasks with dependencies
+- Adds acceptance criteria
+
+**Output**:
 ```
-
-Creates:
-```
-droidz/specs/YYYY-MM-DD-feature-name/
+droidz/specs/2024-11-24-user-authentication/
 ├── spec.md
-├── tasks.md             # ⭐ Implementation tasks
+├── tasks.md             # ⭐ IMPLEMENTATION TASKS
 └── planning/
 ```
 
-**Task structure**: Organized into logical groups (Database, Backend, Frontend, Testing) with clear dependencies and acceptance criteria.
+**tasks.md structure**:
+```markdown
+# Implementation Tasks
+
+## Task Group 1: Database Setup
+- [ ] 1.1: Create users table
+- [ ] 1.2: Create oauth_tokens table
+- [ ] 1.3: Add database indexes
+
+## Task Group 2: OAuth Integration
+- [ ] 2.1: Set up OAuth configs
+- [ ] 2.2: Create callback endpoints
+- [ ] 2.3: Handle token exchange
+
+## Task Group 3: Frontend
+- [ ] 3.1: Create login page
+- [ ] 3.2: Add OAuth buttons
+- [ ] 3.3: Handle redirects
+
+## Task Group 4: Testing
+- [ ] 4.1: Unit tests for OAuth
+- [ ] 4.2: E2E login flow test
+- [ ] 4.3: Security tests
+```
+
+**Example**:
+```
+> /create-tasks
+
+AI: Reading spec.md...
+AI: Identifying task groups...
+AI: Creating tasks with dependencies...
+
+✅ Created tasks.md
+✅ Found 4 task groups
+✅ Total: 23 tasks
+```
 
 ---
 
-### Phase 5: Task Orchestration
+#### `/orchestrate-tasks`
 
-**Plan and coordinate implementation across task groups.**
+**Purpose**: Plan multi-agent implementation
 
-```bash
-> /orchestrate-tasks
+**When to use**: Before implementing (optional but recommended)
+
+**What it does**:
+- Shows task groups
+- Lets you assign specialists (if using subagents)
+- Maps relevant standards to each group
+- Generates implementation prompts
+
+**Output**:
 ```
-
-Creates:
-```
-droidz/specs/YYYY-MM-DD-feature-name/
+droidz/specs/2024-11-24-user-authentication/
 ├── spec.md
 ├── tasks.md
-├── orchestration.yml     # ⭐ Implementation plan
+├── orchestration.yml    # ⭐ COORDINATION PLAN
 └── implementation/
-    └── prompts/          # Generated implementation prompts
+    └── prompts/
+        ├── 1-database-setup.md
+        ├── 2-oauth-integration.md
+        ├── 3-frontend.md
+        └── 4-testing.md
 ```
 
-**What it does**: Assigns specialists to task groups, maps relevant standards, generates implementation prompts.
+**Example**:
+```
+> /orchestrate-tasks
+
+AI: Found 4 task groups. Assign specialists:
+
+1. Database Setup → ?
+2. OAuth Integration → ?
+3. Frontend → ?
+4. Testing → ?
+
+You:
+1. backend-specialist
+2. backend-specialist
+3. frontend-specialist
+4. test-specialist
+
+AI: Map standards for each group:
+
+You:
+1. backend/*, global/security.md
+2. backend/*, global/error-handling.md
+3. frontend/*, global/
+4. testing/*
+
+✅ Created orchestration.yml
+✅ Generated 4 implementation prompts
+```
 
 ---
 
-### Phase 6: Implementation
+#### `/implement-tasks`
 
-**Execute the implementation plan.**
+**Purpose**: Execute implementation
 
-```bash
-> /implement-tasks
-```
+**When to use**: After tasks are created
 
-**Two approaches**:
+**What it does**:
+- Loads spec and tasks
+- Follows standards
+- Implements systematically
+- Updates tasks.md progress
+
+**Two modes**:
 
 **A. Automated (with subagents)**:
-- Delegates to specialized subagents
-- Each implements their task group
-- Progress tracked automatically
+```
+> /orchestrate-tasks
+AI: [Spawns specialized subagents]
+AI: [Each implements their task group in parallel]
+✅ All tasks completed
+```
 
 **B. Manual (using prompts)**:
-- Use generated implementation prompts
-- Copy each into chat for guided implementation
-- Standards automatically enforced
+```
+> /orchestrate-tasks
+AI: [Generates implementation prompts]
+
+# Copy each prompt into chat:
+[Contents of 1-database-setup.md]
+> Implement Task Group 1
+
+[Contents of 2-oauth-integration.md]
+> Implement Task Group 2
+
+...
+```
 
 ---
 
-### Phase 7: Iteration & Refinement
+### Utility Commands
 
-**Continuous improvement based on learnings.**
+#### `/improve-skills`
 
-- Update standards with new patterns
-- Refine workflow based on what works
-- Document lessons learned
-- Create new specs building on previous work
+**Purpose**: Enhance AI agent skills
+
+**When to use**: Customizing agent capabilities
+
+**What it does**:
+- Shows current skills
+- Lets you improve descriptions
+- Adds examples
+- Makes skills more discoverable
 
 ---
 
-### Real-World Example: Adding Real-Time Chat
+## Specialized Agents
+
+Droidz includes 8 specialized agents, each expert in their domain:
+
+### 1. product-planner
+
+**Expertise**: Product strategy, roadmaps, vision
+
+**Use when**:
+- Starting new products
+- Planning major features
+- Creating product documentation
+
+**What it creates**:
+- mission.md - Product vision and goals
+- roadmap.md - Phased development plan
+- tech-stack.md - Technology decisions
+
+**Best for**: Product managers, founders, tech leads
+
+---
+
+### 2. spec-shaper
+
+**Expertise**: Requirements gathering, research
+
+**Use when**:
+- Feature requirements are unclear
+- Need to research implementations
+- Validating technical approach
+
+**What it does**:
+- Asks clarifying questions
+- Researches patterns (with Exa/Ref)
+- Documents decisions
+- Shapes clear requirements
+
+**Best for**: Early-stage feature design
+
+---
+
+### 3. spec-writer
+
+**Expertise**: Writing detailed specifications
+
+**Use when**:
+- Have shaped requirements
+- Need implementable spec
+- Building complex features
+
+**What it creates**:
+- Comprehensive spec.md with:
+  - Architecture
+  - Data models
+  - API contracts
+  - UI flows
+  - Security considerations
+  - Testing strategy
+
+**Best for**: Detailed feature planning
+
+---
+
+### 4. spec-verifier
+
+**Expertise**: Specification review
+
+**Use when**:
+- Validating specs before implementation
+- Checking completeness
+- Finding gaps
+
+**What it checks**:
+- Completeness
+- Clarity
+- Implementability
+- Security considerations
+- Test coverage
+
+**Best for**: Quality assurance, pre-implementation review
+
+---
+
+### 5. tasks-list-creator
+
+**Expertise**: Breaking specs into tasks
+
+**Use when**:
+- Have completed spec
+- Ready to start implementation
+- Need task breakdown
+
+**What it creates**:
+- tasks.md with:
+  - Logical task groups
+  - Clear dependencies
+  - Acceptance criteria
+  - Size estimates
+
+**Best for**: Implementation planning
+
+---
+
+### 6. implementer
+
+**Expertise**: Feature implementation
+
+**Use when**:
+- Have tasks defined
+- Ready to code
+- Following spec and standards
+
+**What it does**:
+- Reads spec and tasks
+- Implements features
+- Follows project standards
+- Writes tests
+- Updates progress
+
+**Best for**: Actual development work
+
+---
+
+### 7. implementation-verifier
+
+**Expertise**: Testing and verification
+
+**Use when**:
+- Implementation complete
+- Need to verify against spec
+- Running test suite
+
+**What it does**:
+- Verifies against acceptance criteria
+- Runs all tests
+- Checks standards compliance
+- Creates verification report
+
+**Best for**: Quality assurance, pre-merge checks
+
+---
+
+### 8. spec-initializer
+
+**Expertise**: Spec folder setup
+
+**Use when**:
+- Starting new spec
+- Need folder structure
+
+**What it creates**:
+- Spec folder with proper structure
+- README.md template
+- planning/ directory
+
+**Best for**: Quick spec initialization
+
+---
+
+## Best Practices
+
+### ✅ DO:
+
+#### 1. Start with Standards
+```
+First feature? Run this FIRST:
+> /standards-shaper
+```
+**Why**: Standards ensure consistency from day one
+
+#### 2. Always Shape Before Writing
+```
+> /shape-spec     # Ask questions, clarify
+> /write-spec     # Write detailed spec
+```
+**Why**: Shaping prevents vague specs and rework
+
+#### 3. Break Down Complex Tasks
+```
+Don't:
+- [ ] Build entire auth system
+
+Do:
+- [ ] Create database tables
+- [ ] Implement OAuth flow
+- [ ] Add login UI
+- [ ] Write tests
+```
+**Why**: Small tasks are easier to implement and track
+
+#### 4. Use Orchestration for Big Features
+```
+> /orchestrate-tasks   # Plan before implementing
+```
+**Why**: Coordination prevents conflicts and missed requirements
+
+#### 5. Reference Specs in Code
+```typescript
+// See droidz/specs/2024-11-24-user-authentication/spec.md
+// Section 4.2: OAuth Token Storage
+export const saveOAuthToken = async (userId, token) => {
+  // ...
+}
+```
+**Why**: Links code to requirements
+
+#### 6. Update Standards as You Learn
+```
+Found a better pattern? Add to:
+droidz/standards/[category]/[pattern].md
+```
+**Why**: Standards evolve with your team
+
+#### 7. Keep Specs Updated
+```
+Feature changed during implementation?
+Update spec.md to match reality.
+```
+**Why**: Specs are documentation, keep them accurate
+
+#### 8. Use Task Groups
+```
+Group 1: Database
+Group 2: Backend
+Group 3: Frontend
+Group 4: Testing
+```
+**Why**: Logical organization, easier to delegate
+
+---
+
+### ❌ DON'T:
+
+#### 1. Skip Planning
+```
+❌ Jump straight to code
+✅ Plan → Spec → Tasks → Implement
+```
+
+#### 2. Write Vague Specs
+```
+❌ "Add user authentication"
+✅ "Implement OAuth 2.0 with Google/GitHub, 
+    JWT tokens, refresh token rotation,
+    secure storage per spec section 5.3"
+```
+
+#### 3. Ignore Standards
+```
+❌ Implement however you want
+✅ Follow droidz/standards/ patterns
+```
+
+#### 4. Mix Concerns in Tasks
+```
+❌ - [ ] Build frontend and backend
+✅ - [ ] Build backend API
+    - [ ] Build frontend UI
+```
+
+#### 5. Lose Context
+```
+❌ "What were we building again?"
+✅ Read droidz/specs/[feature]/spec.md
+```
+
+#### 6. Skip Testing
+```
+❌ Implement without tests
+✅ Tests are part of implementation (Task Group 4)
+```
+
+#### 7. Work in Isolation
+```
+❌ Solo development without docs
+✅ Use workflow so team can collaborate
+```
+
+#### 8. Forget to Commit Droidz Files
+```
+❌ .gitignore droidz/
+✅ Commit specs, standards, product docs
+```
+
+---
+
+## Examples
+
+### Example 1: Building a New Feature
+
+**Scenario**: Add real-time notifications to your app
 
 ```bash
-# Phase 0: Setup (one-time)
+# Phase 0: Standards exist (one-time setup)
 > /standards-shaper
-✅ Created project standards
+✅ Standards created
 
 # Phase 1: Product context
 > /plan-product
-✅ mission.md, roadmap.md, tech-stack.md created
+✅ Product docs created
 
 # Phase 2: Shape the feature
 > /shape-spec
+
 AI: What feature are you planning?
-You: Real-time chat with typing indicators
+You: Real-time notifications with WebSockets
+
+AI: What types of notifications?
+You: New messages, mentions, system alerts
+
+AI: How should they be delivered?
+You: Browser push + in-app toast
+
+[More questions...]
+
 ✅ requirements.md created
 
 # Phase 3: Write detailed spec
 > /write-spec
-✅ Complete spec.md created
+
+✅ spec.md created (1,800 lines)
+   Includes: WebSocket architecture, message schema,
+   push notification setup, UI components
 
 # Phase 4: Break into tasks
 > /create-tasks
-✅ Found 5 task groups, 31 tasks
 
-# Phase 5: Orchestrate
+✅ tasks.md created
+   Found 5 task groups, 28 tasks
+
+# Phase 5: Orchestrate (optional)
 > /orchestrate-tasks
-AI: Assign specialists to task groups...
-✅ Implementation plan ready
+
+You assign:
+1. WebSocket Server → backend-specialist
+2. Message Schema → backend-specialist
+3. Push Notifications → backend-specialist
+4. UI Components → frontend-specialist
+5. E2E Tests → test-specialist
+
+✅ Implementation prompts generated
 
 # Phase 6: Implement
-[Automated: Subagents execute in parallel]
-✅ All 31 tasks completed, tests passing
+[Use subagents or implement manually with prompts]
 
-# Phase 7: Ship it! 🚀
+✅ All 28 tasks completed
+✅ Tests passing
+✅ Feature ready to ship! 🚀
 ```
 
 ---
 
-### Command Quick Reference
+### Example 2: Onboarding New Team Member
 
-| Phase | Command | Purpose |
-|-------|---------|---------|
-| 0 | `/standards-shaper` | Create project standards |
-| 1 | `/plan-product` | Define product vision |
-| 2 | `/shape-spec` | Gather feature requirements |
-| 3 | `/write-spec` | Create detailed specification |
-| 4 | `/create-tasks` | Break spec into tasks |
-| 5 | `/orchestrate-tasks` | Plan implementation |
-| 6 | `/implement-tasks` | Execute implementation |
-| - | `/improve-skills` | Enhance AI capabilities |
+```bash
+# New dev joins your team
 
-**For complete workflow guide**: See `droidz/standards/RECOMMENDED_WORKFLOW.md` after installation.
+# 1. They clone the repo
+git clone your-repo
+cd your-repo
+
+# 2. They install Droidz
+bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
+
+# 3. They read your docs
+cat droidz/product/mission.md      # Understand the product
+cat droidz/product/tech-stack.md   # See tech choices
+ls droidz/standards/                # Review coding standards
+
+# 4. They explore past features
+ls droidz/specs/                    # See all features built
+cat droidz/specs/2024-11-20-*/spec.md  # Read a spec
+
+# 5. They start their first feature
+> /shape-spec                       # Learn the workflow
+> /write-spec
+> /create-tasks
+> /implement-tasks
+
+# Result: New dev is productive day 1, following same patterns as team
+```
+
+---
+
+### Example 3: Mid-Project Standards Creation
+
+**Scenario**: You have a codebase but no standards yet
+
+```bash
+# Run standards-shaper
+> /standards-shaper
+
+AI: I'll analyze your codebase...
+AI: Detected:
+   - React 18 with hooks
+   - TypeScript (strict mode)
+   - Tailwind CSS
+   - tRPC API
+   - Prisma ORM
+   - Vitest tests
+
+AI: Creating standards with your patterns...
+
+✅ Created 15 standards files
+✅ Examples use YOUR tech stack
+✅ Patterns match YOUR code style
+
+# Now all future features follow these standards automatically
+```
+
+---
+
+## Customization
+
+### Modifying Standards
+
+Standards are just markdown files. Edit them to match your team:
+
+```bash
+# Edit any standard
+code droidz/standards/frontend/components.md
+
+# Add your own patterns
+echo "## Our Custom Button Pattern" >> droidz/standards/frontend/components.md
+echo "..." >> droidz/standards/frontend/components.md
+
+# Standards are preserved during Droidz updates
+```
+
+### Creating Custom Agents
+
+Add your own specialized agents:
+
+```bash
+# Factory AI
+create .factory/droids/database-expert.md
+
+# Claude Code
+create .claude/agents/database-expert.md
+```
+
+Format:
+```markdown
+---
+name: database-expert
+description: PostgreSQL and Prisma expert for database design
+color: blue
+model: inherit
+---
+
+You are a database design expert...
+```
+
+### Adding Custom Commands
+
+```bash
+# Factory AI
+create .factory/commands/optimize-queries.md
+
+# Claude Code
+create .claude/commands/optimize-queries.md
+```
+
+---
 
 ## Troubleshooting
 
-**Want to reinstall?** Just run the installer again. It will detect the existing installation and offer to update while preserving your data.
+### Commands Not Showing Up
 
-**Lost your customizations?** The installer backs up to a temp directory during updates. Check `/tmp/` for recent backup folders.
+**Problem**: Installed Droidz but commands don't work
 
-**Commands not working?** Make sure you've restarted your AI tool after installation. Run `/droids` or `/agents` to verify installation.
+**Solutions**:
+1. **Restart your AI tool** (required after installation)
+2. Verify installation:
+   ```
+   > /commands     # Should show 20+ commands
+   ```
+3. Check file locations:
+   ```bash
+   ls .factory/commands/  # Factory AI
+   ls .claude/commands/   # Claude Code
+   ```
 
-**Need support?** Open an issue on [GitHub](https://github.com/korallis/Droidz/issues) or join the Discord community.
+---
 
-## Development
+### Agents Not Activating
 
-For contributors working on the installer or framework:
+**Problem**: Agents don't respond or aren't found
 
-```bash
-# Clone the repository
-git clone https://github.com/korallis/Droidz.git
-cd Droidz
+**Solutions**:
+1. **Restart your AI tool**
+2. Check file structure (must be flat, not nested):
+   ```bash
+   # ✅ Correct
+   .factory/droids/implementer.md
+   
+   # ❌ Wrong
+   .factory/droids/implementation/implementer.md
+   ```
+3. Verify with:
+   ```
+   > /droids      # Factory AI
+   > /agents      # Claude Code
+   ```
 
-# Test the installer locally
-bash install.sh
+---
 
-# Framework files are in
-# - droidz_installer/payloads/droid_cli/default/ (Factory AI)
-# - droidz_installer/payloads/claude/default/ (Claude Code)
-# - droidz_installer/payloads/shared/default/ (Shared standards)
-```
+### Standards Not Being Followed
 
-### Project Structure
+**Problem**: AI ignores your standards
 
-```
-Droidz/
-├── install.sh                    # Interactive bash installer
-├── droidz_installer/
-│   ├── payloads/
-│   │   ├── droid_cli/default/   # Factory AI content
-│   │   │   ├── droids/          # Agent definitions
-│   │   │   └── commands/        # Slash commands
-│   │   ├── claude/default/      # Claude Code content
-│   │   │   ├── agents/          # Subagent definitions
-│   │   │   └── commands/        # Slash commands
-│   │   └── shared/default/      # Shared standards
-│   │       ├── global/
-│   │       ├── backend/
-│   │       ├── frontend/
-│   │       └── testing/
-│   └── manifests/
-│       └── platforms.json       # Platform configurations
-└── README.md
-```
+**Solutions**:
+1. **Reference standards explicitly**:
+   ```
+   > Use the implementer agent and follow droidz/standards/backend/api-design.md
+   ```
+2. Check standards exist:
+   ```bash
+   ls droidz/standards/
+   ```
+3. Make standards more specific (add examples)
+
+---
+
+### Lost Customizations After Update
+
+**Problem**: Your standards got overwritten
+
+**Solutions**:
+1. Check backup folder:
+   ```bash
+   ls /tmp/*droidz*backup*/
+   ```
+2. Restore from backup:
+   ```bash
+   cp /tmp/droidz-backup-*/standards/* droidz/standards/
+   ```
+3. **Prevent in future**: Commit droidz/ to git
+
+---
+
+### Spec Not Loading
+
+**Problem**: Agents can't find your spec
+
+**Solutions**:
+1. Use correct path:
+   ```
+   > Read droidz/specs/2024-11-24-feature-name/spec.md
+   ```
+2. Check file exists:
+   ```bash
+   ls droidz/specs/*/spec.md
+   ```
+3. Verify spec is committed to git
+
+---
+
+## Platform Support
+
+| Platform | Install Location | Content |
+|----------|-----------------|---------|
+| **Factory AI** | `.factory/` | droids/, commands/ |
+| **Claude Code** | `.claude/` | agents/, commands/ |
+| **Cursor** | `.cursor/` | workflows/ |
+| **Cline** | `.cline/` | prompts/ |
+| **Codex CLI** | `.codex/` | playbooks/ |
+| **VS Code** | `.vscode/droidz/` | snippets/ |
+| **All Platforms** | `droidz/` | standards/, product/, specs/ |
+
+---
+
+## What's Included
+
+### 8 Specialized Agents
+- product-planner
+- spec-shaper
+- spec-writer
+- spec-verifier
+- spec-initializer
+- tasks-list-creator
+- implementer
+- implementation-verifier
+
+### 20+ Commands
+- /standards-shaper
+- /plan-product
+- /shape-spec
+- /write-spec
+- /create-tasks
+- /orchestrate-tasks
+- /implement-tasks
+- /improve-skills
+- ...and more
+
+### 50+ Production Skills
+- **Core Development**: TDD, debugging, security, APIs
+- **Modern Frameworks**: Next.js 14, Convex, NeonDB, Tailwind
+- **Tools**: Playwright, MCP builder, document processing
+- **Productivity**: File organization, continuous improvement
+
+### Complete Standards Library
+- Global conventions
+- Backend patterns (API, database)
+- Frontend patterns (components, styling)
+- Testing strategies
+
+---
+
+## Support & Community
+
+### Getting Help
+
+1. **Documentation**: Read `droidz/standards/RECOMMENDED_WORKFLOW.md` after installation
+2. **Discord**: Join Ray Fernando's community (link at top)
+3. **Issues**: [GitHub Issues](https://github.com/korallis/Droidz/issues)
+
+### Contributing
+
+Droidz is open source! Contributions welcome:
+- Improve documentation
+- Add new skills
+- Create example workflows
+- Report bugs
+
+---
 
 ## License
 
 MIT License - see LICENSE file for details
 
+---
+
 ## Credits
 
-Created by the Droidz community with special thanks to Ray Fernando and all our supporters.
+Created by the Droidz community with special thanks to:
+- Ray Fernando
+- All our supporters and contributors
 
-Built on the foundation of spec-driven development principles, adapted for modern AI coding agents.
+Built on principles of spec-driven development adapted for modern AI coding agents.
 
-## 🎉 v4.2.0 - Comprehensive Skills Library
+---
 
-Droidz now includes **50 production-ready skills** for AI-assisted development:
-
-### Quick Start
+**Ready to transform your AI development workflow?**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh)
 ```
 
-### What's Included
-
-- **Core Development** (20 skills): TDD, debugging, security, APIs, databases
-- **Modern Frameworks** (10 skills): Next.js 15, Convex, NeonDB, Tailwind
-- **Developer Tools** (10 skills): MCP builder, Playwright, document processing  
-- **Productivity** (10 skills): File organization, research, continuous improvement
-
-See [SKILLS.md](SKILLS.md) for complete catalog.
+**Questions? Join the Discord!** 💬
