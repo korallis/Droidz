@@ -147,6 +147,37 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.4.0] - 2024-11-24
+
+### Added
+- **NEW COMMAND**: `/standards-shaper` - Creates comprehensive project standards with dos and don'ts
+  - Uses all available tools (Read, Write, Grep, Glob, Execute)
+  - Integrates with Exa code context and Ref documentation (when available)
+  - Gracefully handles missing MCP tools
+  - Auto-detects tech stack from project files
+  - Generates research-backed standards with concrete examples
+  - Creates organized structure: global/, frontend/, backend/, infrastructure/
+  - Each standard includes: core principles, DO/DON'T examples, patterns, common mistakes
+  
+- **Workflow Documentation**: `RECOMMENDED_WORKFLOW.md` in shared standards
+  - Complete phase-by-phase development guide
+  - Real-world examples and best practices
+  - Command quick reference
+  - Advanced patterns for teams
+  - Integration with CI/CD guidance
+
+### Changed
+- Updated workflow to include Phase 0: Setup Standards (using `/standards-shaper`)
+- Standards now central to entire development process
+- All commands now reference standards workflow
+
+### Impact
+- ✅ Projects start with clear, comprehensive standards
+- ✅ AI assistants have structured preferences to follow
+- ✅ Standards automatically integrated with orchestration
+- ✅ Research-backed best practices from day one
+- ✅ Consistent code quality across all features
+
 ## [4.3.0] - 2024-11-24
 
 ### Fixed
