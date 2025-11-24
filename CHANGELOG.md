@@ -147,6 +147,57 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.9.0] - 2024-11-24
+
+### Added
+- **Comprehensive README Rewrite**: Complete documentation overhaul (554 → 1,219 lines)
+  - Detailed command reference for all 8 commands
+  - Complete agent documentation
+  - Best practices (8 DOs + 8 DON'Ts with examples)
+  - 3 real-world usage examples
+  - Enhanced troubleshooting guide
+  - Table of contents for easy navigation
+  - Clear value proposition and "Why Droidz?" section
+
+### Changed
+- **orchestrate-tasks**: Made platform-agnostic
+  - Changed "Claude Code subagent" → "specialist"
+  - Changed YAML key `claude_code_subagent` → `assigned_specialist`
+  - Now works correctly across all platforms (Factory, Claude, Cursor, etc.)
+
+### Documentation Details
+
+**Commands Now Documented**:
+- /standards-shaper (marked as starting point)
+- /plan-product
+- /shape-spec
+- /write-spec
+- /create-tasks
+- /orchestrate-tasks
+- /implement-tasks
+- /improve-skills
+
+**Each Command Includes**:
+- Purpose and when to use
+- What it does (step-by-step)
+- Output files created
+- Real conversation examples
+
+**All 8 Agents Documented**:
+- product-planner
+- spec-shaper
+- spec-writer
+- spec-verifier
+- spec-initializer
+- tasks-list-creator
+- implementer
+- implementation-verifier
+
+**Examples Added**:
+1. Building real-time notifications feature (complete walkthrough)
+2. Onboarding new team member (day 1 productivity)
+3. Creating standards mid-project (existing codebase)
+
 ## [4.8.1] - 2024-11-24
 
 ### Fixed
