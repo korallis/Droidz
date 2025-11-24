@@ -1,0 +1,8 @@
+# Droidz - Ignore sensitive configuration
+config.yml
+
+# Ignore spec-specific generated files
+specs/*/implementation/prompts/
+specs/*/implementation/run-parallel.sh
+specs/*/implementation/*.log
+specs/*/verifications/

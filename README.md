@@ -161,21 +161,31 @@ When you run `/implement-tasks`, choose how to execute:
 **A) Parallel Execution (FAST)** ⚡
 - All task groups run simultaneously
 - Uses Factory's headless Droid Exec mode
-- Bounded concurrency (max 4 at once)
+- Auto-loads API key from `droidz/config.yml`
+- Bounded concurrency (configurable, default: 4)
 - Robust error handling
 - Best for: Multi-group implementations
 
 ```bash
-# One command to run all task groups in parallel
-$ export FACTORY_API_KEY=fk-your-key
+# Just run the script - API key loads from droidz/config.yml
 $ bash droidz/specs/[spec]/implementation/run-parallel.sh
 
 🚀 Starting parallel implementation...
+📄 Loading configuration from droidz/config.yml
+✅ Using API key from config.yml
+⚙️  Autonomy level: medium
+🔢 Max parallel: 4
+
 ▶️  Starting: 1-database-setup.md
 ▶️  Starting: 2-api-endpoints.md
 ▶️  Starting: 3-frontend-ui.md
 ▶️  Starting: 4-testing.md
-✅ All 4 task groups completed in parallel!
+✅ Completed: 1-database-setup.md
+✅ Completed: 2-api-endpoints.md
+✅ Completed: 3-frontend-ui.md
+✅ Completed: 4-testing.md
+
+🎉 All task groups completed!
 ```
 
 **B) Interactive with Live Progress** 📊
@@ -190,14 +200,32 @@ $ bash droidz/specs/[spec]/implementation/run-parallel.sh
 
 ### Requirements for Parallel Mode
 
+**One-Time Setup:**
+
 ```bash
-# Get your Factory API key
+# 1. Copy the config template
+cp droidz/config.yml.template droidz/config.yml
+
+# 2. Get your Factory API key
 # Visit: https://app.factory.ai/settings/api-keys
 
-# Set as environment variable
-export FACTORY_API_KEY=fk-...
+# 3. Edit droidz/config.yml and add your key:
+factory_api_key: "fk-your-key-here"
 
-# Then run the generated parallel script
+# That's it! The script will auto-load your key from config.yml
+# ⚠️  config.yml is in .gitignore - your key won't be committed
+```
+
+**Optional Configuration:**
+
+You can also configure in `droidz/config.yml`:
+- `default_autonomy_level`: "low", "medium", or "high" (default: "medium")
+- `max_parallel_executions`: 1-10 (default: 4)
+
+**Running Parallel Execution:**
+
+```bash
+# Just run the script - API key loads automatically
 bash droidz/specs/[your-spec]/implementation/run-parallel.sh
 ```
 
@@ -585,9 +613,11 @@ You:
 - Uses Factory's **Droid Exec** (headless mode) for true concurrent processing
 - Runs all task groups simultaneously
 - Best for: Multi-group implementations
-- Requirements: `FACTORY_API_KEY` environment variable
+- Requirements: Factory API key in `droidz/config.yml` (one-time setup)
 - Features:
-  - Bounded concurrency (max 4 simultaneous)
+  - Auto-loads API key from config file
+  - Bounded concurrency (configurable, default: 4)
+  - Configurable autonomy level (low/medium/high)
   - Robust error handling (if one fails, others continue)
   - All droids update same tasks.md file
   - Real-time output from all executions
@@ -627,11 +657,13 @@ PROMPTS: droidz/specs/2024-11-24/implementation/prompts/
 SCRIPT: run-parallel.sh
 
 TO EXECUTE:
-$ export FACTORY_API_KEY=fk-your-key
 $ bash droidz/specs/2024-11-24/implementation/run-parallel.sh
 
 🚀 Starting parallel implementation...
-📋 Processing 4 task groups concurrently
+📄 Loading configuration from droidz/config.yml
+✅ Using API key from config.yml
+⚙️  Autonomy level: medium
+🔢 Max parallel: 4
 
 ▶️  Starting: 1-database-setup.md
 ▶️  Starting: 2-api-endpoints.md

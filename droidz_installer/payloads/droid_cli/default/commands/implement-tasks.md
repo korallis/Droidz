@@ -97,24 +97,58 @@ Enter A, B, or C:
    
    SPEC_DIR="droidz/specs/[this-spec]"
    PROMPTS_DIR="$SPEC_DIR/implementation/prompts"
+   CONFIG_FILE="droidz/config.yml"
    
    echo "🚀 Starting parallel implementation..."
    echo "📋 Processing [N] task groups concurrently"
    echo ""
    
-   # Check for Factory API key
+   # Load Factory API key from config.yml or environment
+   if [ -f "$CONFIG_FILE" ]; then
+     echo "📄 Loading configuration from $CONFIG_FILE"
+     
+     # Extract API key from YAML (simple grep approach)
+     API_KEY=$(grep "^factory_api_key:" "$CONFIG_FILE" | sed 's/factory_api_key:[[:space:]]*//' | tr -d '"' | tr -d "'")
+     
+     # Extract optional settings
+     AUTONOMY=$(grep "^default_autonomy_level:" "$CONFIG_FILE" | sed 's/default_autonomy_level:[[:space:]]*//' | tr -d '"' | tr -d "'" || echo "medium")
+     MAX_PARALLEL=$(grep "^max_parallel_executions:" "$CONFIG_FILE" | sed 's/max_parallel_executions:[[:space:]]*//' || echo "4")
+     
+     # Use config file API key if set, otherwise fall back to env var
+     if [ -n "$API_KEY" ]; then
+       export FACTORY_API_KEY="$API_KEY"
+       echo "✅ Using API key from config.yml"
+     fi
+   else
+     # Use defaults if no config file
+     AUTONOMY="medium"
+     MAX_PARALLEL="4"
+   fi
+   
+   # Check that we have an API key from either source
    if [ -z "$FACTORY_API_KEY" ]; then
-     echo "❌ Error: FACTORY_API_KEY not set"
-     echo "   Get your key: https://app.factory.ai/settings/api-keys"
-     echo "   Then: export FACTORY_API_KEY=fk-..."
+     echo "❌ Error: No Factory API key found"
+     echo ""
+     echo "Option 1 (Recommended): Add to config file"
+     echo "   1. Copy droidz/config.yml.template to droidz/config.yml"
+     echo "   2. Get your key from: https://app.factory.ai/settings/api-keys"
+     echo "   3. Add to config.yml: factory_api_key: \"fk-...\""
+     echo ""
+     echo "Option 2: Use environment variable"
+     echo "   export FACTORY_API_KEY=fk-..."
+     echo ""
      exit 1
    fi
    
-   # Run all prompts in parallel (max 4 concurrent)
+   echo "⚙️  Autonomy level: $AUTONOMY"
+   echo "🔢 Max parallel: $MAX_PARALLEL"
+   echo ""
+   
+   # Run all prompts in parallel with configured settings
    find "$PROMPTS_DIR" -name "*.md" -print0 | \
-     xargs -0 -P 4 -I {} bash -c '
+     xargs -0 -P "$MAX_PARALLEL" -I {} bash -c '
        echo "▶️  Starting: $(basename {})"
-       droid exec --auto medium -f "{}" 2>&1 | \
+       droid exec --auto '"$AUTONOMY"' -f "{}" 2>&1 | \
          sed "s/^/[$(basename {})] /"
        echo "✅ Completed: $(basename {})"
      '
@@ -124,7 +158,9 @@ Enter A, B, or C:
    echo "📝 Check tasks.md for progress"
    ```
 
-4. Make script executable and show instructions:
+4. Check if config.yml exists, if not, create instructions for it
+
+5. Make script executable and show instructions:
    ```
    ✅ Created parallel execution setup:
    
@@ -139,16 +175,30 @@ Enter A, B, or C:
    droidz/specs/[this-spec]/implementation/run-parallel.sh
    
    TO EXECUTE:
-   1. Ensure Factory API key is set:
-      export FACTORY_API_KEY=fk-...
+   
+   [If config.yml does NOT exist:]
+   1. Set up your API key (ONE TIME):
+      cp droidz/config.yml.template droidz/config.yml
+      
+      Then edit droidz/config.yml and add your Factory API key:
+      factory_api_key: "fk-your-key-here"
+      
+      Get your key from: https://app.factory.ai/settings/api-keys
+      
+      ⚠️  config.yml is in .gitignore - your key won't be committed
    
    2. Run the script:
+      bash droidz/specs/[this-spec]/implementation/run-parallel.sh
+   
+   [If config.yml EXISTS:]
+   1. Run the script (API key will be loaded automatically):
       bash droidz/specs/[this-spec]/implementation/run-parallel.sh
    
    3. Watch progress in real-time as all task groups execute concurrently!
    
    FEATURES:
-   ✅ Bounded concurrency (max 4 simultaneous)
+   ✅ Auto-loads API key from config.yml
+   ✅ Bounded concurrency (configurable in config.yml)
    ✅ All update same tasks.md file
    ✅ Robust error handling (if one fails, others continue)
    ✅ Real-time output from all executions

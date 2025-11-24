@@ -1,0 +1,22 @@
+# Droidz Configuration File
+# This file stores sensitive configuration for Droidz workflows
+
+# Factory AI API Key (for parallel execution with Droid Exec)
+# Get your key from: https://app.factory.ai/settings/api-keys
+factory_api_key: ""
+
+# Optional: Default autonomy level for Droid Exec
+# Options: low, medium, high
+# - low: File edits only
+# - medium: File edits + package installs + tests + local git
+# - high: Everything including git push and deployments
+default_autonomy_level: "medium"
+
+# Optional: Max parallel executions (1-10)
+# Controls how many task groups run simultaneously
+max_parallel_executions: 4
+
+# SECURITY NOTICE:
+# - Add this file to .gitignore to avoid committing API keys
+# - Never share this file or commit it to version control
+# - Rotate your API key if accidentally exposed
