@@ -147,6 +147,20 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.4.1] - 2024-11-24
+
+### Fixed
+- **CRITICAL**: `/improve-skills` command in Factory Droid CLI now checks correct directory
+  - Was checking `.claude/skills/` (wrong)
+  - Now checks `.factory/skills/` (correct)
+  - Updated all user-facing messages to be platform-neutral
+  - Claude Code version unchanged (already correct)
+
+### Impact
+- ✅ Factory Droid CLI users can now use `/improve-skills`
+- ✅ Command works correctly in both platforms
+- ✅ Each platform checks its own skills directory
+
 ## [4.4.0] - 2024-11-24
 
 ### Added
