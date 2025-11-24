@@ -91,3 +91,24 @@ See git tags and releases for version history prior to v4.0.2.
 ### Technical
 - No code changes, documentation update only
 - Installer v4.2.1 is functionally identical to v4.2.0
+
+## [4.2.2] - 2024-11-24
+
+### Fixed
+- **CRITICAL**: Removed invalid tool specifications from all agents/droids
+  - Removed `tools: Write, Bash, WebFetch` (invalid tool names)
+  - Agents/droids now inherit ALL tools from parent system
+  - Fixes error: "Invalid tools: Write, Bash, WebFetch. Available tools: Read, LS, Execute, Edit..."
+
+### Changed
+- Agents/droids are now more flexible - they inherit all available tools instead of being restricted to a subset
+- Works correctly with both Factory.ai and Claude Code tool sets
+
+### Impact
+- ✅ Agents will no longer error on initialization
+- ✅ More tools available to agents (inherits full tool set)
+- ✅ Better compatibility across platforms
+
+### Files Fixed
+- `claude/default/agents/*.md` (8 files)
+- `droid_cli/default/droids/*.md` (8 files)
