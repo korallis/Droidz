@@ -35,31 +35,33 @@ task_groups:
   # Repeat for each task group found in tasks.md
 ```
 
-### NEXT: Ask user to assign subagents to each task group
+### NEXT: Ask user to assign specialists to each task group
 
-Next we must determine which subagents should be assigned to which task groups.  Ask the user to provide this info using the following request to user and WAIT for user's response:
+Next we must determine which specialists should be assigned to which task groups.  Ask the user to provide this info using the following request to user and WAIT for user's response:
 
 ```
-Please specify the name of each subagent to be assigned to each task group:
+Please specify the name of each specialist to be assigned to each task group:
 
 1. [task-group-name]
 2. [task-group-name]
 3. [task-group-name]
 [repeat for each task-group you've added to orchestration.yml]
 
-Simply respond with the subagent names and corresponding task group number and I'll update orchestration.yml accordingly.
+Simply respond with the specialist names and corresponding task group number and I'll update orchestration.yml accordingly.
+
+Examples: backend-specialist, frontend-specialist, database-specialist, test-specialist
 ```
 
-Using the user's responses, update `orchestration.yml` to specify those subagent names.  `orchestration.yml` should end up looking like this:
+Using the user's responses, update `orchestration.yml` to specify those specialist names.  `orchestration.yml` should end up looking like this:
 
 ```yaml
 task_groups:
   - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
+    assigned_specialist: [specialist-name]
   - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
+    assigned_specialist: [specialist-name]
   - name: [task-group-name]
-    claude_code_subagent: [subagent-name]
+    assigned_specialist: [specialist-name]
   # Repeat for each task group found in tasks.md
 ```
 
@@ -68,11 +70,11 @@ For example, after this step, the `orchestration.yml` file might look like this 
 ```yaml
 task_groups:
   - name: authentication-system
-    claude_code_subagent: backend-specialist
+    assigned_specialist: backend-specialist
   - name: user-dashboard
-    claude_code_subagent: frontend-specialist
+    assigned_specialist: frontend-specialist
   - name: api-endpoints
-    claude_code_subagent: backend-specialist
+    assigned_specialist: backend-specialist
 ```
 
 ### NEXT: Ask user to assign standards to each task group
@@ -132,22 +134,22 @@ task_groups:
       - global/error-handling.md
 ```
 
-Note: If the `use_claude_code_subagents` flag is enabled, the final `orchestration.yml` would include BOTH `claude_code_subagent` assignments AND `standards` for each task group.
+Note: The final `orchestration.yml` would include BOTH `assigned_specialist` assignments AND `standards` for each task group.
 
-### NEXT: Delegate task groups implementations to assigned subagents
+### NEXT: Delegate task groups implementations to assigned specialists
 
-Loop through each task group in `droidz/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned subagent specified in `orchestration.yml`.
+Loop through each task group in `droidz/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned specialist specified in `orchestration.yml`.
 
-For each delegation, provide the subagent with:
+For each delegation, provide the specialist with:
 - The task group (including the parent task and all sub-tasks)
 - The spec file: `droidz/specs/[this-spec]/spec.md`
-- Instruct subagent to:
+- Instruct specialist to:
   - Perform their implementation
   - Check off the task and sub-task(s) in `droidz/specs/[this-spec]/tasks.md`
 
-In addition to the above items, also instruct the subagent to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the subagent, follow these instructions:
+In addition to the above items, also instruct the specialist to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the specialist, follow these instructions:
 
-Provide all of the above to the subagent when delegating tasks for it to implement.
+Provide all of the above to the specialist when delegating tasks for it to implement.
 
 ### NEXT: Generate prompts
 
