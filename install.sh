@@ -31,7 +31,7 @@ safe_read() {
   fi
 }
 
-VERSION="2.1.1"
+VERSION="4.1.0"
 REPO_URL="https://github.com/korallis/Droidz"
 BRANCH="${DROIDZ_BRANCH:-main}"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/${BRANCH}"
@@ -304,16 +304,17 @@ install_platform() {
     
     local file_count=0
     
-    # Copy each subdirectory into a namespaced 'droidz' folder
-    # This mimics how agent-os creates .claude/agents/agent-os/ structure
+    # Copy files to flat structure (Factory.ai, Claude Code require top-level only)
+    # Factory.ai docs: "top-level files only", "nested folders are ignored"
+    # Claude Code docs: Files stored in .claude/agents/ (flat structure recommended)
     for subdir in "$platform_payload_dir"/*; do
       if [[ -d "$subdir" ]]; then
         local subdir_name=$(basename "$subdir")
-        local dest_dir="$expanded_path/$subdir_name/droidz"
+        local dest_dir="$expanded_path/$subdir_name"
         
         mkdir -p "$dest_dir"
         
-        # For commands directory, only copy non-numbered files (like agent-os)
+        # For commands directory, only copy non-numbered files (workflow phase files)
         if [[ "$subdir_name" == "commands" ]]; then
           for file in "$subdir"/*; do
             local filename=$(basename "$file")
@@ -341,8 +342,8 @@ install_platform() {
     fi
     
     # Make commands executable if they have shebangs
-    if [[ -d "$expanded_path/commands/droidz" ]]; then
-      find "$expanded_path/commands/droidz" -type f -exec grep -l '^#!' {} \; 2>/dev/null | while read file; do
+    if [[ -d "$expanded_path/commands" ]]; then
+      find "$expanded_path/commands" -type f -exec grep -l '^#!' {} \; 2>/dev/null | while read file; do
         chmod +x "$file"
       done
     fi
@@ -478,8 +479,8 @@ main() {
       echo -e "  2. Run ${CYAN}/droids${NC} to see available custom droids"
       echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo -e "  Your droids: ${BLUE}$platform_path/droids/droidz/${NC}"
-      echo -e "  Your commands: ${BLUE}$platform_path/commands/droidz/${NC}"
+      echo -e "  Your droids: ${BLUE}$platform_path/droids/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     claude)
@@ -490,8 +491,8 @@ main() {
       echo -e "  2. Run ${CYAN}/agents${NC} to see available subagents"
       echo -e "  3. Run ${CYAN}/commands${NC} to see available slash commands"
       echo ""
-      echo -e "  Your agents: ${BLUE}$platform_path/agents/droidz/${NC}"
-      echo -e "  Your commands: ${BLUE}$platform_path/commands/droidz/${NC}"
+      echo -e "  Your agents: ${BLUE}$platform_path/agents/${NC}"
+      echo -e "  Your commands: ${BLUE}$platform_path/commands/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cursor)
@@ -501,7 +502,7 @@ main() {
       echo "  1. Restart Cursor"
       echo "  2. Access workflows from the Cursor menu"
       echo ""
-      echo -e "  Your workflows: ${BLUE}$platform_path/workflows/droidz/${NC}"
+      echo -e "  Your workflows: ${BLUE}$platform_path/workflows/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     cline)
@@ -511,7 +512,7 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access prompts from the Cline extension"
       echo ""
-      echo -e "  Your prompts: ${BLUE}$platform_path/prompts/droidz/${NC}"
+      echo -e "  Your prompts: ${BLUE}$platform_path/prompts/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     codex)
@@ -521,7 +522,7 @@ main() {
       echo "  1. Run codex CLI"
       echo "  2. Access available playbooks"
       echo ""
-      echo -e "  Your playbooks: ${BLUE}$platform_path/playbooks/droidz/${NC}"
+      echo -e "  Your playbooks: ${BLUE}$platform_path/playbooks/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     vscode)
@@ -531,7 +532,7 @@ main() {
       echo "  1. Restart VS Code"
       echo "  2. Access snippets from the editor"
       echo ""
-      echo -e "  Your snippets: ${BLUE}$platform_path/snippets/droidz/${NC}"
+      echo -e "  Your snippets: ${BLUE}$platform_path/snippets/${NC}"
       echo -e "  Shared standards: ${BLUE}$standards_display_path${NC}"
       ;;
     *)
