@@ -277,3 +277,62 @@ $ python install.py --platform factory --platform claude
 #   [2/3] Factory Agent → ~/.factory/
 #   [3/3] Claude Agent → ~/.claude/
 ```
+
+## Tool Inheritance Architecture (v4.2.2+)
+
+### Design Principle
+
+**All agents/droids inherit tools from the main system, not from parent agents.**
+
+### Why This Matters
+
+When building agent chains (agent A → agent B → agent C), each agent needs direct access to the same tool set:
+
+```
+User
+ └─> Claude Code / Factory Droid CLI [Main Tool Set]
+      ├─> Agent A (inherits main tools)
+      │    └─> Agent B (inherits main tools, NOT from A)
+      │         └─> Agent C (inherits main tools, NOT from B)
+```
+
+### Implementation
+
+**DO NOT** specify `tools:` in agent/droid YAML frontmatter.
+
+```yaml
+---
+name: my-agent
+description: Does something
+# NO tools: line here!
+color: blue
+model: inherit
+---
+```
+
+When `tools:` is omitted, the system automatically provides:
+- **Claude Code**: Read, LS, Execute, Edit, Grep, Glob, Create, WebSearch, FetchUrl, TodoWrite, Skill, etc.
+- **Factory Droid CLI**: Same tool set
+
+### Benefits
+
+1. **Consistent tool access** - All agents in a chain have identical capabilities
+2. **No tool name conflicts** - System provides correct tool names automatically
+3. **Future-proof** - New tools automatically available
+4. **Simplified configuration** - One less thing to configure and maintain
+
+### Previous Issues (Fixed in v4.2.2)
+
+❌ **Before**: Agents specified tools explicitly
+```yaml
+tools: Write, Read, Bash, WebFetch  # Wrong tool names!
+```
+
+Result: `Error: Invalid tools: Write, Bash, WebFetch`
+
+✅ **After**: Agents inherit from system
+```yaml
+# No tools: line - inherits automatically
+```
+
+Result: All system tools available, no errors.
