@@ -4,6 +4,7 @@
 
 Instead of ad-hoc prompting and context loss, Droidz gives you:
 - 📋 **Spec-driven workflow** - Plan → Spec → Tasks → Implementation
+- 🚀 **Parallel execution** - Run multiple task groups simultaneously (NEW!)
 - 🤖 **8 specialized agents** - Each expert in their domain
 - 📚 **50+ production skills** - From TDD to Next.js to security patterns
 - 📏 **Team standards** - Consistent code across all features
@@ -125,7 +126,12 @@ Droidz follows a proven 8-phase cycle for building features:
 │           ↓                                                 │
 │  Phase 5: Task Orchestration     → /orchestrate-tasks      │
 │           ↓                                                 │
-│  Phase 6: Implementation         → /implement-tasks        │
+│  Phase 6: Implementation         → /implement-tasks  🚀     │
+│           │                        (3 MODES!)               │
+│           │                                                 │
+│           ├─→ A) Parallel (FAST) - All tasks run together  │
+│           ├─→ B) Interactive - Live progress updates       │
+│           └─→ C) Sequential - One at a time                │
 │           ↓                                                 │
 │  Phase 7: Continuous Improvement → iterate & refine        │
 │                                                             │
@@ -136,9 +142,64 @@ Droidz follows a proven 8-phase cycle for building features:
 
 1. **Context Persists** - Specs and standards live in your repo
 2. **Clear Handoffs** - Each phase produces artifacts for the next
-3. **Team Alignment** - Everyone works from the same spec
-4. **Quality Gates** - Standards enforced automatically
-5. **Scalable** - Same process for small features or large systems
+3. **Parallel Execution** - Implement multiple task groups simultaneously (NEW!)
+4. **Progress Tracking** - See real-time updates as tasks complete
+5. **Team Alignment** - Everyone works from the same spec
+6. **Quality Gates** - Standards enforced automatically
+7. **Scalable** - Same process for small features or large systems
+
+---
+
+## 🚀 NEW: Parallel Execution
+
+**Speed up implementation by 4x!** Droidz now supports parallel execution using Factory AI's Droid Exec.
+
+### Three Execution Modes
+
+When you run `/implement-tasks`, choose how to execute:
+
+**A) Parallel Execution (FAST)** ⚡
+- All task groups run simultaneously
+- Uses Factory's headless Droid Exec mode
+- Bounded concurrency (max 4 at once)
+- Robust error handling
+- Best for: Multi-group implementations
+
+```bash
+# One command to run all task groups in parallel
+$ export FACTORY_API_KEY=fk-your-key
+$ bash droidz/specs/[spec]/implementation/run-parallel.sh
+
+🚀 Starting parallel implementation...
+▶️  Starting: 1-database-setup.md
+▶️  Starting: 2-api-endpoints.md
+▶️  Starting: 3-frontend-ui.md
+▶️  Starting: 4-testing.md
+✅ All 4 task groups completed in parallel!
+```
+
+**B) Interactive with Live Progress** 📊
+- Sequential execution with real-time TodoWrite updates
+- See tool calls and results as they happen
+- Best for: Learning, debugging, following along
+
+**C) Sequential Delegation** 🔄
+- Traditional one-at-a-time execution
+- Simple and reliable
+- Best for: Single task groups
+
+### Requirements for Parallel Mode
+
+```bash
+# Get your Factory API key
+# Visit: https://app.factory.ai/settings/api-keys
+
+# Set as environment variable
+export FACTORY_API_KEY=fk-...
+
+# Then run the generated parallel script
+bash droidz/specs/[your-spec]/implementation/run-parallel.sh
+```
 
 ---
 
