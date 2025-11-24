@@ -31,7 +31,7 @@ safe_read() {
   fi
 }
 
-VERSION="4.4.1"
+VERSION="4.5.0"
 REPO_URL="https://github.com/korallis/Droidz"
 BRANCH="${DROIDZ_BRANCH:-main}"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/${BRANCH}"

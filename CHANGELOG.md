@@ -147,6 +147,67 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.5.0] - 2024-11-24
+
+### Added
+- **MCP Research Integration**: All agents/droids now include optional MCP tool usage
+  - Added research instructions to 5 core agents/droids:
+    - `product-planner` - Research similar products, tech stacks, market trends
+    - `spec-shaper` - Research technical patterns, architecture approaches
+    - `spec-writer` - Research API design, database patterns, security
+    - `tasks-list-creator` - Research implementation approaches, dependencies
+    - `implementer` - Research code examples, solutions, patterns
+  - Instructions are graceful: work continues without MCPs if unavailable
+  - Enhances quality when Exa/Ref MCPs are installed
+
+### Changed
+- Agents now automatically leverage Exa and Ref MCPs when available
+- Research is optional - no errors if MCPs not installed
+- Clear "Usage Pattern" guidance in each agent
+
+### Technical Details
+
+**Research Tools Section Added**:
+- Lists what each tool is good for (Exa for patterns, Ref for docs)
+- Specific research topics relevant to agent's role
+- Clear usage pattern: Try → If unavailable → Continue
+
+**Example Pattern**:
+```markdown
+## Research Tools (Use When Available)
+
+**Exa Code Context** - For researching:
+- [Relevant research topics]
+
+**Ref Documentation** - For referencing:
+- [Relevant documentation]
+
+**Usage Pattern**:
+Try: [Research action]
+If unavailable: Continue with general knowledge
+```
+
+### Impact
+- ✅ Agents leverage MCPs automatically if installed
+- ✅ No errors or failures if MCPs unavailable
+- ✅ Better quality outputs when research tools available
+- ✅ Research-backed recommendations and patterns
+- ✅ Consistent behavior across all platforms
+
+### Benefits
+
+**With Exa/Ref MCPs Installed**:
+- Product planning uses market research and competitor analysis
+- Spec shaping references current best practices
+- Spec writing includes framework-specific patterns
+- Task breakdown informed by implementation approaches
+- Implementation uses proven code examples
+
+**Without MCPs**:
+- All agents continue working normally
+- Uses general knowledge and best practices
+- No degradation in core functionality
+
 ## [4.4.1] - 2024-11-24
 
 ### Fixed
