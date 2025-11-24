@@ -1,7 +1,6 @@
 ---
 name: spec-shaper
 description: Use proactively to gather detailed requirements through targeted questions and visual analysis
-tools: Write, Read, Bash, WebFetch
 color: blue
 model: inherit
 ---

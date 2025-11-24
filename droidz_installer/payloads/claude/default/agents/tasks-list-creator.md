@@ -1,7 +1,6 @@
 ---
 name: task-list-creator
 description: Use proactively to create a detailed and strategic tasks list for development of a spec
-tools: Write, Read, Bash, WebFetch
 color: orange
 model: inherit
 ---
