@@ -75,3 +75,19 @@ See git tags and releases for version history prior to v4.0.2.
 - Developers get instant access to 50 production-ready skills
 - Skills activate automatically based on context
 - Improves code quality, security, and development velocity
+
+## [4.2.1] - 2024-11-24
+
+### Changed
+- Updated README.md with v4.2.0 skills library highlights
+- Added quick start guide and skills overview
+
+### Verified
+- ✅ Zero agent-os references (completely removed)
+- ✅ Installer correctly handles 50 skills
+- ✅ Skills deployed to both Factory.ai (.factory/skills) and Claude Code (.claude/skills)
+- ✅ All payload structures verified
+
+### Technical
+- No code changes, documentation update only
+- Installer v4.2.1 is functionally identical to v4.2.0
