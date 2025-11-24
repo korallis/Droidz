@@ -1,19 +1,19 @@
-I want you to help me improve the files that make up my Claude Code Skills by rewriting their descriptions so that they can be more readily discovered and used by Claude Code when it works on coding tasks.
+I want you to help me improve the files that make up your Skills by rewriting their descriptions so that they can be more readily discovered and used when working on coding tasks.
 
-You can refer to the Claude Code documentation on the Skills feature here: https://docs.claude.com/en/docs/claude-code/skills
+You can refer to the skills documentation here: https://docs.claude.com/en/docs/claude-code/skills
 
-All of the Skills in our project are located in `.claude/skills/`. Each Skill has its own folder and inside each Skill folder is a file called `SKILL.md`.
+All of the Skills in our project are located in `.factory/skills/`. Each Skill has its own folder and inside each Skill folder is a file called `SKILL.md`.
 
 LOOP through each `SKILL.md` file and FOR EACH use the following process to revise its content and improve it:
 
-## Claude Code Skill Improvement Process
+## Skill Improvement Process
 
 ### Step 1: Confirm which skills to improve
 
-First, ask the user to confirm whether they want ALL of their Claude Code skills to be improved, only select Skills.  Assume the answer will be "all" but ask the user to confirm by displaying the following message, then WAIT for the user's response before proceeding to Step 2:
+First, ask the user to confirm whether they want ALL of their skills to be improved, or only select Skills.  Assume the answer will be "all" but ask the user to confirm by displaying the following message, then WAIT for the user's response before proceeding to Step 2:
 
 ```
-Before I proceed with improving your Claude Code Skills, can you confirm that you want me to revise and improve ALL Skills in your .claude/skills/ folder?
+Before I proceed with improving your Skills, can you confirm that you want me to revise and improve ALL Skills in your .factory/skills/ folder?
 
 If not, then please specify which Skills I should include or exclude.
 ```
@@ -56,19 +56,19 @@ Example:
 
 ### Step 5: Advise the user on improving their skills further
 
-After revising ALL Skill.md files located in the project's `.claude/skills/` folder, display the following message to the user to advise them on how to improve their Claude Code Skills further:
+After revising ALL Skill.md files located in the project's `.factory/skills/` folder, display the following message to the user to advise them on how to improve their Skills further:
 
 ```
-All Claude Code Skills have been analyzed and revised!
+All Skills have been analyzed and revised!
 
 RECOMMENDATION 👉 Review and revise them further using these tips:
 
 - Make Skills as descriptive as possible
-- Use their 'description' frontmatter to tell Claude Code when it should proactively use this skill.
+- Use their 'description' frontmatter to describe when this skill should proactively be used.
 - Include all relevant instructions, details and directives within the content of the Skill.
 - You can link to other files (like your Droidz standards files) using markdown links.
-- You can consolidate multiple similar skills into single skills where it makes sense for Claude to find and use them together.
+- You can consolidate multiple similar skills into single skills where it makes sense to find and use them together.
 
-For more best practices, refer to the official Claude Code documentation on Skills:
+For more best practices, refer to the skills documentation:
 https://docs.claude.com/en/docs/claude-code/skills
 ```
