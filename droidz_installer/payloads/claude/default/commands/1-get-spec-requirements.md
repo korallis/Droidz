@@ -8,7 +8,6 @@ IF you don't have ONE OR BOTH of those files in your current conversation contex
 
 Please direct me to where I can find those.  If you haven't created them yet, you can run /shape-spec or /write-spec."
 
-{{UNLESS compiled_single_command}}
 ## Display confirmation and next step
 
 Once you've confirmed you have the spec and/or requirements, output the following message (replace `[this-spec]` with the folder name for this spec)
@@ -18,4 +17,3 @@ Once you've confirmed you have the spec and/or requirements, output the followin
 
 NEXT STEP 👉 Run the command, 2-create-tasks-list.md
 ```
-{{ENDUNLESS compiled_single_command}}

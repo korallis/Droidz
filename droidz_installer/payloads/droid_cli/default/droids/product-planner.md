@@ -82,19 +82,106 @@ These tools enhance quality but are not required - work continues gracefully wit
 
 ### Step 1: Gather Product Requirements
 
-{{workflows/planning/gather-product-info}}
+
+## Product Planning Process
+
+### Phase 1: Gather Product Information
+
+**Goal**: Understand what needs to be built and why
+
+1. **Ask clarifying questions**:
+   - What problem does this solve?
+   - Who are the target users?
+   - What are the must-have features vs nice-to-have?
+   - Are there existing solutions you want to improve upon?
+   - What's the timeline and budget?
+
+2. **Research market and competitors**:
+   - Identify similar products
+   - Note strengths and weaknesses
+   - Find differentiation opportunities
+
+3. **Define success metrics**:
+   - How will you measure success?
+   - What are the key performance indicators?
+
+### Phase 2: Create Product Mission
+
+**Goal**: Define clear purpose and vision
+
+Create a mission statement that includes:
+- **Problem statement**: What user pain point does this address?
+- **Solution overview**: How does your product solve it?
+- **Target audience**: Who is this for?
+- **Value proposition**: Why choose this over alternatives?
+- **Success criteria**: What does success look like?
+
+### Phase 3: Create Product Roadmap
+
+**Goal**: Plan features and phases
+
+1. **Identify feature categories**:
+   - Core functionality (MVP)
+   - Enhanced features (Phase 2)
+   - Advanced features (Future)
+
+2. **Prioritize using framework**:
+   - Must have (MVP)
+   - Should have (Important but not critical)
+   - Could have (Nice to have)
+   - Won't have (Out of scope)
+
+3. **Create phased roadmap**:
+   ```markdown
+   ## Phase 1: MVP (Months 1-3)
+   - Feature A: Core functionality
+   - Feature B: Basic user management
+   - Feature C: Essential integrations
+   
+   ## Phase 2: Enhancement (Months 4-6)
+   - Feature D: Advanced analytics
+   - Feature E: Team collaboration
+   
+   ## Phase 3: Growth (Months 7-12)
+   - Feature F: Enterprise features
+   - Feature G: Advanced automation
+   ```
+
+### Phase 4: Define Tech Stack
+
+**Goal**: Choose appropriate technologies
+
+Consider:
+1. **Frontend**: React, Vue, Angular, or vanilla JS?
+2. **Backend**: Node.js, Python, Ruby, Go?
+3. **Database**: PostgreSQL, MongoDB, MySQL?
+4. **Hosting**: Vercel, AWS, Google Cloud?
+5. **Authentication**: Auth0, Clerk, custom?
+6. **Payments**: Stripe, PayPal?
+
+Document decisions with rationale:
+```markdown
+## Tech Stack
+
+### Frontend
+- Framework: Next.js 14
+- Styling: Tailwind CSS
+- State: React Context + hooks
+- Rationale: Fast development, great DX, strong ecosystem
+
+### Backend
+- Runtime: Node.js
+- Framework: Next.js API routes
+- ORM: Prisma
+- Rationale: TypeScript end-to-end, serverless-friendly
+```
+
 
 ### Step 2: Create Mission Document
 
-{{workflows/planning/create-product-mission}}
-
 ### Step 3: Create Development Roadmap
 
-{{workflows/planning/create-product-roadmap}}
-
 ### Step 4: Document Tech Stack
-
-{{workflows/planning/create-product-tech-stack}}
 
 ### Step 5: Final Validation
 
@@ -113,10 +200,7 @@ done
 echo "Product planning complete! Review your product documentation in droidz/product/"
 ```
 
-{{UNLESS standards_as_claude_code_skills}}
 ## User Standards & Preferences Compliance
 
 IMPORTANT: Ensure the product mission and roadmap are ALIGNED and DO NOT CONFLICT with the user's preferences and standards as detailed in the following files:
 
-{{standards/global/*}}
-{{ENDUNLESS standards_as_claude_code_skills}}

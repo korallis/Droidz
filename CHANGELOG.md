@@ -147,6 +147,29 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.8.1] - 2024-11-24
+
+### Fixed
+- **CRITICAL**: Fixed all droids and commands referencing non-existent workflow files
+  - All 8 droids now have complete inline workflow instructions
+  - Removed 38 broken template references across 16 droid files and 22 command files
+  - Droids work immediately after installation without missing dependencies
+  - Fixed: tasks-list-creator, spec-writer, product-planner, implementer, spec-shaper, spec-initializer, spec-verifier, implementation-verifier
+  - No more "file not found" errors when using custom droids
+
+### Technical Details
+
+**Root Cause**: Droids referenced `{{workflows/...}}` files that didn't exist. The installer copied files as-is without processing templates, causing all droids to fail.
+
+**Solution**: Inlined complete workflow instructions directly into each droid file, removing dependency on external workflow files.
+
+**Files Fixed**:
+- 16 droid files (8 droids × 2 platforms)
+- 22 command files (11 commands × 2 platforms)
+- Total: 38 files with broken references resolved
+
+**Verification**: 0 broken template references remaining
+
 ## [4.8.0] - 2024-11-24
 
 ### Changed

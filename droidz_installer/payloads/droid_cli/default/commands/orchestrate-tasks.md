@@ -35,7 +35,6 @@ task_groups:
   # Repeat for each task group found in tasks.md
 ```
 
-{{IF use_claude_code_subagents}}
 ### NEXT: Ask user to assign subagents to each task group
 
 Next we must determine which subagents should be assigned to which task groups.  Ask the user to provide this info using the following request to user and WAIT for user's response:
@@ -75,9 +74,7 @@ task_groups:
   - name: api-endpoints
     claude_code_subagent: backend-specialist
 ```
-{{ENDIF use_claude_code_subagents}}
 
-{{UNLESS standards_as_claude_code_skills}}
 ### NEXT: Ask user to assign standards to each task group
 
 Next we must determine which standards should guide the implementation of each task group.  Ask the user to provide this info using the following request to user and WAIT for user's response:
@@ -136,9 +133,7 @@ task_groups:
 ```
 
 Note: If the `use_claude_code_subagents` flag is enabled, the final `orchestration.yml` would include BOTH `claude_code_subagent` assignments AND `standards` for each task group.
-{{ENDUNLESS standards_as_claude_code_skills}}
 
-{{IF use_claude_code_subagents}}
 ### NEXT: Delegate task groups implementations to assigned subagents
 
 Loop through each task group in `droidz/specs/[this-spec]/tasks.md` and delegate its implementation to the assigned subagent specified in `orchestration.yml`.
@@ -149,17 +144,11 @@ For each delegation, provide the subagent with:
 - Instruct subagent to:
   - Perform their implementation
   - Check off the task and sub-task(s) in `droidz/specs/[this-spec]/tasks.md`
-{{UNLESS standards_as_claude_code_skills}}
 
 In addition to the above items, also instruct the subagent to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the subagent, follow these instructions:
 
-{{workflows/implementation/compile-implementation-standards}}
-
 Provide all of the above to the subagent when delegating tasks for it to implement.
-{{ENDUNLESS standards_as_claude_code_skills}}
-{{ENDIF use_claude_code_subagents}}
 
-{{UNLESS use_claude_code_subagents}}
 ### NEXT: Generate prompts
 
 Now we must generate an ordered series of prompt texts, which will be used to direct the implementation of each task group listed in `orchestration.yml`.
@@ -183,11 +172,8 @@ Populate the prompt markdown file using the following Prompt file content templa
 
 In the content template below, replace "[spec-title]" and "[this-spec]" with the current spec's title, and "[task-group-number]" with the current task group's number.
 
-{{UNLESS standards_as_claude_code_skills}}
 To replace "[orchestrated-standards]", use the following workflow:
 
-{{workflows/implementation/compile-implementation-standards}}
-{{ENDUNLESS standards_as_claude_code_skills}}
 
 #### Prompt file content template:
 
@@ -208,15 +194,11 @@ Also read these further context and reference:
 
 ## Perform the implementation
 
-{{workflows/implementation/implement-tasks}}
-
-{{UNLESS standards_as_claude_code_skills}}
 ## User Standards & Preferences Compliance
 
 IMPORTANT: Ensure that your implementation work is ALIGNED and DOES NOT CONFLICT with the user's preferences and standards as detailed in the following files:
 
 [orchestrated-standards]
-{{ENDUNLESS standards_as_claude_code_skills}}
 ```
 
 ### Step 3: Output the list of created prompt files
@@ -234,4 +216,3 @@ Input those prompts into this chat one-by-one or queue them to run in order.
 
 Progress will be tracked in `droidz/specs/[this-spec]/tasks.md`
 ```
-{{ENDUNLESS use_claude_code_subagents}}
