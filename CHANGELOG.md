@@ -147,6 +147,93 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.7.0] - 2024-11-24
+
+### Changed
+- **standards-shaper Updates Existing Standards**: Command now intelligently updates existing standards based on project
+  - Detects tech stack and updates examples in existing standard files
+  - Replaces generic examples with project-specific patterns
+  - Preserves structure while updating content to match your frameworks
+  - Example: Updates `api.md` from generic REST to your Express+TypeScript+Prisma patterns
+  
+### Enhanced
+- **/standards-shaper command** now has two modes:
+  - **Create mode**: Generates new standards from scratch (if no standards exist)
+  - **Update mode**: Updates existing standards to match current project (if standards found)
+  
+### Technical Details
+
+**Update Mode Behavior**:
+```
+1. Check for existing standards
+2. Read each standard file
+3. Detect project tech stack (React, Next.js, Express, Prisma, etc.)
+4. Update examples in standards to match detected stack
+5. Add project-specific patterns from codebase analysis
+6. Preserve user customizations
+```
+
+**Example Update**:
+```markdown
+Before (generic in backend/api.md):
+app.get('/users/:id', async (req, res) => {
+  // Generic example
+})
+
+After (project-specific with detected Express + TypeScript + Prisma):
+app.get('/api/v1/users/:id', async (req: Request, res: Response) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.params.id }
+  });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
+});
+```
+
+**What Gets Updated**:
+- `error-handling.md` - Updated with project's try-catch patterns
+- `testing.md` - Updated with detected test framework (Jest/Vitest/etc)
+- `components.md` - Updated with React/Vue/Angular version-specific patterns
+- `styling.md` - Updated with Tailwind/CSS-in-JS/etc found in project
+- `state-management.md` - Updated with Redux/Zustand/Pinia/etc patterns
+- `api-design.md` - Updated with Express/FastAPI/etc patterns
+- `database.md` - Updated with PostgreSQL/MongoDB/Prisma/etc examples
+- `authentication.md` - Updated with NextAuth/Passport/etc patterns
+
+### Impact
+- ✅ Standards now stay synchronized with project tech stack
+- ✅ Examples in standards match actual frameworks used
+- ✅ No more generic "best practices" - project-specific guidance
+- ✅ Standards evolve as project evolves
+- ✅ Can re-run `/standards-shaper` to update standards when upgrading frameworks
+
+### User Experience
+
+**Before v4.7.0**:
+```
+> /standards-shaper
+AI: Creates generic standards
+Result: backend/api.md has generic Express examples (but you use Fastify!)
+```
+
+**After v4.7.0**:
+```
+> /standards-shaper
+AI: Detected existing standards, updating...
+AI: Found Fastify + TypeScript + PostgreSQL
+AI: Updating api.md with Fastify patterns...
+
+Result: backend/api.md now has Fastify-specific examples matching your project!
+```
+
+**Output Shows Changes**:
+```
+✅ Updated api-design.md - Changed from Express to Fastify patterns
+✅ Updated database.md - Changed from generic SQL to PostgreSQL + node-postgres
+✅ Updated components.md - Changed from React 17 to React 18 patterns
+✅ Updated styling.md - Changed from CSS Modules to Tailwind CSS v4
+```
+
 ## [4.6.0] - 2024-11-24
 
 ### Added

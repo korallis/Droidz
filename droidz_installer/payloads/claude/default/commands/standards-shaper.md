@@ -142,30 +142,53 @@ Use Grep to find existing patterns:
 - API patterns: Grep "api|endpoint|route"
 ```
 
-### PHASE 4: Generate Standards Documents
+### PHASE 4: Generate/Update Standards Documents
 
-Create comprehensive standards files based on research and project analysis.
+Create or update comprehensive standards files based on research and project analysis.
 
-#### Step 4.1: Create directory structure
+#### Step 4.1: Check for existing standards
+
+First, check if standards already exist:
+
+```bash
+if [ -d "droidz/standards" ]; then
+  echo "✅ Found existing standards directory"
+  UPDATING_STANDARDS=true
+else
+  echo "📝 Creating new standards directory"
+  UPDATING_STANDARDS=false
+fi
+```
+
+**If updating existing standards**:
+- Read each existing standard file
+- Keep the structure but update examples to match detected tech stack
+- Add project-specific patterns found in codebase
+- Preserve any user customizations (check git diff if available)
+
+**If creating new standards**:
+- Generate from templates with project-specific content
+
+#### Step 4.2: Create/Update directory structure
 
 ```
 droidz/standards/
 ├── README.md
 ├── global/
 │   ├── coding-principles.md
-│   ├── error-handling.md
-│   ├── testing.md
+│   ├── error-handling.md       [UPDATE with project's error patterns]
+│   ├── testing.md               [UPDATE with detected test framework]
 │   ├── security.md
 │   └── performance.md
 ├── frontend/          [if frontend detected]
-│   ├── components.md
-│   ├── styling.md
-│   ├── state-management.md
+│   ├── components.md            [UPDATE with React/Vue/Angular patterns]
+│   ├── styling.md               [UPDATE with Tailwind/CSS-in-JS/etc]
+│   ├── state-management.md      [UPDATE with Redux/Zustand/Pinia/etc]
 │   └── routing.md
 ├── backend/           [if backend detected]
-│   ├── api-design.md
-│   ├── database.md
-│   ├── authentication.md
+│   ├── api-design.md            [UPDATE with Express/FastAPI/etc patterns]
+│   ├── database.md              [UPDATE with PostgreSQL/MongoDB/etc]
+│   ├── authentication.md        [UPDATE with NextAuth/Passport/etc]
 │   └── error-responses.md
 └── infrastructure/    [if scope includes it]
     ├── deployment.md
@@ -284,15 +307,53 @@ Each standard file should follow this format:
 - [Tools and linters]
 ```
 
-#### Step 4.3: Generate content for each standard
+#### Step 4.3: Generate/Update content for each standard
 
-For each standard file, include:
+For each standard file:
 
+**If updating existing standard**:
+1. Read current content
+2. Keep structure (headings, sections)
+3. Update examples to use detected frameworks
+4. Add patterns found in codebase analysis
+5. Replace generic examples with project-specific ones
+6. Preserve user customizations
+
+**Example Update Process for `backend/api.md`**:
+```javascript
+// Detected: Express + TypeScript + PostgreSQL
+
+// Before (generic):
+```
+app.get('/users/:id', async (req, res) => {
+  // Generic example
+})
+```
+
+// After (project-specific):
+```
+app.get('/api/v1/users/:id', async (req: Request, res: Response) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.params.id }
+  });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
+});
+```
+
+**If creating new standard**, include:
 1. **Research-backed content** (if tools available)
 2. **Framework-specific patterns** (from detected tech stack)
 3. **Project-specific patterns** (from codebase analysis)
-4. **Concrete examples** (with actual code)
-5. **Clear dos and don'ts** (with explanations)
+4. **Concrete examples** (with actual code from the project)
+5. **Clear dos and don'ts** (with project-relevant explanations)
+
+**Critical**: Always use project's actual:
+- Framework versions (React 18, Next.js 15, etc.)
+- Database (PostgreSQL, MongoDB, etc.)
+- Testing framework (Jest, Vitest, Playwright, etc.)
+- Styling approach (Tailwind, CSS Modules, styled-components, etc.)
+- State management (Redux, Zustand, Jotai, etc.)
 
 ### PHASE 5: Create README.md
 
@@ -378,8 +439,59 @@ Standards should be updated when:
 
 ### PHASE 6: Inform User
 
-Output to user:
+Output to user (adjust based on whether updating or creating):
 
+**If updated existing standards**:
+```
+✅ Project standards updated successfully!
+
+📁 Standards Location: droidz/standards/
+
+📋 Updated Standards:
+
+Global:
+  ✅ error-handling.md - Updated with try-catch patterns from codebase
+  ✅ testing.md - Updated with Jest + React Testing Library examples
+  
+Frontend:
+  ✅ components.md - Updated with React 18 patterns
+  ✅ styling.md - Updated with Tailwind CSS v4 examples
+  ✅ state-management.md - Updated with Zustand patterns found in /src/store
+  
+Backend:
+  ✅ api-design.md - Updated with Express + TypeScript patterns
+  ✅ database.md - Updated with Prisma + PostgreSQL examples
+
+📊 Research Used:
+  ✅ Exa Code Context - React 18 best practices
+  ✅ Ref Documentation - Next.js 15 App Router
+  ✅ Codebase Analysis - Found 47 components, 12 API routes
+  ✅ Framework Knowledge - Next.js 15, PostgreSQL 16
+
+🔄 Changes Made:
+  • Replaced generic examples with Next.js 15 App Router patterns
+  • Added Server Components vs Client Components guidelines
+  • Updated API examples to match /app/api structure
+  • Database examples now use Prisma (found in project)
+  • Tailwind CSS v4 patterns (detected from config)
+
+💡 What Changed:
+  • All code examples now match your tech stack
+  • Patterns reflect your actual codebase structure
+  • DO/DON'T examples use your frameworks
+  • Standards are now project-specific, not generic
+
+💡 Next Steps:
+
+1. Review updated standards in droidz/standards/
+2. Verify examples match your coding style
+3. Add any team-specific conventions
+4. Standards will automatically guide all future development
+
+🔗 Workflow Guide: droidz/standards/RECOMMENDED_WORKFLOW.md
+```
+
+**If created new standards**:
 ```
 ✅ Project standards created successfully!
 
