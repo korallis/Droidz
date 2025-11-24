@@ -1,3 +1,8 @@
+---
+name: frontend-component-patterns
+description: Designing React component architecture, improving component reusability, managing state, or solving common UI patterns.
+---
+
 # Frontend Component Patterns - Building Reusable React Components
 
 **Use when**: Designing React component architecture, improving component reusability, managing state, or solving common UI patterns.

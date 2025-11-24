@@ -1,3 +1,8 @@
+---
+name: kaizen-continuous-improvement
+description: Applying incremental improvements, retrospectives.
+---
+
 # Kaizen - Continuous Improvement
 
 **Use when**: Applying incremental improvements, retrospectives.

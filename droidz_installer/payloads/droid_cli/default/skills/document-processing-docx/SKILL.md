@@ -1,3 +1,8 @@
+---
+name: document-processing-docx
+description: Creating, editing Word documents programmatically.
+---
+
 # Document Processing - DOCX Files
 
 **Use when**: Creating, editing Word documents programmatically.

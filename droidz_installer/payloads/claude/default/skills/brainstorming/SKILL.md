@@ -1,3 +1,8 @@
+---
+name: brainstorming
+description: Developing ideas before coding, exploring alternatives.
+---
+
 # Brainstorming - Idea Refinement
 
 **Use when**: Developing ideas before coding, exploring alternatives.

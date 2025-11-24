@@ -1,3 +1,8 @@
+---
+name: git-workflow
+description: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history.
+---
+
 # Git Workflow - Professional Version Control
 
 **Use when**: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history.

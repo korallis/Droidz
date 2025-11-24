@@ -1,3 +1,8 @@
+---
+name: content-research-writer
+description: Writing technical content with citations.
+---
+
 # Content Research Writer - Research-Backed Writing
 
 **Use when**: Writing technical content with citations.

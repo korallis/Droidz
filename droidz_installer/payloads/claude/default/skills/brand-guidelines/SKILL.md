@@ -1,3 +1,8 @@
+---
+name: brand-guidelines
+description: Enforcing brand colors, typography, design standards.
+---
+
 # Brand Guidelines - Design Consistency
 
 **Use when**: Enforcing brand colors, typography, design standards.

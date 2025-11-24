@@ -1,3 +1,8 @@
+---
+name: ci-cd-pipeline
+description: Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows.
+---
+
 # CI/CD Pipeline - Automating Build, Test, and Deployment
 
 **Use when**: Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows.

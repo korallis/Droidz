@@ -1,3 +1,8 @@
+---
+name: nextjs-app-router
+description: Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns.
+---
+
 # Next.js App Router - Modern React Framework Patterns
 
 **Use when**: Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns.

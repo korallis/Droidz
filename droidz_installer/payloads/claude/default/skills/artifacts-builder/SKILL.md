@@ -1,3 +1,8 @@
+---
+name: artifacts-builder
+description: Creating interactive HTML artifacts in Claude.ai.
+---
+
 # Artifacts Builder - Claude.ai HTML Artifacts
 
 **Use when**: Creating interactive HTML artifacts in Claude.ai.

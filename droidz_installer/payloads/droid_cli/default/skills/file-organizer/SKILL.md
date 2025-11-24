@@ -1,3 +1,8 @@
+---
+name: file-organizer
+description: Organizing files, finding duplicates, renaming.
+---
+
 # File Organizer - Intelligent File Management
 
 **Use when**: Organizing files, finding duplicates, renaming.

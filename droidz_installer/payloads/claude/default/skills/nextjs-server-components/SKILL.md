@@ -1,3 +1,8 @@
+---
+name: nextjs-server-components
+description: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries.
+---
+
 # Next.js Server Components - React Server Components Patterns
 
 **Use when**: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries.

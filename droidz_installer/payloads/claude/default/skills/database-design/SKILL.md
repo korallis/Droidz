@@ -1,3 +1,8 @@
+---
+name: database-design
+description: Designing database schemas, choosing between SQL/NoSQL, optimizing queries, planning migrations, or solving data modeling problems.
+---
+
 # Database Design - Schema, Indexes, and Query Optimization
 
 **Use when**: Designing database schemas, choosing between SQL/NoSQL, optimizing queries, planning migrations, or solving data modeling problems.

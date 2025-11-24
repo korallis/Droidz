@@ -1,3 +1,8 @@
+---
+name: code-review
+description: Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.
+---
+
 # Code Review - Systematic Code Quality Analysis
 
 **Use when**: Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.

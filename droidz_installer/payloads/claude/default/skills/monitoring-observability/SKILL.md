@@ -1,3 +1,8 @@
+---
+name: monitoring-observability
+description: Setting up metrics, alerts, dashboards.
+---
+
 # Monitoring & Observability - System Health
 
 **Use when**: Setting up metrics, alerts, dashboards.

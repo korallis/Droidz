@@ -1,3 +1,8 @@
+---
+name: e2e-testing
+description: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments.
+---
+
 # End-to-End Testing - Testing Full User Workflows
 
 **Use when**: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments.

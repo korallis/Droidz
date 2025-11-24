@@ -1,3 +1,8 @@
+---
+name: standards-enforcement
+description: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.
+---
+
 # Standards Enforcement - Maintaining Code Quality
 
 **Use when**: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.

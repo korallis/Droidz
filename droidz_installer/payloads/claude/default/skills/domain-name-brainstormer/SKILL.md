@@ -1,3 +1,8 @@
+---
+name: domain-name-brainstormer
+description: Generating domain name ideas, checking availability.
+---
+
 # Domain Name Brainstormer - Name Generation
 
 **Use when**: Generating domain name ideas, checking availability.

@@ -1,3 +1,8 @@
+---
+name: documentation-generation
+description: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis.
+---
+
 # Documentation Generation - Creating Clear, Maintainable Docs
 
 **Use when**: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis.

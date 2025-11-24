@@ -1,3 +1,8 @@
+---
+name: refactoring
+description: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.
+---
+
 # Refactoring - Improving Code Structure Without Changing Behavior
 
 **Use when**: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.

@@ -1,3 +1,8 @@
+---
+name: backend-service-patterns
+description: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions.
+---
+
 # Backend Service Patterns - Building Scalable Server Applications
 
 **Use when**: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions.

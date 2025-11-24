@@ -1,3 +1,8 @@
+---
+name: convex-backend
+description: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions.
+---
+
 # Convex Backend - Realtime Database & Functions
 
 **Use when**: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions.

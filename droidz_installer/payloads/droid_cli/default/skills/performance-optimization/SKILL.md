@@ -1,3 +1,8 @@
+---
+name: performance-optimization
+description: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage.
+---
+
 # Performance Optimization - Making Software Fast
 
 **Use when**: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage.

@@ -1,3 +1,8 @@
+---
+name: mcp-builder
+description: Building MCP servers, integrating APIs with LLMs.
+---
+
 # MCP Builder - Model Context Protocol Servers
 
 **Use when**: Building MCP servers, integrating APIs with LLMs.

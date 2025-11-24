@@ -1,3 +1,8 @@
+---
+name: neondb-serverless
+description: Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps.
+---
+
 # NeonDB Serverless - PostgreSQL for Modern Apps
 
 **Use when**: Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps.

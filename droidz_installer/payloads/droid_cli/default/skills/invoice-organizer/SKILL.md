@@ -1,3 +1,8 @@
+---
+name: invoice-organizer
+description: Organizing invoices, extracting metadata.
+---
+
 # Invoice Organizer - Receipt Management
 
 **Use when**: Organizing invoices, extracting metadata.

@@ -1,3 +1,8 @@
+---
+name: threat-hunting
+description: Proactive security monitoring, threat detection.
+---
+
 # Threat Hunting - Security Analysis
 
 **Use when**: Proactive security monitoring, threat detection.

@@ -1,3 +1,8 @@
+---
+name: convex-realtime
+description: Building realtime features, live updates, collaborative apps.
+---
+
 # Convex Realtime - Live Data Subscriptions
 
 **Use when**: Building realtime features, live updates, collaborative apps.

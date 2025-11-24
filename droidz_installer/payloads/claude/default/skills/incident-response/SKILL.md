@@ -1,3 +1,8 @@
+---
+name: incident-response
+description: Responding to outages, managing incidents, conducting postmortems.
+---
+
 # Incident Response - Production Issue Management
 
 **Use when**: Responding to outages, managing incidents, conducting postmortems.

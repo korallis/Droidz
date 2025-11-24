@@ -1,3 +1,8 @@
+---
+name: typescript-strict
+description: Ensuring type safety, preventing runtime errors.
+---
+
 # TypeScript Strict - Type Safety Best Practices
 
 **Use when**: Ensuring type safety, preventing runtime errors.

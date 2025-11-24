@@ -1,3 +1,8 @@
+---
+name: react-server-actions
+description: Implementing forms, mutations in Next.js App Router.
+---
+
 # React Server Actions - Form Handling
 
 **Use when**: Implementing forms, mutations in Next.js App Router.

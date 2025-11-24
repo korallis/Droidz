@@ -1,3 +1,8 @@
+---
+name: document-processing-xlsx
+description: Creating, parsing Excel spreadsheets.
+---
+
 # Document Processing - Excel Files
 
 **Use when**: Creating, parsing Excel spreadsheets.

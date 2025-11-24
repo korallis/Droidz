@@ -1,3 +1,8 @@
+---
+name: api-design
+description: Designing public or internal APIs, planning endpoints, defining contracts between services.
+---
+
 # API Design - Building Clean, Scalable REST & GraphQL APIs
 
 **Use when**: Designing public or internal APIs, planning endpoints, defining contracts between services.

@@ -1,3 +1,8 @@
+---
+name: meeting-insights-analyzer
+description: Analyzing meeting transcripts, extracting insights.
+---
+
 # Meeting Insights - Transcript Analysis
 
 **Use when**: Analyzing meeting transcripts, extracting insights.

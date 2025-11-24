@@ -1,3 +1,8 @@
+---
+name: document-processing-pdf
+description: Generating, extracting data from PDFs.
+---
+
 # Document Processing - PDF Files
 
 **Use when**: Generating, extracting data from PDFs.

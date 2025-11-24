@@ -1,3 +1,8 @@
+---
+name: root-cause-tracing
+description: Tracing bugs backward through call stacks.
+---
+
 # Root Cause Tracing - Debugging Deep Errors
 
 **Use when**: Tracing bugs backward through call stacks.

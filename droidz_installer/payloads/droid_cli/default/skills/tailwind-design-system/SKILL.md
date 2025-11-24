@@ -1,3 +1,8 @@
+---
+name: tailwind-design-system
+description: Styling with Tailwind, creating design systems, responsive layouts.
+---
+
 # Tailwind CSS - Utility-First Styling
 
 **Use when**: Styling with Tailwind, creating design systems, responsive layouts.

@@ -1,3 +1,8 @@
+---
+name: error-handling-patterns
+description: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages.
+---
+
 # Error Handling Patterns - Robust Error Management
 
 **Use when**: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages.

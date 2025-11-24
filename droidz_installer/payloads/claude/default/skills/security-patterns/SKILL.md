@@ -1,3 +1,8 @@
+---
+name: security-patterns
+description: Handling user data, authentication, authorization, or any security-sensitive operations.
+---
+
 # Security Patterns - Building Secure Applications
 
 **Use when**: Handling user data, authentication, authorization, or any security-sensitive operations.

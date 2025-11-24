@@ -1,3 +1,8 @@
+---
+name: data-migration
+description: Migrating data between schemas, zero-downtime deployments.
+---
+
 # Data Migration - Safe Schema Changes
 
 **Use when**: Migrating data between schemas, zero-downtime deployments.

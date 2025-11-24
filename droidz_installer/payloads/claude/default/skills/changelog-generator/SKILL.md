@@ -1,3 +1,8 @@
+---
+name: changelog-generator
+description: Generating changelogs from git commits.
+---
+
 # Changelog Generator - Automated Release Notes
 
 **Use when**: Generating changelogs from git commits.

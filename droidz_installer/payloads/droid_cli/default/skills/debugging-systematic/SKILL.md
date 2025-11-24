@@ -1,3 +1,8 @@
+---
+name: debugging-systematic
+description: Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.
+---
+
 # Systematic Debugging - Root Cause Analysis Framework
 
 **Use when**: Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.

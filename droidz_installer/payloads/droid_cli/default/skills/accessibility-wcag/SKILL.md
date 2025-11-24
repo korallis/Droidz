@@ -1,3 +1,8 @@
+---
+name: accessibility-wcag
+description: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2).
+---
+
 # Accessibility (WCAG) - Building Inclusive Web Applications
 
 **Use when**: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2).

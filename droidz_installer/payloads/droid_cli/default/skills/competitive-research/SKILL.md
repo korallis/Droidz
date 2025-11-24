@@ -1,3 +1,8 @@
+---
+name: competitive-research
+description: Analyzing competitors, extracting insights.
+---
+
 # Competitive Research - Market Analysis
 
 **Use when**: Analyzing competitors, extracting insights.

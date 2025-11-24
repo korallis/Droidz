@@ -1,3 +1,8 @@
+---
+name: canvas-design
+description: Creating posters, designs, static visuals.
+---
+
 # Canvas Design - Visual Art Creation
 
 **Use when**: Creating posters, designs, static visuals.
