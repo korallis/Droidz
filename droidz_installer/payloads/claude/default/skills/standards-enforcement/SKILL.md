@@ -1,9 +1,15 @@
 ---
 name: standards-enforcement
-description: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.
+description: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.. Use when standards enforcement. Use when working with standards enforcement in your development workflow.
 ---
 
 # Standards Enforcement - Maintaining Code Quality
+
+## When to use this skill
+
+- Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.
 

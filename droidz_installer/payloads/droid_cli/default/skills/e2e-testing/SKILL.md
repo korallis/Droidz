@@ -1,9 +1,15 @@
 ---
 name: e2e-testing
-description: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments.
+description: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments. Use when writing tests, setting up test frameworks, ensuring code coverage, or implementing testing strategies.
 ---
 
 # End-to-End Testing - Testing Full User Workflows
+
+## When to use this skill
+
+- Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments.
 

@@ -1,9 +1,15 @@
 ---
 name: performance-optimization
-description: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage.
+description: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage. Use when improving application speed, reducing bundle sizes, optimizing rendering, implementing caching strategies, or debugging performance bottlenecks.
 ---
 
 # Performance Optimization - Making Software Fast
+
+## When to use this skill
+
+- Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage.
 

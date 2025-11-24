@@ -1,9 +1,15 @@
 ---
 name: monitoring-observability
-description: Setting up metrics, alerts, dashboards.
+description: Setting up metrics, alerts, dashboards.. Use when monitoring observability. Use when setting up logging, metrics, alerts, or observability for applications.
 ---
 
 # Monitoring & Observability - System Health
+
+## When to use this skill
+
+- Setting up metrics, alerts, dashboards.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Setting up metrics, alerts, dashboards.
 

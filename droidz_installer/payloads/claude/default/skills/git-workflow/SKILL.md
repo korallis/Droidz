@@ -1,9 +1,15 @@
 ---
 name: git-workflow
-description: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history.
+description: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history. Use when managing branches, creating commits, handling merge conflicts, or following Git best practices. Apply during feature development and collaboration.
 ---
 
 # Git Workflow - Professional Version Control
+
+## When to use this skill
+
+- Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history.
 

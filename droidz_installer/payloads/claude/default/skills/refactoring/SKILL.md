@@ -1,9 +1,15 @@
 ---
 name: refactoring
-description: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.
+description: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.. Use when refactoring. Use when improving code structure without changing behavior, reducing technical debt, extracting functions, or applying design patterns.
 ---
 
 # Refactoring - Improving Code Structure Without Changing Behavior
+
+## When to use this skill
+
+- Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.
 

@@ -1,9 +1,15 @@
 ---
 name: file-organizer
-description: Organizing files, finding duplicates, renaming.
+description: Organizing files, finding duplicates, renaming.. Use when file organizer. Use when working with file organizer in your development workflow.
 ---
 
 # File Organizer - Intelligent File Management
+
+## When to use this skill
+
+- Organizing files, finding duplicates, renaming.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Organizing files, finding duplicates, renaming.
 

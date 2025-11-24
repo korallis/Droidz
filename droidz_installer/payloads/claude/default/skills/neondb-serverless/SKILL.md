@@ -1,9 +1,15 @@
 ---
 name: neondb-serverless
-description: Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps.
+description: Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps. Use when working with neondb serverless in your development workflow.
 ---
 
 # NeonDB Serverless - PostgreSQL for Modern Apps
+
+## When to use this skill
+
+- Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Using NeonDB serverless PostgreSQL, implementing connection pooling, or building edge-compatible database apps.
 

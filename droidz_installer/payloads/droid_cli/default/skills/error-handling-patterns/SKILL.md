@@ -1,9 +1,15 @@
 ---
 name: error-handling-patterns
-description: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages.
+description: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages. Use when implementing try-catch blocks, creating custom error classes, setting up error boundaries, or designing error response strategies.
 ---
 
 # Error Handling Patterns - Robust Error Management
+
+## When to use this skill
+
+- Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages.
 

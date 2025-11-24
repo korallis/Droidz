@@ -1,9 +1,15 @@
 ---
 name: skill-creator
-description: Creating new Claude skills, documenting workflows.
+description: Creating new Claude skills, documenting workflows. Use when working with skill creator in your development workflow.
 ---
 
 # Skill Creator - Meta-Skill for Creating Skills
+
+## When to use this skill
+
+- Creating new Claude skills, documenting workflows.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Creating new Claude skills, documenting workflows.
 

@@ -1,9 +1,15 @@
 ---
 name: ci-cd-pipeline
-description: Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows.
+description: Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows. Use when setting up GitHub Actions, GitLab CI, or other CI/CD workflows. Apply when automating builds, tests, deployments, or release processes.
 ---
 
 # CI/CD Pipeline - Automating Build, Test, and Deployment
+
+## When to use this skill
+
+- Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Setting up continuous integration, automating deployments, configuring build pipelines, or implementing DevOps workflows.
 

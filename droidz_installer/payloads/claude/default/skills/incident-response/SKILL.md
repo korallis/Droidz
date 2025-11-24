@@ -1,9 +1,15 @@
 ---
 name: incident-response
-description: Responding to outages, managing incidents, conducting postmortems.
+description: Responding to outages, managing incidents, conducting postmortems.. Use when incident response. Use when working with incident response in your development workflow.
 ---
 
 # Incident Response - Production Issue Management
+
+## When to use this skill
+
+- Responding to outages, managing incidents, conducting postmortems.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Responding to outages, managing incidents, conducting postmortems.
 

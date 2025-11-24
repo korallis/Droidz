@@ -1,9 +1,15 @@
 ---
 name: kaizen-continuous-improvement
-description: Applying incremental improvements, retrospectives.
+description: Applying incremental improvements, retrospectives.. Use when kaizen continuous improvement. Use when working with kaizen continuous improvement in your development workflow.
 ---
 
 # Kaizen - Continuous Improvement
+
+## When to use this skill
+
+- Applying incremental improvements, retrospectives.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Applying incremental improvements, retrospectives.
 

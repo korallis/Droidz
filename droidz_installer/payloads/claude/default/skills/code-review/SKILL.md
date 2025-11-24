@@ -1,9 +1,15 @@
 ---
 name: code-review
-description: Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.
+description: Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.. Use when code review. Use when reviewing pull requests, feature implementations, or code changes before merging. Apply during peer reviews, self-reviews, or code quality audits.
 ---
 
 # Code Review - Systematic Code Quality Analysis
+
+## When to use this skill
+
+- Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Reviewing pull requests, feature implementations, or code changes before merging to ensure quality, maintainability, and adherence to best practices.
 

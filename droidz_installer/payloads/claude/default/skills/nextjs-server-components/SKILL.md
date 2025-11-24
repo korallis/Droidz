@@ -1,9 +1,15 @@
 ---
 name: nextjs-server-components
-description: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries.
+description: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries. Use when working with nextjs server components in your development workflow.
 ---
 
 # Next.js Server Components - React Server Components Patterns
+
+## When to use this skill
+
+- Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries.
 

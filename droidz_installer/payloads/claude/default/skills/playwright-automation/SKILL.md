@@ -1,9 +1,15 @@
 ---
 name: playwright-automation
-description: E2E testing, browser automation, web scraping.
+description: E2E testing, browser automation, web scraping.. Use when playwright automation. Use when working with playwright automation in your development workflow.
 ---
 
 # Playwright Automation - Browser Testing
+
+## When to use this skill
+
+- E2E testing, browser automation, web scraping.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: E2E testing, browser automation, web scraping.
 

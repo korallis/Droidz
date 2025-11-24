@@ -1,9 +1,15 @@
 ---
 name: nextjs-app-router
-description: Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns.
+description: Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns. Use when building Next.js 13+ applications with App Router, implementing Server Components, Client Components, or route handlers. Apply when working with app directory structure.
 ---
 
 # Next.js App Router - Modern React Framework Patterns
+
+## When to use this skill
+
+- Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Building Next.js 13+ applications with App Router, implementing Server Components, or optimizing React Server Components patterns.
 

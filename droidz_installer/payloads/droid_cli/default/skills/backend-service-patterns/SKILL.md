@@ -1,9 +1,15 @@
 ---
 name: backend-service-patterns
-description: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions.
+description: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions. Use when building API services, implementing business logic layers, setting up middleware, or designing service architectures.
 ---
 
 # Backend Service Patterns - Building Scalable Server Applications
+
+## When to use this skill
+
+- Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions.
 

@@ -1,9 +1,15 @@
 ---
 name: react-server-actions
-description: Implementing forms, mutations in Next.js App Router.
+description: Implementing forms, mutations in Next.js App Router. Use when implementing form handling in Next.js 14+, creating server mutations, or building progressive enhancement patterns with React Server Actions.
 ---
 
 # React Server Actions - Form Handling
+
+## When to use this skill
+
+- Implementing forms, mutations in Next.js App Router.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Implementing forms, mutations in Next.js App Router.
 

@@ -1,9 +1,15 @@
 ---
 name: accessibility-wcag
-description: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2).
+description: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2). Use when building web interfaces, ensuring WCAG compliance, implementing ARIA attributes, keyboard navigation, or screen reader support.
 ---
 
 # Accessibility (WCAG) - Building Inclusive Web Applications
+
+## When to use this skill
+
+- Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2).
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2).
 

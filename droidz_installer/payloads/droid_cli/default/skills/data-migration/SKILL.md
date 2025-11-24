@@ -1,9 +1,15 @@
 ---
 name: data-migration
-description: Migrating data between schemas, zero-downtime deployments.
+description: Migrating data between schemas, zero-downtime deployments.. Use when data migration. Use when migrating data, upgrading dependencies, or transforming database schemas.
 ---
 
 # Data Migration - Safe Schema Changes
+
+## When to use this skill
+
+- Migrating data between schemas, zero-downtime deployments.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Migrating data between schemas, zero-downtime deployments.
 

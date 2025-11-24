@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Implement test-driven development (TDD) workflow using the red-green-refactor cycle. Use when writing new features, fixing bugs, or refactoring existing code. Always write the failing test first, then implement minimal code to pass, then refactor.
+description: Implement test-driven development (TDD) workflow using the red-green-refactor cycle. Use when writing new features, fixing bugs, or refactoring existing code. Always write the failing test first, then implement minimal code to pass, then refactor. Use when writing new features, fixing bugs, refactoring existing code, or adding test coverage. Essential for ensuring code reliability before implementation.
 ---
 
 # Test-Driven Development (TDD)

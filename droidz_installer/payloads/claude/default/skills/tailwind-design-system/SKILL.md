@@ -1,9 +1,15 @@
 ---
 name: tailwind-design-system
-description: Styling with Tailwind, creating design systems, responsive layouts.
+description: Styling with Tailwind, creating design systems, responsive layouts. Use when styling with Tailwind CSS, creating design tokens, implementing responsive designs, or building component libraries with utility classes.
 ---
 
 # Tailwind CSS - Utility-First Styling
+
+## When to use this skill
+
+- Styling with Tailwind, creating design systems, responsive layouts.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Styling with Tailwind, creating design systems, responsive layouts.
 

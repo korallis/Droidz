@@ -1,9 +1,15 @@
 ---
 name: document-processing-docx
-description: Creating, editing Word documents programmatically.
+description: Creating, editing Word documents programmatically. Use when processing, generating, or manipulating documents programmatically.
 ---
 
 # Document Processing - DOCX Files
+
+## When to use this skill
+
+- Creating, editing Word documents programmatically.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Creating, editing Word documents programmatically.
 

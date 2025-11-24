@@ -1,9 +1,15 @@
 ---
 name: convex-backend
-description: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions.
+description: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions. Use when building real-time applications with Convex, implementing reactive queries, mutations, or managing backend functions.
 ---
 
 # Convex Backend - Realtime Database & Functions
+
+## When to use this skill
+
+- Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions.
 

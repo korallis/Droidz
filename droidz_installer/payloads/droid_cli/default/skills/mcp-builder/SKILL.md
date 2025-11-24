@@ -1,9 +1,15 @@
 ---
 name: mcp-builder
-description: Building MCP servers, integrating APIs with LLMs.
+description: Building MCP servers, integrating APIs with LLMs. Use when working with mcp builder in your development workflow.
 ---
 
 # MCP Builder - Model Context Protocol Servers
+
+## When to use this skill
+
+- Building MCP servers, integrating APIs with LLMs.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Building MCP servers, integrating APIs with LLMs.
 

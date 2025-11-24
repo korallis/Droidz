@@ -1,9 +1,15 @@
 ---
 name: documentation-generation
-description: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis.
+description: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis. Use when creating API documentation, component libraries, README files, or technical specifications. Apply when documenting code for team members.
 ---
 
 # Documentation Generation - Creating Clear, Maintainable Docs
+
+## When to use this skill
+
+- Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis.
 

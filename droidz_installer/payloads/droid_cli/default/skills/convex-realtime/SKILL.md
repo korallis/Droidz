@@ -1,9 +1,15 @@
 ---
 name: convex-realtime
-description: Building realtime features, live updates, collaborative apps.
+description: Building realtime features, live updates, collaborative apps. Use when working with convex realtime in your development workflow.
 ---
 
 # Convex Realtime - Live Data Subscriptions
+
+## When to use this skill
+
+- Building realtime features, live updates, collaborative apps.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Building realtime features, live updates, collaborative apps.
 

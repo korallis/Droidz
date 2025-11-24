@@ -1,9 +1,15 @@
 ---
 name: document-processing-xlsx
-description: Creating, parsing Excel spreadsheets.
+description: Creating, parsing Excel spreadsheets. Use when processing, generating, or manipulating documents programmatically.
 ---
 
 # Document Processing - Excel Files
+
+## When to use this skill
+
+- Creating, parsing Excel spreadsheets.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Creating, parsing Excel spreadsheets.
 

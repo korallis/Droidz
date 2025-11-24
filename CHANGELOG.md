@@ -147,6 +147,88 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.8.0] - 2024-11-24
+
+### Changed
+- **All 50 Skills Thoroughly Optimized**: Ran improve-skills methodology on every skill
+  - Comprehensive, activation-oriented descriptions
+  - Detailed "When to use this skill" sections with multiple examples
+  - Consistent structure following skill-creator patterns
+  - No maximum length constraints - descriptions are thorough
+  - Better discoverability and activation criteria
+
+### Enhanced
+- **Skill Descriptions**: All descriptions now include:
+  - Clear statement of what the skill does
+  - Multiple specific use cases and situations
+  - File types, tools, and contexts where applicable
+  - Action-oriented language for better activation
+  
+- **When to Use Sections**: Every skill now has:
+  - 4-5 specific activation examples
+  - Clear triggers for skill usage
+  - Context about when to apply expertise
+
+### Technical Details
+
+**Optimization Applied**:
+- Analyzed each skill's content and purpose
+- Rewrote descriptions following improve-skills guidelines
+- Added comprehensive "When to use" sections
+- Applied skill-creator structure templates
+- Ensured consistent format across all 50 skills
+
+**Example Improvements**:
+
+Before:
+```yaml
+description: Designing public or internal APIs
+```
+
+After:
+```yaml
+description: Designing public or internal APIs, planning endpoints, defining contracts between services. Use when designing RESTful or GraphQL APIs, planning endpoint structures, defining request/response contracts, or establishing API versioning strategies.
+```
+
+### Impact
+- ✅ All 50 skills now optimized for discoverability
+- ✅ Consistent, professional quality across skill library
+- ✅ Better activation based on detailed descriptions
+- ✅ Comprehensive examples for each skill
+- ✅ Both Factory Droid CLI and Claude Code versions updated
+
+### Skills Improved (50 total)
+
+**Core Development** (20):
+- test-driven-development, code-review, debugging-systematic
+- git-workflow, refactoring, performance-optimization
+- security-patterns, api-design, database-design
+- frontend-component-patterns, backend-service-patterns
+- e2e-testing, ci-cd-pipeline, documentation-generation
+- error-handling-patterns, accessibility-wcag
+- standards-enforcement, data-migration
+- monitoring-observability, incident-response
+
+**Framework-Specific** (10):
+- nextjs-app-router, nextjs-server-components
+- neondb-serverless, convex-backend, convex-realtime
+- shadcn-ui-components, tailwind-design-system
+- react-server-actions, typescript-strict, vercel-deployment
+
+**Developer Tools** (10):
+- mcp-builder, artifacts-builder, playwright-automation
+- root-cause-tracing, brainstorming, changelog-generator
+- content-research-writer, document-processing-docx
+- document-processing-pdf, document-processing-xlsx
+
+**Productivity** (10):
+- file-organizer, invoice-organizer
+- domain-name-brainstormer, competitive-research
+- brand-guidelines, canvas-design
+- meeting-insights-analyzer
+- kaizen-continuous-improvement
+- threat-hunting, skill-creator
+
 ## [4.7.1] - 2024-11-24
 
 ### Enhanced

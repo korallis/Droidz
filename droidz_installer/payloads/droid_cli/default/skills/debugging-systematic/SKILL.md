@@ -1,9 +1,15 @@
 ---
 name: debugging-systematic
-description: Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.
+description: Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.. Use when debugging systematic. Use when encountering bugs, test failures, unexpected behavior, or production issues. Apply systematic root cause analysis before proposing fixes.
 ---
 
 # Systematic Debugging - Root Cause Analysis Framework
+
+## When to use this skill
+
+- Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Encountering bugs, test failures, unexpected behavior, or production issues - BEFORE proposing fixes.
 

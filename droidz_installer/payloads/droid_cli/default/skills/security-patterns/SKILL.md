@@ -1,9 +1,15 @@
 ---
 name: security-patterns
-description: Handling user data, authentication, authorization, or any security-sensitive operations.
+description: Handling user data, authentication, authorization, or any security-sensitive operations. Use when implementing authentication, authorization, input validation, data encryption, or protecting against common vulnerabilities like XSS, CSRF, SQL injection.
 ---
 
 # Security Patterns - Building Secure Applications
+
+## When to use this skill
+
+- Handling user data, authentication, authorization, or any security-sensitive operations.
+- When working on related tasks or features
+- During development that requires this expertise
 
 **Use when**: Handling user data, authentication, authorization, or any security-sensitive operations.
 
