@@ -147,6 +147,26 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.7.1] - 2024-11-24
+
+### Enhanced
+- **improve-skills now uses skill-creator skill**: Command leverages skill-creator for better quality
+  - skill-creator provides templates, structure guidance, and best practices
+  - Automatically activated when improving skills
+  - Ensures consistent skill format across all improvements
+  - Better activation criteria and examples
+
+### Changed
+- `/improve-skills` command now references skill-creator throughout the process
+- Added guidance to use skill-creator's templates and patterns
+- Updated final message to mention skill-creator was used
+
+### Impact
+- ✅ Higher quality skill improvements
+- ✅ Consistent skill structure
+- ✅ Leverages existing skill-creator skill
+- ✅ Better use of Droidz ecosystem
+
 ## [4.7.0] - 2024-11-24
 
 ### Changed
