@@ -1,9 +1,24 @@
 ---
 name: nextjs-server-components
-description: Building Next.js 13+ apps, optimizing component rendering, managing server/client boundaries. Use when working with nextjs server components in your development workflow.
+description: Build efficient React applications using Next.js Server Components that render on the server, reducing client bundle size, improving performance, and enabling direct database access. Use when fetching data server-side, reducing JavaScript bundle size, accessing databases directly in components, implementing streaming with Suspense, creating layouts that only render once, optimizing Core Web Vitals, or building SEO-friendly applications with server-first architecture.
 ---
 
 # Next.js Server Components - React Server Components Patterns
+
+## When to use this skill
+
+- Fetching data directly in Server Components
+- Reducing client-side JavaScript bundle size
+- Accessing databases directly without API routes
+- Implementing streaming rendering with Suspense
+- Creating layouts that render once and persist
+- Optimizing Largest Contentful Paint (LCP)
+- Building SEO-friendly server-rendered applications
+- Using server-only code (database queries, secrets)
+- Implementing server-side data transformations
+- Reducing Time to Interactive (TTI)
+- Building applications with zero client JS by default
+- Combining Server and Client Components effectively
 
 ## When to use this skill
 

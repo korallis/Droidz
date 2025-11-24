@@ -1,9 +1,24 @@
 ---
 name: performance-optimization
-description: Applications are slow, users complain about lag, or you need to improve response times, throughput, or resource usage. Use when improving application speed, reducing bundle sizes, optimizing rendering, implementing caching strategies, or debugging performance bottlenecks.
+description: Optimize application performance through code splitting, lazy loading, caching strategies, bundle size reduction, render optimization, and profiling. Use when improving page load times, reducing bundle sizes, optimizing React rendering, implementing code splitting, configuring caching strategies, lazy loading components and routes, optimizing images and assets, profiling performance bottlenecks, implementing virtual scrolling for large lists, or improving Core Web Vitals and Lighthouse scores.
 ---
 
 # Performance Optimization - Making Software Fast
+
+## When to use this skill
+
+- Improving slow page load times and performance
+- Reducing JavaScript bundle sizes
+- Optimizing React component rendering with memoization
+- Implementing code splitting and lazy loading
+- Configuring browser and server-side caching
+- Optimizing images with next/image or similar
+- Profiling performance bottlenecks with DevTools
+- Implementing virtual scrolling for large datasets
+- Optimizing database queries and N+1 problems
+- Improving Core Web Vitals (LCP, FID, CLS)
+- Implementing progressive image loading
+- Reducing Time to Interactive (TTI)
 
 ## When to use this skill
 

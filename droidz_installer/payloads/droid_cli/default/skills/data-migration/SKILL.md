@@ -1,9 +1,24 @@
 ---
 name: data-migration
-description: Migrating data between schemas, zero-downtime deployments.. Use when data migration. Use when migrating data, upgrading dependencies, or transforming database schemas.
+description: Plan and execute database migrations, data transformations, and system migrations safely with rollback strategies and data integrity validation. Use when migrating databases, transforming data schemas, moving between database systems, implementing versioned migrations, handling data transformations, ensuring data integrity, or planning zero-downtime migrations.
 ---
 
 # Data Migration - Safe Schema Changes
+
+## When to use this skill
+
+- Migrating database schemas and structures
+- Transforming data between formats
+- Moving data between database systems
+- Implementing versioned database migrations
+- Handling data transformations during migrations
+- Ensuring data integrity and validation
+- Planning zero-downtime migrations
+- Rolling back failed migrations safely
+- Migrating from legacy systems
+- Implementing data backfill strategies
+- Testing migrations in staging environments
+- Creating migration rollback procedures
 
 ## When to use this skill
 

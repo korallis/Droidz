@@ -1,9 +1,24 @@
 ---
 name: convex-backend
-description: Building realtime apps with Convex, implementing reactive queries, or managing backend logic with type-safe functions. Use when building real-time applications with Convex, implementing reactive queries, mutations, or managing backend functions.
+description: Build real-time, reactive backend applications with Convex using TypeScript queries, mutations, and actions with automatic reactivity and optimistic updates. Use when building real-time collaborative applications, implementing reactive data synchronization, writing serverless backend functions, creating queries that auto-update, implementing mutations with transactional guarantees, handling file uploads with Convex storage, implementing authentication with Convex Auth, designing reactive database schemas, or building applications requiring instant data synchronization.
 ---
 
 # Convex Backend - Realtime Database & Functions
+
+## When to use this skill
+
+- Building real-time collaborative applications
+- Implementing reactive data that auto-updates
+- Writing Convex queries, mutations, and actions
+- Creating serverless backend functions with TypeScript
+- Implementing optimistic UI updates
+- Handling file uploads with Convex storage
+- Implementing authentication with Convex Auth
+- Designing Convex database schemas
+- Building chat applications or live dashboards
+- Creating applications with instant data sync
+- Implementing scheduled functions (crons)
+- Building backends without managing infrastructure
 
 ## When to use this skill
 

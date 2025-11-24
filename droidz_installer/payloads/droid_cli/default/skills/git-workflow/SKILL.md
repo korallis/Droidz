@@ -1,9 +1,24 @@
 ---
 name: git-workflow
-description: Managing code changes, collaborating with teams, creating branches, handling conflicts, and maintaining clean git history. Use when managing branches, creating commits, handling merge conflicts, or following Git best practices. Apply during feature development and collaboration.
+description: Manage source control effectively with Git including branching strategies, commit conventions, merge conflict resolution, rebasing, and collaboration workflows like GitHub Flow or GitFlow. Use when managing feature branches, creating meaningful commits, resolving merge conflicts, rebasing branches, squashing commits, using interactive rebase, implementing branch naming conventions, following commit message standards, managing pull requests, or collaborating in team environments.
 ---
 
 # Git Workflow - Professional Version Control
+
+## When to use this skill
+
+- Managing feature branches and branch strategies
+- Creating clear, meaningful commit messages
+- Resolving merge conflicts effectively
+- Rebasing branches to maintain clean history
+- Squashing commits before merging
+- Using interactive rebase to clean up history
+- Implementing branch naming conventions
+- Following commit message standards (Conventional Commits)
+- Managing pull requests and code reviews
+- Collaborating in team Git workflows
+- Recovering from Git mistakes (reset, revert, reflog)
+- Managing release branches and hotfixes
 
 ## When to use this skill
 

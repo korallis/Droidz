@@ -1,9 +1,24 @@
 ---
 name: frontend-component-patterns
-description: Designing React component architecture, improving component reusability, managing state, or solving common UI patterns.. Use when frontend component patterns. Use when building reusable React/Vue/Angular components, implementing component composition, or establishing component architecture.
+description: Build reusable, composable, and maintainable React/Vue/Angular components following established design patterns like compound components, render props, custom hooks, and HOCs. Use when creating component libraries, implementing component composition, building reusable UI elements, designing prop APIs, managing component state patterns, implementing controlled vs uncontrolled components, creating compound components, using render props or children as functions, building custom hooks, or establishing component architecture standards.
 ---
 
 # Frontend Component Patterns - Building Reusable React Components
+
+## When to use this skill
+
+- Creating reusable component libraries
+- Implementing component composition patterns
+- Building flexible, configurable UI components
+- Designing intuitive component prop APIs
+- Managing component state with patterns
+- Implementing controlled vs uncontrolled components
+- Creating compound components (e.g., Tabs, Accordion)
+- Using render props or children as functions
+- Building custom React hooks for shared logic
+- Implementing Higher-Order Components (HOCs)
+- Establishing component architecture standards
+- Creating accessible, keyboard-navigable components
 
 ## When to use this skill
 

@@ -150,12 +150,12 @@ Without this, Factory CLI ignores the skill file completely.
 ## [4.8.0] - 2024-11-24
 
 ### Changed
-- **All 50 Skills Thoroughly Optimized**: Ran improve-skills methodology on every skill
-  - Comprehensive, activation-oriented descriptions
-  - Detailed "When to use this skill" sections with multiple examples
-  - Consistent structure following skill-creator patterns
-  - No maximum length constraints - descriptions are thorough
-  - Better discoverability and activation criteria
+- **All 50 Skills Thoroughly Optimized**: Applied comprehensive optimization to every skill in the library
+  - Comprehensive, activation-oriented descriptions (200-400+ characters each)
+  - Detailed "When to use this skill" sections with 12+ specific examples per skill
+  - Consistent structure following skill-creator patterns throughout
+  - No maximum length constraints - descriptions are as thorough as needed
+  - Significantly improved discoverability and activation criteria
 
 ### Enhanced
 - **Skill Descriptions**: All descriptions now include:
@@ -182,12 +182,32 @@ Without this, Factory CLI ignores the skill file completely.
 
 Before:
 ```yaml
-description: Designing public or internal APIs
+description: E2E testing, browser automation, web scraping.
+
+## When to use this skill
+- E2E testing, browser automation, web scraping.
+- When working on related tasks or features
+- During development that requires this expertise
 ```
 
 After:
 ```yaml
-description: Designing public or internal APIs, planning endpoints, defining contracts between services. Use when designing RESTful or GraphQL APIs, planning endpoint structures, defining request/response contracts, or establishing API versioning strategies.
+description: Automate browser testing, web scraping, and user workflow testing with Playwright across multiple browsers. Use when writing end-to-end tests for web applications, automating repetitive browser tasks, scraping data from websites, testing across Chrome/Firefox/Safari, taking screenshots for visual regression testing, testing authentication flows, filling and submitting forms programmatically, testing responsive designs across viewports, or any browser automation requiring reliable, cross-browser testing capabilities.
+
+## When to use this skill
+- Writing end-to-end tests for web applications
+- Automating repetitive browser tasks and workflows
+- Scraping data from websites programmatically
+- Testing across Chrome, Firefox, Safari, and Edge browsers
+- Taking screenshots for visual regression testing
+- Testing authentication and login flows
+- Filling and submitting forms automatically
+- Testing responsive designs across different viewports
+- Simulating user interactions (clicks, typing, navigation)
+- Testing file uploads and downloads
+- Capturing network requests and responses
+- Testing Single Page Applications (SPAs)
+- Any browser automation requiring reliable cross-browser support
 ```
 
 ### Impact

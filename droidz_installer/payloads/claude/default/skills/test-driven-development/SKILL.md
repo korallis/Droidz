@@ -1,19 +1,26 @@
 ---
 name: test-driven-development
-description: Implement test-driven development (TDD) workflow using the red-green-refactor cycle. Use when writing new features, fixing bugs, or refactoring existing code. Always write the failing test first, then implement minimal code to pass, then refactor. Use when writing new features, fixing bugs, refactoring existing code, or adding test coverage. Essential for ensuring code reliability before implementation.
+description: Implement test-driven development (TDD) workflow using the red-green-refactor cycle. Use when writing new features, fixing bugs, or refactoring existing code. Always write the failing test first, then implement minimal code to pass, then refactor. Essential for ensuring code reliability, preventing regressions, improving design through testability requirements, documenting expected behavior through tests, enabling confident refactoring, and maintaining high code quality standards throughout the development process.
 ---
 
 # Test-Driven Development (TDD)
 
-Implement the red-green-refactor cycle for reliable, testable code.
-
 ## When to use this skill
 
-- Writing new features or functionality
-- Fixing bugs with regression tests
-- Refactoring existing code safely
-- Adding test coverage to untested code
-- Ensuring code behaves as expected
+- Writing new features or functionality from scratch
+- Fixing bugs with regression tests to prevent recurrence
+- Refactoring existing code safely with test coverage
+- Adding test coverage to untested legacy code
+- Ensuring code behaves as expected before implementation
+- Improving code design through testability constraints
+- Documenting expected behavior and edge cases
+- Building critical business logic that must be correct
+- Developing APIs or libraries with clear contracts
+- Working on projects requiring high reliability
+- Implementing complex algorithms or business rules
+- Collaborating in teams where tests serve as documentation
+
+Implement the red-green-refactor cycle for reliable, testable code.
 
 ## TDD Cycle
 

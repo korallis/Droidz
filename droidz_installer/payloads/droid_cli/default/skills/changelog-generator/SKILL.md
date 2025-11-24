@@ -1,9 +1,24 @@
 ---
 name: changelog-generator
-description: Generating changelogs from git commits.. Use when changelog generator. Use when working with changelog generator in your development workflow.
+description: Generate comprehensive changelogs from Git history, commit messages, pull requests, and issue tracking for release documentation. Use when preparing releases, documenting changes, creating release notes, categorizing commits, generating version summaries, maintaining project history, or automating changelog updates.
 ---
 
 # Changelog Generator - Automated Release Notes
+
+## When to use this skill
+
+- Preparing software releases
+- Documenting changes between versions
+- Creating release notes from commits
+- Categorizing changes (features, fixes, breaking)
+- Generating version summaries
+- Maintaining project changelog files
+- Automating changelog updates in CI
+- Creating GitHub release notes
+- Tracking breaking changes
+- Communicating changes to users
+- Following Conventional Commits standard
+- Building release announcement content
 
 ## When to use this skill
 

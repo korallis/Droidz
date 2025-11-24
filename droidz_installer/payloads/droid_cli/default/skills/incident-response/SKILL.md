@@ -1,9 +1,24 @@
 ---
 name: incident-response
-description: Responding to outages, managing incidents, conducting postmortems.. Use when incident response. Use when working with incident response in your development workflow.
+description: Respond to production incidents systematically with triage, investigation, resolution, and post-mortem analysis to minimize downtime and prevent recurrence. Use when handling production outages, triaging incidents, investigating critical bugs, coordinating incident response, implementing hotfixes, conducting post-mortems, or establishing incident response procedures.
 ---
 
 # Incident Response - Production Issue Management
+
+## When to use this skill
+
+- Responding to production outages
+- Triaging critical incidents
+- Investigating high-severity bugs
+- Coordinating incident response teams
+- Implementing emergency hotfixes
+- Conducting post-mortem analyses
+- Establishing incident response procedures
+- Communicating status during incidents
+- Creating runbooks for common issues
+- Implementing rollback strategies
+- Documenting incident timelines
+- Preventing incident recurrence
 
 ## When to use this skill
 

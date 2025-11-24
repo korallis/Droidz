@@ -1,9 +1,24 @@
 ---
 name: root-cause-tracing
-description: Tracing bugs backward through call stacks.. Use when root cause tracing. Use when working with root cause tracing in your development workflow.
+description: Trace bugs backward through call stacks and execution flows to identify the original source of errors, invalid data, or incorrect behavior. Use when debugging complex issues, tracing error origins, investigating data corruption, following execution paths, identifying where invalid data enters the system, or finding root causes of cascading failures.
 ---
 
 # Root Cause Tracing - Debugging Deep Errors
+
+## When to use this skill
+
+- Debugging complex, multi-layered issues
+- Tracing errors back through call stacks
+- Investigating data corruption sources
+- Following execution paths through systems
+- Identifying where invalid data originates
+- Finding root causes of cascading failures
+- Debugging integration issues
+- Tracing state changes backward
+- Investigating intermittent bugs
+- Following data flow through transformations
+- Identifying the first point of failure
+- Debugging asynchronous or distributed systems
 
 ## When to use this skill
 

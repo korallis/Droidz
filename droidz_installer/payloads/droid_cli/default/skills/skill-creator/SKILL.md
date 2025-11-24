@@ -1,9 +1,24 @@
 ---
 name: skill-creator
-description: Creating new Claude skills, documenting workflows. Use when working with skill creator in your development workflow.
+description: Create well-structured, comprehensive Claude skills with clear activation criteria, detailed descriptions, usage examples, and proper documentation following best practices. Use when documenting new workflows, creating reusable skill patterns, establishing coding standards as skills, building team knowledge base, or expanding the skills library with new capabilities.
 ---
 
 # Skill Creator - Meta-Skill for Creating Skills
+
+## When to use this skill
+
+- Documenting new workflows as skills
+- Creating reusable skill patterns
+- Establishing coding standards as skills
+- Building team knowledge bases
+- Expanding skills library with new capabilities
+- Documenting best practices systematically
+- Creating activation-oriented descriptions
+- Writing comprehensive usage examples
+- Structuring skills following best practices
+- Creating skills from tribal knowledge
+- Documenting domain-specific expertise
+- Building organizational skill libraries
 
 ## When to use this skill
 

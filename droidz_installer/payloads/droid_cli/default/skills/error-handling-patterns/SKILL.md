@@ -1,9 +1,24 @@
 ---
 name: error-handling-patterns
-description: Implementing error handling, designing fault-tolerant systems, debugging production issues, or improving error messages. Use when implementing try-catch blocks, creating custom error classes, setting up error boundaries, or designing error response strategies.
+description: Design robust error handling strategies including try-catch blocks, custom error classes, error boundaries, graceful degradation, and comprehensive logging. Use when implementing exception handling, creating custom error types, setting up error boundaries in React, designing error response formats for APIs, implementing retry logic, handling async errors and promise rejections, logging errors for monitoring, creating user-friendly error messages, or building fault-tolerant systems that fail gracefully.
 ---
 
 # Error Handling Patterns - Robust Error Management
+
+## When to use this skill
+
+- Implementing try-catch blocks for error handling
+- Creating custom error classes with specific error codes
+- Setting up React Error Boundaries for UI error recovery
+- Designing consistent API error response formats
+- Handling async errors and promise rejections
+- Implementing retry logic with exponential backoff
+- Logging errors for monitoring and debugging
+- Creating user-friendly error messages
+- Building graceful degradation for failed services
+- Handling validation errors consistently
+- Implementing error tracking with Sentry or similar
+- Designing fault-tolerant systems
 
 ## When to use this skill
 

@@ -1,9 +1,24 @@
 ---
 name: documentation-generation
-description: Creating API documentation, writing technical guides, generating code documentation, or maintaining project wikis. Use when creating API documentation, component libraries, README files, or technical specifications. Apply when documenting code for team members.
+description: Create comprehensive technical documentation including API docs, component libraries, README files, architecture diagrams, and developer guides using tools like JSDoc, Storybook, or Docusaurus. Use when documenting APIs, creating component documentation, writing README files, generating API references, documenting architecture decisions, creating onboarding guides, maintaining changelogs, documenting configuration options, or building developer documentation sites.
 ---
 
 # Documentation Generation - Creating Clear, Maintainable Docs
+
+## When to use this skill
+
+- Documenting REST or GraphQL APIs
+- Creating component libraries with Storybook
+- Writing comprehensive README files
+- Generating API reference documentation
+- Documenting architecture decisions (ADRs)
+- Creating developer onboarding guides
+- Maintaining changelogs and release notes
+- Documenting configuration and environment variables
+- Building documentation sites with Docusaurus
+- Writing inline code documentation (JSDoc, TSDoc)
+- Creating visual architecture diagrams
+- Documenting deployment and operational procedures
 
 ## When to use this skill
 

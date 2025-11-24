@@ -1,9 +1,24 @@
 ---
 name: refactoring
-description: Code works but is difficult to understand, modify, or test. Improving structure while maintaining functionality.. Use when refactoring. Use when improving code structure without changing behavior, reducing technical debt, extracting functions, or applying design patterns.
+description: Improve code structure, readability, and maintainability without changing external behavior through systematic refactoring techniques like extracting functions, removing duplication, simplifying conditionals, and applying design patterns. Use when reducing technical debt, extracting functions or classes, removing code duplication, simplifying complex conditionals, renaming for clarity, applying design patterns, improving code organization, reducing coupling, increasing cohesion, or maintaining test coverage during structural improvements.
 ---
 
 # Refactoring - Improving Code Structure Without Changing Behavior
+
+## When to use this skill
+
+- Reducing technical debt in existing codebases
+- Extracting functions from long methods
+- Removing code duplication (DRY principle)
+- Simplifying complex conditional logic
+- Renaming variables, functions for clarity
+- Applying design patterns to improve structure
+- Improving code organization and file structure
+- Reducing coupling between modules
+- Increasing cohesion within classes/modules
+- Maintaining test coverage during refactoring
+- Breaking up large files or functions
+- Modernizing legacy code incrementally
 
 ## When to use this skill
 

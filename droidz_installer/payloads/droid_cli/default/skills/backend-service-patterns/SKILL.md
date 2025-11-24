@@ -1,9 +1,24 @@
 ---
 name: backend-service-patterns
-description: Designing backend architecture, implementing APIs, handling business logic, managing microservices, or building serverless functions. Use when building API services, implementing business logic layers, setting up middleware, or designing service architectures.
+description: Architect scalable backend services using layered architecture, dependency injection, middleware patterns, service classes, and separation of concerns. Use when building API services, implementing business logic layers, creating service classes, setting up middleware chains, implementing dependency injection, designing controller-service-repository patterns, handling cross-cutting concerns, creating domain models, implementing CQRS patterns, or establishing backend architecture standards.
 ---
 
 # Backend Service Patterns - Building Scalable Server Applications
+
+## When to use this skill
+
+- Building API services and backend applications
+- Implementing business logic in service layers
+- Creating controller-service-repository architectures
+- Setting up Express/Fastify middleware chains
+- Implementing dependency injection containers
+- Designing domain models and business entities
+- Handling cross-cutting concerns (logging, auth, validation)
+- Implementing CQRS (Command Query Responsibility Segregation)
+- Creating background job processing services
+- Designing event-driven service architectures
+- Implementing API gateway patterns
+- Building microservices with clear boundaries
 
 ## When to use this skill
 

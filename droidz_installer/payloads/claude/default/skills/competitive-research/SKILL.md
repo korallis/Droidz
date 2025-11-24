@@ -1,9 +1,24 @@
 ---
 name: competitive-research
-description: Analyzing competitors, extracting insights.. Use when competitive research. Use when working with competitive research in your development workflow.
+description: Research competitors, analyze market positioning, identify differentiators, and understand competitive landscape to inform product strategy and positioning. Use when researching competitors, analyzing features, identifying market gaps, understanding pricing strategies, evaluating competitive advantages, researching market trends, or informing product decisions.
 ---
 
 # Competitive Research - Market Analysis
+
+## When to use this skill
+
+- Researching competitor products and features
+- Analyzing competitive positioning
+- Identifying market gaps and opportunities
+- Understanding competitor pricing strategies
+- Evaluating competitive advantages
+- Researching market trends and directions
+- Informing product strategy decisions
+- Creating competitive feature matrices
+- Analyzing competitor user experiences
+- Identifying differentiators
+- Researching emerging competitors
+- Building competitive intelligence
 
 ## When to use this skill
 

@@ -1,9 +1,24 @@
 ---
 name: database-design
-description: Designing database schemas, choosing between SQL/NoSQL, optimizing queries, planning migrations, or solving data modeling problems.. Use when database design. Use when designing database schemas, planning table relationships, optimizing queries, or setting up indexes. Essential for data modeling and migration planning.
+description: Design scalable, normalized database schemas with proper relationships, indexes, constraints, and migration strategies for relational and NoSQL databases. Use when designing database schemas, planning table relationships and foreign keys, creating indexes for query optimization, defining constraints and validations, designing data models for scalability, planning database migrations, choosing between SQL and NoSQL, implementing sharding strategies, optimizing query performance, or establishing data integrity rules.
 ---
 
 # Database Design - Schema, Indexes, and Query Optimization
+
+## When to use this skill
+
+- Designing new database schemas and data models
+- Planning table relationships and foreign key constraints
+- Creating indexes to optimize query performance
+- Defining database constraints and validation rules
+- Designing for scalability and future growth
+- Planning database migration strategies
+- Choosing between SQL and NoSQL databases
+- Implementing database sharding or partitioning
+- Normalizing data to reduce redundancy
+- Optimizing slow database queries
+- Designing audit trails and soft deletes
+- Planning backup and disaster recovery strategies
 
 ## When to use this skill
 

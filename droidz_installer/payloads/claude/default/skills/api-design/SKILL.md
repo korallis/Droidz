@@ -1,9 +1,24 @@
 ---
 name: api-design
-description: Designing public or internal APIs, planning endpoints, defining contracts between services.. Use when api design. Use when designing RESTful or GraphQL APIs, planning endpoint structures, defining request/response contracts, or establishing API versioning strategies.
+description: Design clean, scalable, and maintainable REST and GraphQL APIs following industry best practices. Use when designing public or internal APIs, planning endpoint structures, defining request/response contracts, establishing versioning strategies, implementing authentication patterns, designing data models, creating API documentation, ensuring consistent error handling, optimizing for performance, or establishing service contracts between microservices.
 ---
 
 # API Design - Building Clean, Scalable REST & GraphQL APIs
+
+## When to use this skill
+
+- Designing new REST or GraphQL APIs from scratch
+- Planning endpoint structures and URL patterns
+- Defining request/response contracts and data schemas
+- Establishing API versioning and deprecation strategies
+- Implementing authentication and authorization patterns
+- Creating API documentation (OpenAPI/Swagger)
+- Designing error response formats and status codes
+- Planning pagination, filtering, and sorting strategies
+- Establishing rate limiting and throttling policies
+- Designing webhooks or event-driven integrations
+- Creating service contracts for microservices
+- Optimizing API performance and caching strategies
 
 ## When to use this skill
 

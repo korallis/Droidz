@@ -1,9 +1,24 @@
 ---
 name: security-patterns
-description: Handling user data, authentication, authorization, or any security-sensitive operations. Use when implementing authentication, authorization, input validation, data encryption, or protecting against common vulnerabilities like XSS, CSRF, SQL injection.
+description: Implement comprehensive security patterns to protect applications against OWASP Top 10 vulnerabilities including XSS, CSRF, SQL injection, authentication bypass, and data exposure. Use when handling user data, implementing authentication and authorization, validating input, encrypting sensitive data, preventing injection attacks, securing API endpoints, managing sessions and tokens, implementing rate limiting, configuring security headers, or building security-critical features that require defense-in-depth protection.
 ---
 
 # Security Patterns - Building Secure Applications
+
+## When to use this skill
+
+- Implementing authentication and authorization systems
+- Handling sensitive user data and personal information
+- Validating and sanitizing all user inputs
+- Preventing SQL injection with parameterized queries
+- Protecting against XSS attacks with output escaping
+- Implementing CSRF protection with tokens
+- Encrypting data at rest and in transit
+- Securing API endpoints with authentication
+- Configuring security headers (CSP, HSTS, etc.)
+- Implementing rate limiting and DDoS protection
+- Managing sessions, JWTs, and authentication tokens
+- Conducting security audits and vulnerability assessments
 
 ## When to use this skill
 

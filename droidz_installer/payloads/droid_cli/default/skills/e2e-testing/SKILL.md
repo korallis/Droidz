@@ -1,9 +1,24 @@
 ---
 name: e2e-testing
-description: Verifying complete user flows, testing integrations, validating critical paths, or ensuring features work in production-like environments. Use when writing tests, setting up test frameworks, ensuring code coverage, or implementing testing strategies.
+description: Write comprehensive end-to-end tests that verify complete user workflows, integration between components, and system behavior from user perspective using Playwright, Cypress, or similar frameworks. Use when testing user flows, verifying feature integration, testing across real browsers, ensuring UI interactions work correctly, validating form submissions end-to-end, testing authentication flows, catching regressions, automating QA processes, testing API integrations, or building confidence in production deployments.
 ---
 
 # End-to-End Testing - Testing Full User Workflows
+
+## When to use this skill
+
+- Testing complete user workflows end-to-end
+- Verifying integration between frontend and backend
+- Testing critical user journeys (signup, checkout, etc.)
+- Validating form submissions and data persistence
+- Testing authentication and authorization flows
+- Catching regressions before production deployment
+- Automating manual QA testing processes
+- Testing responsive behavior across devices
+- Verifying third-party integrations work correctly
+- Building CI/CD confidence with automated tests
+- Testing error handling and edge cases
+- Ensuring accessibility features work correctly
 
 ## When to use this skill
 

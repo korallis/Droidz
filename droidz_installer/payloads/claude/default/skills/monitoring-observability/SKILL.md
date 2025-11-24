@@ -1,9 +1,24 @@
 ---
 name: monitoring-observability
-description: Setting up metrics, alerts, dashboards.. Use when monitoring observability. Use when setting up logging, metrics, alerts, or observability for applications.
+description: Implement comprehensive monitoring, logging, metrics, tracing, and alerting for production applications to ensure reliability and quick incident response. Use when setting up application monitoring, implementing structured logging, creating metrics and dashboards, setting up alerts, implementing distributed tracing, monitoring performance, tracking errors, or building observability into applications.
 ---
 
 # Monitoring & Observability - System Health
+
+## When to use this skill
+
+- Setting up application monitoring systems
+- Implementing structured logging
+- Creating metrics and performance dashboards
+- Setting up alerts for critical issues
+- Implementing distributed tracing
+- Monitoring API performance and latency
+- Tracking error rates and exceptions
+- Building observability into applications
+- Setting up log aggregation
+- Creating SLO/SLA monitoring
+- Implementing health checks
+- Building incident detection systems
 
 ## When to use this skill
 

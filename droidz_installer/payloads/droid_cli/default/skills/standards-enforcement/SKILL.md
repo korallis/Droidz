@@ -1,9 +1,24 @@
 ---
 name: standards-enforcement
-description: Setting up project guidelines, code reviews, enforcing best practices, maintaining consistency.. Use when standards enforcement. Use when working with standards enforcement in your development workflow.
+description: Establish and enforce coding standards, best practices, and architectural patterns across the codebase using linters, formatters, and code review processes. Use when setting up ESLint/Prettier, configuring linting rules, creating code style guides, implementing pre-commit hooks, establishing naming conventions, enforcing TypeScript strict mode, maintaining consistency, conducting architecture reviews, or defining team coding standards.
 ---
 
 # Standards Enforcement - Maintaining Code Quality
+
+## When to use this skill
+
+- Setting up ESLint, Prettier, and code formatters
+- Configuring linting rules and code standards
+- Creating team code style guides
+- Implementing pre-commit hooks with Husky
+- Establishing naming conventions
+- Enforcing TypeScript strict mode
+- Maintaining code consistency across team
+- Conducting code review for standards compliance
+- Defining architectural patterns and rules
+- Setting up import ordering and organization
+- Enforcing test coverage requirements
+- Creating and maintaining coding guidelines
 
 ## When to use this skill
 

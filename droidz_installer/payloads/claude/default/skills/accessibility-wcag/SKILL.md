@@ -1,9 +1,24 @@
 ---
 name: accessibility-wcag
-description: Designing UIs, implementing components, ensuring compliance with accessibility standards (WCAG 2.1/2.2). Use when building web interfaces, ensuring WCAG compliance, implementing ARIA attributes, keyboard navigation, or screen reader support.
+description: Build accessible web applications following WCAG 2.1/2.2 guidelines with proper semantic HTML, ARIA attributes, keyboard navigation, screen reader support, and inclusive design. Use when implementing ARIA labels and roles, ensuring keyboard navigation, supporting screen readers, providing text alternatives for images, managing focus, creating accessible forms, building inclusive UI components, testing with accessibility tools, meeting WCAG compliance levels, or designing for users with disabilities.
 ---
 
 # Accessibility (WCAG) - Building Inclusive Web Applications
+
+## When to use this skill
+
+- Implementing ARIA labels, roles, and properties
+- Ensuring full keyboard navigation support
+- Supporting screen readers (NVDA, JAWS, VoiceOver)
+- Providing text alternatives for images and media
+- Managing focus and focus indicators
+- Creating accessible forms with proper labels
+- Building inclusive, usable UI components
+- Testing with axe DevTools or similar tools
+- Meeting WCAG 2.1/2.2 AA or AAA compliance
+- Designing for color blindness and low vision
+- Implementing skip links and landmarks
+- Ensuring sufficient color contrast ratios
 
 ## When to use this skill
 
