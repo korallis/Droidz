@@ -330,3 +330,22 @@ MIT License - see LICENSE file for details
 Created by the Droidz community with special thanks to Ray Fernando and all our supporters.
 
 Built on the foundation of spec-driven development principles, adapted for modern AI coding agents.
+
+## 🎉 v4.2.0 - Comprehensive Skills Library
+
+Droidz now includes **50 production-ready skills** for AI-assisted development:
+
+### Quick Start
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/korallis/Droidz/main/install.sh | bash
+```
+
+### What's Included
+
+- **Core Development** (20 skills): TDD, debugging, security, APIs, databases
+- **Modern Frameworks** (10 skills): Next.js 15, Convex, NeonDB, Tailwind
+- **Developer Tools** (10 skills): MCP builder, Playwright, document processing  
+- **Productivity** (10 skills): File organization, research, continuous improvement
+
+See [SKILLS.md](SKILLS.md) for complete catalog.
