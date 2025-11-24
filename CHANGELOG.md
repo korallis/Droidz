@@ -146,3 +146,45 @@ Without this, Factory CLI ignores the skill file completely.
 ### Files Modified
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
+
+## [4.3.0] - 2024-11-24
+
+### Fixed
+- **MAJOR**: Reformatted all 100 skills to match official Claude Skills specification
+  - Skills now follow proper structure from Claude Skills Deep Dive blog post
+  - Clean YAML frontmatter with action-oriented descriptions
+  - Proper heading hierarchy and content organization
+  - Imperative language throughout ("Use when..." not "You should...")
+
+### Changed  
+- All skill files now have consistent, specification-compliant format
+- Better skill descriptions that help Claude understand when to activate
+- Improved progressive disclosure (core info first, details follow)
+
+### Impact
+- ✅ Skills properly discovered and activated by AI systems
+- ✅ Claude better understands skill activation criteria
+- ✅ Follows official Claude Skills prompt-based architecture
+- ✅ Better context injection and modification
+- ✅ Compliance with Factory.ai and Claude Code skill standards
+
+### Technical
+Skills now follow this structure:
+```yaml
+---
+name: skill-name
+description: Clear, action-oriented description
+---
+
+# Title
+
+Overview → Instructions → Examples → Resources
+```
+
+Based on:
+- https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/
+- https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices
+
+### Files Modified
+- All 50 skills in `claude/default/skills/*/SKILL.md`
+- All 50 skills in `droid_cli/default/skills/*/SKILL.md`
