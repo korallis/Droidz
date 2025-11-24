@@ -45,3 +45,33 @@ All notable changes to Droidz Framework will be documented in this file.
 ## Earlier Versions
 
 See git tags and releases for version history prior to v4.0.2.
+
+## [4.2.0] - 2024-11-24
+
+### Added
+- **50 Comprehensive Skills** - Complete skills library for software development
+  - Core Development (20 skills): TDD, debugging, code review, git, refactoring, performance, security, API design, database, frontend, backend, E2E testing, CI/CD, documentation, error handling, accessibility, standards, migrations, monitoring, incidents
+  - Framework-Specific (10 skills): Next.js App Router, Server Components, NeonDB serverless, Convex backend/realtime, Shadcn UI, Tailwind, Server Actions, TypeScript strict, Vercel deployment
+  - Developer Tools (10 skills): MCP builder, artifacts, Playwright, root-cause tracing, brainstorming, changelog generator, content research, document processing (DOCX/PDF/XLSX)
+  - Productivity (10 skills): File organizer, invoice organizer, domain brainstormer, competitive research, brand guidelines, canvas design, meeting insights, kaizen, threat hunting, skill creator
+
+- Research-backed content from:
+  - Composio awesome-claude-skills repository
+  - Next.js 15 best practices
+  - NeonDB serverless patterns
+  - Convex realtime database patterns
+  - OWASP security guidelines
+
+### Changed
+- Updated SKILLS.md with complete 50-skill catalog
+- Skills automatically deployed to both Factory.ai and Claude Code
+
+### Technical
+- Skills installed to `.factory/skills/` and `.claude/skills/`
+- Flat directory structure for platform compatibility
+- Each skill includes practical examples and resources
+
+### Impact
+- Developers get instant access to 50 production-ready skills
+- Skills activate automatically based on context
+- Improves code quality, security, and development velocity
