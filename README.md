@@ -233,42 +233,245 @@ Example usage:
 - `~/droidz/specs/[spec-name]/tasks.md` - Task breakdown
 - `~/droidz/specs/[spec-name]/planning/` - Requirements and research
 
-## Workflow Example
+## Complete Development Workflow
 
-Here's how to use Droidz for a complete feature development cycle:
+Droidz provides a systematic, 8-phase workflow for AI-assisted development:
 
-1. **Plan the Product** (if starting new)
-   ```
-   /plan-product
-   ```
-   Creates mission, roadmap, and tech stack documentation.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    DROIDZ WORKFLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Phase 0: SETUP STANDARDS        → /standards-shaper       │
+│           ↓                                                 │
+│  Phase 1: PRODUCT PLANNING       → /plan-product           │
+│           ↓                                                 │
+│  Phase 2: SPEC SHAPING           → /shape-spec             │
+│           ↓                                                 │
+│  Phase 3: SPEC WRITING           → /write-spec             │
+│           ↓                                                 │
+│  Phase 4: TASK CREATION          → /create-tasks           │
+│           ↓                                                 │
+│  Phase 5: TASK ORCHESTRATION     → /orchestrate-tasks      │
+│           ↓                                                 │
+│  Phase 6: IMPLEMENTATION         → /implement-tasks        │
+│           ↓                                                 │
+│  Phase 7: CONTINUOUS IMPROVEMENT → iterate & refine        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-2. **Shape the Specification**
-   ```
-   /shape-spec
-   ```
-   Initializes spec folder and researches requirements.
+### Phase 0: Setup Standards (One-Time)
 
-3. **Write the Specification**
-   ```
-   /write-spec
-   ```
-   Creates a detailed, implementable specification.
+**Before starting development, establish your project standards.**
 
-4. **Create Task List**
-   ```
-   /create-tasks
-   ```
-   Breaks down the spec into concrete implementation tasks.
+```bash
+> /standards-shaper
+```
 
-5. **Implement the Feature**
-   ```
-   /implement-tasks
-   ```
-   Implements the tasks, following the spec and standards.
+Creates comprehensive project standards:
+```
+droidz/standards/
+├── global/          # Coding principles, error handling, security
+├── frontend/        # Components, styling, state management
+├── backend/         # API design, database, authentication
+└── testing/         # Test patterns, coverage requirements
+```
 
-6. **Verify Implementation**
-   The implementation-verifier agent runs tests and creates verification reports.
+**Why this matters**: Ensures consistency, quality, and maintainability across all features.
+
+---
+
+### Phase 1: Product Planning
+
+**Define your product vision, mission, and roadmap.**
+
+```bash
+> /plan-product
+```
+
+Creates:
+```
+droidz/product/
+├── mission.md        # Vision, goals, target users
+├── roadmap.md        # Phased development plan
+└── tech-stack.md     # Technology decisions
+```
+
+**When to use**: Starting new products, major pivots, team onboarding, quarterly planning.
+
+---
+
+### Phase 2: Spec Shaping
+
+**Shape the scope and design of a specific feature.**
+
+```bash
+> /shape-spec
+```
+
+Creates:
+```
+droidz/specs/YYYY-MM-DD-feature-name/
+├── planning/
+│   ├── requirements.md   # Gathered requirements
+│   ├── decisions.md      # Key design decisions
+│   └── visuals/          # Screenshots, wireframes
+└── README.md
+```
+
+**When to use**: Before building any new feature, when requirements are fuzzy, for collaborative design.
+
+---
+
+### Phase 3: Spec Writing
+
+**Transform shaped requirements into detailed specification.**
+
+```bash
+> /write-spec
+```
+
+Creates:
+```
+droidz/specs/YYYY-MM-DD-feature-name/
+├── spec.md              # ⭐ Complete specification
+├── planning/
+└── README.md
+```
+
+**spec.md contains**: Feature overview, user stories, technical architecture, API contracts, database schemas, UI/UX specifications, security considerations, testing strategy, success metrics.
+
+---
+
+### Phase 4: Task Creation
+
+**Break down the spec into implementable tasks.**
+
+```bash
+> /create-tasks
+```
+
+Creates:
+```
+droidz/specs/YYYY-MM-DD-feature-name/
+├── spec.md
+├── tasks.md             # ⭐ Implementation tasks
+└── planning/
+```
+
+**Task structure**: Organized into logical groups (Database, Backend, Frontend, Testing) with clear dependencies and acceptance criteria.
+
+---
+
+### Phase 5: Task Orchestration
+
+**Plan and coordinate implementation across task groups.**
+
+```bash
+> /orchestrate-tasks
+```
+
+Creates:
+```
+droidz/specs/YYYY-MM-DD-feature-name/
+├── spec.md
+├── tasks.md
+├── orchestration.yml     # ⭐ Implementation plan
+└── implementation/
+    └── prompts/          # Generated implementation prompts
+```
+
+**What it does**: Assigns specialists to task groups, maps relevant standards, generates implementation prompts.
+
+---
+
+### Phase 6: Implementation
+
+**Execute the implementation plan.**
+
+```bash
+> /implement-tasks
+```
+
+**Two approaches**:
+
+**A. Automated (with subagents)**:
+- Delegates to specialized subagents
+- Each implements their task group
+- Progress tracked automatically
+
+**B. Manual (using prompts)**:
+- Use generated implementation prompts
+- Copy each into chat for guided implementation
+- Standards automatically enforced
+
+---
+
+### Phase 7: Iteration & Refinement
+
+**Continuous improvement based on learnings.**
+
+- Update standards with new patterns
+- Refine workflow based on what works
+- Document lessons learned
+- Create new specs building on previous work
+
+---
+
+### Real-World Example: Adding Real-Time Chat
+
+```bash
+# Phase 0: Setup (one-time)
+> /standards-shaper
+✅ Created project standards
+
+# Phase 1: Product context
+> /plan-product
+✅ mission.md, roadmap.md, tech-stack.md created
+
+# Phase 2: Shape the feature
+> /shape-spec
+AI: What feature are you planning?
+You: Real-time chat with typing indicators
+✅ requirements.md created
+
+# Phase 3: Write detailed spec
+> /write-spec
+✅ Complete spec.md created
+
+# Phase 4: Break into tasks
+> /create-tasks
+✅ Found 5 task groups, 31 tasks
+
+# Phase 5: Orchestrate
+> /orchestrate-tasks
+AI: Assign specialists to task groups...
+✅ Implementation plan ready
+
+# Phase 6: Implement
+[Automated: Subagents execute in parallel]
+✅ All 31 tasks completed, tests passing
+
+# Phase 7: Ship it! 🚀
+```
+
+---
+
+### Command Quick Reference
+
+| Phase | Command | Purpose |
+|-------|---------|---------|
+| 0 | `/standards-shaper` | Create project standards |
+| 1 | `/plan-product` | Define product vision |
+| 2 | `/shape-spec` | Gather feature requirements |
+| 3 | `/write-spec` | Create detailed specification |
+| 4 | `/create-tasks` | Break spec into tasks |
+| 5 | `/orchestrate-tasks` | Plan implementation |
+| 6 | `/implement-tasks` | Execute implementation |
+| - | `/improve-skills` | Enhance AI capabilities |
+
+**For complete workflow guide**: See `droidz/standards/RECOMMENDED_WORKFLOW.md` after installation.
 
 ## Troubleshooting
 
