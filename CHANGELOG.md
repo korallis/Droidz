@@ -147,6 +147,90 @@ Without this, Factory CLI ignores the skill file completely.
 - `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 - `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
 
+## [4.6.0] - 2024-11-24
+
+### Added
+- **TodoWrite Progress Tracking**: Factory Droid CLI agents now show real-time progress
+  - Added to 5 core droids: product-planner, spec-shaper, spec-writer, tasks-list-creator, implementer
+  - Subagents use TodoWrite to update their progress in the main session
+  - Users can now see what subagents are doing (previously invisible)
+  - Critical for long-running tasks like spec writing or implementation
+
+### Changed
+- **Factory Droid CLI only** - Claude Code agents unchanged (avoid platform conflicts)
+- Each agent includes "Progress Tracking (CRITICAL)" section with TodoWrite pattern
+- Pattern: Create todos at start → Update as work progresses → Mark complete when done
+
+### Technical Details
+
+**TodoWrite Pattern Added**:
+```javascript
+// At start
+TodoWrite({
+  todos: [
+    { id: "step1", content: "Task description", status: "in_progress", priority: "high" },
+    { id: "step2", content: "Next task", status: "pending", priority: "medium" }
+  ]
+});
+
+// Update as work progresses
+TodoWrite({
+  todos: [
+    { id: "step1", content: "Task description", status: "completed", priority: "high" },
+    { id: "step2", content: "Next task (3/8 complete)", status: "in_progress", priority: "medium" }
+  ]
+});
+```
+
+**Why This Works**:
+- TodoWrite updates are session-wide (visible in main session)
+- Factory.ai displays todos in real-time UI
+- No breaking changes - adds visibility without changing functionality
+- Works within Factory's existing architecture
+
+### Impact
+- ✅ Subagent work now visible in main session
+- ✅ Users see real-time progress during long operations
+- ✅ No more "check on subagent" confusion
+- ✅ Better user experience for multi-agent workflows
+- ✅ Especially helpful for spec-writer (can take minutes to complete)
+
+### User Experience
+
+**Before v4.6.0**:
+```
+> /write-spec
+AI: The spec-writer subagent is creating your specification...
+[Long wait with no feedback]
+[User types: "check on the sub agent"]
+AI: Let me check... [reads files to see progress]
+```
+
+**After v4.6.0**:
+```
+> /write-spec  
+AI: The spec-writer subagent is creating your specification...
+
+Real-time updates visible:
+✅ Reading requirements (92 Q&A processed) 
+✅ Analyzing questions and decisions
+✅ Structuring specification (12 sections)
+🔄 Writing specification (section 7/12)
+⏸️ Validating completeness
+```
+
+### Platform Differences
+
+**Factory Droid CLI** (v4.6.0):
+- ✅ Progress tracking with TodoWrite
+- ✅ Real-time subagent visibility
+- ✅ Better UX for long operations
+
+**Claude Code** (unchanged):
+- Maintains existing behavior
+- No TodoWrite tracking
+- Avoids potential conflicts
+
 ## [4.5.0] - 2024-11-24
 
 ### Added
