@@ -112,3 +112,37 @@ See git tags and releases for version history prior to v4.0.2.
 ### Files Fixed
 - `claude/default/agents/*.md` (8 files)
 - `droid_cli/default/droids/*.md` (8 files)
+
+## [4.2.3] - 2024-11-24
+
+### Fixed
+- **CRITICAL**: Added required YAML frontmatter to all 50 skills
+  - Skills were missing `name:` and `description:` in YAML frontmatter
+  - Only test-driven-development showed up in Factory Droid CLI `/skills` command
+  - Other 49 skills were invisible and unusable
+
+### Changed
+- All 100 skill files now have proper frontmatter (50 in each platform)
+- Format: `---\nname: skill-name\ndescription: ...\n---`
+- Skills now properly discovered by both Factory.ai and Claude Code
+
+### Impact
+- ✅ All 50 skills now visible in `/skills` command (Factory Droid CLI)
+- ✅ All 50 skills now discoverable in Claude Code
+- ✅ Skills can be edited and used properly
+- ✅ Better activation - AI understands when to use each skill
+
+### Technical
+According to Factory.ai docs, skills MUST have YAML frontmatter:
+```yaml
+---
+name: skill-name
+description: Description of what skill does and when to use it
+---
+```
+
+Without this, Factory CLI ignores the skill file completely.
+
+### Files Modified
+- `claude/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
+- `droid_cli/default/skills/*/SKILL.md` (49 files updated, 1 already correct)
