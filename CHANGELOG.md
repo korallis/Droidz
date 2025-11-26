@@ -2,24 +2,37 @@
 
 All notable changes to Droidz Framework will be documented in this file.
 
-## [4.11.1] - 2025-11-26
+## [4.12.0] - 2025-11-26
+
+### Added
+- **6 New Specialist Agents** for both Claude Code and Droid CLI:
+  - `backend-specialist` - APIs, authentication, server-side logic, microservices
+  - `frontend-specialist` - React components, state management, styling, accessibility
+  - `database-specialist` - Schema design, migrations, query optimization, SQL/NoSQL
+  - `devops-specialist` - CI/CD pipelines, Docker, cloud infrastructure, monitoring
+  - `test-specialist` - Unit tests, integration tests, E2E tests, test strategies
+  - `full-stack-specialist` - End-to-end feature implementation across all layers
 
 ### Fixed
 - **CRITICAL**: Claude Code `/implement-tasks` parallel execution now uses correct method
   - Was incorrectly using `droid exec` (Factory CLI method) in Claude Code
   - Now uses native Claude Code Task tool with multiple parallel subagent invocations
   - Spawns the **assigned specialists from orchestration.yml**, not generic agents
+  - Removed linear dependency blocker - parallel execution proceeds without checking dependencies
 
 ### Changed
-- **Claude Code implement-tasks.md** - Option A (Parallel Execution) completely rewritten:
-  - Requires `/orchestrate-tasks` to be run first to assign specialists
-  - Reads `orchestration.yml` to get `assigned_specialist` for each task group
-  - Verifies specialists exist in `.claude/agents/`
-  - Spawns all specialists in a SINGLE message for true parallelism
-  - Includes proper standards resolution from orchestration.yml
-  - Clear error messages if orchestration.yml or specialists are missing
+- **Claude Code implement-tasks.md** - Option A (Parallel Execution) simplified:
+  - Uses specialists from `orchestration.yml` (if exists) or falls back to `implementer`
+  - Spawns all agents in a SINGLE message for true parallelism
+  - No longer blocks on linear dependency detection
+  - Clear fallback behavior when specialists don't exist
 
 - **Droid CLI implement-tasks.md** - Unchanged (still uses `droid exec` with Factory API)
+
+- **Droid CLI specialists** - All 6 new specialists configured for Factory:
+  - Includes `color` field for CLI display
+  - Includes `Progress Tracking (CRITICAL)` section with TodoWrite patterns
+  - No tool restrictions (inherits all available tools)
 
 ### Technical Details
 

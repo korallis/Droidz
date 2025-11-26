@@ -84,50 +84,35 @@ Enter A, B, or C:
 
 **How it works**: Uses Claude Code's native Task tool to spawn multiple parallel subagents. Each subagent operates in its own context and works on a separate task group simultaneously.
 
-**Prerequisites**:
-- Run `/orchestrate-tasks` first to create `orchestration.yml` with specialist assignments
-- Specialists should be defined as Claude Code subagents in `.claude/agents/`
+---
+
+**Step 1: Determine Which Agent to Use**
+
+Check for orchestration.yml and specialist availability:
+
+1. **If `orchestration.yml` EXISTS**:
+   - Read `assigned_specialist` for each task group
+   - Check if each specialist exists in `.claude/agents/`
+   - **If specialist exists** → Use that specialist
+   - **If specialist MISSING** → Fall back to `implementer` agent
+
+2. **If `orchestration.yml` does NOT exist**:
+   - Use the `implementer` agent for all task groups
+   - Or use `general-purpose` subagent type
+
+**Fallback Behavior** (when specialists don't exist):
+```
+ℹ️ Specialist "[name]" not found in .claude/agents/
+   Using "implementer" agent instead.
+```
+
+This is NOT an error - implementation proceeds with available agents.
 
 ---
 
-**Step 1: Check for orchestration.yml**
+**Step 2: Build prompts for each task group**
 
-Read `droidz/specs/[this-spec]/orchestration.yml` to get:
-- Task group names
-- Assigned specialists (`assigned_specialist` field)
-- Standards for each task group
-
-**If orchestration.yml does NOT exist**, inform user:
-```
-⚠️ No orchestration.yml found for this spec.
-
-Parallel execution requires specialist assignments from /orchestrate-tasks.
-
-Options:
-1. Run /orchestrate-tasks first to assign specialists to each task group
-2. Choose Option B or C for non-parallel execution
-```
-
----
-
-**Step 2: Verify specialists exist**
-
-For each `assigned_specialist` in orchestration.yml, verify the subagent exists in `.claude/agents/[specialist-name].md`.
-
-If a specialist is missing, warn the user:
-```
-⚠️ Specialist "[specialist-name]" not found in .claude/agents/
-
-Create it with: /agents → Create New Agent → Name: [specialist-name]
-
-Or reassign in orchestration.yml to an existing specialist.
-```
-
----
-
-**Step 3: Build prompts for each task group**
-
-For EACH task group in orchestration.yml, prepare a prompt that includes:
+For EACH task group, prepare a prompt that includes:
 - The specific task group content from tasks.md
 - Path to spec: `droidz/specs/[this-spec]/spec.md`
 - Path to requirements: `droidz/specs/[this-spec]/planning/requirements.md`
@@ -137,47 +122,64 @@ For EACH task group in orchestration.yml, prepare a prompt that includes:
 
 ---
 
-**Step 4: CRITICAL - Spawn ALL specialists in a SINGLE message**
+**Step 3: CRITICAL - Spawn ALL agents in a SINGLE message**
 
 Use the Task tool multiple times in ONE response to launch parallel subagents.
 
-For EACH task group, invoke the **assigned specialist** from orchestration.yml:
+For EACH task group, use the agent determined in Step 2:
 
 ```
 Task tool call for each task group:
-- Invoke the specialist by name: "Use the [assigned_specialist] agent to implement [task-group-name]"
+- subagent_type: "general-purpose" (Claude Code's built-in agent type)
 - description: "Implement [task-group-name]"
-- prompt: [Full implementation prompt - see template below]
+- prompt: Include the specialist context + full implementation prompt
 ```
 
-**Example** (based on orchestration.yml):
+**Example A** (with orchestration.yml and existing specialists):
 ```yaml
 # orchestration.yml shows:
 task_groups:
   - name: authentication-system
-    assigned_specialist: backend-specialist
+    assigned_specialist: backend-specialist  # exists in .claude/agents/
   - name: user-dashboard
-    assigned_specialist: frontend-specialist
-  - name: api-endpoints
-    assigned_specialist: backend-specialist
+    assigned_specialist: frontend-specialist  # exists in .claude/agents/
 ```
 
 ```
-[Single message with 3 Task tool invocations:]
+[Single message with 2 Task tool invocations:]
 
-Invoke 1: "Use the backend-specialist agent to implement authentication-system"
-          prompt="[Full prompt for auth-system task group]"
+Task 1: description="Implement authentication-system"
+        prompt="You are acting as the backend-specialist.
+                [Include backend-specialist's system prompt from .claude/agents/backend-specialist.md]
 
-Invoke 2: "Use the frontend-specialist agent to implement user-dashboard"
-          prompt="[Full prompt for user-dashboard task group]"
+                [Full implementation prompt for auth-system]"
 
-Invoke 3: "Use the backend-specialist agent to implement api-endpoints"
-          prompt="[Full prompt for api-endpoints task group]"
+Task 2: description="Implement user-dashboard"
+        prompt="You are acting as the frontend-specialist.
+                [Include frontend-specialist's system prompt from .claude/agents/frontend-specialist.md]
+
+                [Full implementation prompt for user-dashboard]"
+```
+
+**Example B** (without orchestration.yml or missing specialists - using implementer):
+```
+[Single message with N Task tool invocations:]
+
+Task 1: description="Implement task-group-1"
+        prompt="You are the implementer agent.
+                [Full implementation prompt for task-group-1]"
+
+Task 2: description="Implement task-group-2"
+        prompt="You are the implementer agent.
+                [Full implementation prompt for task-group-2]"
+
+Task N: description="Implement task-group-N"
+        prompt="..."
 ```
 
 ---
 
-**Step 5: Prompt Template for Each Specialist**
+**Step 4: Prompt Template for Each Agent**
 
 Each prompt to a specialist should include:
 
@@ -236,7 +238,7 @@ Format as:
 
 ---
 
-**Step 6: Show completion summary**
+**Step 5: Show completion summary**
 
 After ALL parallel specialists complete, show:
 ```
