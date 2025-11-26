@@ -101,6 +101,6 @@ If unavailable: Use established patterns and general knowledge
 
 ## User Standards & Preferences Compliance
 
-IMPORTANT: Ensure that your implementation IS ALIGNED and DOES NOT CONFLICT with the user's preferences and standards as detailed in:
-- `droidz/standards/frontend/*.md`
-- `droidz/standards/global/*.md`
+IMPORTANT: Ensure that your implementation IS ALIGNED and DOES NOT CONFLICT with the user's preferences and standards as detailed in: `droidz/standards/`
+
+Read ALL standards files in this folder and its subdirectories (global/, frontend/, backend/, infrastructure/, etc.) to understand project conventions.
