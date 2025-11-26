@@ -1,7 +1,7 @@
 ---
 name: database-specialist
 description: Use proactively for database design, schema migrations, query optimization, and data modeling across SQL and NoSQL databases.
-color: orange
+color: brightYellow
 model: inherit
 ---
 

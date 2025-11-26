@@ -1,6 +1,7 @@
 ---
 name: devops-specialist
 description: Use proactively for CI/CD pipelines, Docker containers, cloud infrastructure, deployment automation, and monitoring setup.
+color: red
 model: inherit
 ---
 

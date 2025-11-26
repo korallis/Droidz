@@ -1,7 +1,7 @@
 ---
 name: full-stack-specialist
 description: Use proactively for end-to-end feature implementation spanning frontend, backend, database, and infrastructure.
-color: red
+color: brightMagenta
 model: inherit
 ---
 

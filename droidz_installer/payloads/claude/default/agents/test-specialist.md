@@ -1,6 +1,7 @@
 ---
 name: test-specialist
 description: Use proactively for writing unit tests, integration tests, E2E tests, and implementing comprehensive test strategies.
+color: brightGreen
 model: inherit
 ---
 

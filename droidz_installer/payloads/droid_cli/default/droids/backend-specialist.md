@@ -1,7 +1,7 @@
 ---
 name: backend-specialist
 description: Use proactively for backend development including APIs, databases, authentication, server-side logic, and microservices architecture.
-color: blue
+color: yellow
 model: inherit
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: frontend-specialist
 description: Use proactively for frontend development including React components, state management, styling, accessibility, and responsive design.
-color: green
+color: magenta
 model: inherit
 ---
 

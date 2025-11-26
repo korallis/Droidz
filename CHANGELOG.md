@@ -2,6 +2,20 @@
 
 All notable changes to Droidz Framework will be documented in this file.
 
+## [4.13.0] - 2025-11-26
+
+### Changed
+- **Specialist Agent Colors** - Added distinct colors to all 6 specialist sub-agents for better visual identification in the CLI:
+  - `frontend-specialist` - magenta
+  - `backend-specialist` - yellow
+  - `database-specialist` - brightYellow
+  - `devops-specialist` - red
+  - `test-specialist` - brightGreen
+  - `full-stack-specialist` - brightMagenta
+- Colors are now consistent across both Claude Code agents and Droid CLI droids
+
+---
+
 ## [4.12.0] - 2025-11-26
 
 ### Added
