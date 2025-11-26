@@ -38,23 +38,23 @@ For each task:
 
 ### Step 3: Run All Tests
 
-Execute comprehensive test suite:
-```bash
-# Unit tests
-npm test
+**First, detect the project's package manager** by checking for lockfiles:
+- `bun.lockb` → Use **bun**
+- `pnpm-lock.yaml` → Use **pnpm**
+- `yarn.lock` → Use **yarn**
+- `package-lock.json` → Use **npm**
 
-# Integration tests
-npm run test:integration
+Execute comprehensive test suite using the **detected package manager**:
 
-# E2E tests
-npm run test:e2e
+| Test Type | npm | yarn | pnpm | bun |
+|-----------|-----|------|------|-----|
+| Unit tests | `npm test` | `yarn test` | `pnpm test` | `bun test` |
+| Integration | `npm run test:integration` | `yarn test:integration` | `pnpm test:integration` | `bun run test:integration` |
+| E2E tests | `npm run test:e2e` | `yarn test:e2e` | `pnpm test:e2e` | `bun run test:e2e` |
+| Type check | `npm run type-check` | `yarn type-check` | `pnpm type-check` | `bun run type-check` |
+| Linting | `npm run lint` | `yarn lint` | `pnpm lint` | `bun run lint` |
 
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-```
+**Note**: Only run tests that are available in the project's `package.json` scripts.
 
 ### Step 4: Create Verification Report
 

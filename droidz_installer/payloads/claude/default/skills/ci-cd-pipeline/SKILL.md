@@ -5,6 +5,30 @@ description: Set up and maintain continuous integration and continuous deploymen
 
 # CI/CD Pipeline - Automating Build, Test, and Deployment
 
+## Package Manager Detection
+
+**IMPORTANT**: Before creating CI/CD configurations, detect the project's package manager by checking for lockfiles and adapt all commands accordingly.
+
+**Detection Order** (first match wins):
+1. `bun.lockb` → Use **bun**
+2. `pnpm-lock.yaml` → Use **pnpm**
+3. `yarn.lock` → Use **yarn**
+4. `package-lock.json` → Use **npm**
+
+**Command Mapping** - Adapt examples in this skill to use the detected package manager:
+
+| Action | npm | yarn | pnpm | bun |
+|--------|-----|------|------|-----|
+| Install (CI) | `npm ci` | `yarn install --frozen-lockfile` | `pnpm install --frozen-lockfile` | `bun install --frozen-lockfile` |
+| Run script | `npm run <script>` | `yarn <script>` | `pnpm <script>` | `bun run <script>` |
+| Execute bin | `npx <cmd>` | `yarn dlx <cmd>` | `pnpm dlx <cmd>` | `bunx <cmd>` |
+| Cache key | `package-lock.json` | `yarn.lock` | `pnpm-lock.yaml` | `bun.lockb` |
+| Cache path | `~/.npm` | `~/.yarn/cache` | `~/.pnpm-store` | `~/.bun/install/cache` |
+
+**Note**: The examples below use npm by default. When implementing, replace with the appropriate commands for your detected package manager.
+
+---
+
 ## When to use this skill
 
 - Setting up GitHub Actions or GitLab CI workflows

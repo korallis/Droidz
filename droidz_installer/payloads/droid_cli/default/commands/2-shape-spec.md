@@ -28,3 +28,23 @@ Spec initialized successfully!
 
 IMPORTANT: Ensure that your research questions and insights are ALIGNED and DOES NOT CONFLICT with the user's preferences and standards as detailed in the following files:
 
+### Standards Loading Instructions
+
+Before proceeding, check for and load project standards:
+
+1. **Check if standards exist**: Look for `droidz/standards/` directory
+2. **If standards exist**, **read ALL standards files recursively**:
+   - Use glob pattern `droidz/standards/**/*.md` to find all markdown files
+   - This includes all subdirectories (global, frontend, backend, infrastructure, and any custom directories the user has created)
+   - Read every `.md` file found in the standards directory tree
+
+3. **Apply ALL loaded standards to your research** by ensuring:
+   - Questions align with established architectural patterns
+   - Proposed approaches don't conflict with documented conventions
+   - Requirements gathering considers existing coding principles
+   - Design decisions follow documented best practices
+
+If no standards directory exists, proceed normally but note to the user:
+```
+ℹ️ No project standards found. Consider running /shape-standards to establish conventions.
+```

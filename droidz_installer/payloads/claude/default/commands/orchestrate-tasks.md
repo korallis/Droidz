@@ -4,6 +4,34 @@ Now that we have a spec and tasks list ready for implementation, we will proceed
 
 Follow each of these phases and their individual workflows IN SEQUENCE:
 
+## Pre-Requisite: Detect Project Configuration
+
+### Detect Package Manager
+
+**IMPORTANT**: Before orchestrating any tasks, detect the project's package manager by checking for lockfiles. Use the detected package manager for ALL implementation prompts and commands.
+
+**Detection Order** (first match wins):
+1. `bun.lockb` → Use **bun** (`bun install`, `bun run`, `bunx`)
+2. `pnpm-lock.yaml` → Use **pnpm** (`pnpm install`, `pnpm run`, `pnpm dlx`)
+3. `yarn.lock` → Use **yarn** (`yarn install`, `yarn run`, `yarn dlx`)
+4. `package-lock.json` → Use **npm** (`npm install`, `npm run`, `npx`)
+5. No lockfile found → Default to **npm** but note that the user should verify their preferred package manager
+
+**Command Mapping**:
+| Action | npm | yarn | pnpm | bun |
+|--------|-----|------|------|-----|
+| Install deps | `npm install` | `yarn install` | `pnpm install` | `bun install` |
+| Add package | `npm install <pkg>` | `yarn add <pkg>` | `pnpm add <pkg>` | `bun add <pkg>` |
+| Run script | `npm run <script>` | `yarn <script>` | `pnpm <script>` | `bun run <script>` |
+| Execute bin | `npx <cmd>` | `yarn dlx <cmd>` | `pnpm dlx <cmd>` | `bunx <cmd>` |
+
+Store the detected package manager and use it when:
+- Generating implementation prompts
+- Writing orchestration.yml
+- Creating any bash scripts or commands for specialists
+
+---
+
 ## Multi-Phase Process
 
 ### FIRST: Get tasks.md for this spec
@@ -149,6 +177,34 @@ For each delegation, provide the specialist with:
 
 In addition to the above items, also instruct the specialist to closely adhere to the user's standards & preferences as specified in the following files.  To build the list of file references to give to the specialist, follow these instructions:
 
+#### Building the Standards File List for a Task Group
+
+For each task group, look up its `standards` entry in `orchestration.yml` and resolve it to actual file paths:
+
+1. **If `standards` contains "all"**:
+   - Include all files from `droidz/standards/global/*.md`
+   - Include all files from `droidz/standards/frontend/*.md`
+   - Include all files from `droidz/standards/backend/*.md`
+   - Include all files from `droidz/standards/infrastructure/*.md`
+
+2. **If `standards` contains a wildcard pattern** (e.g., "global/*", "frontend/*"):
+   - Include all `.md` files from `droidz/standards/[pattern]/`
+   - Example: "backend/*" → all files in `droidz/standards/backend/`
+
+3. **If `standards` contains a specific file path** (e.g., "frontend/components.md"):
+   - Include that specific file: `droidz/standards/[path]`
+   - Example: "frontend/components.md" → `droidz/standards/frontend/components.md`
+
+4. **If `standards` is missing or contains "none"**:
+   - Do not include any standards files for this task group
+
+5. **Format the file list** for the specialist as markdown file references:
+   ```
+   - @droidz/standards/global/coding-principles.md
+   - @droidz/standards/global/error-handling.md
+   - @droidz/standards/frontend/components.md
+   ```
+
 Provide all of the above to the specialist when delegating tasks for it to implement.
 
 ### NEXT: Generate prompts
@@ -176,6 +232,38 @@ In the content template below, replace "[spec-title]" and "[this-spec]" with the
 
 To replace "[orchestrated-standards]", use the following workflow:
 
+1. **Look up this task group in `orchestration.yml`** to find its `standards` entries
+2. **Resolve each standards entry to actual file paths** using the same logic from "Building the Standards File List for a Task Group" above:
+   - "all" → list all files from all standards subdirectories
+   - "global/*" → list all files from `droidz/standards/global/`
+   - "frontend/components.md" → `droidz/standards/frontend/components.md`
+   - "none" or missing → leave [orchestrated-standards] empty or write "No specific standards assigned."
+
+3. **Format as markdown file references**:
+   ```
+   - @droidz/standards/global/coding-principles.md
+   - @droidz/standards/global/error-handling.md
+   - @droidz/standards/frontend/components.md
+   ```
+
+4. **Replace [orchestrated-standards]** in the prompt template with the formatted list
+
+**Example**: If `orchestration.yml` has:
+```yaml
+- name: user-dashboard
+  standards:
+    - global/*
+    - frontend/components.md
+```
+
+Then [orchestrated-standards] becomes:
+```
+- @droidz/standards/global/coding-principles.md
+- @droidz/standards/global/error-handling.md
+- @droidz/standards/global/testing.md
+- @droidz/standards/global/security.md
+- @droidz/standards/frontend/components.md
+```
 
 #### Prompt file content template:
 
