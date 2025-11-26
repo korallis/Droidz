@@ -2,6 +2,61 @@
 
 All notable changes to Droidz Framework will be documented in this file.
 
+## [4.11.1] - 2025-11-26
+
+### Fixed
+- **CRITICAL**: Claude Code `/implement-tasks` parallel execution now uses correct method
+  - Was incorrectly using `droid exec` (Factory CLI method) in Claude Code
+  - Now uses native Claude Code Task tool with multiple parallel subagent invocations
+  - Spawns the **assigned specialists from orchestration.yml**, not generic agents
+
+### Changed
+- **Claude Code implement-tasks.md** - Option A (Parallel Execution) completely rewritten:
+  - Requires `/orchestrate-tasks` to be run first to assign specialists
+  - Reads `orchestration.yml` to get `assigned_specialist` for each task group
+  - Verifies specialists exist in `.claude/agents/`
+  - Spawns all specialists in a SINGLE message for true parallelism
+  - Includes proper standards resolution from orchestration.yml
+  - Clear error messages if orchestration.yml or specialists are missing
+
+- **Droid CLI implement-tasks.md** - Unchanged (still uses `droid exec` with Factory API)
+
+### Technical Details
+
+**Claude Code Parallel Execution Flow**:
+```
+1. Check orchestration.yml exists
+2. Read assigned_specialist for each task group
+3. Verify each specialist exists in .claude/agents/
+4. Build prompts with resolved standards
+5. Spawn ALL specialists in ONE message (critical for parallelism)
+6. Aggregate results and show summary
+```
+
+**Example orchestration.yml**:
+```yaml
+task_groups:
+  - name: authentication-system
+    assigned_specialist: backend-specialist
+  - name: user-dashboard
+    assigned_specialist: frontend-specialist
+```
+
+**Results in**:
+```
+[Single message spawning 2 specialists in parallel]
+├── backend-specialist → authentication-system
+└── frontend-specialist → user-dashboard
+```
+
+### Impact
+- ✅ Claude Code users get proper native parallel execution
+- ✅ Factory/Droid CLI users unaffected (still use `droid exec`)
+- ✅ Specialists from `/orchestrate-tasks` are properly utilized
+- ✅ No more confusion about which parallel method to use per platform
+
+---
+
 ## [4.1.0] - 2025-11-24
 
 ### 🔥 CRITICAL FIX - Directory Structure

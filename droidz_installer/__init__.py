@@ -5,4 +5,4 @@ from .exceptions import InstallerError
 
 __all__ = ["InstallOptions", "InstallerError", "install", "list_platforms"]
 
-__version__ = "0.1.0"
+__version__ = "4.11.1"
