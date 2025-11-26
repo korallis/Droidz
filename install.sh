@@ -31,7 +31,7 @@ safe_read() {
   fi
 }
 
-VERSION="4.9.0"
+VERSION="4.10.0"
 REPO_URL="https://github.com/korallis/Droidz"
 BRANCH="${DROIDZ_BRANCH:-main}"
 GITHUB_RAW="https://raw.githubusercontent.com/korallis/Droidz/${BRANCH}"
@@ -90,6 +90,138 @@ detect_os() {
     MINGW*|MSYS*|CYGWIN*) echo "windows" ;;
     *)        echo "unknown" ;;
   esac
+}
+
+# Detect architecture
+detect_arch() {
+  case "$(uname -m)" in
+    x86_64|amd64) echo "x64" ;;
+    arm64|aarch64) echo "arm64" ;;
+    *) echo "unknown" ;;
+  esac
+}
+
+# Check if ripgrep is installed and accessible
+check_ripgrep() {
+  # Check common locations
+  if command -v rg &> /dev/null; then
+    return 0
+  fi
+  if [[ -x "$HOME/.local/bin/rg" ]]; then
+    return 0
+  fi
+  if [[ -x "$HOME/.factory/bin/rg" ]]; then
+    return 0
+  fi
+  return 1
+}
+
+# Install ripgrep binary
+install_ripgrep() {
+  local os_type="$1"
+  local arch="$2"
+  
+  print_info "Checking for ripgrep (required for file search)..."
+  
+  if check_ripgrep; then
+    print_success "ripgrep is already installed"
+    return 0
+  fi
+  
+  print_warning "ripgrep not found - installing..."
+  
+  # Map OS to platform name
+  local platform
+  case "$os_type" in
+    macos) platform="darwin" ;;
+    linux) platform="linux" ;;
+    *) 
+      print_warning "Cannot auto-install ripgrep on $os_type"
+      print_info "Please install ripgrep manually: https://github.com/BurntSushi/ripgrep#installation"
+      return 1
+      ;;
+  esac
+  
+  # Map architecture
+  local rg_arch
+  case "$arch" in
+    x64) rg_arch="x64" ;;
+    arm64) rg_arch="arm64" ;;
+    *)
+      print_warning "Unknown architecture: $arch"
+      print_info "Please install ripgrep manually: https://github.com/BurntSushi/ripgrep#installation"
+      return 1
+      ;;
+  esac
+  
+  # Try Factory's hosted ripgrep first, then fallback to GitHub releases
+  local rg_url="https://downloads.factory.ai/ripgrep/$platform/$rg_arch/rg"
+  local install_dir="$HOME/.local/bin"
+  local rg_binary="$install_dir/rg"
+  
+  mkdir -p "$install_dir"
+  
+  print_info "Downloading ripgrep..."
+  
+  local download_success=false
+  
+  # Try Factory's CDN first
+  if curl -fsSL -o "$rg_binary" "$rg_url" 2>/dev/null; then
+    download_success=true
+  else
+    # Fallback to GitHub releases
+    print_info "Trying GitHub releases..."
+    local rg_version="14.1.1"
+    local gh_arch gh_platform gh_ext
+    
+    case "$platform" in
+      darwin)
+        gh_platform="apple-darwin"
+        gh_ext="tar.gz"
+        ;;
+      linux)
+        gh_platform="unknown-linux-musl"
+        gh_ext="tar.gz"
+        ;;
+    esac
+    
+    case "$arch" in
+      x64) gh_arch="x86_64" ;;
+      arm64) gh_arch="aarch64" ;;
+    esac
+    
+    local gh_url="https://github.com/BurntSushi/ripgrep/releases/download/${rg_version}/ripgrep-${rg_version}-${gh_arch}-${gh_platform}.${gh_ext}"
+    local temp_dir=$(mktemp -d)
+    
+    if curl -fsSL -o "$temp_dir/rg.tar.gz" "$gh_url" 2>/dev/null; then
+      tar -xzf "$temp_dir/rg.tar.gz" -C "$temp_dir"
+      local extracted_dir=$(find "$temp_dir" -maxdepth 1 -type d -name "ripgrep-*" | head -n 1)
+      if [[ -n "$extracted_dir" && -f "$extracted_dir/rg" ]]; then
+        cp "$extracted_dir/rg" "$rg_binary"
+        download_success=true
+      fi
+    fi
+    rm -rf "$temp_dir"
+  fi
+  
+  if [[ "$download_success" == "true" ]]; then
+    chmod +x "$rg_binary"
+    print_success "ripgrep installed to $rg_binary"
+    
+    # Check if ~/.local/bin is in PATH
+    if ! echo "$PATH" | grep -q "$install_dir"; then
+      print_warning "Add ~/.local/bin to your PATH:"
+      echo ""
+      echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc"
+      echo "  source ~/.zshrc"
+      echo ""
+    fi
+    return 0
+  else
+    print_warning "Failed to download ripgrep"
+    print_info "Please install ripgrep manually: https://github.com/BurntSushi/ripgrep#installation"
+    return 1
+  fi
 }
 
 # Check if running interactively
@@ -369,8 +501,13 @@ install_platform() {
 # Main installation flow
 main() {
   local os_type=$(detect_os)
+  local arch_type=$(detect_arch)
   
   print_header
+  
+  # Install ripgrep dependency (required for file search in AI tools)
+  install_ripgrep "$os_type" "$arch_type"
+  echo ""
   
   # Show platform menu
   show_platform_menu
